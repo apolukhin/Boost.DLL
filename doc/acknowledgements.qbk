@@ -1,0 +1,23 @@
+[/
+    Copyright 2014 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Acknowledgements]
+
+A special thanks goes to [*Vicente J. Botet Escriba] that helped a lot on all areas of this lib.
+
+Thanks to (chronological order):
+
+[*Rodrigo Madera] for your comments, help and RM support.[br]
+[*Sergei Nikulov] for provided fixes and patches.[br]
+[*Benjamin Dieckmann] for your comments and help on posix side and the singleton implementation inside lib.[br]
+[*Stanislav Ivochkin] for your comments and self-pipe aspect design.[br]
+[*Julian Gonggrijp] for your comments to improving the ease of use.[br]
+[*Jarrad Waterloo] for your comments and directions.
+
+The first Boost.Application appears in 2011 labed as 'version alpha 1 (0.1)' and some people have helped on various areas that influenced Boost.Application. 
+
+[endsect]
+

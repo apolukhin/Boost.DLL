@@ -1,0 +1,15 @@
+[/
+    Copyright 2013 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Supported compilers and platforms]
+
+The following platforms and compilers have been tested:
+
+* Win32 and Win64 using Visual C++ 11.0.
+* Linux (2.6 kernels) using g++ 4.7.3.
+ 
+[endsect]
+

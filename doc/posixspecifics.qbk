@@ -1,0 +1,45 @@
+[/
+    Copyright 2013 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section POSIX specifics]
+
+Boost.Application have some specifics on each side, here the user that uses POSIX system need be aware.
+
+[/
+  NOW WE USE SELFPIPE ON wait_for_termination_request
+/]
+[/
+[section Reserved SIGNAL(SIGUSR1) ]
+
+On POSIX the SIGNAL 'SIGUSR1' is used internaly be wait_for_termination_request (wait_for_termination_request_impl).
+
+If you need of 'SIGUSR1' on your application, you need customize an new wait_for_termination_request to use other signal (e.g. SIGUSR2), this is ease task, refer to:
+[@../html/boost_application/customization.html#boost_application.customization.customize_handlers 'Customize Aspects']
+
+[endsect]
+/]
+
+[section Self-pipe ]
+
+The Self-pipe aspect can be used if user need more control of application.
+
+In default form a SIGNAL can interrupt your program at any time. E.g.: while any of your code is executing, a signal can arrive and interrupt it. While one signal is being handled, another signal (or the same signal), can arrive a second time and interrupt the first handler and so on.
+
+The problem is that the default signal handler is not re-entrant, and if you need that your signal handlers to be re-entrant, you can use Self-pipe aspect.
+
+In Self-pipe a 'pipe' is used as queue (you just write some bytes to one end and read some bytes from the other end), and this queue is used to notify the other side that an 'event', or a SIGNAL has arrived.
+
+User can use 'select' system call to monitors the reading end of this pipe, to know when SIGNAL arrives.
+
+[import ../example/selfpipe/selfpipe.cpp]
+[selfpipe]
+
+[note Note that Self-pipe is only available on POSIX platform. This aspect is platform dependent, and the use of it implies in use of some POSIX API, like select().]
+
+[endsect]
+
+[endsect]
+

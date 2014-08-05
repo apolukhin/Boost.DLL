@@ -1,0 +1,39 @@
+[section:introduction Motivation]
+
+[caution This is not yet an official Boost C++ library. It wasn't reviewed and can't be downloaded from www.boost.org. This beta is available to boost community to know real interest and get comments for refinement.The intention is to submit library to formal review, if community think that it is interesting!]
+
+Sometimes we need run application for long time (e.g. Server Application), we need a mechanism to extend this application on runtime, and we need some facilities to access paths, ensure single instance instantiation on system, manage and catch signals and so on.
+
+This work is recurrent each time that we need build and deploy an application for particular system, and the way to do this, change a lot on each of these systems.
+
+For instance on Windows side we have 'services' and on Unix (POSIX) side we have 'daemons' that are used to build long-running executable applications (e.g. server) and these two APIs have no similarity. Thus, in this scenarios, is so much difficult to developer have your application running on Windows or on POSIX as server without a lot of work. The work is harder if we need run same application in both systems.
+
+Other problem raise when user want provide a way to extend your application using a plug-in mechanism. Like Service/Daemon, the shared modules (DSO) manipulation changes a lot on Windows and POSIX. 
+
+Obtain simple thing like paths, arguments, manipulate signal, can be annoying, since it also don't has a common interface to do this on both systems.
+
+Boost.Application library aims to make significantly easier for the developer has your application runs in cross-platform (POSIX/Windows) environment. Boost.Application provides a application environment, or start point to any people that want a basic infrastructure to build an system application on Windows or Unix Variants (e.g. Solaris, Linux, MacOS).
+
+The Boost.Application uses behaviours modeled using 'aspects' concept proposed by 'Vicente J. Botet Escriba', that allow easy extension and customization of library components. The application modes uses these components internally to achieve the user desirable behaviours.
+
+Boost.Application provide many usefull ready-to-use features, e.g:
+
+* Run application as Windows Service; 
+* Run application as UNIX/POSIX Daemon;
+* Plugin extension system;
+* Process(executable) Single instance Instantiation support;
+* Application SIGNAL/Callbacks customization;
+
+Here's a simple example of how to construct a application with Boost.Application:
+
+[import ../example/simple_application.cpp]
+[intro]
+
+Refer to [@../html/boost_application/roadmap.html "road map"] to know all required/optional steps to build a complete application using Boost.Application. To high level design overview, refer to [@../html/boost_application/design_overview.html '"design overview"']
+
+[caution
+This documentatuion is in "Work in Progress" status.
+[@https://github.com/retf/Boost.Application DOWNLOAD THE LIB]
+]
+
+[endsect]

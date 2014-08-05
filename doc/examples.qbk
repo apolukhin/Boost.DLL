@@ -1,0 +1,97 @@
+[/
+    Copyright 2014 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+[section Examples]
+
+[* Common Application]
+
+[pre
+Simplest Common Aplication [@http://www.boost.org/libs/application/example/simple_application.cpp (simple_application.cpp)] 
+Simplest Common Aplication with global Context [@http://www.boost.org/libs/application/example/simple_application_with_global_context.cpp (simple_application_with_global_context.cpp)] 
+]
+
+[* Server Application]
+
+[pre
+Simplest Server Aplication [@http://www.boost.org/libs/application/example/simple_server_application.cpp (simple_server_application.cpp)] 
+]
+
+[* Other Features]
+
+[pre
+Application Mode Select [@http://www.boost.org/libs/application/example/application_mode_select.cpp (application_mode_select.cpp)] 
+Handling Errors (ec version) [@http://www.boost.org/libs/application/example/handling_errors_ec_version.cpp (handling_errors_ec_version.cpp)] 
+Handling Errors (ex version) [@http://www.boost.org/libs/application/example/handling_errors_ex_version.cpp (handling_errors_ex_version.cpp)] 
+Limit Single Instance [@http://www.boost.org/libs/application/example/limit_single_instance.cpp (limit_single_instance.cpp)] 
+Limit Single Instance (interprocess) [@http://www.boost.org/libs/application/example/limit_single_instance_boost_interprocess_named_mutex.cpp (limit_single_instance_boost_interprocess_named_mutex.cpp)] 
+Limit Single Instance Using Callback [@http://www.boost.org/libs/application/example/limit_single_instance_callback.cpp (limit_single_instance_callback.cpp)]
+Limit Single Instance with global Context [@http://www.boost.org/libs/application/example/limit_single_instance_callback_with_global_context.cpp (limit_single_instance_callback_with_global_context.cpp)]
+Plug-in System [@http://www.boost.org/libs/application/example/shared_library_load_plugin.cpp (shared_library_load_plugin.cpp)]
+]
+
+[* Customization]
+
+[pre
+Termination Handler Signal Customization [@http://www.boost.org/libs/application/example/my_own_termination_handler.cpp (my_own_termination_handler.cpp)] 
+Wait For Termination Request Customization [@http://www.boost.org/libs/application/example/my_own_wait_for_termination_request.cpp (my_own_wait_for_termination_request.cpp)] 
+Define My Own Exception [@http://www.boost.org/libs/application/example/myexception.cpp (myexception.cpp)] 
+]
+
+[* Library extension]
+
+[pre
+Apache httpd Application Mode [@http://www.boost.org/libs/application/example/new_application_mode/apache_httpd_mode.hpp (apache_httpd_mode.hpp)]
+Use of Apache httpd Application Mode [@http://www.boost.org/libs/application/example/new_application_mode/apache_httpd.cpp (apache_httpd.cpp)]
+]
+
+[* Windows specifics]
+
+[pre
+Windows Service Setup [@http://www.boost.org/libs/application/example/setup/windows/setup.cpp (setup.cpp)]
+]
+
+[* POSIX specifics]
+
+[pre
+Self-pipe [@http://www.boost.org/libs/application/example/selfpipe/selfpipe.cpp (selfpipe.cpp)]
+]
+
+[* Other Aspects]
+
+[pre
+Path Aspect [@http://www.boost.org/libs/application/example/path.cpp (path.cpp)] 
+Wait For Termination Request Customization [@http://www.boost.org/libs/application/example/my_own_wait_for_termination_request.cpp (my_own_wait_for_termination_request.cpp)] 
+Termination Handler [@http://www.boost.org/libs/application/example/termination_handler.cpp (termination_handler.cpp)] 
+Wait For Termination Request [@http://www.boost.org/libs/application/example/wait_for_termination_request.cpp (wait_for_termination_request.cpp)] 
+]
+
+[* Tutorial]
+
+[pre
+Tutorial Stage 1 [@http://www.boost.org/libs/application/example/tutorial/main_stage1.cpp (main_stage1.cpp)] 
+Tutorial Stage 2 [@http://www.boost.org/libs/application/example/tutorial/main_stage2.cpp (main_stage2.cpp)] 
+Tutorial Stage 3 [@http://www.boost.org/libs/application/example/tutorial/main_stage3.cpp (main_stage3.cpp)] 
+Tutorial Stage 4 [@http://www.boost.org/libs/application/example/tutorial/main_stage4.cpp (main_stage4.cpp)] 
+]
+
+[* Complex Examples]
+
+[pre
+Common Application With Simple Asio Based Threadpool [@http://www.boost.org/libs/application/example/work_queue/work_queue.cpp (work_queue.cpp)]
+UUID Generator (server) Application Uisng Asio [@http://www.boost.org/libs/application/example/uuid_client_server/server.cpp (server.cpp)]
+UUID Generator (client) Application Uisng Asio [@http://www.boost.org/libs/application/example/uuid_client_server/client.cpp (client.cpp)]
+UUID Generator (plugin) Application Uisng Asio [@http://www.boost.org/libs/application/example/uuid_client_server/plugin.cpp (plugin.cpp)]
+Time-based Server [@http://www.boost.org/libs/application/example/time_based_server/server.cpp (server.cpp)]
+Time-based Server Plug-in [@http://www.boost.org/libs/application/example/time_based_server/job_plugin_library.cpp (job_plugin_library.cpp)]
+]
+
+[note
+For Windows Users the library provide Visual Studio 11 Projects to all samples on :
+application\vc11ide
+]
+
+[endsect]
+
+

@@ -1,0 +1,38 @@
+[/
+    Copyright 2014 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section:roadmap Application Roadmap]
+
+Building an application with Boost.Application is a simple process, the basic roadmap steps are:
+
+[table:rs Roadmap Steps
+    [[Step]               [Optionally?]             [Description]]
+    [[A]                  [NO]                      [Define a 'functor' class for your application with an application operator]]
+    [[B]                  [NO]                      [Create a 'context' for application. An context can be a global_context (singleton) or local context]]
+    [[C]                  [YES]                     [Add desired 'aspects' to application context]]
+    [[D]                  [YES]                     [Define a 'callback' for 'handler aspects' type. e.g.: stop, pause, resume]]
+    [[E]                  [YES]                     [Define new 'apects', and add it to application context]]
+    [[F]                  [YES]                     [Customize some ready to use 'apects']]
+    [[G]                  [YES]                     [Customize 'SIGNALS' of application]]
+    [[H]                  [NO]                      [Launch an application using some ready to use mode. ('common' or 'server' application)]]
+    [[I]                  [YES]                     [Use 'plugin system' to extend or change behavior of application at runtime]]
+    [[J]                  [YES]                     [In case of 'Windows Service' (Server mode on Windows), use example code to setup service]]
+    [[K]                  [YES]                     [Use 'aspects' available in the context (that user add on step 'C' or 'E')]]
+]
+
+A basic sample of server application can be:
+
+[import ../example/simple_server_application_help.cpp]
+[simplesrvrhelp]
+
+[note	
+	   The 'application context' can be defined in 2 ways. [br]
+		 [br]    1. 'global_context' based version (that don't receive a 'context' as parameter on constructor).
+		 [br]    2. 'local' based version (that receive a 'context' of application as parameter on constructor, our case here.).
+]
+
+[endsect]
+

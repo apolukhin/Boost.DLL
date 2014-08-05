@@ -1,0 +1,92 @@
+[/
+    Copyright 2013 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+
+
+[section Windows specifics]
+
+Boost.Application have some specifics on each side, here the user that uses Windows system need be aware.
+
+[/
+# --------------------------------------------------------------------------------
+# setup_service
+# --------------------------------------------------------------------------------
+]
+
+[section:setup_service Setup for Windows Service] 
+
+In this version the library don’t provide official support for "service or daemon" installation. This is because we need maintain symmetry between functionality provided on all platforms that the lib support, and on POSIX side, the installation process varies a lot. Thus the library provide installation functionality for major system as sample on examples folder. In future we have plan to bring these functionality to core library.
+
+[note
+For POSIX you need use some shell script to control a daemon, refer to:
+
+\example\setup\posix\ubuntu
+
+That has some samples from Ubuntu.
+]
+
+On Window we will use this sample code:
+
+\example\setup\windows\setup\service_setup.hpp
+
+Boost.Application provides a setup code, that can be added to to enable installation/uninstallation of windows service application.
+
+[import ../example/setup/windows/setup.cpp]
+[wss]
+
+This example shows how to use windows service setup module to provide a installation system to application using program_options.
+
+[pre
+[*Installation]
+windows_service_setup.exe -i --name "My Service" --path "c:\myservice\service.exe"
+windows_service_setup.exe -i --name "My Service" --path "c:\myservice\service.exe" --display "My Service"
+windows_service_setup.exe -i --name "My Service" --path "c:\myservice\service.exe" --display "My Service" --description "Service Description"
+
+[*Check Installation]
+windows_service_setup.exe -c --name "My Service" 
+
+[*Uninstallation]
+windows_service_setup.exe -u --name "My Service" --path "c:\myservice\service.exe" 
+]
+
+[important 
+To install service you need have permission to do that. An easy way is execute installation as Admin.
+]
+
+[note
+Note that when arg name are not priovided, the name will be the name of executable, in this case, service name will be: 'windows_service_setup'
+]
+
+[note
+Note that you can provide “user login” to install the service for a specific Windows User.
+
+windows_service_setup.exe -i --name "My Service" --path "c:\myservice\service.exe" --display "My Service" --description "Service Description" --user "Renato Forti" --pass "1c2c3c"
+]
+
+[tip
+The sample 'simple_server application.cpp' has the setup code embed on it. This shows a way to incorporate all required code into a single executable.
+]
+
+[endsect]
+
+[section:multi_service Multi-Service Process] 
+By definition, each Win32 service process can contain one or more services, running on separate threads.
+
+Note that Boost.Application do not support more than one service at one executable. This limitation is imposed to maintain symmetry between Windows and POSIX sides.
+[endsect]
+
+[section:unicode Unicode on Services] 
+Boost.Application supports both Unicode and ANSI char types to develop a server (service) mode application, but is highly recommended that you use Unicode.
+
+Windows has two versions of every API function that takes a string parameter, one for wide chars that name ends with W, and another that name ends with A for ANSI. The native call is for 'W' functions, while the 'A' version function simply ends up calling the 'W' function.
+
+Uing ANSI therefore makes extra function call, and aditional string conversion overhad.
+
+To know how Boost.Application handle Unicode, refer to [@../html/boost_application/f_a_q_.html#boost_application.f_a_q_.how_unicode__windows__is_hadled_ FAQ]
+
+[endsect]
+
+[endsect]

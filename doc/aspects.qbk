@@ -1,0 +1,43 @@
+[/
+    Copyright 2013 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section:aspects Application Apects ]
+A central concept on Boost.Application is the 'aspects' that can be added to application context. 
+
+Boost.Application provide a wide class of ready-to-use 'aspects' and user is free to customize or define anyone that he needs, basically we can classify the ready-to-use aspects in 2 groups:
+
+[table:sca Simple or Common that can be any class
+    [[Aspect Name]                        [Aspect Contract Class]         [Aspect Final Class]                             [Aspect Functionality]]
+    [[args]                               [args]                          [args (same class)]                              [Provide functionality for handling arguments of the application]]
+    [[path]                               [path]                          [path_default_behaviour]                         [Provide functionality for handling paths of the application]]
+    [[run_mode]                           [run_mode]                      [run_mode (same class)]                          [Provide information of application running mode (common or server)]]
+    [[status]                             [status]                        [status (same class)]                            [Provide information about current satatus of application (sopped, running or paused)]]
+    [[wait_for_termination_request]       [wait_for_termination_request]  [wait_for_termination_request_default_behaviour] [Provide functionality for wait for task completion]]
+
+]
+
+[table:hc Handler, that has a callback associated to it
+    [[Aspect Name]                        [Aspect Contract Class]         [Aspect Final Class]                             [Aspect Functionality]]
+    [[pause_handler]                      [pause_handler]                 [pause_handler_default_behaviour]                [When 'pause' event is detected, fire a user defined callback]]
+    [[resume_handler]                     [resume_handler]                [resume_handler_default_behaviour]               [When 'resume' event is detected, fire a user defined callback]]
+    [[termination_handler]                [termination_handler]           [termination_handler_default_behaviour]          [When 'stop' signal/event is detected, fire a user defined callback]]
+    [[limit_single_instance]              [limit_single_instance]         [limit_single_instance_default_behaviour]        [When single instance feature is enabled, fire a user defined callback to handle it]]
+
+]
+
+To know how customize an Aspect, refer to [@../html/boost_application/customization.html#boost_application.customization.customize_handlers 'Customize Aspects']
+
+
+[note	
+	   Note that that the application launch<mode> tie 'run_mode' and 'status' aspects to application context in automatic way.
+]
+
+For sample, the following code show the use of 'path' aspect.
+[import ../example/path.cpp]
+[path]
+
+[endsect]
+

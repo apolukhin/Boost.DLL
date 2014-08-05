@@ -1,0 +1,51 @@
+[/
+    Copyright 2014 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section F.A.Q.]
+
+[section Is Boost.Application thread-safe?]
+Not at all, applications singleton objects should not be called between threads, you should create several threads from it.
+
+The "shared_library" and "context" (aspect_map) classes are synchronized
+[endsect]
+
+[section How Unicode (Windows) is hadled?]
+Boost.Application supports Unicode on Windows. If the macro UNICODE or _UNICODE is defined, the Unicode version of Windows [@http://msdn.microsoft.com/en-us/library/windows/desktop/dd374081(v=vs.85).aspx API] is used when needed.
+[endsect]
+
+[section Can I customize a application SIGNALS?]
+Yes. The unique exception is Server Mode on Windows (Windows Service).
+
+The rule is that you need inherit of abstract contract class of aspect. Refer to [@../html/boost_application/customization.html#boost_application.customization.customize_signal 'Customize Signals/Handlers'] to know more. 
+[endsect]
+
+[section Can I customize a library provided aspects?]
+Yes. All library provided aspects can be customized. 
+
+The rule is that you need inherit of '[*signal_manager]' class and customize signals that you want. Refer to [@../html/boost_application/customization.html#boost_application.customization.customize_handlers 'Customize Aspects'] to know more. 
+[endsect]
+
+[section Can I build another aspects to application?]
+Yes. An aspect is a normal object, that are stored in application context. Any C++ class can be an aspect. The only limitation is that you can have only one aspect of same type on application context. Refer to [@../html/boost_application/customization.html#boost_application.customization.customize_handlers 'Customize Aspects'] to know more.
+[endsect]
+
+[section Can I build another application mode? What is needed?]
+Yes. Use a '[*common]' mode as model, and changes the internal behaviour to what you want. You can create new aspects to it too. Refer to the example [@../html/boost_application/examples.html 'Apache httpd Application Mode' on session 'Library extension'].
+
+[tip 
+An unofficial tutorial can be found at [@http://www.codeproject.com/Articles/695937/Creating-a-New-Application-Mode Code Project]
+]
+
+[endsect]
+
+[section I have found a bug, how do I notify?]
+Please, send a e-mail with detailed description to re.tf[at]acm.org
+[endsect]
+
+[endsect]
+
+
+

@@ -1,0 +1,25 @@
+
+[section Bibliography]
+
+This section lists all the bibliographic references cited by this documentation.
+
+* Andrei Alexandrescu. [@http://www.informit.com/articles/article.aspx?p=25298&seqNum=5 Multithreading and the C++ Type System] (Threads Synchronization)
+* Anthony Williams, Vicente J. Botet Escriba [@http://www.boost.org/doc/libs/1_55_0/doc/html/thread/synchronization.html Boost Threads Synchronization] (Threads Synchronization)
+* Arch D. Robison, Anton Malakhov, Artur Laksberg. [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3425.html Concurrent Unordered Associative Containers for C++] (Containers Concurrent Access)
+* Arch D. Robison, Anton Potapov, Anton Malakhov. [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3732.pdf Value-Oriented Concurrent Unordered Containers] (Containers Concurrent Access)
+* Arch D. Robison. [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3712.pdf Policy-Based Design for Safe Destruction in Concurrent Containers] (Containers Concurrent Access)
+* Dave Lennert. [@http://cjh.polyplex.org/software/daemon.pdf How To Write a UNIX Daemon] (Unix Daemon)
+* Devin Watson. [@http://www.netzmafia.de/skripten/unix/linux-daemon-howto.html Linux Daemon Writing HOWTO] (Linux Daemon)
+* W. Richard Stevens, Stephen A. Rago. [@http://www.amazon.com/Programming-Environment-Addison-Wesley-Professional-Computing/dp/0321637739/ref=sr_1_1?s=books&ie=UTF8&qid=1379593264&sr=1-1&keywords=advanced+unix+programming+3rd+edition Advanced Programming in the UNIX Environment] (Unix Daemon)
+* Kevin Miller. [@http://www.amazon.com/Professional-NT-Services-Kevin-Miller/dp/1861001304/ref=sr_1_sc_1?ie=UTF8&qid=1398252097&sr=8-1-spell&keywords=profisional+nt+services Professional NT Services] (Windows Services)
+* Marshall Brain, Ronald D. Reeves. [@http://www.amazon.com/Programming-Environment-Addison-Wesley-Professional-Computing/dp/0321637739/ref=sr_1_1?s=books&ie=UTF8&qid=1379593264&sr=1-1&keywords=advanced+unix+programming+3rd+edition Win32 System Services: The Heart of Windows 98 and Windows 2000] (Windows Services)
+* Johnson M. Hart. [@http://www.amazon.com/Win32-System-Programming-Application-Developers/dp/0201703106/ref=pd_sim_b_15 Win32 System Programming: A Windows 2000 Application Developer's Guide] (Windows Services)
+* David Vandevoorde, Nicolai M. Josuttis. [@http://www.amazon.com/Templates-Complete-Guide-David-Vandevoorde/dp/0201734842/ref=sr_1_1?s=books&ie=UTF8&qid=1379592907&sr=1-1&keywords=c+++templates C++ Templates: The Complete Guide] (Templates stuff)
+* Davide Di Gennaro. [@http://www.amazon.com/Templates-Complete-Guide-David-Vandevoorde/dp/0201734842/ref=sr_1_1?s=books&ie=UTF8&qid=1379592907&sr=1-1&keywords=c+++templates Advanced C++ Metaprogramming] (Templates stuff)
+* Martin Reddy. [@http://www.amazon.com/API-Design-C-Martin-Reddy/dp/0123850037/ref=pd_sim_b_4 API Design for C++] (Plugin Systems)
+* Wikipedia. [@http://en.wikipedia.org/wiki/Unix_signal Unix Signal] (Unix Signals)
+* Enderunix. [@http://www.enderunix.org/docs/eng/daemon.php Unix Daemon Server Programming] (Unix Daemon)
+
+[endsect]
+
+

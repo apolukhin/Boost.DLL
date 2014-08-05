@@ -1,0 +1,26 @@
+[/
+    Copyright 2014 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Handling errors]
+
+All class methods of Boost.Application that can generate an error has two version, one throws an exception of type boost::system::system_error, and another receive a boost::system::error_code variable 'ec' that would be set to the result of the operation, and no thrown an exception.
+ 
+[section Throws an 'system_error' version.]
+
+[import ../example/handling_errors_ex_version.cpp]
+[exver]
+
+[endsect]
+
+[section Set 'error_code' on error version.]
+
+[import ../example/handling_errors_ec_version.cpp]
+[ecver]
+
+[endsect]
+
+[endsect]
+

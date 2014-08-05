@@ -1,0 +1,91 @@
+#
+#          Copyright Renato Tegon Forti 2011 - 2013.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+#
+
+# For more information, see http://www.boost.org
+
+# bring in rules for testing
+import testing ;
+import os ;
+import path ;
+
+path-constant TEST_DIR : $(BOOST_ROOT)/bin.v2/libs/application/test ;
+
+if [ os.name ] = SOLARIS
+{
+  lib socket ;
+  lib nsl ;
+}
+else if [ os.name ] = NT
+{
+  lib ws2_32 ;
+  lib mswsock ;
+}
+else if [ os.name ] = HPUX
+{
+  lib ipv6 ;
+}
+
+project
+   : source-location .
+   : requirements
+   # windows
+
+   # msvc
+      <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+      <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+      <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
+      <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+      <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+ 
+   # linux
+      <target-os>linux:<linkflags>"-ldl" 
+      
+   # mingw, cygwin
+      <os>NT:<define>_WIN32_WINNT=0x0501
+      <os>NT,<toolset>gcc:<library>ws2_32
+      <os>NT,<toolset>gcc:<library>mswsock
+      <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+   #  <os>NT,<toolset>gcc:<linkflags>"-ldl" 
+  
+   # solaris     
+      <os>SOLARIS:<library>socket
+      <os>SOLARIS:<library>nsl
+      
+   # hpux  
+      <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+      <os>HPUX:<library>ipv6
+
+   # gcc
+      <toolset>gcc:<cxxflags>-fno-strict-aliasing  # avoids strict aliasing violations in other Boost components
+	
+   # use dynamic libs
+   # <define>BOOST_ALL_DYN_LINK
+   # <define>BOOST_LIB_DIAGNOSTIC
+	  
+   # others
+      <link>shared:<define>BOOST_ALL_DLL      
+      <library>/boost/system//boost_system
+      <library>/boost/filesystem//boost_filesystem
+      <threading>multi
+
+      ;
+{
+
+    # our test lib for shared library tests
+    lib test_library : test_library.cpp ;
+    lib plugin_library : ../example/plugin_library.cpp ;
+    install install-bin : test_library plugin_library : <location>$(TEST_DIR) ;
+  
+    test-suite application
+        : 
+        [ run shared_library_load_test.cpp : $(TEST_DIR) ]
+        [ run shared_library_search_symbol_test.cpp : $(TEST_DIR) ]
+        [ run shared_library_get_symbol_test.cpp : $(TEST_DIR) ]
+        [ run ../example/shared_library_load_plugin.cpp : $(TEST_DIR) ]
+    ;
+}
+      

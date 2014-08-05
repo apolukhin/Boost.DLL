@@ -1,0 +1,41 @@
+[/
+    Copyright 2014 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[library Boost.Application
+    [quickbook 1.5]
+    [authors [Forti, Renato]]
+    [copyright 2014 Dokfile Software Ltd.]
+    [id application]
+    [dirname application]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        http://www.boost.org/LICENSE_1_0.txt)
+    ]
+]
+
+[include introduction.qbk]
+[include designoverview.qbk]
+[include apptypes.qbk]
+[include roadmap.qbk]
+[include context.qbk]
+[include aspects.qbk]
+[include useaspecthandler.qbk]
+[include handlingerrors.qbk]
+[include tutorial.qbk]
+[include customization.qbk]
+[include otherfeatures.qbk]
+[include windowsspecifics.qbk]
+[include posixspecifics.qbk]
+[include faq.qbk]
+[include dependencies.qbk]
+[include platforms.qbk]
+[include examples.qbk]
+[include reference.qbk]
+[include bibliography.qbk]
+[include todo.qbk]
+[include revisionhistory.qbk]
+[include acknowledgements.qbk]

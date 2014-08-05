@@ -1,0 +1,65 @@
+[/
+    Copyright 2013 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+
+
+[section:customization Customization]
+
+
+[/
+# --------------------------------------------------------------------------------
+# customize_handlers
+# --------------------------------------------------------------------------------
+]
+
+[section:customize_handlers Customize Aspects]
+
+The '[*aspects]' concept allow user to customize, and extend library functionality in easy way. The diagram below shows the way to extend or create new aspect.
+
+[$aspect.gif]
+
+The '[*A]' shows the more complex aspects, that needs to meet a well defined interface, which is used internally by the application mode.
+
+On '[*B]' we have simplest aspect that can be any C++ class.
+
+Thus, the user can customize the default behavior of any handler. To do this, the user needs inheriting of contract handler class (abstract) that he wants to modify the behavior.
+
+For sample: The default behavior of wait_for_termination_request is unblock and exit of application. To change this behavior user can do as follows:
+
+[import ../example/my_own_wait_for_termination_request.cpp]
+[mownwfr]
+
+[endsect]
+
+[/
+# --------------------------------------------------------------------------------
+# customize_signal
+# --------------------------------------------------------------------------------
+]
+
+[section:customize_signal Customize Signals/Handlers]
+
+Like a handler, the user is free to customize the SIGNALS of application.
+
+[note
+The SIGNALS can not be customized when Windows Service (server application mode on windows) is used.
+
+Windows Service uses a completely different set of signals called 'events', so in this case you should customize 'pause', 'resume' and 'stop' handlers
+]
+
+This feature allows user configure/add handlers for others SIGNALS.
+
+In this sample we will create a handler to SIGUSR2 POSIX signal. Note that this signal is not available on Windows.
+
+To do this user need inheriting of signal_manager class and add new signal bind, like:
+
+[import ../example/my_own_termination_handler.cpp]
+[myownsig]
+
+[endsect]
+
+
+[endsect]

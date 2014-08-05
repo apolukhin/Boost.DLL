@@ -1,0 +1,78 @@
+#
+#          Copyright Renato Tegon Forti 2011 - 2013.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+#
+
+import os ;
+
+if [ os.name ] = SOLARIS
+{
+  lib socket ;
+  lib nsl ;
+}
+else if [ os.name ] = NT
+{
+  lib ws2_32 ;
+  lib mswsock ;
+}
+else if [ os.name ] = HPUX
+{
+  lib ipv6 ;
+}
+
+project
+   : source-location .
+   : requirements
+   # windows
+
+   # msvc
+      <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+      <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+      <toolset>msvc:<define>_CRT_SECURE_NO_WARNINGS
+      <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+      <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+
+   # linux
+      <target-os>linux:<linkflags>"-ldl" 
+      
+   # mingw, cygwin
+      <os>NT:<define>_WIN32_WINNT=0x0501
+      <os>NT,<toolset>gcc:<library>ws2_32
+      <os>NT,<toolset>gcc:<library>mswsock
+      <os>NT,<toolset>gcc-cygwin:<define>__USE_W32_SOCKETS
+   #  <os>NT,<toolset>gcc:<linkflags>"-ldl" 
+  
+   # solaris     
+      <os>SOLARIS:<library>socket
+      <os>SOLARIS:<library>nsl
+      
+   # hpux  
+      <os>HPUX,<toolset>gcc:<define>_XOPEN_SOURCE_EXTENDED
+      <os>HPUX:<library>ipv6
+
+   # gcc
+      <toolset>gcc:<cxxflags>-fno-strict-aliasing  # avoids strict aliasing violations in other Boost components
+
+   # others
+      <link>shared:<define>BOOST_ALL_DLL
+      <library>/boost/system//boost_system
+      <library>/boost/filesystem//boost_filesystem
+      <threading>multi
+      ;
+	
+   # our example plugin lib
+   lib plugin_library : plugin_library.cpp ; 
+   install install-bin 
+      : plugin_library : 
+      <target-os>windows:<location>"C:/test/boost/application" 
+      <target-os>linux:<location>/test/boost/application ; 
+	  
+	  
+# shared library sub-system
+   
+exe shared_library_load_plugin  
+   : shared_library_load_plugin.cpp
+   ;
+

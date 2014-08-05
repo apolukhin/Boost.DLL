@@ -1,0 +1,25 @@
+[/
+    Copyright 2014 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Suported Application Types]
+
+Boost.Application supports basically 2 flavors of applications that can be:
+
+[section Common Application]
+This kind of application is a usual Interactive Terminal application.
+[endsect]
+
+[section Server Application]
+This kind of application generates a Service (Windows), or a background process/Daemon (Unix).
+[endsect]
+
+[note Both versions can be extended using the plugin system provided by library (see [@../html/boost_application/other_features.html#plugin_system 'Extending Application'])
+]
+
+Other types of applications can be added in the future, e.g. Apache Module, IIS Module, FastCGI.
+
+[endsect]
+

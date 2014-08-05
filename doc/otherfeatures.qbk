@@ -1,0 +1,80 @@
+[/
+    Copyright 2013 Renato Tegon Forti
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+
+
+[section:other_features Other Features]
+
+
+[section Single Instance Feature] 
+
+Some applications should only have a single instance running on a given operating system, Boost.Application provides a means to easily achieve this, as:
+
+User need define a unique identity to application. To do this the user need generate a [@http://www.boost.org/doc/libs/1_54_0/libs/uuid/ Boost.Uuid].
+
+Optionally, the user can define a callback that will handle if a new instance of application should continue or exit. 
+
+If this callback this is not set the default behavior is terminate. 
+
+[import ../example/limit_single_instance_callback.cpp]
+[lsic]
+
+[endsect]
+
+
+[section:plugin_system Extending Application (Plugin System)]
+
+An important addition of Boost.Application, is a "Shared Library Class" that allow user to extend the application using Dynamic Library Modules (DLL,SO/DSO) loaded at runtime. Using this feature the client can provide a plugin system to application.
+
+[warning 
+
+Unix/Linux Note
+To shared library work, on unix/linux variants you need link with: '-ldl' lib (dlopen etc), e.g on bjam: 
+
+<target-os>linux:<linkflags>"-ldl"
+
+]
+
+The class shared_library has a list of methods to load library, find symbol, and get symbol to execution.
+
+```
+shared_library sl("/test/boost/application/libtest_library.so");
+```
+
+The following diagram shows the process of extension of the application functionality. The library is loaded dynamically in the context of the application, and then a library
+function is executed. After that, the library is unloaded and will cease to exist in the application.
+
+[$plugin.gif]
+
+Now, a simple tutorial is provided to give you a idea, of how to use shared library class.
+
+The first thing to do is define the plugin interface, this will be a abstract class that will be our plugin API, and we will have a cpp file that will hold a implementation of our plugin.
+
+[import ../example/plugin_api.hpp]
+[plugapi]
+
+[import ../example/plugin_library.cpp]
+[plugcpp]
+
+Now our application that will use our plugin.
+
+[import ../example/shared_library_load_plugin.cpp]
+[callplugcpp]
+
+The output:
+
+[pre
+ubuntu@ip-10-248-38-104:./shared_library_load_plugin
+Plugin Version: 1
+Plugin Method:  3
+;o)
+]
+
+[endsect]
+
+
+
+[endsect]
