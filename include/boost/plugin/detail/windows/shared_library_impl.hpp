@@ -14,18 +14,18 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_APPLICATION_SHARED_LIBRARY_IMPL_HPP
-#define BOOST_APPLICATION_SHARED_LIBRARY_IMPL_HPP
+#ifndef BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
+#define BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
 
-#include <boost/application/config.hpp>
-#include <boost/application/shared_library_types.hpp>
-#include <boost/application/shared_library_load_mode.hpp>
+#include <boost/config.hpp>
+#include <boost/plugin/shared_library_types.hpp>
+#include <boost/plugin/shared_library_load_mode.hpp>
 
 #include <boost/noncopyable.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
 
-namespace boost { namespace application {
+namespace boost { namespace plugin {
 
 class shared_library_impl : noncopyable {
 public:
@@ -47,7 +47,7 @@ public:
         DWORD flags = static_cast<DWORD>(mode);
         handle_ = LoadLibraryExW(sh.c_str(), 0, flags);
         if (!handle_) {
-            ec = boost::application::last_error_code();
+            ec = boost::plugin::detail::last_error_code();
         }
     }
 
@@ -66,12 +66,8 @@ public:
         boost::swap(handle_, rhs.handle_);
     }
 
-    static character_types::string_type suffix() {
-#if defined(BOOST_APPLICATION_STD_WSTRING)
+    static library_path suffix() {
         return character_types::string_type(L".dll");
-#else
-        return character_types::string_type(".dll");
-#endif
     }
 
     void* symbol_addr(const symbol_type &sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
@@ -80,20 +76,25 @@ public:
         // There can be it and is correct, as in executed
         // units names of functions are stored in narrow characters.
 
-        if (handle_) {
-            return (void*) GetProcAddress(handle_, sb.data());
-        } else {
-            ec = boost::application::last_error_code();
+        if (!handle_) {
+            ec = bad_file_descriptor;
+            return NULL;
+        }
+         
+        // dlsym - obtain the address of a symbol from a dlopen object
+        void* symbol = dlsym(handle_, sb.data());
+        if (symbol == NULL) {
+            ec = boost::plugin::detail::last_error_code();
         }
 
-        return NULL;
+        return symbol;
     }
 
 private:
     HMODULE handle_;
 };
 
-}} // boost::application
+}} // boost::plugin
 
-#endif // BOOST_APPLICATION_SHARED_LIBRARY_IMPL_HPP
+#endif // BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
 

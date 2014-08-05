@@ -1,7 +1,8 @@
 // shared_library_mode.hpp ----------------------------------------------------//
 // -----------------------------------------------------------------------------
 
-// Copyright 2011-2013 Renato Tegon Forti
+// Copyright 2011-2013 Renato Tegon Forti.
+// Copyright 2014 Renato Tegon Forti, Antony Polukhin.
 
 // Distributed under the Boost Software License, Version 1.0.
 // See http://www.boost.org/LICENSE_1_0.txt
@@ -13,19 +14,18 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_APPLICATION_SHARED_LIBRARY_MODE_HPP
-#define BOOST_APPLICATION_SHARED_LIBRARY_MODE_HPP
+#ifndef BOOST_PLUGIN_SHARED_LIBRARY_MODE_HPP
+#define BOOST_PLUGIN_SHARED_LIBRARY_MODE_HPP
 
-#include <boost/application/config.hpp>
+#include <boost/config.hpp>
+#include <boost/predef/os.h>
 
 // MINGW NOTE
 //
 // in mingw we have some problems here, at this time we don't support shared_library for __MINGW32__
 // you can download port yourself from:  https://code.google.com/p/dlfcn-win32/downloads/list
 
-#if defined( BOOST_POSIX_API ) 
-#include <dlfcn.h>
-#elif defined( BOOST_WINDOWS_API ) 
+#if BOOST_OS_WINDOWS
 // workaround [
 
 #   ifndef DONT_RESOLVE_DLL_REFERENCES
@@ -50,8 +50,8 @@
 
 // -
       
-#   ifndef LOAD_LIBRARY_SEARCH_APPLICATION_DIR
-#      define LOAD_LIBRARY_SEARCH_APPLICATION_DIR 0x00000200
+#   ifndef LOAD_LIBRARY_SEARCH_PLUGIN_DIR
+#      define LOAD_LIBRARY_SEARCH_PLUGIN_DIR 0x00000200
 #   endif
 
 #   ifndef LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
@@ -70,9 +70,11 @@
 #      define LOAD_LIBRARY_SEARCH_USER_DIRS       0x00000400
 #   endif
 // ] end workaround
+#else
+#   include <dlfcn.h>
 #endif
 
-namespace boost { namespace application {
+namespace boost { namespace plugin {
 
    /*! \enum Modes of load library.
     *
@@ -117,20 +119,20 @@ namespace boost { namespace application {
     * If forced integrity checking is desired for the loaded file then
     * LOAD_LIBRARY_AS_IMAGE is recommended instead.
     *
-    * LOAD_LIBRARY_SEARCH_APPLICATION_DIR
-    * If this value is used, the application's installation directory is searched
+    * LOAD_LIBRARY_SEARCH_PLUGIN_DIR
+    * If this value is used, the plugin's installation directory is searched
     * for the DLL and its dependencies. Directories in the standard search path
     * are not searched.
     * This value cannot be combined with LOAD_WITH_ALTERED_SEARCH_PATH.
     *
     * LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
-    * This value is a combination of LOAD_LIBRARY_SEARCH_APPLICATION_DIR,
+    * This value is a combination of LOAD_LIBRARY_SEARCH_PLUGIN_DIR,
     * LOAD_LIBRARY_SEARCH_SYSTEM32, and LOAD_LIBRARY_SEARCH_USER_DIRS.
     *
     * Directories in the standard search path are not searched.
     * This value cannot be combined with LOAD_WITH_ALTERED_SEARCH_PATH.
     * This value represents the recommended maximum number of directories
-    * an application should include in its DLL search path.
+    * an plugin should include in its DLL search path.
     *
     * LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR
     * If this value is used, the directory that contains the DLL is temporarily
@@ -178,7 +180,7 @@ namespace boost { namespace application {
     * All necessary relocations shall be performed when the object is first
     * loaded. This may waste some processing if relocations are performed for
     * functions that are never referenced. This behavior may be useful for
-    * applications that need to know as soon as an object is loaded that all
+    * plugins that need to know as soon as an object is loaded that all
     * symbols referenced during execution are available.
     *
     * Any object loaded by dlopen() that requires relocations against global
@@ -206,7 +208,7 @@ namespace boost { namespace application {
     */
    enum shared_library_load_mode
    {
-#if defined( BOOST_WINDOWS_API ) 
+#if BOOST_OS_WINDOWS
       // windows
       load_library_default_mode               = 0,
       dont_resolve_dll_references             = DONT_RESOLVE_DLL_REFERENCES,         // 0x00000001
@@ -215,7 +217,7 @@ namespace boost { namespace application {
       load_library_as_datafile_exclusive      = LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE,  // 0x00000040
       load_library_as_image_resource          = LOAD_LIBRARY_AS_IMAGE_RESOURCE,      // 0x00000020
 
-      // About LOAD_LIBRARY_SEARCH_APPLICATION_DIR, 
+      // About LOAD_LIBRARY_SEARCH_PLUGIN_DIR, 
       //       LOAD_LIBRARY_SEARCH_DEFAULT_DIRS, 
       //       LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR,
       //       LOAD_LIBRARY_SEARCH_SYSTEM32 and
@@ -229,7 +231,7 @@ namespace boost { namespace application {
 
 #   ifndef _USING_V110_SDK71_
       // when user uses: Visual Studio 2012 - Windows XP (v110_xp), we need hide following enums :
-      load_library_search_application_dir     = LOAD_LIBRARY_SEARCH_APPLICATION_DIR, // 0x00000200
+      load_library_search_plugin_dir     = LOAD_LIBRARY_SEARCH_PLUGIN_DIR, // 0x00000200
       load_library_search_default_dirs        = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS,    // 0x00001000
       load_library_search_dll_load_dir        = LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR,    // 0x00000100
       load_library_search_system32            = LOAD_LIBRARY_SEARCH_SYSTEM32,        // 0x00000800
@@ -239,7 +241,7 @@ namespace boost { namespace application {
 
       load_with_altered_search_path           = LOAD_WITH_ALTERED_SEARCH_PATH        // 0x00000008
 
-#elif defined( BOOST_POSIX_API ) 
+#else
       // posix
       rtld_lazy   = RTLD_LAZY,   // 1
       rtld_now    = RTLD_NOW,    // 2
@@ -303,6 +305,6 @@ namespace boost { namespace application {
       return (left);
    }
 
-}} // boost::application
+}} // boost::plugin
 
-#endif // BOOST_APPLICATION_SHARED_LIBRARY_MODE_HPP
+#endif // BOOST_PLUGIN_SHARED_LIBRARY_MODE_HPP

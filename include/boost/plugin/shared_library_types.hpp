@@ -13,15 +13,13 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_APPLICATION_SHARED_LIBRARY_TYPES_HPP
-#define BOOST_APPLICATION_SHARED_LIBRARY_TYPES_HPP
+#ifndef BOOST_PLUGIN_SHARED_LIBRARY_TYPES_HPP
+#define BOOST_PLUGIN_SHARED_LIBRARY_TYPES_HPP
 
-#include <boost/application/config.hpp>
-#include <boost/application/base_type.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/utility/string_ref.hpp>
 
-namespace boost { namespace application {
+namespace boost { namespace plugin {
 
    /*!
     * \brief This is a path.
@@ -45,7 +43,7 @@ namespace boost { namespace application {
     */
    typedef boost::string_ref symbol_type;
 
-}} // boost::application
+}} // boost::plugin
 
-#endif // BOOST_APPLICATION_SHARED_LIBRARY_TYPES_HPP
+#endif // BOOST_PLUGIN_SHARED_LIBRARY_TYPES_HPP
 

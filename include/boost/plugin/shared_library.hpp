@@ -14,20 +14,23 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_APPLICATION_SHARED_LIBRARY_HPP
-#define BOOST_APPLICATION_SHARED_LIBRARY_HPP
+#ifndef BOOST_PLUGIN_SHARED_LIBRARY_HPP
+#define BOOST_PLUGIN_SHARED_LIBRARY_HPP
 
-#include <boost/application/config.hpp>
-#include <boost/application/shared_library_load_mode.hpp>
-#if defined( BOOST_WINDOWS_API )
-#include <boost/application/detail/windows/shared_library_impl.hpp>
-#elif defined( BOOST_POSIX_API )
-#include <boost/application/detail/posix/shared_library_impl.hpp>
+#include <boost/config.hpp>
+#include <boost/predef/os.h>
+
+#include <boost/plugin/shared_library_load_mode.hpp>
+#include <boost/plugin/detail/system_error.hpp>
+
+#if BOOST_OS_WINDOWS
+#   include <boost/plugin/detail/windows/shared_library_impl.hpp>
 #else
-#error "Sorry, no boost application are available for this platform."
+#   include <boost/plugin/detail/posix/shared_library_impl.hpp>
 #endif
 
-namespace boost { namespace application {
+
+namespace boost { namespace plugin {
 
 /*!
 * \brief This class can be used to load a
@@ -35,7 +38,7 @@ namespace boost { namespace application {
 *        as dynamic shared objects (DSO's) and invoke their exported
 *        symbols.
 *
-* Provides a means to extend your application using plugins way.
+* Provides a means to extend your plugin using plugins way.
 *
 */
 class shared_library: private shared_library_impl {
@@ -158,8 +161,7 @@ public:
 
         if (ec) {
             path_.clear();
-            BOOST_APPLICATION_THROW_LAST_SYSTEM_ERROR_USING_MY_EC(
-            "load() failed", ec);
+            boost::plugin::detail::report_error(ec, "load() failed");
         }
     }
 
@@ -212,8 +214,7 @@ public:
 
         if (ec) {
             path_.clear();
-            BOOST_APPLICATION_THROW_LAST_SYSTEM_ERROR_USING_MY_EC(
-            "load() failed", ec);
+            boost::plugin::detail::report_error(ec, "load() failed");
         }
     }
 
@@ -305,8 +306,7 @@ public:
         void* ret = base_t::symbol_addr(sb, ec);
 
         if (ec || !ret) {
-            BOOST_APPLICATION_THROW_LAST_SYSTEM_ERROR_USING_MY_EC(
-            "get() failed", ec);
+            boost::plugin::detail::report_error(ec, "get() failed");
         }
 
         return *reinterpret_cast<Result*>(ret);
@@ -334,7 +334,7 @@ public:
     * .dylib (mac)
     *
     */
-    static character_types::string_type suffix() {
+    static boost::filesystem::path suffix() {
         return base_t::suffix();
     }
 
@@ -376,7 +376,7 @@ inline void swap(shared_library& lhs, shared_library& rhs) BOOST_NOEXCEPT {
     lhs.swap(rhs);
 }
 
-}} // boost::application
+}} // boost::plugin
 
-#endif // BOOST_APPLICATION_SHARED_LIBRARY_HPP
+#endif // BOOST_PLUGIN_SHARED_LIBRARY_HPP
 

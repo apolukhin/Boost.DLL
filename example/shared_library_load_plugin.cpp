@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
     BOOST_ASSERT(argc >= 2);
     boost::filesystem::path shared_library_path = get_shared_lib(argv[1], L"plugin_library");
 
-    application::shared_library sl(shared_library_path);
+    plugin::shared_library sl(shared_library_path);
 
     if (!sl.search_symbol("create_my_plugin")) {
         return 2;

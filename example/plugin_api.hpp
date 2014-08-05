@@ -5,8 +5,8 @@
 
 // For more information, see http://www.boost.org
 
-#ifndef BOOST_APPLICATION_MY_PLUGIN_API_HPP
-#define BOOST_APPLICATION_MY_PLUGIN_API_HPP
+#ifndef BOOST_PLUGIN_MY_PLUGIN_API_HPP
+#define BOOST_PLUGIN_MY_PLUGIN_API_HPP
 
 //[plugapi
 class my_plugin_api
@@ -18,5 +18,5 @@ public:
 };
 //]
    
-#endif // BOOST_APPLICATION_MY_PLUGIN_API_HPP
+#endif // BOOST_PLUGIN_MY_PLUGIN_API_HPP
 

@@ -26,7 +26,7 @@ fs::path get_shared_lib(const fs::path& root, const std::wstring& filename_part)
 
 int test_main(int argc, char* argv[])
 {
-   using namespace boost::application;
+   using namespace boost::plugin;
 
    BOOST_CHECK(argc >= 2);
    boost::filesystem::path shared_library_path = get_shared_lib(argv[1], L"test_library");

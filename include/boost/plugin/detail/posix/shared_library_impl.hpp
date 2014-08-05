@@ -15,12 +15,12 @@
 //
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_APPLICATION_SHARED_LIBRARY_IMPL_HPP
-#define BOOST_APPLICATION_SHARED_LIBRARY_IMPL_HPP
+#ifndef BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
+#define BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
 
-#include <boost/application/config.hpp>
-#include <boost/application/shared_library_types.hpp>
-#include <boost/application/shared_library_load_mode.hpp>
+#include <boost/config.hpp>
+#include <boost/plugin/shared_library_types.hpp>
+#include <boost/plugin/shared_library_load_mode.hpp>
 
 #include <boost/noncopyable.hpp>
 #include <boost/swap.hpp>
@@ -37,7 +37,7 @@
 #include <sys/stat.h>
 #include <dlfcn.h>
 
-namespace boost { namespace application {
+namespace boost { namespace plugin {
 
 class shared_library_impl : noncopyable {
 public:
@@ -58,7 +58,7 @@ public:
 
         handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
         if (!handle_) {
-            ec = boost::application::last_error_code();
+            ec = boost::plugin::detail::last_error_code();
         }
     }
 
@@ -79,25 +79,28 @@ public:
         boost::swap(handle_, rhs.handle_);
     }
 
-    static character_types::string_type suffix() {
+    static library_path suffix() {
         // https://sourceforge.net/p/predef/wiki/OperatingSystems/
 #if defined(__APPLE__)
-        return character_types::string_type(".dylib");
+        return ".dylib";
 #else
-        return character_types::string_type(".so");
+        return ".so";
 #endif
     }
 
     void* symbol_addr(const symbol_type &sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
-        void* symbol = 0;
-
-        if (handle_) {
-            // dlsym - obtain the address of a symbol from a dlopen object
-            symbol = dlsym(handle_, sb.data());
+        if (!handle_) {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor, 
+                boost::system::generic_category()
+            );
+            return NULL;
         }
-
+         
+        // dlsym - obtain the address of a symbol from a dlopen object
+        void* symbol = dlsym(handle_, sb.data());
         if (symbol == NULL) {
-            ec = boost::application::last_error_code();
+            ec = boost::plugin::detail::last_error_code();
         }
 
         // If handle does not refer to a valid object opened by dlopen(),
@@ -112,7 +115,7 @@ private:
     void* handle_;
 };
 
-}} // boost::application
+}} // boost::plugin
 
-#endif // BOOST_APPLICATION_SHARED_LIBRARY_IMPL_HPP
+#endif // BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
 
