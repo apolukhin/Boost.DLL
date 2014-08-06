@@ -1,180 +1,35 @@
 [/
-    Copyright 2014 Renato Tegon Forti
+    Copyright 2014 Renato Tegon Forti, Antony Polukhin
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
 
 [section Tutorial]
 
-This tutorial will demonstrate how to use the "Boost.Application" to build the two types of application supported in the current version, thus it is divided into 2 parts, as follows.
+tutorial is provided to give you a idea, of how to use shared library class.
 
-*The first part shows how to build a "Common" application;
-*The second part show how to build a simple "Server" application.
+The first thing to do is define the plugin interface, this will be a abstract class that will be our plugin API, and we will have a cpp file that will hold a implementation of our plugin.
 
-[note
-The code presented here can be compiled on UNIX variants and Windows without modifications.
-]
+[import ../example/plugin_api.hpp]
+[plugapi]
 
-[tip 
-An more complex tutorial can be found at [@http://www.codeproject.com/Articles/756866/Build-a-Server-Application-using-Application-Libra Code Project]
-]
+[import ../example/plugin_library.cpp]
+[plugcpp]
 
+Now our application that will use our plugin.
 
-[section Common Application]
-Like name aready explan, this is a most usual type of aplication. Exemples of this kind of application are a command application (e.g. more, tail, ls), mail client application and so on. In general matter, this kind of application does not execute to a long period of time, like a server application are.
+[import ../example/shared_library_load_plugin.cpp]
+[callplugcpp]
 
-[h4 Header ]
-
-Boost.Application is a header-only library. It comes with a convenience header file which is the only one you need to include to make use of all library features:
-
-```
-#include <boost/application.hpp>
-```
-
-[h4 Functor Application Class ]
-
-After that, a functor class (that will hold user application code) need be created. 
-
-[import ../example/tutorial/myfunctor_stage1.hpp]
-[tutorials1]
-
-An important things here is 'context'. Context is your application 'aspect' pool and you will use it to retrieves application information and control your application.
-
-Refer to [@../html/boost_application/context.html 'Application Context'] to know more.
-
-[h4 Standard Main Function ]
-
-The standard "main" function that will instantiate our application ([*myapp]) looks like as:
-
-[import ../example/tutorial/main_stage1.cpp]
-[tutorialcpps1]
-
-This is the simplest application that we can have. 
-
-[h4 Action Loop and Wait For Termination Request ]
-
-The library provides 2 methods to wait execution of application:
-
-* Inspect the '[*status]' aspect state;
-* Using '[*wait_for_termination_request]' aspect.
-
-Here we will use the first version. 
-
-[import ../example/tutorial/myfunctor_stage2.hpp]
-[tutorials2]
-
-[note
-By default the signals '[*SIGINT]', '[*SIGTERM]' and '[*SIGABRT]' will change internal state os aspect '[*status]' of application from '[*application::status::running]' to '[*application::status::stoped]'.
-
-User can customize the default behaviour, refer to [@../html/boost_application/customization.html#boost_application.customization.customize_signal 'Customize Signals/Handlers']
-] 
-
-[h4 Handlers ]
-
-Handlers is the way that you can define a custom action to a event. 
-
-Here we will add a '[*stop]' handler to application. 
-
-[note Note that the way to 'fire' an event changes depending on the chosen application and operating system types. e.g.: The user can use 'kill -INT <PID>' on UNIX, send CTRL-C on Windows console, or press the link 'stop' on [@http://msdn.microsoft.com/en-us/library/windows/desktop/ms685150(v=vs.85).aspx SCM]
-]
-
-[import ../example/tutorial/myfunctor_stage3.hpp]
-[tutorials3]
-
-Now you need tie a 'stop' handler to 'termination_handler' aspect, we will use 'auto_handler' to do this:
-
-[import ../example/tutorial/main_stage2.cpp]
-[tutorialcpps2]
-
-[endsect]
-
-[section Server Application]
-Everything that has been seen so far, applies to the application server. But server application (mainly in windows side) provide other features. For sample on Windows Side we have pause and resume handlers and installation functionality.
-
-[h4 Instantiate a Server ]
-
-To transform the '[*common]' seen application in a '[*server]' you need only change the template application mode on main, like this:
-
-[import ../example/tutorial/main_stage3.cpp]
-[tutorialcpps3]
-
-Now if you compile on [@http://en.wikipedia.org/wiki/Windows_service Windows], a Service will be created, and on Unix Variants a background process/[@http://en.wikipedia.org/wiki/Daemon_(computing) Daemon] will be created.
-
-[important 
-
-In oder to use a Windows service, you have to install it. 
-Installation makes the SCM aware of the service and cause the SCM to add it to the list of services that appears in Services Console of Control Painel.
-
-Refer to setup example on 'example/setup' folder to know how to build a setup for Windows Service.
-
-After instalation you can see your service on SCM.
-
-[$scm.gif]
- 
-On POSIX system you need only execute your application.
-
-[$terminal.gif]
-
-]
-
-[h4 Optional Handlers (Windows) ]
-
-Now that you know the basis, we will do a simplest server and add some new handles to it.
-
-Let's start doing a simple server with simple log to file funcionality (If you desire you can change this code to use Boost.Log).
-
-[import ../example/tutorial/myfunctor_stage4.hpp]
-[tutorials4]
-
-And in cpp file:
-
-[import ../example/tutorial/main_stage4.cpp]
-[tutorialcpps4]
-
-Now, after start your service you will see "pause" on SCM.
-
-[$scm_pause.gif]
-
-Then if you start your application and pause and then resume, in log you will have some thing like this:
+The output:
 
 [pre
-Start Log...
-work_thread (1s)
-work_thread (2s)
-work_thread (3s)
-Pause my application...
-work_thread paused...(4s)
-work_thread paused...(5s)
-work_thread paused...(6s)
-work_thread paused...(7s)
-work_thread paused...(8s)
-work_thread paused...(9s)
-work_thread paused...(10s)
-Resume my application...
-work_thread (11s)
-work_thread (12s)
-work_thread (13s)
-Stoping my application...
-]
-
-[note
-By default, the log (log.txt) file is located in the same directory as the application binary.
-]
-
-[note
-On POSIX system you will see only 'Start Log... Stoping my application...'
-]
-
-[note
-Windows Service
-
-If you do not add '[*stop handler]' to your class, you will block the autonomy of the User to stop the service, see:
-
-[$scm_stop.gif]
-
+ubuntu@ip-10-248-38-104:./shared_library_load_plugin
+Plugin Version: 1
+Plugin Method:  3
+;o)
 ]
 
 [endsect]
 
-[endsect]
 

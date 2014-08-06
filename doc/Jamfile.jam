@@ -3,10 +3,6 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#using boostbook ;
-#using quickbook ;
-#using doxygen ;
-
 using quickbook ;
 using boostbook ;
 using doxygen ;
@@ -18,65 +14,41 @@ import xsltproc ;
 import notfile ;
 import path ;
 
-project boost/libs/application/doc ;
+project boost/libs/plugin/doc ;
 
 #
 # Common params for doxygen
 # 
 
 local doxygen_params =
-  <doxygen:param>PREDEFINED=BOOST_APPLICATINO_DOXYGEN
+  <doxygen:param>PREDEFINED=BOOST_PLUGIN_DOXYGEN
   <doxygen:param>HIDE_UNDOC_CLASSES=YES
   <doxygen:param>HIDE_UNDOC_MEMBERS=YES
 ;
 
 #
 # Ref Sessions Generation
-# 
-
-doxygen autodoc_core
+#
+doxygen autodoc_shared_library_core
 :
-   [ glob 
-      ../../../boost/application/aspect_map.hpp 
-      ../../../boost/application/context.hpp 
-      ../../../boost/application/handler.hpp 
-      ../../../boost/application/signal_binder.hpp 
-      ../../../boost/application/launch.hpp 
-   ]
-:
-   $(doxygen_params)
-   <xsl:param>"boost.doxygen.reftitle=Core Reference"
-;
-
-doxygen autodoc_modes
-:
-   [ glob 
-      ../../../boost/application/common_application.hpp 
-      ../../../boost/application/server_application.hpp 
-   ]
-:
-   $(doxygen_params)
-   <xsl:param>"boost.doxygen.reftitle=Application Modes Reference"
-;
-
-doxygen autodoc_shared_library
-:
-   [ glob 
-      ../../../boost/application/shared_library.hpp 
-      ../../../boost/application/shared_library_load_mode.hpp 
-   ]
+    [ glob 
+        ../../../boost/plugin/shared_library.hpp
+        ../../../boost/plugin/shared_library_load_mode.hpp
+        ../../../boost/plugin/alias.hpp
+    ]
 :
    $(doxygen_params)
    <xsl:param>"boost.doxygen.reftitle=Shared Library Reference"
 ;
 
-doxygen autodoc_aspects
-:
-   [ glob ../../../boost/application/aspects/*.hpp ]
-:
-   $(doxygen_params)
-   <xsl:param>"boost.doxygen.reftitle=Aspects Reference"
-;
+#doxygen autodoc_shared_library_refcountable
+#:
+#    [ ]
+#:
+#   $(doxygen_params)
+#   <xsl:param>"boost.doxygen.reftitle=Shared Library Refcountable Reference"
+#;
+
 
 #
 # Docs Generation
@@ -84,13 +56,11 @@ doxygen autodoc_aspects
 
 boostbook standalone
 :
-  application.qbk
+  plugin.qbk
 :
-  <dependency>autodoc_core
-  <dependency>autodoc_modes
-  <dependency>autodoc_shared_library
-  <dependency>autodoc_aspects
-  <xsl:param>boost.root=../../../..
+  <dependency>autodoc_shared_library_core
+  <xsl:param>boost.root=http://www.boost.org/doc/libs/1_55_0
+# <xsl:param>boost.root=../../../.
   <xml:param>html.stylesheet=../../../../doc/src/boostbook.css
 ;
 

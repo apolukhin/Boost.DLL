@@ -8,7 +8,8 @@ Library for comfortable work with DLL and DSO
 This is not yet an official Boost C++ library. It wasn't reviewed and can't be downloaded from www.boost.org. This beta is available to boost community to know real interest and get comments for refinement.The intention is to submit library to formal review, if community think that it is interesting!
 
 
-### Introduction
+### Docs
+[Documentation of Boost.Plugin](http://apolukhin.github.io/Boost.Plugin/index.html)
 
 
 ### Hello World (common application and plug-in system)
