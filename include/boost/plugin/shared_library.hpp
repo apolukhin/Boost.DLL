@@ -286,7 +286,7 @@ public:
     */
     bool search_symbol(const symbol_type &sb) const BOOST_NOEXCEPT {
         boost::system::error_code ec;
-        return !!base_t::symbol_addr(sb, ec) && !ec;
+        return is_loaded() && !!base_t::symbol_addr(sb, ec) && !ec;
     }
 
     /*!
@@ -309,8 +309,22 @@ public:
     template <typename Result>
     Result& get(const symbol_type &sb) const {
         boost::system::error_code ec;
-        void* ret = base_t::symbol_addr(sb, ec);
 
+        if (!is_loaded()) {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor,
+                boost::system::generic_category()
+            );
+
+            // report_error() calls dlsym
+            boost::throw_exception(
+                boost::system::system_error(
+                    ec, "get() failed (no library was loaded)"
+                )
+            );
+        }
+
+        void* ret = base_t::symbol_addr(sb, ec);
         if (ec || !ret) {
             boost::plugin::detail::report_error(ec, "get() failed");
         }

@@ -28,6 +28,13 @@
 namespace boost { namespace plugin {
 
 class shared_library_impl : noncopyable {
+    static inline boost::system::error_code last_error_code() BOOST_NOEXCEPT {
+        return boost::system::error_code(
+            boost::detail::winapi::GetLastError(),
+            boost::system::system_category()
+        );
+    }
+
 public:
     shared_library_impl() BOOST_NOEXCEPT
         : handle_(NULL)
@@ -47,7 +54,7 @@ public:
         DWORD flags = static_cast<DWORD>(mode);
         handle_ = LoadLibraryExW(sh.c_str(), 0, flags);
         if (!handle_) {
-            ec = boost::plugin::detail::last_error_code();
+            ec = last_error_code();
         }
     }
 
@@ -67,7 +74,7 @@ public:
     }
 
     static library_path suffix() {
-        return character_types::string_type(L".dll");
+        return L".dll";
     }
 
     void* symbol_addr(const symbol_type &sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
@@ -75,16 +82,9 @@ public:
         // at GetProcAddress there is no version for UNICODE.
         // There can be it and is correct, as in executed
         // units names of functions are stored in narrow characters.
-
-        if (!handle_) {
-            ec = bad_file_descriptor;
-            return NULL;
-        }
-         
-        // dlsym - obtain the address of a symbol from a dlopen object
-        void* symbol = dlsym(handle_, sb.data());
+        void* const symbol = GetProcAddress(handle_, sb.data());
         if (symbol == NULL) {
-            ec = boost::plugin::detail::last_error_code();
+            ec = last_error_code();
         }
 
         return symbol;
