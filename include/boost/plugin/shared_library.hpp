@@ -156,6 +156,7 @@ public:
     *
     */
     void load(const library_path &sl) {
+        path_ = sl;
         boost::system::error_code ec;
         base_t::load(sl, base_t::default_mode(), ec);
 
@@ -184,6 +185,8 @@ public:
     *
     */
     void load(const library_path &sl, boost::system::error_code &ec) {
+        path_ = sl;
+        ec.clear();
         base_t::load(sl, base_t::default_mode(), ec);
 
         if (ec) {
@@ -209,6 +212,7 @@ public:
     *
     */
     void load(const library_path &sl, shared_library_load_mode mode) {
+        path_ = sl;
         boost::system::error_code ec;
         base_t::load(sl, mode, ec);
 
@@ -239,6 +243,8 @@ public:
     *
     */
     void load(const library_path &sl, shared_library_load_mode mode, boost::system::error_code &ec) {
+        path_ = sl;
+        ec.clear();
         base_t::load(sl, mode, ec);
         
         if (ec) {
@@ -280,7 +286,7 @@ public:
     */
     bool search_symbol(const symbol_type &sb) const BOOST_NOEXCEPT {
         boost::system::error_code ec;
-        return !!base_t::symbol_addr(sb, ec) && !ec;
+        return is_loaded() && !!base_t::symbol_addr(sb, ec) && !ec;
     }
 
     /*!
@@ -303,8 +309,22 @@ public:
     template <typename Result>
     Result& get(const symbol_type &sb) const {
         boost::system::error_code ec;
-        void* ret = base_t::symbol_addr(sb, ec);
 
+        if (!is_loaded()) {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor,
+                boost::system::generic_category()
+            );
+
+            // report_error() calls dlsym
+            boost::throw_exception(
+                boost::system::system_error(
+                    ec, "get() failed (no library was loaded)"
+                )
+            );
+        }
+
+        void* ret = base_t::symbol_addr(sb, ec);
         if (ec || !ret) {
             boost::plugin::detail::report_error(ec, "get() failed");
         }
@@ -319,7 +339,7 @@ public:
     * \return the boost::filesystem::path path of module.
     *
     */
-    const boost::filesystem::path& get_path() const BOOST_NOEXCEPT {
+    const boost::filesystem::path& path() const BOOST_NOEXCEPT {
         return path_;
     }
 
@@ -356,7 +376,7 @@ public:
 *
 */
 inline bool operator==(const shared_library& lhs, const shared_library& rhs) BOOST_NOEXCEPT {
-    return lhs.get_path() == rhs.get_path();
+    return lhs.path() == rhs.path();
 }
 
 /*!
@@ -365,7 +385,7 @@ inline bool operator==(const shared_library& lhs, const shared_library& rhs) BOO
 *
 */
 inline bool operator<(const shared_library& lhs, const shared_library& rhs) BOOST_NOEXCEPT {
-    return lhs.get_path() < rhs.get_path();
+    return lhs.path() < rhs.path();
 }
 
 /*!

@@ -85,6 +85,7 @@ project
         [ run shared_library_load_test.cpp : $(TEST_DIR) ]
         [ run shared_library_search_symbol_test.cpp : $(TEST_DIR) ]
         [ run shared_library_get_symbol_test.cpp : $(TEST_DIR) ]
+        [ run shared_library_errors.cpp : $(TEST_DIR) : : <test-info>always_show_run_output  ]
         [ run ../example/shared_library_load_plugin.cpp : $(TEST_DIR) ]
     ;
 }

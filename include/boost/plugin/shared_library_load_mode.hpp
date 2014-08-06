@@ -26,50 +26,8 @@
 // you can download port yourself from:  https://code.google.com/p/dlfcn-win32/downloads/list
 
 #if BOOST_OS_WINDOWS
-// workaround [
-
-#   ifndef DONT_RESOLVE_DLL_REFERENCES
-#      define DONT_RESOLVE_DLL_REFERENCES 0x00000001
-#   endif
-
-#   ifndef LOAD_IGNORE_CODE_AUTHZ_LEVEL
-#      define LOAD_IGNORE_CODE_AUTHZ_LEVEL 0x00000010
-#   endif
-
-#   ifndef LOAD_LIBRARY_AS_DATAFILE
-#      define LOAD_LIBRARY_AS_DATAFILE 0x00000002
-#   endif
-
-#   ifndef LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE
-#      define LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE 0x00000040
-#   endif
-
-#   ifndef LOAD_LIBRARY_AS_IMAGE_RESOURCE
-#      define LOAD_LIBRARY_AS_IMAGE_RESOURCE 0x00000020
-#   endif
-
-// -
-      
-#   ifndef LOAD_LIBRARY_SEARCH_PLUGIN_DIR
-#      define LOAD_LIBRARY_SEARCH_PLUGIN_DIR 0x00000200
-#   endif
-
-#   ifndef LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
-#      define LOAD_LIBRARY_SEARCH_DEFAULT_DIRS    0x00001000
-#   endif
-
-#   ifndef LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR
-#      define LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR    0x00000100
-#   endif
-
-#   ifndef LOAD_LIBRARY_SEARCH_SYSTEM32
-#      define LOAD_LIBRARY_SEARCH_SYSTEM32        0x00000800
-#   endif
-
-#   ifndef LOAD_LIBRARY_SEARCH_USER_DIRS
-#      define LOAD_LIBRARY_SEARCH_USER_DIRS       0x00000400
-#   endif
-// ] end workaround
+//#include <boost/detail/winapi/dll.hpp>
+#include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
 #else
 #   include <dlfcn.h>
 #endif
@@ -211,11 +169,11 @@ namespace boost { namespace plugin {
 #if BOOST_OS_WINDOWS
       // windows
       load_library_default_mode               = 0,
-      dont_resolve_dll_references             = DONT_RESOLVE_DLL_REFERENCES,         // 0x00000001
-      load_ignore_code_authz_level            = LOAD_IGNORE_CODE_AUTHZ_LEVEL,        // 0x00000010
-      load_library_as_datafile                = LOAD_LIBRARY_AS_DATAFILE,            // 0x00000002
-      load_library_as_datafile_exclusive      = LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE,  // 0x00000040
-      load_library_as_image_resource          = LOAD_LIBRARY_AS_IMAGE_RESOURCE,      // 0x00000020
+      dont_resolve_dll_references             = boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
+      load_ignore_code_authz_level            = boost::detail::winapi::LOAD_IGNORE_CODE_AUTHZ_LEVEL_,
+      load_library_as_datafile                = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_,
+      load_library_as_datafile_exclusive      = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE_,
+      load_library_as_image_resource          = boost::detail::winapi::LOAD_LIBRARY_AS_IMAGE_RESOURCE_,
 
       // About LOAD_LIBRARY_SEARCH_PLUGIN_DIR, 
       //       LOAD_LIBRARY_SEARCH_DEFAULT_DIRS, 
@@ -231,15 +189,15 @@ namespace boost { namespace plugin {
 
 #   ifndef _USING_V110_SDK71_
       // when user uses: Visual Studio 2012 - Windows XP (v110_xp), we need hide following enums :
-      load_library_search_plugin_dir     = LOAD_LIBRARY_SEARCH_PLUGIN_DIR, // 0x00000200
-      load_library_search_default_dirs        = LOAD_LIBRARY_SEARCH_DEFAULT_DIRS,    // 0x00001000
-      load_library_search_dll_load_dir        = LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR,    // 0x00000100
-      load_library_search_system32            = LOAD_LIBRARY_SEARCH_SYSTEM32,        // 0x00000800
-      load_library_search_user_dirs           = LOAD_LIBRARY_SEARCH_USER_DIRS,       // 0x00000400
+      load_library_search_plugin_dir     = boost::detail::winapi::LOAD_LIBRARY_SEARCH_PLUGIN_DIR_,
+      load_library_search_default_dirs        = boost::detail::winapi::LOAD_LIBRARY_SEARCH_DEFAULT_DIRS_,
+      load_library_search_dll_load_dir        = boost::detail::winapi::LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR_,
+      load_library_search_system32            = boost::detail::winapi::LOAD_LIBRARY_SEARCH_SYSTEM32_,
+      load_library_search_user_dirs           = boost::detail::winapi::LOAD_LIBRARY_SEARCH_USER_DIRS_,
       // <-
 #   endif
 
-      load_with_altered_search_path           = LOAD_WITH_ALTERED_SEARCH_PATH        // 0x00000008
+      load_with_altered_search_path           = boost::detail::winapi::LOAD_WITH_ALTERED_SEARCH_PATH_
 
 #else
       // posix

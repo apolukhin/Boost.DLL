@@ -58,7 +58,10 @@ public:
 
         handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
         if (!handle_) {
-            ec = boost::plugin::detail::last_error_code();
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor,
+                boost::system::generic_category()
+            );
         }
     }
 
@@ -89,18 +92,13 @@ public:
     }
 
     void* symbol_addr(const symbol_type &sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
-        if (!handle_) {
+        // dlsym - obtain the address of a symbol from a dlopen object
+        void* const symbol = dlsym(handle_, sb.data());
+        if (symbol == NULL) {
             ec = boost::system::error_code(
-                boost::system::errc::bad_file_descriptor, 
+                boost::system::errc::invalid_seek,
                 boost::system::generic_category()
             );
-            return NULL;
-        }
-         
-        // dlsym - obtain the address of a symbol from a dlopen object
-        void* symbol = dlsym(handle_, sb.data());
-        if (symbol == NULL) {
-            ec = boost::plugin::detail::last_error_code();
         }
 
         // If handle does not refer to a valid object opened by dlopen(),
