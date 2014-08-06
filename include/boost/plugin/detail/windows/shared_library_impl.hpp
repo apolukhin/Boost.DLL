@@ -24,7 +24,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/detail/winapi/dll.hpp>
+#include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
 
 namespace boost { namespace plugin {
 

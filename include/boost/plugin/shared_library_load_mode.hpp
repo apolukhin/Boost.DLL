@@ -26,7 +26,8 @@
 // you can download port yourself from:  https://code.google.com/p/dlfcn-win32/downloads/list
 
 #if BOOST_OS_WINDOWS
-#include <boost/detail/winapi/dll.hpp>
+//#include <boost/detail/winapi/dll.hpp>
+#include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
 #else
 #   include <dlfcn.h>
 #endif

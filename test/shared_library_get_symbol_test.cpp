@@ -72,6 +72,7 @@ int test_main(int argc, char* argv[]) {
     BOOST_CHECK(inc(1) == 2);
     BOOST_CHECK(sl.get<int>("integer_g") == 10);
 
+    // Does not work on Windows
     boost::function<std::size_t(const std::vector<int>&)> sz 
         = sl.get<std::size_t(const std::vector<int>&)>("alias");
 
@@ -80,8 +81,7 @@ int test_main(int argc, char* argv[]) {
     std::vector<int> v(10);
     BOOST_CHECK(sz(v) == 10);
 
-    std::cout << "Before c++ variable\n";
-
+    // Does not work on Windows
     BOOST_CHECK(sl.get<std::size_t>("variable") == 42);
 
     return 0;
