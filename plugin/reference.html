@@ -1,0 +1,107 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Reference</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
+<link rel="prev" href="../boost_plugin/tutorial.html" title="Tutorial">
+<link rel="next" href="../BOOST_PLUGIN_ALIAS.html" title="Macro BOOST_PLUGIN_ALIAS">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../boost_plugin/tutorial.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../BOOST_PLUGIN_ALIAS.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="plugin.reference"></a><a class="link" href="reference.html" title="Reference">Reference</a>
+</h2></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="reference.html#shared_library_reference">Shared Library Reference</a></span></dt></dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="shared_library_reference"></a>Shared Library Reference</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference.html#header.boost.plugin.alias_hpp">Header &lt;boost/plugin/alias.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.plugin.shared_library_hpp">Header &lt;boost/plugin/shared_library.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.plugin.shared_library_load_mode_hpp">Header &lt;boost/plugin/shared_library_load_mode.hpp&gt;</a></span></dt>
+</dl></div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.plugin.alias_hpp"></a>Header &lt;<a href="../../../../../boost/plugin/alias.hpp" target="_top">boost/plugin/alias.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis">
+
+<a class="link" href="../BOOST_PLUGIN_ALIAS.html" title="Macro BOOST_PLUGIN_ALIAS">BOOST_PLUGIN_ALIAS</a>(Function, AliasName)</pre>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+  <span class="keyword">namespace</span> <span class="identifier">plugin</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> Result<span class="special">&gt;</span> 
+      <span class="identifier">Result</span> <span class="special">&amp;</span> <a name="boost.plugin.alias"></a><span class="identifier">alias</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lib<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">symbol_type</span> <span class="special">&amp;</span> symbol<span class="special">)</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.plugin.shared_library_hpp"></a>Header &lt;<a href="../../../../../boost/plugin/shared_library.hpp" target="_top">boost/plugin/shared_library.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+  <span class="keyword">namespace</span> <span class="identifier">plugin</span> <span class="special">{</span>
+    <span class="keyword">class</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a><span class="special">;</span>
+    <span class="keyword">bool</span> <a class="link" href="../boost/plugin/operator__.html" title="Function operator=="><span class="keyword">operator</span><span class="special">==</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">bool</span> <a class="link" href="../boost/plugin/operator_idp5268208.html" title="Function operator&lt;"><span class="keyword">operator</span><span class="special">&lt;</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="../boost/plugin/swap.html" title="Function swap"><span class="identifier">swap</span></a><span class="special">(</span><a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.plugin.shared_library_load_mode_hpp"></a>Header &lt;<a href="../../../../../boost/plugin/shared_library_load_mode.hpp" target="_top">boost/plugin/shared_library_load_mode.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+  <span class="keyword">namespace</span> <span class="identifier">plugin</span> <span class="special">{</span>
+
+    <span class="keyword">enum</span> <a name="boost.plugin.shared_library_load_mode"></a>shared_library_load_mode <span class="special">{</span> rtld_lazy = = RTLD_LAZY, 
+                                    rtld_now = = RTLD_NOW, 
+                                    rtld_global = = RTLD_GLOBAL, 
+                                    rtld_local = = RTLD_LOCAL <span class="special">}</span><span class="special">;</span>
+    <span class="identifier">shared_library_load_mode</span> 
+    <a class="link" href="../boost/plugin/operator_.html" title="Function operator&amp;"><span class="keyword">operator</span><span class="special">&amp;</span></a><span class="special">(</span><span class="identifier">shared_library_load_mode</span><span class="special">,</span> <span class="identifier">shared_library_load_mode</span><span class="special">)</span><span class="special">;</span>
+    <span class="identifier">shared_library_load_mode</span> 
+    <a name="boost.plugin.operator_idp5282400"></a><span class="keyword">operator</span><span class="special">|</span><span class="special">(</span><span class="identifier">shared_library_load_mode</span> left<span class="special">,</span> <span class="identifier">shared_library_load_mode</span> right<span class="special">)</span><span class="special">;</span>
+    <span class="identifier">shared_library_load_mode</span> 
+    <a name="boost.plugin.operator%5E"></a><span class="keyword">operator</span><span class="special">^</span><span class="special">(</span><span class="identifier">shared_library_load_mode</span> left<span class="special">,</span> <span class="identifier">shared_library_load_mode</span> right<span class="special">)</span><span class="special">;</span>
+    <span class="identifier">shared_library_load_mode</span> <a name="boost.plugin.operator~"></a><span class="keyword">operator</span><span class="special">~</span><span class="special">(</span><span class="identifier">shared_library_load_mode</span> left<span class="special">)</span><span class="special">;</span>
+    <span class="identifier">shared_library_load_mode</span> <span class="special">&amp;</span> 
+    <a name="boost.plugin.operator&amp;="></a><span class="keyword">operator</span><span class="special">&amp;=</span><span class="special">(</span><span class="identifier">shared_library_load_mode</span> <span class="special">&amp;</span> left<span class="special">,</span> 
+               <span class="identifier">shared_library_load_mode</span> right<span class="special">)</span><span class="special">;</span>
+    <span class="identifier">shared_library_load_mode</span> <span class="special">&amp;</span> 
+    <a name="boost.plugin.operator_=_idp5289776"></a><span class="keyword">operator</span><span class="special">|=</span><span class="special">(</span><span class="identifier">shared_library_load_mode</span> <span class="special">&amp;</span> left<span class="special">,</span> 
+               <span class="identifier">shared_library_load_mode</span> right<span class="special">)</span><span class="special">;</span>
+    <span class="identifier">shared_library_load_mode</span> <span class="special">&amp;</span> 
+    <a name="boost.plugin.operator%5E="></a><span class="keyword">operator</span><span class="special">^=</span><span class="special">(</span><span class="identifier">shared_library_load_mode</span> <span class="special">&amp;</span> left<span class="special">,</span> 
+               <span class="identifier">shared_library_load_mode</span> right<span class="special">)</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span></pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Renato Tegon Forti, Antony Polukhin<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../boost_plugin/tutorial.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../BOOST_PLUGIN_ALIAS.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

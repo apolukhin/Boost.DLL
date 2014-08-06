@@ -1,0 +1,154 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
+<title>Tutorial</title>
+<link rel="stylesheet" href="../../../../../doc/src/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
+<link rel="prev" href="introduction0.html" title="Getting started">
+<link rel="next" href="../plugin/reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="introduction0.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../plugin/reference.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_plugin.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
+</h2></div></div></div>
+<p>
+      tutorial is provided to give you a idea, of how to use shared library class.
+    </p>
+<p>
+      The first thing to do is define the plugin interface, this will be a abstract
+      class that will be our plugin API, and we will have a cpp file that will hold
+      a implementation of our plugin.
+    </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">my_plugin_api</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+   <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">my_plugin_api</span><span class="special">(){};</span>
+   <span class="keyword">virtual</span> <span class="keyword">float</span> <span class="identifier">version</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+   <span class="keyword">virtual</span> <span class="keyword">float</span> <span class="identifier">calculate</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+    </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#define</span> <span class="identifier">LIBRARY_API</span> <span class="identifier">BOOST_SYMBOL_EXPORT</span>
+
+<span class="preprocessor">#include</span> <span class="string">"plugin_api.hpp"</span>
+
+<span class="keyword">extern</span> <span class="string">"C"</span> <span class="identifier">LIBRARY_API</span> <span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">create_my_plugin</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
+<span class="keyword">extern</span> <span class="string">"C"</span> <span class="identifier">LIBRARY_API</span> <span class="keyword">void</span> <span class="identifier">delete_my_plugin</span><span class="special">(</span><span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">myplugin</span><span class="special">);</span>
+
+<span class="keyword">class</span> <span class="identifier">my_plugin_sum</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">my_plugin_api</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+   <span class="keyword">float</span> <span class="identifier">version</span><span class="special">()</span>
+   <span class="special">{</span>
+      <span class="keyword">return</span> <span class="number">1.0</span><span class="special">;</span>
+   <span class="special">};</span>
+
+   <span class="keyword">float</span> <span class="identifier">calculate</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">y</span><span class="special">)</span>
+   <span class="special">{</span>
+      <span class="keyword">return</span> <span class="identifier">x</span><span class="special">+</span><span class="identifier">y</span><span class="special">;</span>
+   <span class="special">};</span>
+
+   <span class="special">~</span><span class="identifier">my_plugin_sum</span><span class="special">()</span>
+   <span class="special">{</span>
+      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">";o)"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+   <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">create_my_plugin</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
+<span class="special">{</span>
+   <span class="identifier">my_plugin_api</span> <span class="special">*</span><span class="identifier">myplugin</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">my_plugin_sum</span><span class="special">();</span>
+   <span class="keyword">return</span> <span class="identifier">myplugin</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">delete_my_plugin</span><span class="special">(</span><span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">myplugin</span><span class="special">)</span>
+<span class="special">{</span>
+   <span class="keyword">delete</span> <span class="identifier">myplugin</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<p>
+      Now our application that will use our plugin.
+    </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">plugin</span><span class="special">/</span><span class="identifier">shared_library</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">"plugin_api.hpp"</span>
+
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="special">(</span><span class="identifier">pluginapi_create</span><span class="special">)</span> <span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
+<span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">pluginapi_delete</span><span class="special">)</span> <span class="special">(</span><span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">myplugin</span><span class="special">);</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">argv</span><span class="special">[])</span>
+<span class="special">{</span>
+    <span class="comment">// argv[1] must contain plugin path</span>
+    <span class="identifier">BOOST_ASSERT</span><span class="special">(</span><span class="identifier">argc</span> <span class="special">&gt;=</span> <span class="number">2</span><span class="special">);</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="identifier">shared_library_path</span> <span class="special">=</span> <span class="identifier">get_shared_lib</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">L</span><span class="string">"plugin_library"</span><span class="special">);</span>
+
+    <span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span> <span class="identifier">sl</span><span class="special">(</span><span class="identifier">shared_library_path</span><span class="special">);</span>
+
+    <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">sl</span><span class="special">.</span><span class="identifier">search_symbol</span><span class="special">(</span><span class="string">"create_my_plugin"</span><span class="special">))</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="number">2</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">plugin</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">sl</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">pluginapi_create</span><span class="special">&gt;(</span><span class="string">"create_my_plugin"</span><span class="special">))();</span>
+
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">plugin</span> <span class="special">==</span> <span class="identifier">NULL</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="number">3</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Plugin Version: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">-&gt;</span><span class="identifier">version</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Plugin Method:  "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">-&gt;</span><span class="identifier">calculate</span><span class="special">(</span><span class="number">1.5</span><span class="special">,</span> <span class="number">1.5</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="special">(</span><span class="identifier">sl</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">pluginapi_delete</span><span class="special">&gt;(</span><span class="string">"delete_my_plugin"</span><span class="special">))(</span><span class="identifier">plugin</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<p>
+      The output:
+    </p>
+<pre class="programlisting">ubuntu@ip-10-248-38-104:./shared_library_load_plugin
+Plugin Version: 1
+Plugin Method:  3
+;o)
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright &#169; 2014 Renato Tegon Forti, Antony Polukhin<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="introduction0.html"><img src="../../../../../doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../plugin/reference.html"><img src="../../../../../doc/src/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
