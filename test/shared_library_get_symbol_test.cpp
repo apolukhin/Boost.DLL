@@ -43,7 +43,7 @@ int test_main(int argc, char* argv[]) {
     boost::filesystem::path shared_library_path = get_shared_lib(argv[1], L"test_library");
     std::cout << "Library: " << shared_library_path;
 
-    shared_library sl(shared_library_path/"qweqwe");
+    shared_library sl(shared_library_path);
 
     BOOST_CHECK(sl.get<int>("integer_g") == 100);
 
