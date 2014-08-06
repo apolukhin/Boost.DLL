@@ -24,6 +24,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/detail/winapi/dll.hpp>
 
 namespace boost { namespace plugin {
 
@@ -51,8 +52,8 @@ public:
     void load(const library_path &sh, shared_library_load_mode mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
-        DWORD flags = static_cast<DWORD>(mode);
-        handle_ = LoadLibraryExW(sh.c_str(), 0, flags);
+        boost::detail::winapi::DWORD_ flags = static_cast<boost::detail::winapi::DWORD_>(mode);
+        handle_ = boost::detail::winapi::LoadLibraryExW(sh.c_str(), 0, flags);
         if (!handle_) {
             ec = last_error_code();
         }
@@ -64,7 +65,7 @@ public:
 
     void unload() BOOST_NOEXCEPT {
         if (handle_) {
-            FreeLibrary(handle_);
+            boost::detail::winapi::FreeLibrary(handle_);
             handle_ = 0;
         }
     }
@@ -82,7 +83,7 @@ public:
         // at GetProcAddress there is no version for UNICODE.
         // There can be it and is correct, as in executed
         // units names of functions are stored in narrow characters.
-        void* const symbol = GetProcAddress(handle_, sb.data());
+        void* const symbol = boost::detail::winapi::GetProcAddress(handle_, sb.data());
         if (symbol == NULL) {
             ec = last_error_code();
         }
@@ -91,7 +92,7 @@ public:
     }
 
 private:
-    HMODULE handle_;
+    boost::detail::winapi::HMODULE_ handle_;
 };
 
 }} // boost::plugin
