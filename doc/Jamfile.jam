@@ -25,58 +25,34 @@ project boost/libs/application/doc ;
 # 
 
 local doxygen_params =
-  <doxygen:param>PREDEFINED=BOOST_APPLICATINO_DOXYGEN
+  <doxygen:param>PREDEFINED=BOOST_PLUGIN_DOXYGEN
   <doxygen:param>HIDE_UNDOC_CLASSES=YES
   <doxygen:param>HIDE_UNDOC_MEMBERS=YES
 ;
 
 #
 # Ref Sessions Generation
-# 
-
-doxygen autodoc_core
+#
+doxygen autodoc_shared_library_core
 :
-   [ glob 
-      ../../../boost/application/aspect_map.hpp 
-      ../../../boost/application/context.hpp 
-      ../../../boost/application/handler.hpp 
-      ../../../boost/application/signal_binder.hpp 
-      ../../../boost/application/launch.hpp 
-   ]
-:
-   $(doxygen_params)
-   <xsl:param>"boost.doxygen.reftitle=Core Reference"
-;
-
-doxygen autodoc_modes
-:
-   [ glob 
-      ../../../boost/application/common_application.hpp 
-      ../../../boost/application/server_application.hpp 
-   ]
-:
-   $(doxygen_params)
-   <xsl:param>"boost.doxygen.reftitle=Application Modes Reference"
-;
-
-doxygen autodoc_shared_library
-:
-   [ glob 
-      ../../../boost/application/shared_library.hpp 
-      ../../../boost/application/shared_library_load_mode.hpp 
-   ]
+    [ glob 
+        ../../../boost/plugin/shared_library.hpp
+        ../../../boost/plugin/shared_library_load_mode.hpp
+        ../../../boost/plugin/alias.hpp
+    ]
 :
    $(doxygen_params)
    <xsl:param>"boost.doxygen.reftitle=Shared Library Reference"
 ;
 
-doxygen autodoc_aspects
+doxygen autodoc_shared_library_refcountable
 :
-   [ glob ../../../boost/application/aspects/*.hpp ]
+    [ ]
 :
    $(doxygen_params)
-   <xsl:param>"boost.doxygen.reftitle=Aspects Reference"
+   <xsl:param>"boost.doxygen.reftitle=Shared Library Refcountable Reference"
 ;
+
 
 #
 # Docs Generation
@@ -84,7 +60,7 @@ doxygen autodoc_aspects
 
 boostbook standalone
 :
-  application.qbk
+  plugin.qbk
 :
   <dependency>autodoc_core
   <dependency>autodoc_modes

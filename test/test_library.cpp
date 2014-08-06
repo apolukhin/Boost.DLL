@@ -8,6 +8,7 @@
 // For more information, see http://www.boost.org
 
 #include <boost/config.hpp>
+#include <boost/plugin/alias.hpp>
 #include <iostream>
 #include <vector>
 
@@ -24,17 +25,14 @@ namespace foo {
     std::size_t bar(const std::vector<int>& v) {
         return v.size();
     }
-}
 
-extern "C" LIBRARY_API void alias() {
-    reinterpret_cast<void (*)()>(foo::bar)();
-}
-
-
-namespace foo {
-    extern "C" std::size_t variable;
     std::size_t variable = 42;
 }
+
+
+BOOST_PLUGIN_ALIAS(foo::bar, foo_bar)
+BOOST_PLUGIN_ALIAS(foo::variable, foo_variable)
+
 
 int integer_g = 100;
 

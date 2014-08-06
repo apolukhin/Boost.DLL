@@ -8,6 +8,7 @@
 // For more information, see http://www.boost.org
 
 #include <boost/plugin/shared_library.hpp>
+#include <boost/plugin/alias.hpp>
 #include <boost/test/minimal.hpp>
 #include <boost/function.hpp>
 
@@ -72,17 +73,20 @@ int test_main(int argc, char* argv[]) {
     BOOST_CHECK(inc(1) == 2);
     BOOST_CHECK(sl.get<int>("integer_g") == 10);
 
-    // Does not work on Windows
-    boost::function<std::size_t(const std::vector<int>&)> sz 
-        = sl.get<std::size_t(const std::vector<int>&)>("alias");
 
-    std::cout << "Before alias call\n";
+    // Checking aliases
+    boost::function<std::size_t(const std::vector<int>&)> sz 
+        = alias<std::size_t(const std::vector<int>&)>(sl, "foo_bar");
 
     std::vector<int> v(10);
     BOOST_CHECK(sz(v) == 10);
+    BOOST_CHECK(alias<std::size_t>(sl, "foo_variable") == 42);
 
-    // Does not work on Windows
-    BOOST_CHECK(sl.get<std::size_t>("variable") == 42);
+
+    boost::function<std::size_t(const std::vector<int>&)> sz 
+        = sl.get<std::size_t(*)(const std::vector<int>&)>(sl, "foo_bar");
+    BOOST_CHECK(sz(v) == 10);
+    BOOST_CHECK(*sl.get<std::size_t*>(sl, "foo_variable") == 42);
 
     return 0;
 }
