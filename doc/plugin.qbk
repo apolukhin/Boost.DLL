@@ -23,6 +23,7 @@
 
 [section Reference]
 [xinclude autodoc_shared_library_core.xml]
+[xinclude autodoc_shared_library_refcountable.xml]
 [endsect]
 
 [include dependencies.qbk]

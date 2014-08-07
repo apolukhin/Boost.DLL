@@ -41,13 +41,15 @@ doxygen autodoc_shared_library_core
    <xsl:param>"boost.doxygen.reftitle=Shared Library Reference"
 ;
 
-#doxygen autodoc_shared_library_refcountable
-#:
-#    [ ]
-#:
-#   $(doxygen_params)
-#   <xsl:param>"boost.doxygen.reftitle=Shared Library Refcountable Reference"
-#;
+doxygen autodoc_shared_library_refcountable
+:
+    [ glob
+        ../../../boost/plugin/refcountable.hpp
+    ]
+:
+   $(doxygen_params)
+   <xsl:param>"boost.doxygen.reftitle=Shared Library Refcountable Reference"
+;
 
 
 #
@@ -59,6 +61,7 @@ boostbook standalone
   plugin.qbk
 :
   <dependency>autodoc_shared_library_core
+  <dependency>autodoc_shared_library_refcountable
   <xsl:param>boost.root=http://www.boost.org/doc/libs/1_55_0
 # <xsl:param>boost.root=../../../.
   <xml:param>html.stylesheet=../../../../doc/src/boostbook.css
