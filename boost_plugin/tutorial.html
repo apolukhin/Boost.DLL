@@ -36,10 +36,9 @@
     </p>
 <p>
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">my_plugin_api</span>
-<span class="special">{</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">my_plugin_api</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-   <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">my_plugin_api</span><span class="special">(){};</span>
+   <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">my_plugin_api</span><span class="special">()</span> <span class="special">{};</span>
    <span class="keyword">virtual</span> <span class="keyword">float</span> <span class="identifier">version</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
    <span class="keyword">virtual</span> <span class="keyword">float</span> <span class="identifier">calculate</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
@@ -48,44 +47,34 @@
     </p>
 <p>
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#define</span> <span class="identifier">LIBRARY_API</span> <span class="identifier">BOOST_SYMBOL_EXPORT</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="string">"plugin_api.hpp"</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">plugin</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
-<span class="preprocessor">#include</span> <span class="string">"plugin_api.hpp"</span>
+<span class="keyword">namespace</span> <span class="identifier">my_namespace</span> <span class="special">{</span>
 
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="identifier">LIBRARY_API</span> <span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">create_my_plugin</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="identifier">LIBRARY_API</span> <span class="keyword">void</span> <span class="identifier">delete_my_plugin</span><span class="special">(</span><span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">myplugin</span><span class="special">);</span>
-
-<span class="keyword">class</span> <span class="identifier">my_plugin_sum</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">my_plugin_api</span>
-<span class="special">{</span>
+<span class="keyword">class</span> <span class="identifier">my_plugin_sum</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">my_plugin_api</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
 
-   <span class="keyword">float</span> <span class="identifier">version</span><span class="special">()</span>
-   <span class="special">{</span>
-      <span class="keyword">return</span> <span class="number">1.0</span><span class="special">;</span>
-   <span class="special">};</span>
+    <span class="keyword">float</span> <span class="identifier">version</span><span class="special">()</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="number">1.0</span><span class="special">;</span>
+    <span class="special">}</span>
 
-   <span class="keyword">float</span> <span class="identifier">calculate</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">y</span><span class="special">)</span>
-   <span class="special">{</span>
-      <span class="keyword">return</span> <span class="identifier">x</span><span class="special">+</span><span class="identifier">y</span><span class="special">;</span>
-   <span class="special">};</span>
+    <span class="keyword">float</span> <span class="identifier">calculate</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">x</span> <span class="special">+</span> <span class="identifier">y</span><span class="special">;</span>
+    <span class="special">}</span>
 
-   <span class="special">~</span><span class="identifier">my_plugin_sum</span><span class="special">()</span>
-   <span class="special">{</span>
-      <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">";o)"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-   <span class="special">}</span>
+    <span class="special">~</span><span class="identifier">my_plugin_sum</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">";o)"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
 <span class="special">};</span>
 
-<span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">create_my_plugin</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span>
-<span class="special">{</span>
-   <span class="identifier">my_plugin_api</span> <span class="special">*</span><span class="identifier">myplugin</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">my_plugin_sum</span><span class="special">();</span>
-   <span class="keyword">return</span> <span class="identifier">myplugin</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;</span> <span class="identifier">create_my_plugin</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">my_plugin_sum</span><span class="special">&gt;();</span>
 <span class="special">}</span>
 
-<span class="keyword">void</span> <span class="identifier">delete_my_plugin</span><span class="special">(</span><span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">myplugin</span><span class="special">)</span>
-<span class="special">{</span>
-   <span class="keyword">delete</span> <span class="identifier">myplugin</span><span class="special">;</span>
-<span class="special">}</span>
+<span class="special">}</span> <span class="comment">// namespace my_namespace</span>
+
+<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">create_my_plugin</span><span class="special">,</span> <span class="identifier">create_plugin</span><span class="special">)</span>
 </pre>
 <p>
     </p>
@@ -94,37 +83,23 @@
     </p>
 <p>
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">plugin</span><span class="special">/</span><span class="identifier">shared_library</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">plugin</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="string">"plugin_api.hpp"</span>
 
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
 
-<span class="keyword">typedef</span> <span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="special">(</span><span class="identifier">pluginapi_create</span><span class="special">)</span> <span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
-<span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(</span><span class="identifier">pluginapi_delete</span><span class="special">)</span> <span class="special">(</span><span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">myplugin</span><span class="special">);</span>
-
-<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">argv</span><span class="special">[])</span>
-<span class="special">{</span>
-    <span class="comment">// argv[1] must contain plugin path</span>
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">argv</span><span class="special">[])</span> <span class="special">{</span>
+    <span class="comment">// argv[1] contains path to our plugin library </span>
     <span class="identifier">BOOST_ASSERT</span><span class="special">(</span><span class="identifier">argc</span> <span class="special">&gt;=</span> <span class="number">2</span><span class="special">);</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="identifier">shared_library_path</span> <span class="special">=</span> <span class="identifier">get_shared_lib</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">L</span><span class="string">"plugin_library"</span><span class="special">);</span>
 
-    <span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span> <span class="identifier">sl</span><span class="special">(</span><span class="identifier">shared_library_path</span><span class="special">);</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;</span> <span class="special">(</span><span class="identifier">pluginapi_create_t</span><span class="special">)();</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">pluginapi_create_t</span><span class="special">&gt;</span> <span class="identifier">creator</span>
+        <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_function_alias</span><span class="special">&lt;</span><span class="identifier">pluginapi_create_t</span><span class="special">&gt;(</span><span class="identifier">shared_library_path</span><span class="special">,</span> <span class="string">"create_plugin"</span><span class="special">);</span>
 
-    <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">sl</span><span class="special">.</span><span class="identifier">search_symbol</span><span class="special">(</span><span class="string">"create_my_plugin"</span><span class="special">))</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="number">2</span><span class="special">;</span>
-    <span class="special">}</span>
-
-    <span class="identifier">my_plugin_api</span><span class="special">*</span> <span class="identifier">plugin</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">sl</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">pluginapi_create</span><span class="special">&gt;(</span><span class="string">"create_my_plugin"</span><span class="special">))();</span>
-
-    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">plugin</span> <span class="special">==</span> <span class="identifier">NULL</span><span class="special">)</span> <span class="special">{</span>
-        <span class="keyword">return</span> <span class="number">3</span><span class="special">;</span>
-    <span class="special">}</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;</span> <span class="identifier">plugin</span> <span class="special">=</span> <span class="identifier">creator</span><span class="special">();</span>
 
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Plugin Version: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">-&gt;</span><span class="identifier">version</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Plugin Method:  "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">-&gt;</span><span class="identifier">calculate</span><span class="special">(</span><span class="number">1.5</span><span class="special">,</span> <span class="number">1.5</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
-
-    <span class="special">(</span><span class="identifier">sl</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">pluginapi_delete</span><span class="special">&gt;(</span><span class="string">"delete_my_plugin"</span><span class="special">))(</span><span class="identifier">plugin</span><span class="special">);</span>
-    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -132,8 +107,7 @@
 <p>
       The output:
     </p>
-<pre class="programlisting">ubuntu@ip-10-248-38-104:./shared_library_load_plugin
-Plugin Version: 1
+<pre class="programlisting">Plugin Version: 1
 Plugin Method:  3
 ;o)
 </pre>

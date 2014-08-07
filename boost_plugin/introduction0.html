@@ -27,19 +27,146 @@
 <a name="boost_plugin.introduction0"></a><a class="link" href="introduction0.html" title="Getting started">Getting started</a>
 </h2></div></div></div>
 <p>
-      <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span></code> does almost al lthe work.
-      If you whant to load a library, just cunstruct that class with a path to the
-      library as a parameter:
+      To start with the library you only need to include <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">plugin</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+      header. After that you are free to import and export functions and variables:
+    </p>
+<div class="informaltable">
+<a name="boost_plugin.introduction.starting"></a><table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                In plugin (DLL/DSL) sources:
+              </p>
+            </th>
+<th>
+              <p>
+                In code that uses plugin:
+              </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// pure 'C' method</span>
+<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">int</span> <span class="identifier">BOOST_SYMBOL_EXPORT</span> <span class="identifier">c_func_name</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;</span> <span class="identifier">c_func</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;(</span>
+    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_func_name"</span>
+<span class="special">);</span>
+</pre>
+<p>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// POD 'C' variable in global namespace</span>
+<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">int</span> <span class="identifier">BOOST_SYMBOL_EXPORT</span> <span class="identifier">c_variable_name</span><span class="special">;</span>
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">c_var</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_variable</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span>
+    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_variable_name"</span>
+<span class="special">);</span>
+</pre>
+<p>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// 'C++' function</span>
+<span class="keyword">namespace</span> <span class="identifier">my_namespace</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">cpp_function_name</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">param</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">cpp_function_name</span><span class="special">,</span> <span class="identifier">cpp_function_alias_name</span><span class="special">)</span>
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">cpp_func_type</span><span class="special">)(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;);</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">cpp_func_type</span><span class="special">&gt;</span> <span class="identifier">cpp_func</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_function_alias</span><span class="special">&lt;</span><span class="identifier">cpp_func_type</span><span class="special">&gt;(</span>
+    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"cpp_function_alias_name"</span>
+<span class="special">);</span>
+</pre>
+<p>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// 'C++' variable</span>
+<span class="keyword">namespace</span> <span class="identifier">my_namespace</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">cpp_variable_name</span> <span class="special">=</span> <span class="string">"some value"</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">cpp_variable_name</span><span class="special">,</span> <span class="identifier">cpp_variable_alias_name</span><span class="special">)</span>
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="identifier">cpp_var</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_variable_alias</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;(</span>
+    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"cpp_variable_alias_name"</span>
+<span class="special">);</span>
+</pre>
+<p>
+              </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+      In all the cases above it is safe to use imported variable or function because
+      the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span></code> or <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span></code>
+      internaly hold a reference to shread library.
+    </p>
+<p>
+      If you need a low level api <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span></code>
+      and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">alias</span></code> will suit you. If you want to load
+      a library, just cunstruct that class with a path to the library as a parameter:
 </p>
 <pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span> <span class="identifier">lib</span><span class="special">(</span><span class="string">"/test/boost/application/libtest_library.so"</span><span class="special">);</span>
 </pre>
 <p>
-      Now you can easily export symbols from that library using the <code class="computeroutput"><span class="identifier">get</span></code> member function:
+      Now you can easily import symbols from that library using the <code class="computeroutput"><span class="identifier">get</span></code> member function:
 </p>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">plugin_constant</span> <span class="special">=</span> <span class="identifier">lib</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">int</span><span class="special">&gt;(</span><span class="string">"integer_variable"</span><span class="special">);</span>
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">lib</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;(</span><span class="string">"function_returning_int"</span><span class="special">);</span>
 </pre>
 <p>
+      In case of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span></code> it is safe to use imported
+      symbols only until instance <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span></code>
+      is not destroyed.
     </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
