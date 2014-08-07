@@ -6,16 +6,34 @@
 
 [section:introduction Getting started]
 
-`boost::plugin::shared_library` does almost al lthe work. If you whant to load a library,
+To start with the library you only need to include `<boost/plugin.hpp>` header. After that you are free to import and export functions and variables:
+
+
+[import ../example/getting_started.cpp]
+[import ../example/getting_started_library.cpp]
+
+[table:starting
+    [[ In plugin (DLL/DSL) sources: ]           [ In code that uses plugin: ]]
+    [[ [getting_started_exports_c_function] ]   [ [getting_started_imports_c_function] ]]
+    [[ [getting_started_exports_c_variable] ]   [ [getting_started_imports_c_variable] ]]
+    [[ [getting_started_exports_cpp_function] ] [ [getting_started_imports_cpp_function] ]]
+    [[ [getting_started_exports_cpp_variable] ] [ [getting_started_imports_cpp_variable] ]]
+]
+
+In all the cases above it is safe to use imported variable or function because the `boost::function` or `boost::shared_ptr` internaly hold
+a reference to shread library.
+
+If you need a low level api `boost::plugin::shared_library` and `boost::plugin::alias` will suit you. If you want to load a library,
 just cunstruct that class with a path to the library as a parameter:
 ```
 boost::plugin::shared_library lib("/test/boost/application/libtest_library.so");
 
 ```
-Now you can easily export symbols from that library using the `get` member function:
+Now you can easily import symbols from that library using the `get` member function:
 ```
 int plugin_constant = lib.get<const int>("integer_variable");
 boost::function<int()> f = lib.get<int()>("function_returning_int");
 ```
+In case of `boost::plugin::shared_library` it is safe to use imported symbols only until instance `boost::plugin::shared_library` is not destroyed.
 
 [endsect]

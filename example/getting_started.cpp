@@ -1,0 +1,82 @@
+// Copyright 2011-2012 Renato Tegon Forti.
+// Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+// For more information, see http://www.boost.org
+
+#include <boost/test/minimal.hpp>
+#include <boost/plugin.hpp>
+#include <string>
+
+#include <boost/filesystem.hpp>
+namespace fs = ::boost::filesystem;
+fs::path get_shared_lib(const fs::path& root, const std::wstring& filename_part) {  
+    fs::directory_iterator it(root);
+    fs::directory_iterator endit;
+
+    while (it != endit) {
+        if (fs::is_regular_file(*it) && it->path().filename().wstring().find(filename_part) != std::wstring::npos) {
+            return *it;
+        }
+        ++it;
+    }
+
+    throw std::runtime_error("Failed to find library");
+}
+
+// Unit Tests
+int test_main(int argc, char* argv[]) {
+    using namespace boost::plugin;
+
+    BOOST_CHECK(argc >= 2);
+
+    boost::filesystem::path path_to_shared_library = get_shared_lib(argv[1], L"getting_started_library");
+    
+    //[getting_started_imports_c_function
+    boost::function<int(int)> c_func = boost::plugin::shared_function<int(int)>(
+        path_to_shared_library, "c_func_name"
+    );
+    //]
+
+    int c_func_res = c_func(1); // calling the function
+    BOOST_CHECK(c_func_res == 2);
+
+
+    //[getting_started_imports_c_variable
+    boost::shared_ptr<int> c_var = boost::plugin::shared_variable<int>(
+        path_to_shared_library, "c_variable_name"
+    );
+    //]
+
+    int c_var_old_contents = *c_var; // using the variable
+    *c_var = 100;
+    BOOST_CHECK(c_var_old_contents == 1);
+
+
+    //[getting_started_imports_cpp_function
+    typedef std::string(cpp_func_type)(const std::string&);
+    boost::function<cpp_func_type> cpp_func = boost::plugin::shared_function_alias<cpp_func_type>(
+        path_to_shared_library, "cpp_function_alias_name"
+    );
+    //]
+
+    std::string cpp_func_res = cpp_func(std::string("In importer.")); // calling the function
+    BOOST_CHECK(cpp_func_res == "In importer. Hello from lib!");
+
+    //[getting_started_imports_cpp_variable    
+    boost::shared_ptr<std::string> cpp_var = boost::plugin::shared_variable_alias<std::string>(
+        path_to_shared_library, "cpp_variable_alias_name"
+    );
+    //]
+
+    std::string cpp_var_old_contents = *cpp_var; // using the variable
+    *cpp_var = "New value";
+    BOOST_CHECK(cpp_var_old_contents == "some value");
+    BOOST_CHECK(*cpp_var == "New value");
+
+    return 0;
+}
+

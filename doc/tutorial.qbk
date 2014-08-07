@@ -24,7 +24,6 @@ Now our application that will use our plugin.
 The output:
 
 [pre
-ubuntu@ip-10-248-38-104:./shared_library_load_plugin
 Plugin Version: 1
 Plugin Method:  3
 ;o)
