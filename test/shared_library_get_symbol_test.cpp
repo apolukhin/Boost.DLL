@@ -68,8 +68,12 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
 
 
     {
-        boost::function<do_share_t> f
-            = shared_function_alias<do_share_t>(shared_library_path, "do_share");
+        boost::function<do_share_t> f;
+
+        {
+            boost::function<do_share_t> f2 = shared_function_alias<do_share_t>(shared_library_path, "do_share");
+            f = f2;
+        }
 
         std::vector<int> v1(1, 1), v2(2, 2), v3(3, 3), v4(4, 4), v5(1000, 5);
         boost::shared_ptr<do_share_res_t> res = f(v1, v2, v3, &v4, &v5);
@@ -86,6 +90,32 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
         BOOST_CHECK(v5.back() == 9990);
     }
 
+    {
+        boost::shared_ptr<int> i = shared_variable<int>(shared_library_path, "integer_g");
+        BOOST_CHECK(*i == 100);
+
+        boost::shared_ptr<int> i2;
+        i.swap(i2);
+        BOOST_CHECK(*i2 == 100);
+    }
+
+    {
+        boost::shared_ptr<const int> i = shared_variable<const int>(shared_library_path, "const_integer_g");
+        BOOST_CHECK(*i == 777);
+
+        boost::shared_ptr<const int> i2 = i;
+        i.reset();
+        BOOST_CHECK(*i2 == 777);
+    }
+
+    {
+        boost::shared_ptr<std::string> s = shared_variable_alias<std::string>(shared_library_path, "info");
+        BOOST_CHECK(*s == "I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
+
+        boost::shared_ptr<std::string> s2;
+        s.swap(s2);
+        BOOST_CHECK(*s2 == "I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
+    }
 }
 
 

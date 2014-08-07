@@ -63,9 +63,10 @@ project
       ;
 	
    # our example plugin lib
-   lib plugin_library : plugin_library.cpp ; 
+   lib plugin_library : plugin_library.cpp ;
+   lib getting_started_library : getting_started_library.cpp ;
    install install-bin 
-      : plugin_library : 
+      : plugin_library getting_started_library :
       <target-os>windows:<location>"C:/test/boost/application" 
       <target-os>linux:<location>/test/boost/application ; 
 	  
@@ -76,3 +77,7 @@ exe shared_library_load_plugin
    : shared_library_load_plugin.cpp
    ;
 
+
+exe getting_started  
+   : getting_started.cpp
+   ;

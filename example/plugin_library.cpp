@@ -6,47 +6,38 @@
 // For more information, see http://www.boost.org
 
 #include <iostream>
+#include <boost/make_shared.hpp>
 
 //[plugcpp
-
-#include <boost/config.hpp>
-#define LIBRARY_API BOOST_SYMBOL_EXPORT
    
 #include "plugin_api.hpp"
+#include <boost/plugin.hpp>
 
-extern "C" LIBRARY_API my_plugin_api* create_my_plugin(void);
-extern "C" LIBRARY_API void delete_my_plugin(my_plugin_api* myplugin);
+namespace my_namespace {
 
-class my_plugin_sum : public my_plugin_api
-{
+class my_plugin_sum : public my_plugin_api {
 public:
 
-   float version() 
-   { 
-      return 1.0;  
-   };
+    float version() {
+        return 1.0;
+    }
 
-   float calculate(float x, float y) 
-   { 
-      return x+y; 
-   };
+    float calculate(float x, float y) {
+        return x + y;
+    }
    
-   ~my_plugin_sum()
-   {
-      std::cout << ";o)" << std::endl;
-   }
+    ~my_plugin_sum() {
+        std::cout << ";o)" << std::endl;
+    }
 };
 
-my_plugin_api* create_my_plugin(void)
-{
-   my_plugin_api *myplugin = new my_plugin_sum();
-   return myplugin;
+boost::shared_ptr<my_plugin_api> create_my_plugin() {
+    return boost::make_shared<my_namespace::my_plugin_sum>();
 }
 
-void delete_my_plugin(my_plugin_api* myplugin)
-{
-   delete myplugin;
-}
+} // namespace my_namespace
+
+BOOST_PLUGIN_ALIAS(my_namespace::create_my_plugin, create_plugin)
 //]
 
 
