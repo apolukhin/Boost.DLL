@@ -52,12 +52,15 @@ namespace namespace1 { namespace namespace2 { namespace namespace3 {
         v5->back() = 9990;
         return boost::make_shared<do_share_res_t>(v1, v2, v3, v4, v5);
     }
+
+    std::string info("I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
 }}}
 
 
 BOOST_PLUGIN_ALIAS(foo::bar, foo_bar)
 BOOST_PLUGIN_ALIAS(foo::variable, foo_variable)
 BOOST_PLUGIN_ALIAS(namespace1::namespace2::namespace3::do_share, do_share);
+BOOST_PLUGIN_ALIAS(namespace1::namespace2::namespace3::info, info);
 
 
 int integer_g = 100;
