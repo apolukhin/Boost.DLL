@@ -35,6 +35,7 @@
 <colgroup>
 <col>
 <col>
+<col>
 </colgroup>
 <thead><tr>
 <th>
@@ -45,6 +46,11 @@
 <th>
               <p>
                 In code that uses plugin:
+              </p>
+            </th>
+<th>
+              <p>
+                Function description:
               </p>
             </th>
 </tr></thead>
@@ -62,11 +68,18 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;</span> <span class="identifier">c_func</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;(</span>
-    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_func_name"</span>
-<span class="special">);</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;</span> <span class="identifier">c_func</span>
+    <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;(</span>
+        <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_func_name"</span>
+    <span class="special">);</span>
 </pre>
 <p>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><a class="link" href="../plugin/reference.html#boost.plugin.shared_function_idp5459552">shared_function
+                </a></code>
               </p>
             </td>
 </tr>
@@ -83,11 +96,18 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">c_var</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_variable</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span>
-    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_variable_name"</span>
-<span class="special">);</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">c_var</span>
+    <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_variable</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span>
+        <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_variable_name"</span>
+    <span class="special">);</span>
 </pre>
 <p>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><a class="link" href="../plugin/reference.html#boost.plugin.shared_variable_idp5471728">shared_variable
+                </a></code>
               </p>
             </td>
 </tr>
@@ -100,7 +120,9 @@
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">cpp_function_name</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">param</span><span class="special">);</span>
 <span class="special">}</span>
 
-<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">cpp_function_name</span><span class="special">,</span> <span class="identifier">cpp_function_alias_name</span><span class="special">)</span>
+<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span>
+    <span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">cpp_function_name</span><span class="special">,</span> <span class="identifier">cpp_function_alias_name</span>
+<span class="special">)</span>
 </pre>
 <p>
               </p>
@@ -109,11 +131,18 @@
               <p>
 </p>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">cpp_func_type</span><span class="special">)(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;);</span>
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">cpp_func_type</span><span class="special">&gt;</span> <span class="identifier">cpp_func</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_function_alias</span><span class="special">&lt;</span><span class="identifier">cpp_func_type</span><span class="special">&gt;(</span>
-    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"cpp_function_alias_name"</span>
-<span class="special">);</span>
+
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">cpp_func_type</span><span class="special">&gt;</span> <span class="identifier">cpp_func</span>
+    <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_function_alias</span><span class="special">&lt;</span><span class="identifier">cpp_func_type</span><span class="special">&gt;(</span>
+        <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"cpp_function_alias_name"</span>
+    <span class="special">);</span>
 </pre>
 <p>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><a class="link" href="../plugin/reference.html#boost.plugin.shared_function_idp5465568">shared_function_alias</a></code>
               </p>
             </td>
 </tr>
@@ -126,7 +155,9 @@
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">cpp_variable_name</span> <span class="special">=</span> <span class="string">"some value"</span><span class="special">;</span>
 <span class="special">}</span>
 
-<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">cpp_variable_name</span><span class="special">,</span> <span class="identifier">cpp_variable_alias_name</span><span class="special">)</span>
+<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span>
+    <span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">cpp_variable_name</span><span class="special">,</span> <span class="identifier">cpp_variable_alias_name</span>
+<span class="special">)</span>
 </pre>
 <p>
               </p>
@@ -134,11 +165,17 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="identifier">cpp_var</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_variable_alias</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;(</span>
-    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"cpp_variable_alias_name"</span>
-<span class="special">);</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="identifier">cpp_var</span>
+    <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_variable_alias</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;(</span>
+        <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"cpp_variable_alias_name"</span>
+    <span class="special">);</span>
 </pre>
 <p>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><a class="link" href="../plugin/reference.html#boost.plugin.shared_variable_idp5477888">shared_variable_alias</a></code>
               </p>
             </td>
 </tr>
@@ -151,9 +188,10 @@
       internaly hold a reference to shread library.
     </p>
 <p>
-      If you need a low level api <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span></code>
-      and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">alias</span></code> will suit you. If you want to load
-      a library, just cunstruct that class with a path to the library as a parameter:
+      If you need a low level api <code class="computeroutput"><a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">boost::plugin::shared_library</a></code>
+      and <code class="computeroutput"><a class="link" href="../plugin/reference.html#boost.plugin.alias">boost::plugin::alias</a></code>
+      will suit you. If you want to load a library, just cunstruct that class with
+      a path to the library as a parameter:
 </p>
 <pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span> <span class="identifier">lib</span><span class="special">(</span><span class="string">"/test/boost/application/libtest_library.so"</span><span class="special">);</span>
 </pre>

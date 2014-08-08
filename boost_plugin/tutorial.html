@@ -26,37 +26,60 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_plugin.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
 </h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#boost_plugin.tutorial.plugin_basics">Plugin basics</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_plugin.tutorial.factory_method_in_plugin">Factory
+      method in plugin</a></span></dt>
+</dl></div>
 <p>
-      tutorial is provided to give you a idea, of how to use shared library class.
+      Tutorial is provided to give you an idea of how to create and use plugins.
     </p>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_plugin.tutorial.plugin_basics"></a><a class="link" href="tutorial.html#boost_plugin.tutorial.plugin_basics" title="Plugin basics">Plugin basics</a>
+</h3></div></div></div>
 <p>
-      The first thing to do is define the plugin interface, this will be a abstract
-      class that will be our plugin API, and we will have a cpp file that will hold
-      a implementation of our plugin.
-    </p>
+        The first thing to do when creating your own plugins is define the plugin
+        interface. There is an example of an abstract class that will be our plugin
+        API:
+      </p>
 <p>
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">my_plugin_api</span> <span class="special">{</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
+
+<span class="keyword">class</span> <span class="identifier">my_plugin_api</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">my_plugin_api</span><span class="special">()</span> <span class="special">{};</span>
-   <span class="keyword">virtual</span> <span class="keyword">float</span> <span class="identifier">version</span><span class="special">()</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+   <span class="keyword">virtual</span> <span class="keyword">float</span> <span class="identifier">version</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+   <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">name</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
    <span class="keyword">virtual</span> <span class="keyword">float</span> <span class="identifier">calculate</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <p>
-    </p>
+      </p>
+<p>
+        Now let's make a DLL/DSO library that will holds implementation of plugin
+        interface and exports it using the <code class="computeroutput"><a class="link" href="../BOOST_PLUGIN_ALIAS.html" title="Macro BOOST_PLUGIN_ALIAS">BOOST_PLUGIN_ALIAS</a></code>:
+      </p>
 <p>
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="string">"plugin_api.hpp"</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="string">"../tutorial_common/plugin_api.hpp"</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">plugin</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">namespace</span> <span class="identifier">my_namespace</span> <span class="special">{</span>
 
 <span class="keyword">class</span> <span class="identifier">my_plugin_sum</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">my_plugin_api</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">my_plugin_sum</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Constructing my_plugin_sum"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
 
-    <span class="keyword">float</span> <span class="identifier">version</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">float</span> <span class="identifier">version</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
         <span class="keyword">return</span> <span class="number">1.0</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">name</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="string">"sum"</span><span class="special">;</span>
     <span class="special">}</span>
 
     <span class="keyword">float</span> <span class="identifier">calculate</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">{</span>
@@ -64,33 +87,117 @@
     <span class="special">}</span>
 
     <span class="special">~</span><span class="identifier">my_plugin_sum</span><span class="special">()</span> <span class="special">{</span>
-        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">";o)"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Destructing my_plugin_sum ;o)"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="special">}</span>
 <span class="special">};</span>
 
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;</span> <span class="identifier">create_my_plugin</span><span class="special">()</span> <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">my_plugin_sum</span><span class="special">&gt;();</span>
+<span class="identifier">my_plugin_sum</span> <span class="identifier">plugin</span><span class="special">;</span>
+
+<span class="special">}</span> <span class="comment">// namespace my_namespace</span>
+
+<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">,</span> <span class="identifier">plugin</span><span class="special">)</span>
+</pre>
+<p>
+      </p>
+<p>
+        Simple application that loads plugin using the <code class="computeroutput"><a class="link" href="../plugin/reference.html#boost.plugin.shared_variable_idp5477888">boost::plugin::shared_variable_alias</a></code>:
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">plugin</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">"../tutorial_common/plugin_api.hpp"</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">argv</span><span class="special">[])</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Application started"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+    <span class="comment">// argv[1] contains path to our plugin library </span>
+    <span class="identifier">BOOST_ASSERT</span><span class="special">(</span><span class="identifier">argc</span> <span class="special">&gt;=</span> <span class="number">2</span><span class="special">);</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="identifier">shared_library_path</span> <span class="special">=</span> <span class="identifier">shared_lib_path</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">L</span><span class="string">"my_plugin_sum"</span><span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Loading the plugin"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;</span> <span class="identifier">plugin</span>
+        <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_variable_alias</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;(</span>
+            <span class="identifier">shared_library_path</span><span class="special">,</span> <span class="string">"plugin"</span>
+        <span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Plugin Version: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">-&gt;</span><span class="identifier">version</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Plugin Method:  "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">-&gt;</span><span class="identifier">calculate</span><span class="special">(</span><span class="number">1.5</span><span class="special">,</span> <span class="number">1.5</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        That application will output:
+      </p>
+<pre class="programlisting">Application started
+Loading the plugin
+Constructing my_plugin_sum
+Plugin Version: 1
+Plugin Method:  3
+Destructing my_plugin_sum ;o)
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_plugin.tutorial.factory_method_in_plugin"></a><a class="link" href="tutorial.html#boost_plugin.tutorial.factory_method_in_plugin" title="Factory method in plugin">Factory
+      method in plugin</a>
+</h3></div></div></div>
+<p>
+        In previous example we were importing from a plugin a single variable. Let's
+        make a class that uses our plugin API plugin and holds some state:
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="string">"../tutorial_common/plugin_api.hpp"</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">plugin</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">my_namespace</span> <span class="special">{</span>
+
+<span class="keyword">class</span> <span class="identifier">my_plugin_aggregator</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">my_plugin_api</span> <span class="special">{</span>
+    <span class="keyword">float</span> <span class="identifier">aggr_</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">my_plugin_aggregator</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">aggr_</span><span class="special">(</span><span class="number">0</span><span class="special">)</span> <span class="special">{}</span>
+
+    <span class="keyword">float</span> <span class="identifier">version</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="number">1.0</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">name</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="string">"aggregator"</span><span class="special">;</span>
+    <span class="special">}</span>
+
+    <span class="keyword">float</span> <span class="identifier">calculate</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">y</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">aggr_</span> <span class="special">+=</span> <span class="identifier">x</span> <span class="special">+</span> <span class="identifier">y</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="identifier">aggr_</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_aggregator</span><span class="special">&gt;</span> <span class="identifier">create_plugin</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">my_plugin_aggregator</span><span class="special">&gt;();</span>
 <span class="special">}</span>
 
 <span class="special">}</span> <span class="comment">// namespace my_namespace</span>
 
-<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">create_my_plugin</span><span class="special">,</span> <span class="identifier">create_plugin</span><span class="special">)</span>
+<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">create_plugin</span><span class="special">,</span> <span class="identifier">create_plugin</span><span class="special">)</span>
 </pre>
 <p>
-    </p>
+      </p>
 <p>
-      Now our application that will use our plugin.
-    </p>
+        As you may see, <code class="computeroutput"><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">create_plugin</span></code>
+        is a factory method, that creates instances of <code class="computeroutput"><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">my_plugin_aggregator</span></code>.
+        We export that method with the name "create_plugin" using <code class="computeroutput"><a class="link" href="../BOOST_PLUGIN_ALIAS.html" title="Macro BOOST_PLUGIN_ALIAS">BOOST_PLUGIN_ALIAS</a></code>.
+      </p>
 <p>
 </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">plugin</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="string">"plugin_api.hpp"</span>
-
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">"../tutorial_common/plugin_api.hpp"</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">argv</span><span class="special">[])</span> <span class="special">{</span>
     <span class="comment">// argv[1] contains path to our plugin library </span>
     <span class="identifier">BOOST_ASSERT</span><span class="special">(</span><span class="identifier">argc</span> <span class="special">&gt;=</span> <span class="number">2</span><span class="special">);</span>
-    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="identifier">shared_library_path</span> <span class="special">=</span> <span class="identifier">get_shared_lib</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">L</span><span class="string">"plugin_library"</span><span class="special">);</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="identifier">shared_library_path</span> <span class="special">=</span> <span class="identifier">shared_lib_path</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">L</span><span class="string">"my_plugin_aggregator"</span><span class="special">);</span>
 
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;</span> <span class="special">(</span><span class="identifier">pluginapi_create_t</span><span class="special">)();</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">pluginapi_create_t</span><span class="special">&gt;</span> <span class="identifier">creator</span>
@@ -100,17 +207,36 @@
 
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Plugin Version: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">-&gt;</span><span class="identifier">version</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Plugin Method:  "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">-&gt;</span><span class="identifier">calculate</span><span class="special">(</span><span class="number">1.5</span><span class="special">,</span> <span class="number">1.5</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Plugin Method second call:  "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">-&gt;</span><span class="identifier">calculate</span><span class="special">(</span><span class="number">1.5</span><span class="special">,</span> <span class="number">1.5</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Plugin Name:  "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">-&gt;</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
-    </p>
+      </p>
 <p>
-      The output:
-    </p>
+        In that application we have imported the factory method using <code class="computeroutput"><a class="link" href="../plugin/reference.html#boost.plugin.shared_function_idp5465568">boost::plugin::shared_function_alias</a></code>.
+      </p>
+<div class="caution"><table border="0" summary="Caution">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/caution.png"></td>
+<th align="left">Caution</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Be careful: <code class="computeroutput"><span class="identifier">creator</span></code> variable
+          holds a reference to the loaded shared library. If this variable goes out
+          of scope or will be reset, then the <span class="bold"><strong>DLL/DSO will
+          be unloaded</strong></span> and any attempt to dereference the <code class="computeroutput"><span class="identifier">plugin</span></code> variable will lead to <span class="bold"><strong>undefined behavior</strong></span>.
+        </p></td></tr>
+</table></div>
+<p>
+        Output of the application will be the following:
+      </p>
 <pre class="programlisting">Plugin Version: 1
 Plugin Method:  3
-;o)
+Plugin Method second call:  6
+Plugin Name:  aggregator
 </pre>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
