@@ -2,10 +2,11 @@ index.html
 boost_plugin/introduction0.html
 boost_plugin/tutorial.html
 plugin/reference.html
+boost/plugin/alias.html
 BOOST_PLUGIN_ALIAS.html
 boost/plugin/shared_library.html
 boost/plugin/operator__.html
-boost/plugin/operator_idp5531824.html
+boost/plugin/operator_idp5928896.html
 boost/plugin/swap.html
 boost/plugin/operator_.html
 boost_plugin/dependencies.html
