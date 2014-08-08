@@ -48,6 +48,7 @@ BOOST_PLUGIN_ALIAS(my_namespace::create_my_plugin, create_plugin)
 
 // return TRUE on success and FALSE if an error occurs. returning
 // FALSE will cause the library to be unloaded.
+/*
 BOOL WINAPI DllMain
 (
     HINSTANCE hinstDLL,
@@ -67,7 +68,7 @@ BOOL WINAPI DllMain
 
     return (TRUE);
 }
-
+*/
 #elif defined( BOOST_POSIX_API )
 
 // GCC
