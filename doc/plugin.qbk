@@ -6,7 +6,7 @@
 
 [library Boost.Plugin
     [quickbook 1.5]
-    [authors [Forti, Renato, Antony Polukhin]]
+    [authors [Forti, Renato][Polukhin, Antony]]
     [copyright 2014 Renato Tegon Forti, Antony Polukhin]
     [id plugin]
     [dirname plugin]
