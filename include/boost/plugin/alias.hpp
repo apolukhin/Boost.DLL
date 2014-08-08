@@ -19,19 +19,37 @@
 #include <boost/config.hpp>
 #include <boost/plugin/shared_library.hpp>
 
+#ifdef BOOST_HAS_PRAGMA_ONCE
+# pragma once
+#endif
+
 namespace boost { namespace plugin {
+
+/*!
+* \brief Makes an alias exported name for a function or variable
+*/
+#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)            \
+    extern "C" BOOST_SYMBOL_EXPORT void *AliasName;             \
+    void *AliasName = reinterpret_cast<void*>(&FunctionOrVar);  \
+    /**/
 
 
 /*!
-* \brief makes an alias for a function
+* Returns a symbol (function or variable) from a shared library by symbols alias name.
+*
+* \b Example:
+* \code
+* shared_library lib("test_lib.so");
+* int& i = alias<int>(lib, "integer_alias_name");
+* \endcode
+*
+* \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
+*
+* \throw boost::system::system_error on a execption, or
+*        if symbol do not exist, or if library is not loaded.
 */
-#define BOOST_PLUGIN_ALIAS(Function, AliasName)             \
-    extern "C" BOOST_SYMBOL_EXPORT void *AliasName;         \
-    void *AliasName = reinterpret_cast<void*>(&Function);   \
-    /**/
-
-template <typename Result>
-inline Result& alias(const shared_library& lib, const symbol_type &symbol) {
+template <typename T>
+inline T& alias(const shared_library& lib, const symbol_type &symbol) {
     // Alias - is just a variable that pointers to original data
     //
     // A few attempts were made to avoid additional indirection:
@@ -51,7 +69,7 @@ inline Result& alias(const shared_library& lib, const symbol_type &symbol) {
     //
     //          // hard to use
     //          `#pragma comment(linker, "/alternatename:_pWeakValue=_pDefaultWeakValue")`
-    return *lib.get<Result*>(symbol);
+    return *lib.get<T*>(symbol);
 }
 
 }} // boost::plugin

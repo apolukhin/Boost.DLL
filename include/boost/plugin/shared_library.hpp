@@ -17,6 +17,10 @@
 #ifndef BOOST_PLUGIN_SHARED_LIBRARY_HPP
 #define BOOST_PLUGIN_SHARED_LIBRARY_HPP
 
+/// \file boost/plugin/shared_library.hpp
+/// \brief Contains the boost::plugin::shared_library class, main class for all the
+/// DLL/DSO operations.
+
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
 
@@ -29,80 +33,67 @@
 #   include <boost/plugin/detail/posix/shared_library_impl.hpp>
 #endif
 
+#ifdef BOOST_HAS_PRAGMA_ONCE
+# pragma once
+#endif
 
 namespace boost { namespace plugin {
 
 /*!
 * \brief This class can be used to load a
 *        Dynamic link libraries (DLL's) or Shared Library, also know
-*        as dynamic shared objects (DSO's) and invoke their exported
-*        symbols.
-*
-* Provides a means to extend your plugin using plugins way.
-*
+*        as dynamic shared objects (DSO's) and get their exported
+*        symbols (functions and variables).
 */
-class shared_library: private shared_library_impl {
+class shared_library: protected shared_library_impl {
     typedef shared_library_impl base_t;
-    boost::filesystem::path path_;
 
 public:
+    typedef shared_library_impl::native_handle_t native_handle_t;
+
     /*!
-    * Creates empty shared_library obj, need call load to
-    * load a shared object.
+    * Creates empty shared_library.
     *
+    * \throw Nothing.
     */
     shared_library() BOOST_NOEXCEPT {}
 
     /*!
-    * Creates a shared_library object loading a library
-    * from library() initializer function.
+    * Creates a shared_library object and loads a library by specified path.
     *
-    * The library() can handle std::string, char, std::wstring,
-    * wchar_t or filesystem path.
+    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    *           wchar_t or filesystem path.
     *
-    * \param sl An initializer free function, e.g.:
-    *        shared_library sh(library("c:\\mylib.dll"));
-    *
-    * Throw a boost::system::system_error on a execption.
-    *
+    * \throw boost::system::system_error.
     */
     explicit shared_library(const library_path &sl) {
         load(sl);
     }
 
     /*!
-    * Creates a shared_library object loading a library
-    * from library() initializer function.
+    * Creates a shared_library object and loads a library by specified path.
     *
-    * The library() can handle std::string, char, std::wstring,
-    * wchar_t or filesystem path.
+    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    *           wchar_t or filesystem path.
     *
-    * \param sl An initializer free function, e.g.:
-    *        shared_library sh(library("c:\\mylib.dll"), ec);
+    * \param ec Variable that will be set to the result of the operation.
     *
-    * \param ec Variable (boost::system::error_code) that will be
-    *        set to the result of the operation.
-    *
-    * Check ec for errors.
-    *
+    * \throw Nothing.
     */
-    shared_library(const library_path &sl, boost::system::error_code &ec) {
+    shared_library(const library_path &sl, boost::system::error_code &ec) BOOST_NOEXCEPT {
         load(sl, ec);
     }
 
     /*!
-    * Creates a shared_library object loading a library
-    * from library() initializer function.
+    * Creates a shared_library object and loads a library by specified path
+    * with a specified mode.
     *
-    * The library() can handle std::string, char, std::wstring,
-    * wchar_t or filesystem path.
+    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    *           wchar_t or filesystem path.
     *
-    * \param sl An initializer free function, e.g.:
-    *        shared_library sh(library("c:\\mylib.dll"), 0x00000001);
+    * \param mode An mode that will be used on library load.
     *
-    * \param mode An mode that will be used on load.
-    *
-    * Throw a boost::system::system_error on a execption.
+    * \throw boost::system::system_error.
     *
     */
     shared_library(const library_path &sl, shared_library_load_mode mode) {
@@ -110,161 +101,135 @@ public:
     }
 
     /*!
-    * Creates a shared_library object loading a library
-    * from library() initializer function.
+    * Creates a shared_library object and loads a library by specified path
+    * with a specified mode.
     *
-    * The library() can handle std::string, char, std::wstring,
-    * wchar_t or filesystem path.
+    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    *           wchar_t or filesystem path.
     *
-    * \param sl An initializer free function, e.g.:
-    *        shared_library sh(library("c:\\mylib.dll"), 0x00000001, ec);
+    * \param ec Variable that will be set to the result of the operation.
     *
-    * \param mode An mode that will be used on load.
+    * \param mode An mode that will be used on library load.
     *
-    * \param ec Variable (boost::system::error_code) that will be
-    *        set to the result of the operation.
-    *
-    * Check ec for errors.
+    * \throw Nothing.
     *
     */
-    shared_library(const library_path &sl, shared_library_load_mode mode, boost::system::error_code &ec) {
+    shared_library(const library_path &sl, shared_library_load_mode mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         load(sl, mode, ec);
     }
 
     /*!
-    * Destructor
-    * Destroys the SharedLibrary.
-    * The actual library is unloaded. The unload() is called!
+    * Destroys the shared_library.
+    * `unload()` is called if the DLL/DSO was loaded. If library was loaded multiple times
+    * by different instances of shared_library, the actual DLL/DSO won't be unloaded until
+    * there is at least one instance of shared_library.
     *
+    * \throw Nothing.
     */
     ~shared_library() BOOST_NOEXCEPT {}
 
 
     /*!
-    * Loads a shared library from library() initializer function.
+    * Loads a library by specified path.
     *
-    * The library() can handle std::string, char, std::wstring,
-    * wchar_t or filesystem path.
-    *
-    * \param sl An initializer free function, e.g.:
-    *        sh.load(library("c:\\mylib.dll"));
-    *
-    * Throw a boost::system::system_error on a execption.
-    *
-    * Note that if a library is aread loaded, load will
+    * Note that if some library is already loaded, load will
     * unload it and then load the new provided library.
+    *
+    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    *           wchar_t or filesystem path.
+    *
+    * \throw boost::system::system_error.
     *
     */
     void load(const library_path &sl) {
-        path_ = sl;
         boost::system::error_code ec;
         base_t::load(sl, base_t::default_mode(), ec);
 
         if (ec) {
-            path_.clear();
             boost::plugin::detail::report_error(ec, "load() failed");
         }
     }
 
+
     /*!
-    * Loads a shared library from library() initializer function.
+    * Loads a library by specified path.
     *
-    * The library() can handle std::string, char, std::wstring,
-    * wchar_t or filesystem path.
-    *
-    * \param sl An initializer free function, e.g.:
-    *        sh.load(library("c:\\mylib.dll"), ec);
-    *
-    * \param ec Variable (boost::system::error_code) that will be
-    *        set to the result of the operation.
-    *
-    * Check ec for errors.
-    *
-    * Note that if a library is aread loaded, load will
+    * Note that if some library is already loaded, load will
     * unload it and then load the new provided library.
     *
+    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    *           wchar_t or filesystem path.
+    *
+    * \param ec Variable that will be set to the result of the operation.
+    *
+    * \throw Nothing.
     */
-    void load(const library_path &sl, boost::system::error_code &ec) {
-        path_ = sl;
+    void load(const library_path &sl, boost::system::error_code &ec) BOOST_NOEXCEPT {
         ec.clear();
         base_t::load(sl, base_t::default_mode(), ec);
-
-        if (ec) {
-            path_.clear();
-        }
     }
 
+
     /*!
-    * Loads a shared library from library() initializer function.
+    * Loads a library by specified path with a specified mode.
     *
-    * The library() can handle std::string, char, std::wstring,
-    * wchar_t or filesystem path.
-    *
-    * \param sl An initializer free function, e.g.:
-    *        sl.load(library("c:\\mylib.dll"), 0);
-    *
-    * \param mode An mode that will be used on load.
-    *
-    * Throw a boost::system::system_error on a execption.
-    *
-    * Note that if a library is aread loaded, load will
+    * Note that if some library is already loaded, load will
     * unload it and then load the new provided library.
+    *
+    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    *           wchar_t or filesystem path.
+    *
+    * \param mode An mode that will be used on library load.
+    *
+    * \throw boost::system::system_error.
     *
     */
     void load(const library_path &sl, shared_library_load_mode mode) {
-        path_ = sl;
         boost::system::error_code ec;
         base_t::load(sl, mode, ec);
 
         if (ec) {
-            path_.clear();
             boost::plugin::detail::report_error(ec, "load() failed");
         }
     }
 
     /*!
-    * Loads a shared library from library() initializer function.
+    * Loads a library by specified path with a specified mode.
     *
-    * The library() can handle std::string, char, std::wstring,
-    * wchar_t or filesystem path.
-    *
-    * \param sl An initializer free function, e.g.:
-    *        sl.load("c:\\mylib.dll", 0, ec);
-    *
-    * \param mode An mode that will be used on load.
-    *
-    * \param ec Variable (boost::system::error_code) that will be
-    *        set to the result of the operation.
-    *
-    * Check ec for errors.
-    *
-    * Note that if a library is aread loaded, load will
+    * Note that if some library is already loaded, load will
     * unload it and then load the new provided library.
     *
+    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    *           wchar_t or filesystem path.
+    *
+    * \param ec Variable that will be set to the result of the operation.
+    *
+    * \param mode An mode that will be used on library load.
+    *
+    * \throw Nothing.
+    *
     */
-    void load(const library_path &sl, shared_library_load_mode mode, boost::system::error_code &ec) {
-        path_ = sl;
+    void load(const library_path &sl, shared_library_load_mode mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         ec.clear();
         base_t::load(sl, mode, ec);
-        
-        if (ec) {
-            path_.clear();
-        }
     }
 
     /*!
-    * Unloads a shared library.
+    * Unloads a shared library. If library was loaded multiple times
+    * by different instances of shared_library, the actual DLL/DSO won't be unloaded until
+    * there is at least one instance of shared_library.
     *
     */
     void unload() BOOST_NOEXCEPT {
         base_t::unload();
-        path_.clear();
     }
 
     /*!
     * Check if an library is loaded.
     *
-    * \return true if a library has been loaded
+    * \return true if a library has been loaded.
+    *
+    * \throw Nothing.
     *
     */
     bool is_loaded() const BOOST_NOEXCEPT {
@@ -274,14 +239,12 @@ public:
     /*!
     * Seach for d givem symbol on loaded library.
     *
-    * The symbol() can handle std::string, char,
-    * std::wstring or wchar_t.
-    *
-    * \param symbol_type An initializer free function, e.g.:
-    *        sl.search_symbol(symbol("do_anything"))
+    * \param sb Symbol name. Can handle std::string, char*, const char*.
     *
     * \return true if the loaded library contains
     *         a symbol from a given name.
+    *
+    * \throw Nothing.
     *
     */
     bool search_symbol(const symbol_type &sb) const BOOST_NOEXCEPT {
@@ -290,24 +253,26 @@ public:
     }
 
     /*!
-    * Returns the address of the symbol with the
-    * given name to posterior call.
+    * Returns the symbol (function or variable) with the given name from the loaded library.
     *
-    * Name must be provided using symbol() initializer
-    * function that can handle std::string, char,
-    * std::wstring or wchar_t.
+    * \b Example:
+    * \code
+    * shared_library lib("test_lib.so");
+    * int& i = lib.get<int>(lib, "integer_name");
+    * \endcode
     *
-    * \param symbol_type An initializer free function, e.g.:
-    *        sl.get_symbol(symbol("do_anything"))
+    * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
+    *
+    * \param sb Symbol name. Can handle std::string, char*, const char*.
     *
     * \return the address of symbol.
     *
-    * Throw a boost::system::system_error on a execption, or
-    * if symbol do not exist.
+    * \throw boost::system::system_error on a execption, or
+    *        if symbol do not exist, or if library is not loaded.
     *
     */
-    template <typename Result>
-    Result& get(const symbol_type &sb) const {
+    template <typename T>
+    T& get(const symbol_type &sb) const {
         boost::system::error_code ec;
 
         if (!is_loaded()) {
@@ -316,7 +281,7 @@ public:
                 boost::system::generic_category()
             );
 
-            // report_error() calls dlsym
+            // report_error() calls dlsym, do not use it here!
             boost::throw_exception(
                 boost::system::system_error(
                     ec, "get() failed (no library was loaded)"
@@ -329,18 +294,16 @@ public:
             boost::plugin::detail::report_error(ec, "get() failed");
         }
 
-        return *reinterpret_cast<Result*>(ret);
+        return *reinterpret_cast<T*>(ret);
     }
 
     /*!
-    * Returns the path of the loaded library, as specified
-    * in a call to load() or the constructor/load.
+    * Returns the native handler of the loaded library.
     *
-    * \return the boost::filesystem::path path of module.
-    *
+    * \return platform-specific handle.
     */
-    const boost::filesystem::path& path() const BOOST_NOEXCEPT {
-        return path_;
+    native_handle_t native() const BOOST_NOEXCEPT {
+        return base_t::native();
     }
 
     /*!
@@ -358,39 +321,45 @@ public:
         return base_t::suffix();
     }
 
-
     /*!
     * Swaps two libraries.
     * Does not invalidate existing symbols and functions loaded from libraries.
+    *
+    * \param rhs Library to swap with.
+    *
+    * \throw Nothing.
     */
     void swap(shared_library& rhs) BOOST_NOEXCEPT {
         base_t::swap(rhs);
-        path_.swap(rhs.path_);
     }
 };
 
 
 /*!
 * Check equality of shared_library
-* If the same shared library is loaded, means: same path
+* If the same shared library is loaded, means: same native handle
 *
+* \throw Nothing.
 */
 inline bool operator==(const shared_library& lhs, const shared_library& rhs) BOOST_NOEXCEPT {
-    return lhs.path() == rhs.path();
+    return lhs.native() == rhs.native();
 }
 
 /*!
 * Check equality of shared_library
-* If the same shared library is loaded, means: same path
+* If the same shared library is loaded, means: same native handle
 *
+* \throw Nothing.
 */
 inline bool operator<(const shared_library& lhs, const shared_library& rhs) BOOST_NOEXCEPT {
-    return lhs.path() < rhs.path();
+    return lhs.native() < rhs.native();
 }
 
 /*!
 * Swaps two shared libraries.
 * Does not invalidate existing symbols and functions loaded from libraries.
+*
+* \throw Nothing.
 */
 inline void swap(shared_library& lhs, shared_library& rhs) BOOST_NOEXCEPT {
     lhs.swap(rhs);

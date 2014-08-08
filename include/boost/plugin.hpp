@@ -16,10 +16,17 @@
 #ifndef BOOST_PLUGIN_PLUGIN_HPP
 #define BOOST_PLUGIN_PLUGIN_HPP
 
+/// \file boost/plugin.hpp
+/// \brief Includes all the set headers of the Boost.Plugin library.
+
 #include <boost/config.hpp>
 #include <boost/plugin/shared_library.hpp>
 #include <boost/plugin/alias.hpp>
 #include <boost/plugin/refcountable.hpp>
+
+#ifdef BOOST_HAS_PRAGMA_ONCE
+# pragma once
+#endif
 
 #endif // BOOST_PLUGIN_PLUGIN_HPP
 

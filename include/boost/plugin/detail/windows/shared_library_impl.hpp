@@ -37,6 +37,8 @@ class shared_library_impl : noncopyable {
     }
 
 public:
+    typedef boost::detail::winapi::HMODULE_ native_handle_t;
+
     shared_library_impl() BOOST_NOEXCEPT
         : handle_(NULL)
     {}
@@ -91,8 +93,12 @@ public:
         return symbol;
     }
 
+    native_handle_t native() const BOOST_NOEXCEPT {
+        return handle_;
+    }
+
 private:
-    boost::detail::winapi::HMODULE_ handle_;
+    native_handle_t handle_;
 };
 
 }} // boost::plugin
