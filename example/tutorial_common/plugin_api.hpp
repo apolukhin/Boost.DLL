@@ -9,10 +9,13 @@
 #define BOOST_PLUGIN_MY_PLUGIN_API_HPP
 
 //[plugapi
+#include <string>
+
 class my_plugin_api {
 public:
    virtual ~my_plugin_api() {};
-   virtual float version() = 0;
+   virtual float version() const = 0;
+   virtual std::string name() const = 0;
    virtual float calculate(float x, float y) = 0;
 };
 //]

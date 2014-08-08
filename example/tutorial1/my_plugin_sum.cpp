@@ -1,4 +1,5 @@
-// Copyright 2011-2013 Renato Tegon Forti
+// Copyright 2011-2013 Renato Tegon Forti.
+// Copyright 2014 Renato Tegon Forti, Antony Polukhin.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -8,18 +9,25 @@
 #include <iostream>
 #include <boost/make_shared.hpp>
 
-//[plugcpp
+//[plugcpp_my_plugin_sum
    
-#include "plugin_api.hpp"
+#include "../tutorial_common/plugin_api.hpp"
 #include <boost/plugin.hpp>
 
 namespace my_namespace {
 
 class my_plugin_sum : public my_plugin_api {
 public:
+    my_plugin_sum() {
+        std::cout << "Constructing my_plugin_sum" << std::endl;
+    }
 
-    float version() {
+    float version() const {
         return 1.0;
+    }
+
+    std::string name() const {
+        return "sum";
     }
 
     float calculate(float x, float y) {
@@ -27,17 +35,15 @@ public:
     }
    
     ~my_plugin_sum() {
-        std::cout << ";o)" << std::endl;
+        std::cout << "Destructing my_plugin_sum ;o)" << std::endl;
     }
 };
 
-boost::shared_ptr<my_plugin_api> create_my_plugin() {
-    return boost::make_shared<my_namespace::my_plugin_sum>();
-}
+my_plugin_sum plugin;
 
 } // namespace my_namespace
 
-BOOST_PLUGIN_ALIAS(my_namespace::create_my_plugin, create_plugin)
+BOOST_PLUGIN_ALIAS(my_namespace::plugin, plugin)
 //]
 
 
@@ -48,7 +54,6 @@ BOOST_PLUGIN_ALIAS(my_namespace::create_my_plugin, create_plugin)
 
 // return TRUE on success and FALSE if an error occurs. returning
 // FALSE will cause the library to be unloaded.
-/*
 BOOL WINAPI DllMain
 (
     HINSTANCE hinstDLL,
@@ -68,7 +73,7 @@ BOOL WINAPI DllMain
 
     return (TRUE);
 }
-*/
+
 #elif defined( BOOST_POSIX_API )
 
 // GCC

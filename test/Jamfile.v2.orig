@@ -32,9 +32,8 @@ project
     # our test lib for shared library tests
     lib test_library : test_library.cpp ;
     lib getting_started_library : ../example/getting_started_library.cpp ;
-    lib my_plugin_sum : ../example/tutorial1/my_plugin_sum.cpp ;
-    lib my_plugin_aggregator : ../example/tutorial2/my_plugin_aggregator.cpp ;
-    install install-bin : test_library my_plugin_sum my_plugin_aggregator getting_started_library : <location>$(TEST_DIR) ;
+    lib plugin_library : ../example/plugin_library.cpp ;
+    install install-bin : test_library plugin_library getting_started_library : <location>$(TEST_DIR) ;
   
     test-suite application
         : 
@@ -42,8 +41,7 @@ project
         [ run shared_library_search_symbol_test.cpp : $(TEST_DIR) ]
         [ run shared_library_get_symbol_test.cpp : $(TEST_DIR) ]
         [ run shared_library_errors.cpp : $(TEST_DIR) : : <test-info>always_show_run_output  ]
+        [ run ../example/shared_library_load_plugin.cpp : $(TEST_DIR) ]
         [ run ../example/getting_started.cpp : $(TEST_DIR) ]
-        [ run ../example/tutorial1/tutorial1.cpp : $(TEST_DIR) ]
-        [ run ../example/tutorial2/tutorial2.cpp : $(TEST_DIR) ]
     ;
 }
