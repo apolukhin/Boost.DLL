@@ -61,8 +61,8 @@ public:
     /*!
     * Creates a shared_library object and loads a library by specified path.
     *
-    * \param sl Library file name. Can handle std::string, char, std::wstring,
-    *           wchar_t or filesystem path.
+    * \param sl Library file name. Can handle std::string, char*, std::wstring,
+    *           wchar_t* or boost::filesystem::path.
     *
     * \throw boost::system::system_error.
     */
@@ -237,12 +237,11 @@ public:
     }
 
     /*!
-    * Seach for d givem symbol on loaded library.
+    * Seach for a given symbol on loaded library. Works for all symbols, including alias names.
     *
     * \param sb Symbol name. Can handle std::string, char*, const char*.
     *
-    * \return true if the loaded library contains
-    *         a symbol from a given name.
+    * \return `true` if the loaded library contains a symbol with a given name.
     *
     * \throw Nothing.
     *
@@ -253,22 +252,26 @@ public:
     }
 
     /*!
-    * Returns the symbol (function or variable) with the given name from the loaded library.
+    * Returns reference to the symbol (function or variable) with the given name from the loaded library.
+    * This call will always succeed and throw nothing if call to `search_symbol(const symbol_type &)`
+    * member function with the same symbol name returned `true`.
+    *
+    * If using this call for an alias name do not forget to add a pointer to a resulting type.
     *
     * \b Example:
     * \code
     * shared_library lib("test_lib.so");
-    * int& i = lib.get<int>(lib, "integer_name");
+    * int& i0 = lib.get<int>("integer_name");
+    * int& i1 = *lib.get<int*>("integer_alias_name");
     * \endcode
     *
     * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
     *
     * \param sb Symbol name. Can handle std::string, char*, const char*.
     *
-    * \return the address of symbol.
+    * \return Reference to the symbol.
     *
-    * \throw boost::system::system_error on a execption, or
-    *        if symbol do not exist, or if library is not loaded.
+    * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
     *
     */
     template <typename T>
@@ -300,7 +303,7 @@ public:
     /*!
     * Returns the native handler of the loaded library.
     *
-    * \return platform-specific handle.
+    * \return Platform-specific handle.
     */
     native_handle_t native() const BOOST_NOEXCEPT {
         return base_t::native();
@@ -310,7 +313,7 @@ public:
     * Returns suffix od shared module:
     * in a call to load() or the constructor/load.
     *
-    * \return the suffix od shared module, like:
+    * \return The suffix od shared module, like:
     *
     * .dll (windows)
     * .so (unix)
@@ -336,8 +339,7 @@ public:
 
 
 /*!
-* Check equality of shared_library
-* If the same shared library is loaded, means: same native handle
+* Check equality of shared_library, libraries compared using native handles.
 *
 * \throw Nothing.
 */
@@ -346,8 +348,7 @@ inline bool operator==(const shared_library& lhs, const shared_library& rhs) BOO
 }
 
 /*!
-* Check equality of shared_library
-* If the same shared library is loaded, means: same native handle
+* Less compares loaded libraries using native handles.
 *
 * \throw Nothing.
 */
