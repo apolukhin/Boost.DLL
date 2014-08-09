@@ -146,7 +146,7 @@ namespace boost { namespace plugin {
             rtld_global                           = default_mode,
             rtld_local                            = default_mode,
 #else
-            default_mode                          = RTLD_LAZY | RTLD_GLOBAL,
+            default_mode                          = RTLD_LAZY | RTLD_LOCAL,
             // windows
             dont_resolve_dll_references           = default_mode,
             load_ignore_code_authz_level          = default_mode,
@@ -165,16 +165,8 @@ namespace boost { namespace plugin {
    };
 
    /*!
-    * Free operators for load_mode::type flag manibulation.
+    * Free operators for load_mode::type flag manipulation.
     */
-
-   inline load_mode::type operator&(
-      load_mode::type left,
-      load_mode::type right)
-   {
-      return (static_cast<load_mode::type>(
-         static_cast<unsigned int>(left) & static_cast<unsigned int>(right)));
-   }
 
    inline load_mode::type operator|(
       load_mode::type left,
@@ -184,38 +176,10 @@ namespace boost { namespace plugin {
          static_cast<unsigned int>(left) | static_cast<unsigned int>(right)));
    }
 
-   inline load_mode::type operator^(
-      load_mode::type left,
-      load_mode::type right)
-   {
-      return (static_cast<load_mode::type>(
-         static_cast<unsigned int>(left) ^ static_cast<unsigned int>(right)));
-   }
-
-   inline load_mode::type operator~(load_mode::type left)
-   {
-      return (static_cast<load_mode::type>(
-         ~static_cast<unsigned int>(left)));
-   }
-
-   inline load_mode::type& operator&=(
-      load_mode::type& left, load_mode::type right)
-   {
-      left = left & right;
-      return (left);
-   }
-
    inline load_mode::type& operator|=(
       load_mode::type& left, load_mode::type right)
    {
       left = left | right;
-      return (left);
-   }
-
-   inline load_mode::type& operator^=(
-      load_mode::type& left, load_mode::type right)
-   {
-      left = left ^ right;
       return (left);
    }
 
