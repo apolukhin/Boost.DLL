@@ -96,7 +96,7 @@ public:
     * \throw boost::system::system_error.
     *
     */
-    shared_library(const library_path &sl, shared_library_load_mode mode) {
+    shared_library(const library_path &sl, load_mode::type mode) {
         load(sl, mode);
     }
 
@@ -114,7 +114,7 @@ public:
     * \throw Nothing.
     *
     */
-    shared_library(const library_path &sl, shared_library_load_mode mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    shared_library(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         load(sl, mode, ec);
     }
 
@@ -143,7 +143,7 @@ public:
     */
     void load(const library_path &sl) {
         boost::system::error_code ec;
-        base_t::load(sl, base_t::default_mode(), ec);
+        base_t::load(sl, load_mode::default_mode, ec);
 
         if (ec) {
             boost::plugin::detail::report_error(ec, "load() failed");
@@ -166,7 +166,7 @@ public:
     */
     void load(const library_path &sl, boost::system::error_code &ec) BOOST_NOEXCEPT {
         ec.clear();
-        base_t::load(sl, base_t::default_mode(), ec);
+        base_t::load(sl, load_mode::default_mode, ec);
     }
 
 
@@ -184,7 +184,7 @@ public:
     * \throw boost::system::system_error.
     *
     */
-    void load(const library_path &sl, shared_library_load_mode mode) {
+    void load(const library_path &sl, load_mode::type mode) {
         boost::system::error_code ec;
         base_t::load(sl, mode, ec);
 
@@ -209,7 +209,7 @@ public:
     * \throw Nothing.
     *
     */
-    void load(const library_path &sl, shared_library_load_mode mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         ec.clear();
         base_t::load(sl, mode, ec);
     }

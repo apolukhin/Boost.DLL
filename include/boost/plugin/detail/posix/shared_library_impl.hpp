@@ -51,11 +51,7 @@ public:
         unload();
     }
 
-    static shared_library_load_mode default_mode() BOOST_NOEXCEPT {
-        return rtld_lazy | rtld_global;
-    }
-
-    void load(const library_path &sl, shared_library_load_mode mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
         handle_ = dlopen(sl.c_str(), static_cast<int>(mode));

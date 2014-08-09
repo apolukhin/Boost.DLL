@@ -47,11 +47,7 @@ public:
         unload();
     }
 
-    static shared_library_load_mode default_mode() BOOST_NOEXCEPT {
-        return load_library_default_mode;
-    }
-
-    void load(const library_path &sh, shared_library_load_mode mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const library_path &sh, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
         boost::detail::winapi::DWORD_ flags = static_cast<boost::detail::winapi::DWORD_>(mode);

@@ -50,58 +50,53 @@ int test_main(int argc, char* argv[])
       BOOST_CHECK(sl.is_loaded());
    }
 
-#if defined( BOOST_WINDOWS_API )
-#if !defined(__MINGW32__)   
    {
-      shared_library sl(shared_library_path, load_with_altered_search_path );
+      shared_library sl(shared_library_path, load_mode::load_with_altered_search_path );
       BOOST_CHECK(sl.is_loaded());
    }
 
    {
       boost::system::error_code ec;
-      shared_library sl(shared_library_path, load_with_altered_search_path, ec);
+      shared_library sl(shared_library_path, load_mode::load_with_altered_search_path, ec);
       BOOST_CHECK(sl.is_loaded());
    }
 
    {
       shared_library sl;
-      sl.load(shared_library_path, load_with_altered_search_path);
+      sl.load(shared_library_path, load_mode::load_with_altered_search_path);
       BOOST_CHECK(sl.is_loaded());
    }
 
    {
       shared_library sl;
       boost::system::error_code ec;
-      sl.load(shared_library_path, load_with_altered_search_path, ec);
+      sl.load(shared_library_path, load_mode::load_with_altered_search_path, ec);
       BOOST_CHECK(sl.is_loaded());
    }
-#endif   
-#elif defined( BOOST_POSIX_API )
 
    {
-      shared_library sl(shared_library_path, rtld_lazy | rtld_global);
+      shared_library sl(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global);
       BOOST_CHECK(sl.is_loaded());
    }
 
    {
       boost::system::error_code ec;
-      shared_library sl(shared_library_path, rtld_lazy | rtld_global, ec);
+      shared_library sl(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global, ec);
       BOOST_CHECK(sl.is_loaded());
    }
 
    {
       shared_library sl;
-      sl.load(shared_library_path, rtld_lazy | rtld_global);
+      sl.load(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global);
       BOOST_CHECK(sl.is_loaded());
    }
 
    {
       shared_library sl;
       boost::system::error_code ec;
-      sl.load(shared_library_path, rtld_lazy | rtld_global, ec);
+      sl.load(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global, ec);
       BOOST_CHECK(sl.is_loaded());
    }
-#endif
 
    {  // unload
       shared_library sl(shared_library_path);

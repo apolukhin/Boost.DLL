@@ -20,11 +20,6 @@
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
 
-// MINGW NOTE
-//
-// in mingw we have some problems here, at this time we don't support shared_library for __MINGW32__
-// you can download port yourself from:  https://code.google.com/p/dlfcn-win32/downloads/list
-
 #if BOOST_OS_WINDOWS
 //#include <boost/detail/winapi/dll.hpp>
 #include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
@@ -36,7 +31,7 @@ namespace boost { namespace plugin {
 
    /*! \enum Modes of load library.
     *
-    * Each of system family provides your own way:
+    * Each of system family provides own flags:
     *
     * WINDOWS
     * -------
@@ -77,39 +72,8 @@ namespace boost { namespace plugin {
     * If forced integrity checking is desired for the loaded file then
     * LOAD_LIBRARY_AS_IMAGE is recommended instead.
     *
-    * LOAD_LIBRARY_SEARCH_PLUGIN_DIR
-    * If this value is used, the plugin's installation directory is searched
-    * for the DLL and its dependencies. Directories in the standard search path
-    * are not searched.
-    * This value cannot be combined with LOAD_WITH_ALTERED_SEARCH_PATH.
     *
-    * LOAD_LIBRARY_SEARCH_DEFAULT_DIRS
-    * This value is a combination of LOAD_LIBRARY_SEARCH_PLUGIN_DIR,
-    * LOAD_LIBRARY_SEARCH_SYSTEM32, and LOAD_LIBRARY_SEARCH_USER_DIRS.
-    *
-    * Directories in the standard search path are not searched.
-    * This value cannot be combined with LOAD_WITH_ALTERED_SEARCH_PATH.
-    * This value represents the recommended maximum number of directories
-    * an plugin should include in its DLL search path.
-    *
-    * LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR
-    * If this value is used, the directory that contains the DLL is temporarily
-    * added to the beginning of the list of directories that are searched for
-    * the DLL's dependencies. Directories in the standard search path are not
-    * searched.
-    *
-    * The lpFileName parameter must specify a fully qualified path.
-    * This value cannot be combined with LOAD_WITH_ALTERED_SEARCH_PATH.
-    *
-    * LOAD_LIBRARY_SEARCH_SYSTEM32
-    * If this value is used, %windows%\system32 is searched for the DLL and its
-    * dependencies. Directories in the standard search path are not searched.
-    * This value cannot be combined with LOAD_WITH_ALTERED_SEARCH_PATH.
-    *
-    * LOAD_LIBRARY_SEARCH_USER_DIRS
-    * If this value is used, directories added using the AddDllDirectory or
-    * the SetDllDirectory function are searched for the DLL and its
-    * dependencies.
+    * All the LOAD_LIBRARY_SEARCH_* macro are not used... because of portability issues, even on Windows.
     *
     * LOAD_WITH_ALTERED_SEARCH_PATH
     * If this value is used and lpFileName specifies an absolute path,
@@ -164,100 +128,92 @@ namespace boost { namespace plugin {
     * http://pubs.opengroup.org/onlinepubs/000095399/functions/dlopen.html
     *
     */
-   enum shared_library_load_mode
-   {
+   struct load_mode {
+        enum type {
 #if BOOST_OS_WINDOWS
-      // windows
-      load_library_default_mode               = 0,
-      dont_resolve_dll_references             = boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
-      load_ignore_code_authz_level            = boost::detail::winapi::LOAD_IGNORE_CODE_AUTHZ_LEVEL_,
-      load_library_as_datafile                = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_,
-      load_library_as_datafile_exclusive      = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE_,
-      load_library_as_image_resource          = boost::detail::winapi::LOAD_LIBRARY_AS_IMAGE_RESOURCE_,
+            default_mode                          = 0,
+            // windows
+            dont_resolve_dll_references           = boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
+            load_ignore_code_authz_level          = boost::detail::winapi::LOAD_IGNORE_CODE_AUTHZ_LEVEL_,
+            load_library_as_datafile              = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_,
+            load_library_as_datafile_exclusive    = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE_,
+            load_library_as_image_resource        = boost::detail::winapi::LOAD_LIBRARY_AS_IMAGE_RESOURCE_,
+            load_with_altered_search_path         = boost::detail::winapi::LOAD_WITH_ALTERED_SEARCH_PATH_,
 
-      // About LOAD_LIBRARY_SEARCH_PLUGIN_DIR, 
-      //       LOAD_LIBRARY_SEARCH_DEFAULT_DIRS, 
-      //       LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR,
-      //       LOAD_LIBRARY_SEARCH_SYSTEM32 and
-      //       LOAD_LIBRARY_SEARCH_USER_DIRS
-      //
-      // Minimum supported client :  Windows 8 
-      // Minimum supported server : Windows Server 2012 
-      //
-      // To Windows 7, Windows Server 2008 R2, Windows Vista, 
-      // and Windows Server 2008: KB2533623 must be installed on the target platform.
-
-#   ifndef _USING_V110_SDK71_
-      // when user uses: Visual Studio 2012 - Windows XP (v110_xp), we need hide following enums :
-      load_library_search_plugin_dir     = boost::detail::winapi::LOAD_LIBRARY_SEARCH_PLUGIN_DIR_,
-      load_library_search_default_dirs        = boost::detail::winapi::LOAD_LIBRARY_SEARCH_DEFAULT_DIRS_,
-      load_library_search_dll_load_dir        = boost::detail::winapi::LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR_,
-      load_library_search_system32            = boost::detail::winapi::LOAD_LIBRARY_SEARCH_SYSTEM32_,
-      load_library_search_user_dirs           = boost::detail::winapi::LOAD_LIBRARY_SEARCH_USER_DIRS_,
-      // <-
-#   endif
-
-      load_with_altered_search_path           = boost::detail::winapi::LOAD_WITH_ALTERED_SEARCH_PATH_
-
+            // posix
+            rtld_lazy                             = default_mode,
+            rtld_now                              = default_mode,
+            rtld_global                           = default_mode,
+            rtld_local                            = default_mode,
 #else
-      // posix
-      rtld_lazy   = RTLD_LAZY,   // 1
-      rtld_now    = RTLD_NOW,    // 2
-      rtld_global = RTLD_GLOBAL, // 3
-      rtld_local  = RTLD_LOCAL   // 4
+            default_mode                          = RTLD_LAZY | RTLD_GLOBAL,
+            // windows
+            dont_resolve_dll_references           = default_mode,
+            load_ignore_code_authz_level          = default_mode,
+            load_library_as_datafile              = default_mode,
+            load_library_as_datafile_exclusive    = default_mode,
+            load_library_as_image_resource        = default_mode,
+            load_with_altered_search_path         = default_mode,
+
+            // posix
+            rtld_lazy                             = RTLD_LAZY,   // 1
+            rtld_now                              = RTLD_NOW,    // 2
+            rtld_global                           = RTLD_GLOBAL, // 3
+            rtld_local                            = RTLD_LOCAL   // 4
 #endif
+        };
    };
 
    /*!
-    * Free operators for shared_library_load_mode flag manibulation.
+    * Free operators for load_mode::type flag manibulation.
     */
 
-   inline shared_library_load_mode operator&(
-      shared_library_load_mode left,
-      shared_library_load_mode right)
+   inline load_mode::type operator&(
+      load_mode::type left,
+      load_mode::type right)
    {
-      return (static_cast<shared_library_load_mode>(
+      return (static_cast<load_mode::type>(
          static_cast<unsigned int>(left) & static_cast<unsigned int>(right)));
    }
 
-   inline shared_library_load_mode operator|(
-      shared_library_load_mode left,
-      shared_library_load_mode right)
+   inline load_mode::type operator|(
+      load_mode::type left,
+      load_mode::type right)
    {
-      return (static_cast<shared_library_load_mode>(
+      return (static_cast<load_mode::type>(
          static_cast<unsigned int>(left) | static_cast<unsigned int>(right)));
    }
 
-   inline shared_library_load_mode operator^(
-      shared_library_load_mode left,
-      shared_library_load_mode right)
+   inline load_mode::type operator^(
+      load_mode::type left,
+      load_mode::type right)
    {
-      return (static_cast<shared_library_load_mode>(
+      return (static_cast<load_mode::type>(
          static_cast<unsigned int>(left) ^ static_cast<unsigned int>(right)));
    }
 
-   inline shared_library_load_mode operator~(shared_library_load_mode left)
+   inline load_mode::type operator~(load_mode::type left)
    {
-      return (static_cast<shared_library_load_mode>(
+      return (static_cast<load_mode::type>(
          ~static_cast<unsigned int>(left)));
    }
 
-   inline shared_library_load_mode& operator&=(
-      shared_library_load_mode& left, shared_library_load_mode right)
+   inline load_mode::type& operator&=(
+      load_mode::type& left, load_mode::type right)
    {
       left = left & right;
       return (left);
    }
 
-   inline shared_library_load_mode& operator|=(
-      shared_library_load_mode& left, shared_library_load_mode right)
+   inline load_mode::type& operator|=(
+      load_mode::type& left, load_mode::type right)
    {
       left = left | right;
       return (left);
    }
 
-   inline shared_library_load_mode& operator^=(
-      shared_library_load_mode& left, shared_library_load_mode right)
+   inline load_mode::type& operator^=(
+      load_mode::type& left, load_mode::type right)
    {
       left = left ^ right;
       return (left);
