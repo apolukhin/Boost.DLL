@@ -6,9 +6,11 @@ boost/plugin/alias.html
 BOOST_PLUGIN_ALIAS.html
 boost/plugin/shared_library.html
 boost/plugin/operator__.html
-boost/plugin/operator_idp5928896.html
+boost/plugin/operator_idp16998496.html
 boost/plugin/swap.html
-boost/plugin/operator_.html
+boost/plugin/load_mode.html
+boost/plugin/operator_idp17016176.html
+boost/plugin/shared_functio_idp16886976.html
 boost_plugin/dependencies.html
 boost_plugin/f_a_q_.html
 boost_plugin/i_have_found_a_bug__how_do_i_notify_.html
