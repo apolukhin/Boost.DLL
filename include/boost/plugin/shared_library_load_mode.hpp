@@ -128,10 +128,10 @@ namespace boost { namespace plugin {
     * http://pubs.opengroup.org/onlinepubs/000095399/functions/dlopen.html
     *
     */
-   struct load_mode {
+    struct load_mode {
         enum type {
-#if BOOST_OS_WINDOWS
             default_mode                          = 0,
+#if BOOST_OS_WINDOWS
             // windows
             dont_resolve_dll_references           = boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
             load_ignore_code_authz_level          = boost::detail::winapi::LOAD_IGNORE_CODE_AUTHZ_LEVEL_,
@@ -141,19 +141,18 @@ namespace boost { namespace plugin {
             load_with_altered_search_path         = boost::detail::winapi::LOAD_WITH_ALTERED_SEARCH_PATH_,
 
             // posix
-            rtld_lazy                             = default_mode,
-            rtld_now                              = default_mode,
-            rtld_global                           = default_mode,
-            rtld_local                            = default_mode,
+            rtld_lazy                             = 0,
+            rtld_now                              = 0,
+            rtld_global                           = 0,
+            rtld_local                            = 0,
 #else
-            default_mode                          = RTLD_LAZY | RTLD_LOCAL,
             // windows
-            dont_resolve_dll_references           = default_mode,
-            load_ignore_code_authz_level          = default_mode,
-            load_library_as_datafile              = default_mode,
-            load_library_as_datafile_exclusive    = default_mode,
-            load_library_as_image_resource        = default_mode,
-            load_with_altered_search_path         = default_mode,
+            dont_resolve_dll_references           = 0,
+            load_ignore_code_authz_level          = 0,
+            load_library_as_datafile              = 0,
+            load_library_as_datafile_exclusive    = 0,
+            load_library_as_image_resource        = 0,
+            load_with_altered_search_path         = 0,
 
             // posix
             rtld_lazy                             = RTLD_LAZY,   // 1
@@ -162,26 +161,23 @@ namespace boost { namespace plugin {
             rtld_local                            = RTLD_LOCAL   // 4
 #endif
         };
-   };
+    };
 
-   /*!
+
+    /*!
     * Free operators for load_mode::type flag manipulation.
     */
 
-   inline load_mode::type operator|(
-      load_mode::type left,
-      load_mode::type right)
-   {
-      return (static_cast<load_mode::type>(
-         static_cast<unsigned int>(left) | static_cast<unsigned int>(right)));
-   }
+    inline load_mode::type operator|(load_mode::type left, load_mode::type right) {
+        return (static_cast<load_mode::type>(
+            static_cast<unsigned int>(left) | static_cast<unsigned int>(right))
+        );
+    }
 
-   inline load_mode::type& operator|=(
-      load_mode::type& left, load_mode::type right)
-   {
-      left = left | right;
-      return (left);
-   }
+    inline load_mode::type& operator|=(load_mode::type& left, load_mode::type right) {
+        left = left | right;
+        return (left);
+    }
 
 }} // boost::plugin
 

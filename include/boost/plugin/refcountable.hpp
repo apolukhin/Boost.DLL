@@ -27,18 +27,18 @@ namespace boost { namespace plugin {
 
 namespace detail {
 
-    template <class Result>
+    template <class T>
     class refc_function {
         boost::shared_ptr<shared_library>   lib_;
-        Result*                             func_ptr_;
+        T*                                  func_ptr_;
 
     public:
-        refc_function(const boost::shared_ptr<shared_library>& lib, Result* func_ptr)
+        refc_function(const boost::shared_ptr<shared_library>& lib, T* func_ptr)
             : lib_(lib)
             , func_ptr_(func_ptr)
         {}
 
-        operator Result*() const BOOST_NOEXCEPT {
+        operator T*() const BOOST_NOEXCEPT {
             return func_ptr_;
         }
     };
@@ -51,20 +51,51 @@ namespace detail {
             : lib_(lib)
         {}
 
-        inline void operator()(const void*) const BOOST_NOEXCEPT { /*do notjing*/ }
+        inline void operator()(const void*) const BOOST_NOEXCEPT { /*do nothing*/ }
     };
 }
 
 
 // shared_function methods
-template <class Result>
-boost::function<Result> shared_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::plugin::detail::refc_function<Result>(lib, &lib->get<Result>(func_name));
+
+
+template <class T>
+boost::function<T> shared_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
+    return boost::plugin::detail::refc_function<T>(lib, &lib->get<T>(func_name));
 }
 
-template <class Result>
-boost::function<Result> shared_function(const boost::filesystem::path& lib_path, boost::string_ref func_name) {
-    return shared_function<Result>(
+/*!
+* Returns boost::function that holds an imported function from the loaded library and refcounts usage
+* of the loaded shared library, so that it won't get unload until all copies of return value
+* are not destroyed.
+*
+* This call will succeed if call to `shared_library::search_symbol(const symbol_type &)`
+* function with the same symbol name returned `true`.
+*
+* For impoting function by it alias name use boost::plugin::shared_function_alias method
+* or add a pointer to a resulting type.
+*
+* \b Example:
+* \code
+* int& i = shared_function<int>("test_lib.so", "integer_name");
+* \endcode
+*
+* \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
+*
+* \param lib_path Path to the library to load function from.
+*
+* \param func_name Name of the function to import. Can handle std::string, char*, const char*.
+*
+* \return boost::function<T> that holds an imported function from the loaded library and refcounts usage
+* of the loaded shared library.
+*
+* \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+*        std::bad_alloc in case of insufficient memory.
+*
+*/
+template <class T>
+boost::function<T> shared_function(const boost::filesystem::path& lib_path, boost::string_ref func_name) {
+    return shared_function<T>(
         boost::make_shared<shared_library>(lib_path),
         func_name
     );
@@ -72,28 +103,28 @@ boost::function<Result> shared_function(const boost::filesystem::path& lib_path,
 
 
 // shared_function_alias methods
-template <class Result>
-boost::function<Result> shared_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::plugin::detail::refc_function<Result>(lib, lib->get<Result*>(func_name));
+template <class T>
+boost::function<T> shared_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
+    return boost::plugin::detail::refc_function<T>(lib, lib->get<T*>(func_name));
 }
 
-template <class Result>
-boost::function<Result> shared_function_alias(const boost::filesystem::path& lib_path, boost::string_ref func_name) {
-    return shared_function_alias<Result>(
+template <class T>
+boost::function<T> shared_function_alias(const boost::filesystem::path& lib_path, boost::string_ref func_name) {
+    return shared_function_alias<T>(
         boost::make_shared<shared_library>(lib_path),
         func_name
     );
 }
 
 // shared_variable methods
-template <class Result>
-boost::shared_ptr<Result> shared_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<Result>(&lib->get<Result>(variable_name), detail::ptr_holding_empty_deleter(lib));
+template <class T>
+boost::shared_ptr<T> shared_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
+    return boost::shared_ptr<T>(&lib->get<T>(variable_name), detail::ptr_holding_empty_deleter(lib));
 }
 
-template <class Result>
-boost::shared_ptr<Result> shared_variable(const boost::filesystem::path& lib_path, boost::string_ref variable_name) {
-    return shared_variable<Result>(
+template <class T>
+boost::shared_ptr<T> shared_variable(const boost::filesystem::path& lib_path, boost::string_ref variable_name) {
+    return shared_variable<T>(
         boost::make_shared<shared_library>(lib_path),
         variable_name
     );
@@ -101,14 +132,14 @@ boost::shared_ptr<Result> shared_variable(const boost::filesystem::path& lib_pat
 
 
 // shared_variable_alias methods
-template <class Result>
-boost::shared_ptr<Result> shared_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<Result>(lib->get<Result*>(variable_name), detail::ptr_holding_empty_deleter(lib));
+template <class T>
+boost::shared_ptr<T> shared_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
+    return boost::shared_ptr<T>(lib->get<T*>(variable_name), detail::ptr_holding_empty_deleter(lib));
 }
 
-template <class Result>
-boost::shared_ptr<Result> shared_variable_alias(const boost::filesystem::path& lib_path, boost::string_ref variable_name) {
-    return shared_variable_alias<Result>(
+template <class T>
+boost::shared_ptr<T> shared_variable_alias(const boost::filesystem::path& lib_path, boost::string_ref variable_name) {
+    return shared_variable_alias<T>(
         boost::make_shared<shared_library>(lib_path),
         variable_name
     );

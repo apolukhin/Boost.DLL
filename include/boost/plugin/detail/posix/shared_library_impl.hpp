@@ -54,6 +54,15 @@ public:
     void load(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
+        // Fixing modes
+        if (!(mode & RTLD_LAZY || mode & RTLD_NOW)) {
+            mode |= load_mode::rtld_lazy;
+        }
+
+        if (!(mode & RTLD_LOCAL || mode & RTLD_GLOBAL)) {
+            mode |= load_mode::rtld_local;
+        }
+
         handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
         if (!handle_) {
             ec = boost::system::error_code(
