@@ -23,6 +23,7 @@
 #include <boost/plugin/shared_library_load_mode.hpp>
 
 #include <boost/noncopyable.hpp>
+#include <boost/move/move.hpp>
 #include <boost/swap.hpp>
 
 #include <signal.h>
@@ -40,6 +41,9 @@
 namespace boost { namespace plugin {
 
 class shared_library_impl : noncopyable {
+
+    BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library_impl)
+
 public:
     typedef void* native_handle_t;
 
@@ -49,6 +53,16 @@ public:
 
     ~shared_library_impl() BOOST_NOEXCEPT {
         unload();
+    }
+    
+    shared_library_impl(BOOST_RV_REF(shared_library_impl) sl)
+    {  
+        handle_ = sl.handle_; sl.handle_ = NULL;  
+    }
+
+    shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl)
+    {  
+        handle_ = sl.handle_; sl.handle_ = NULL; return *this;  
     }
 
     void load(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {

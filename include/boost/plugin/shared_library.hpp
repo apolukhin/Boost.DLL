@@ -47,6 +47,10 @@ namespace boost { namespace plugin {
 */
 class shared_library: protected shared_library_impl {
     typedef shared_library_impl base_t;
+    
+    // The 'shared library' is not enabled to be copied but can be movable.
+    // This makes class 'shared library' movable.
+    BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library)
 
 public:
     typedef shared_library_impl::native_handle_t native_handle_t;
@@ -116,6 +120,31 @@ public:
     */
     shared_library(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         load(sl, mode, ec);
+    }
+    
+   /*!
+    * Move a shared_library object.
+    *
+    * \param sl a shared_library to move from.
+    *
+    * \throw Nothing.
+    */
+    shared_library(BOOST_RV_REF(shared_library) sl) BOOST_NOEXCEPT // Move ctor
+        : base_t(boost::move(static_cast<base_t&>(sl)))
+    {  
+    }
+
+   /*!
+    * Move a shared_library object.
+    *
+    * \param sl a shared_library to move from.
+    *
+    * \throw Nothing.
+    */
+    shared_library& operator=(BOOST_RV_REF(shared_library) sl) BOOST_NOEXCEPT // Move assign
+    {
+        base_t::operator=(boost::move(static_cast<base_t&>(sl)));
+        return *this;
     }
 
     /*!
