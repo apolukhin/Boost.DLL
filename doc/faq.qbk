@@ -14,9 +14,7 @@ No.
 Boost.Plugin supports Unicode, so that you could provide a unicode paths to it.
 [endsect]
 
-[tip 
-An unofficial usage example can be found at [@http://www.codeproject.com/Articles/695937/Creating-a-New-Application-Mode Code Project]
-]
+
 
 [endsect]
 

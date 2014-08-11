@@ -6,7 +6,7 @@
 
 [section Dependencies]
 
-The Boost.Plugin is a header only library, but it depends on the following libraries, and they must be available in order to compile programs that use Boost.Application:
+The Boost.Plugin is a header only library, but it depends on the following libraries, and they must be available in order to compile programs that use Boost.Plugin:
 
 * Boost.System for the boost::system::error_code and boost::system::system_error classes.
 * Boost.Filesystem to directory manipulation.
