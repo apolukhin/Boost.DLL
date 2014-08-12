@@ -13,11 +13,6 @@
 #include <boost/plugin.hpp>
 #include <iostream>
 
-extern "C" BOOST_SYMBOL_EXPORT int sumexe(int x, int y)
-{
-   return x+y;
-}
-
 int main(int argc, char* argv[]) { 
     std::cout << "Application started" << std::endl;
     

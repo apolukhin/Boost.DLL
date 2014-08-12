@@ -22,7 +22,6 @@
 #include <boost/plugin/shared_library_types.hpp>
 #include <boost/plugin/shared_library_load_mode.hpp>
 
-#include <boost/noncopyable.hpp>
 #include <boost/move/move.hpp>
 #include <boost/swap.hpp>
 
@@ -40,7 +39,7 @@
 
 namespace boost { namespace plugin {
 
-class shared_library_impl : noncopyable {
+class shared_library_impl {
 
     BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library_impl)
 
@@ -94,7 +93,7 @@ public:
         // "handle" for the dynamic library. If filename is NULL, then the 
         // returned handle is for the main program.
 
-        handle_ = dlopen(NULL, DLOPEN_LAZY | DLOPEN_GLOBAL | RTLD_DEEPBIND);
+        handle_ = dlopen(NULL, RTLD_LAZY);
 
         if (!handle_) {
             ec = boost::system::error_code(

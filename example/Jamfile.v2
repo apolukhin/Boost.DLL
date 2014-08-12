@@ -39,5 +39,5 @@ exe getting_started
    ;
 
 exe load_self  
-   : load_self.cpp
+   : tutorail3/load_self.cpp
    ;

@@ -105,7 +105,7 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
 }
 
 // exe function
-extern "C" BOOST_SYMBOL_EXPORT int exef() {
+extern "C" int BOOST_SYMBOL_EXPORT exef() {
     return 15;
 }
 

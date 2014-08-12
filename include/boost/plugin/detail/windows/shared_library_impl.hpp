@@ -21,7 +21,6 @@
 #include <boost/plugin/shared_library_types.hpp>
 #include <boost/plugin/shared_library_load_mode.hpp>
 
-#include <boost/noncopyable.hpp>
 #include <boost/move/move.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
@@ -29,7 +28,7 @@
 
 namespace boost { namespace plugin {
 
-class shared_library_impl : noncopyable {
+class shared_library_impl {
 
     BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library_impl)
 

@@ -11,7 +11,10 @@
 import testing ;
 import path ;
 
-path-constant TEST_DIR : $(BOOST_ROOT)/bin.v2/libs/application/test ;
+path-constant TEST_DIR : $(BOOST_ROOT)/bin.v2/libs/plugin/test ;
+
+# Static library that is not linked with any of the boost libs
+lib static_plugin : ../example/tutorial3/static_plugin.cpp : <link>static : : <target-os>linux:<cxxflags>"-rdynamic" ;
 
 project
    : source-location .
@@ -21,11 +24,10 @@ project
       <target-os>linux:<linkflags>"-ldl" 
 
    # others
-      <link>shared:<define>BOOST_ALL_DLL      
+      <link>shared:<define>BOOST_ALL_DLL
       <library>/boost/system//boost_system
       <library>/boost/filesystem//boost_filesystem
       <threading>multi
-
     ;
 {
 
@@ -39,11 +41,12 @@ project
     test-suite application
         : 
         [ run shared_library_load_test.cpp : $(TEST_DIR) ]
-        [ run shared_library_search_symbol_test.cpp : $(TEST_DIR) ]
-        [ run shared_library_get_symbol_test.cpp : $(TEST_DIR) ]
+        [ run shared_library_search_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
+        [ run shared_library_get_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
         [ run shared_library_errors.cpp : $(TEST_DIR) : : <test-info>always_show_run_output  ]
         [ run ../example/getting_started.cpp : $(TEST_DIR) ]
         [ run ../example/tutorial1/tutorial1.cpp : $(TEST_DIR) ]
         [ run ../example/tutorial2/tutorial2.cpp : $(TEST_DIR) ]
+        [ run ../example/tutorial3/load_self.cpp : : : <library>static_plugin ]
     ;
 }

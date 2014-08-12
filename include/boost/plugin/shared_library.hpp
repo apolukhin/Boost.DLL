@@ -201,7 +201,7 @@ public:
         base_t::load_self(ec);
 
         if (ec) {
-            boost::plugin::detail::report_error(ec, "load() failed");
+            boost::plugin::detail::report_error(ec, "load_self() failed");
         }
     }
 

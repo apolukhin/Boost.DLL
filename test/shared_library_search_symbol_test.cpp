@@ -13,7 +13,7 @@
 #include "../example/shared_lib_path.hpp"
 // Unit Tests
 
-extern "C" BOOST_SYMBOL_EXPORT void exef() {
+extern "C" void BOOST_SYMBOL_EXPORT exef() {
 }
 
 int test_main(int argc, char* argv[])
