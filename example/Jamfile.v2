@@ -37,3 +37,7 @@ exe shared_library_load_plugin
 exe getting_started  
    : getting_started.cpp
    ;
+
+exe load_self  
+   : load_self.cpp
+   ;
