@@ -13,6 +13,9 @@
 #include "../example/shared_lib_path.hpp"
 // Unit Tests
 
+extern "C" BOOST_SYMBOL_EXPORT void exef() {
+}
+
 int test_main(int argc, char* argv[])
 {
    using namespace boost::plugin;
@@ -28,7 +31,14 @@ int test_main(int argc, char* argv[])
       BOOST_CHECK(sl.search_symbol("integer_g"));
       BOOST_CHECK(!sl.search_symbol("i_do_not_exist"));
    }
-
+   
+   {
+      shared_library sl;
+      sl.load_self();
+      BOOST_CHECK(sl.search_symbol("exef"));
+      BOOST_CHECK(!sl.search_symbol("i_do_not_exist"));
+   }
+   
    return 0;
 }
 

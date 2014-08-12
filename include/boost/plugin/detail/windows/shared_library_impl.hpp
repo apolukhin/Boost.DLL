@@ -71,6 +71,28 @@ public:
         }
     }
 
+    void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
+        unload();
+
+        // TODO: I dont have TCHAR_ and MAX_PATH_ on basic_types.hpp, what I should use here?
+        TCHAR szPath[MAX_PATH];
+
+        // A handle to the loaded module whose path is being requested. 
+        // If this parameter is NULL, GetModuleFileName retrieves the path of the 
+        // executable file of the current process.
+        if(!GetModuleFileName(NULL, szPath, MAX_PATH ) )
+        {
+            ec = last_error_code(); return;
+        }
+
+        // here "handle" will be handle of current process!
+        handle_ = boost::detail::winapi::LoadLibrary(szPath);
+
+        if (!handle_) {
+            ec = last_error_code();
+        }
+    }
+
     bool is_loaded() const BOOST_NOEXCEPT {
         return (handle_ != 0);
     }

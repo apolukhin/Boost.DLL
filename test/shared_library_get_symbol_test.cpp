@@ -104,6 +104,10 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
     }
 }
 
+// exe function
+extern "C" BOOST_SYMBOL_EXPORT int exef() {
+    return 15;
+}
 
 // Unit Tests
 int test_main(int argc, char* argv[]) {
@@ -160,6 +164,13 @@ int test_main(int argc, char* argv[]) {
     sz = sl.get<std::size_t(*)(const std::vector<int>&)>("foo_bar");
     BOOST_CHECK(sz(v) == 10);
     BOOST_CHECK(*sl.get<std::size_t*>("foo_variable") == 42);
+    
+    { // self
+        shared_library sl;
+        sl.load_self();
+        int val = sl.get<int(void)>("exef")();
+        BOOST_CHECK(val == 15);   
+    }
 
     return 0;
 }

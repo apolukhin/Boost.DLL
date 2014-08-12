@@ -86,6 +86,24 @@ public:
         }
     }
 
+    void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
+        unload();
+
+        // As is known the function dlopen() loads the dynamic library file 
+        // named by the null-terminated string filename and returns an opaque 
+        // "handle" for the dynamic library. If filename is NULL, then the 
+        // returned handle is for the main program.
+
+        handle_ = dlopen(NULL, DLOPEN_LAZY | DLOPEN_GLOBAL | RTLD_DEEPBIND);
+
+        if (!handle_) {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor,
+                boost::system::generic_category()
+            );
+        }
+    }
+
     bool is_loaded() const BOOST_NOEXCEPT {
         return (handle_ != 0);
     }
