@@ -79,7 +79,7 @@ public:
         // A handle to the loaded module whose path is being requested. 
         // If this parameter is NULL, GetModuleFileName retrieves the path of the 
         // executable file of the current process.
-        if(!GetModuleFileName(NULL, szPath, MAX_PATH ) )
+        if(!boost::detail::winapi::GetModuleFileName(NULL, szPath, MAX_PATH ) )
         {
             ec = last_error_code(); return;
         }
