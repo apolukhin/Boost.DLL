@@ -24,8 +24,9 @@ int main(int argc, char* argv[]) {
     boost::plugin::shared_library self;
     self.load_self();
 
-    if(self.search_symbol("f"))
+    if(self.search_symbol("sumexe"))
     {
+       std::cout << "Call function 'int sumexe(int x, int y)'" << std::endl;
        boost::function<int(int, int)> sum = self.get<int(int, int)>("sumexe");
        std::cout << "Computed Value: " << sum(2,2) << std::endl;
     }
