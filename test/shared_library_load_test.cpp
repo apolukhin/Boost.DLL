@@ -105,11 +105,24 @@ int test_main(int argc, char* argv[])
       sl.load(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global);
       BOOST_CHECK(sl.is_loaded());
    }
+   
+   {  // self_load
+      shared_library sl;
+      sl.load_self();
+      BOOST_CHECK(sl.is_loaded());
+   }
 
    {
       shared_library sl;
       boost::system::error_code ec;
       sl.load(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global, ec);
+      BOOST_CHECK(sl.is_loaded());
+   }
+   
+   {  // self_load
+      shared_library sl;
+      boost::system::error_code ec;
+      sl.load_self(ec);
       BOOST_CHECK(sl.is_loaded());
    }
 

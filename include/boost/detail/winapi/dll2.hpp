@@ -31,11 +31,13 @@ namespace winapi
     using ::LoadLibraryW;
     using ::LoadLibraryExW;
     using ::GetModuleHandleW;
+    using ::GetModuleFileNameW;
 
 # ifndef BOOST_NO_ANSI_APIS
     using ::LoadLibraryA;
     using ::LoadLibraryExA;
     using ::GetModuleHandleA;
+    using ::GetModuleFileNameA;
 # endif
     using ::FreeLibrary;
     using ::GetProcAddress;
@@ -90,6 +92,13 @@ extern "C" {
             LPCWSTR_ lpFileName
     );
 
+    __declspec(dllimport) DWORD_ WINAPI
+        GetModuleFileNameW(
+            HMODULE_ hModule,
+            LPCWSTR_ lpFilename,
+            DWORD_ nSize
+    );
+
 # ifndef BOOST_NO_ANSI_APIS
     __declspec(dllimport) HMODULE_ WINAPI
         LoadLibraryA(
@@ -104,6 +113,12 @@ extern "C" {
     __declspec(dllimport) HMODULE_ WINAPI
         GetModuleHandleA(
             LPCSTR_ lpFileName
+    );
+    __declspec(dllimport) DWORD_ WINAPI
+        GetModuleFileNameA(
+            HMODULE_ hModule,
+            LPCSTR_ lpFilename,
+            DWORD_ nSize
     );
 # endif
 

@@ -47,6 +47,10 @@ namespace boost { namespace plugin {
 */
 class shared_library: protected shared_library_impl {
     typedef shared_library_impl base_t;
+    
+    // The 'shared library' is not enabled to be copied but can be movable.
+    // This makes class 'shared library' movable.
+    BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library)
 
 public:
     typedef shared_library_impl::native_handle_t native_handle_t;
@@ -117,6 +121,31 @@ public:
     shared_library(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         load(sl, mode, ec);
     }
+    
+   /*!
+    * Move a shared_library object.
+    *
+    * \param sl a shared_library to move from.
+    *
+    * \throw Nothing.
+    */
+    shared_library(BOOST_RV_REF(shared_library) sl) BOOST_NOEXCEPT // Move ctor
+        : base_t(boost::move(static_cast<base_t&>(sl)))
+    {  
+    }
+
+   /*!
+    * Move a shared_library object.
+    *
+    * \param sl a shared_library to move from.
+    *
+    * \throw Nothing.
+    */
+    shared_library& operator=(BOOST_RV_REF(shared_library) sl) BOOST_NOEXCEPT // Move assign
+    {
+        base_t::operator=(boost::move(static_cast<base_t&>(sl)));
+        return *this;
+    }
 
     /*!
     * Destroys the shared_library.
@@ -127,7 +156,6 @@ public:
     * \throw Nothing.
     */
     ~shared_library() BOOST_NOEXCEPT {}
-
 
     /*!
     * Loads a library by specified path.
@@ -150,6 +178,32 @@ public:
         }
     }
 
+    /*!
+    * Open myself (executable) have access to symbols. 
+    *
+    * Note that if some library is already loaded, load will
+    * unload it and then load itself.
+    *
+    * Note that this can be used when DLLs/DSOs is directly linked into the 
+    * executable.
+    * 
+    * You must export the symbol even if you are on exe.
+    *
+    * \b Example:
+    * \code
+    * extern "C" BOOST_SYMBOL_EXPORT void f() {}
+    * \endcode
+    *
+    * \throw boost::system::system_error.
+    */
+    void load_self() {
+        boost::system::error_code ec;
+        base_t::load_self(ec);
+
+        if (ec) {
+            boost::plugin::detail::report_error(ec, "load_self() failed");
+        }
+    }
 
     /*!
     * Loads a library by specified path.
@@ -169,6 +223,30 @@ public:
         base_t::load(sl, load_mode::default_mode, ec);
     }
 
+    /*!
+    * Open myself (executable) to have access to symbols. 
+    *
+    * Note that if some library is already loaded, load will
+    * unload it and then load itself.
+    *
+    * Note that this can be used when DLLs/DSOs is directly linked into the 
+    * executable.
+    *
+    * You must export the symbol even if you are on exe.
+    * 
+    * \b Example:
+    * \code
+    * extern "C" BOOST_SYMBOL_EXPORT void f() {}
+    * \endcode
+    *
+    * \param ec Variable that will be set to the result of the operation.
+    *
+    * \throw Nothing.
+    */
+    void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
+        ec.clear();
+        base_t::load_self(ec);
+    }
 
     /*!
     * Loads a library by specified path with a specified mode.

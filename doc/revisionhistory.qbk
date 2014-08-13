@@ -6,91 +6,9 @@
 
 [section Revision History]
 
-[h5 0.4.9]
-
-As proposed by Rodrigo Madera (Application RM), this:
-
- struct myapp {
-     bool stop(boost::application::context& context);
-     bool pause(boost::application::context& context);
-     bool resume(boost::application::context& context); };
-
-Become this:
-
- struct myapp {
-     myapp(boost::application::context& context);
-
-     bool stop();
-     bool pause();
-     bool resume();
- };
-
-[h5 0.4.8]
-
-New experimental module auto_handler.hpp
-This module simplifies the creation of the main 'handlers', like: stop, instace_aready_running, pause (windows only), resume (windows only)
-
-[h5 0.4.7]
-
-In line with the last Boost.TypeIndex (typeindex::type_index)
-
-[@https://github.com/boostorg/type_index TypeIndex]
-
-[h5 0.4.6]
-
-Removes Boost.Singularity dependence and add a global context
-
-[h5 0.4.5]
-
-In line with the last Boost.TypeIndex (typeind::type_index)
-
-[h5 0.4.4]
-
-New sample that show how user can extend the lib(new_application_mode)
-
-[@https://github.com/retf/Boost.Application Version 0.4.4.b (Current)]
-
-[h5 0.4.3]
-
-Changes on identification of application modes.
-
-[@https://github.com/retf/Boost.Application Version 0.4.3.b]
-
-[h5 0.4.2]
-
-aspect_map now is Thread-Safe.
-
-[@https://github.com/retf/Boost.Application Version 0.4.2.b]
-
-[h5 0.4.1]
-
-On POSIX/UNIX now we provide 'selfpipe' for SIGNALS handle like proposed by 'Stanislav Ivochkin' on mailing list discussion.
-
-[@https://github.com/retf/Boost.Application Version 0.4.1.b]
-
-[h5 0.4]
-
-Boost.Application 0.4 (Aspect Based Design) 
-
-[@https://github.com/retf/Boost.Application Version 0.4.b]
-
-[h5 0.3]
-
-Boost.Application 0.3 (Old Interface)
-
-[@http://sourceforge.net/projects/boostapp/ Version 0.3.b]
-
-[h5 0.2]
-
-Boost.Application 0.2 (Concept Tests)
-
-[@http://sourceforge.net/projects/boostapp/ Version 0.2.pa Boost.Application_pre_alpha_2]
-
 [h5 0.1]
 
-Boost.Application 0.1 (Initial Prototype)
-
-[@http://sourceforge.net/projects/boostapp/ Version 0.1.pa Boost.Application_pre_alpha_1]
+Boost.Plugin 0.1 (Initial Solo Prototype)
 
 [endsect]
 

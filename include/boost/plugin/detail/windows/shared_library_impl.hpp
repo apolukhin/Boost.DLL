@@ -21,14 +21,17 @@
 #include <boost/plugin/shared_library_types.hpp>
 #include <boost/plugin/shared_library_load_mode.hpp>
 
-#include <boost/noncopyable.hpp>
+#include <boost/move/move.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
 
 namespace boost { namespace plugin {
 
-class shared_library_impl : noncopyable {
+class shared_library_impl {
+
+    BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library_impl)
+
     static inline boost::system::error_code last_error_code() BOOST_NOEXCEPT {
         return boost::system::error_code(
             boost::detail::winapi::GetLastError(),
@@ -46,6 +49,16 @@ public:
     ~shared_library_impl() BOOST_NOEXCEPT {
         unload();
     }
+    
+    shared_library_impl(BOOST_RV_REF(shared_library_impl) sl)
+    {  
+        handle_ = sl.handle_;   sl.handle_ = NULL;  
+    }
+
+    shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl)
+    {  
+        handle_ = sl.handle_; sl.handle_ = NULL; return *this;  
+    }
 
     void load(const library_path &sh, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
@@ -54,6 +67,44 @@ public:
         handle_ = boost::detail::winapi::LoadLibraryExW(sh.c_str(), 0, flags);
         if (!handle_) {
             ec = last_error_code();
+        }
+    }
+
+    void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
+        unload();
+
+        // 260 == MAX_PATH
+        const boost::detail::winapi::DWORD_ default_path_size = 260;
+        const boost::detail::winapi::DWORD_ ERROR_INSUFFICIENT_BUFFER_ = 0x7A;
+        boost::detail::winapi::WCHAR_ path_hldr[default_path_size];
+        boost::detail::winapi::LPCWSTR_ path = path_hldr;
+        
+        // A handle to the loaded module whose path is being requested. 
+        // If this parameter is NULL, GetModuleFileName retrieves the path of the 
+        // executable file of the current process.
+        boost::detail::winapi::GetModuleFileNameW(NULL, path, default_path_size);
+        ec = last_error_code();
+        
+        // In case of ERROR_INSUFFICIENT_BUFFER_ trying to get buffer, big enought to store the whole path
+        for (unsigned i = 2; i < 1025 && ec.value() == ERROR_INSUFFICIENT_BUFFER_; i *= 2) {
+            path = new boost::detail::winapi::WCHAR_[default_path_size * i];
+            boost::detail::winapi::GetModuleFileNameW(NULL, path, default_path_size * i);
+            ec = last_error_code();
+        }
+        
+        if (ec) {
+            // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough
+            return;
+        }
+        
+        // here "handle" will be handle of current process!
+        handle_ = boost::detail::winapi::LoadLibraryExW(path, 0, 0);
+        if (!handle_) {
+            ec = last_error_code();
+        }
+
+        if (path != path_hldr) {
+            delete[] path;
         }
     }
 

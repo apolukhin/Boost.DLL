@@ -14,16 +14,15 @@ No.
 Boost.Plugin supports Unicode, so that you could provide a unicode paths to it.
 [endsect]
 
-[tip 
-An unofficial usage example can be found at [@http://www.codeproject.com/Articles/695937/Creating-a-New-Application-Mode Code Project]
-]
-
+[section Can I open an executable file?]
+Yes, you can, but the symbols need be exported using: BOOST_SYMBOL_EXPORT or BOOST_PLUGIN_ALIAS.
+You can use 'load_self' method to load yourself. Refer to 'load_self.cpp' on example folder to more detail.
 [endsect]
 
 [section I have found a bug, how do I notify?]
 Please, send a e-mail with detailed description to re.tf[at]acm.org
 [endsect]
 
-
+[endsect]
 
 

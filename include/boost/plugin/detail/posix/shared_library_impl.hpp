@@ -22,7 +22,7 @@
 #include <boost/plugin/shared_library_types.hpp>
 #include <boost/plugin/shared_library_load_mode.hpp>
 
-#include <boost/noncopyable.hpp>
+#include <boost/move/move.hpp>
 #include <boost/swap.hpp>
 
 #include <signal.h>
@@ -39,7 +39,10 @@
 
 namespace boost { namespace plugin {
 
-class shared_library_impl : noncopyable {
+class shared_library_impl {
+
+    BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library_impl)
+
 public:
     typedef void* native_handle_t;
 
@@ -49,6 +52,16 @@ public:
 
     ~shared_library_impl() BOOST_NOEXCEPT {
         unload();
+    }
+    
+    shared_library_impl(BOOST_RV_REF(shared_library_impl) sl)
+    {  
+        handle_ = sl.handle_; sl.handle_ = NULL;  
+    }
+
+    shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl)
+    {  
+        handle_ = sl.handle_; sl.handle_ = NULL; return *this;  
     }
 
     void load(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
@@ -64,6 +77,24 @@ public:
         }
 
         handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
+        if (!handle_) {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor,
+                boost::system::generic_category()
+            );
+        }
+    }
+
+    void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
+        unload();
+
+        // As is known the function dlopen() loads the dynamic library file 
+        // named by the null-terminated string filename and returns an opaque 
+        // "handle" for the dynamic library. If filename is NULL, then the 
+        // returned handle is for the main program.
+
+        handle_ = dlopen(NULL, RTLD_LAZY);
+
         if (!handle_) {
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,
