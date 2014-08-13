@@ -76,6 +76,26 @@ Plugin Name:  aggregator
 
 [endsect]
 
+[section Searching for a symbol in multiple plugins]
+
+Consider the situation: we have multiple plugins, but only some of them have symbols that we need.
+Let's write a function that search list of plugins and attempts to find `"create_plugin"` method.
+
+[import ../example/tutorial3/tutorial3.cpp]
+[callplugcpp_tutorial3]
+
+If we call that method for all our plugins we'll get the following output:
+
+[pre
+Loading plugin: "/test/libmy_plugin_aggregator.so"
+Matching plugin name: aggregator
+Loading plugin: "/test/libmy_plugin_sum.so.1.56"
+Constructing my_plugin_sum
+Destructing my_plugin_sum ;o)
+]
+
+[endsect]
+
 [endsect]
 
 

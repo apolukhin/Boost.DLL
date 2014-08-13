@@ -14,7 +14,7 @@ import path ;
 path-constant TEST_DIR : $(BOOST_ROOT)/bin.v2/libs/plugin/test ;
 
 # Static library that is not linked with any of the boost libs
-lib static_plugin : ../example/tutorial3/static_plugin.cpp : <link>static : : <target-os>linux:<cxxflags>"-rdynamic" ;
+lib static_plugin : ../example/tutorial4/static_plugin.cpp : <link>static : : <target-os>linux:<cxxflags>"-rdynamic" ;
 
 project
    : source-location .
@@ -47,6 +47,7 @@ project
         [ run ../example/getting_started.cpp : $(TEST_DIR) ]
         [ run ../example/tutorial1/tutorial1.cpp : $(TEST_DIR) ]
         [ run ../example/tutorial2/tutorial2.cpp : $(TEST_DIR) ]
-        [ run ../example/tutorial3/load_self.cpp : : : <library>static_plugin <target-os>linux:<linkflags>"-rdynamic" ]
+        [ run ../example/tutorial3/tutorial3.cpp : $(TEST_DIR) ]
+        [ run ../example/tutorial4/load_self.cpp : : : <library>static_plugin <target-os>linux:<linkflags>"-rdynamic" ]
     ;
 }
