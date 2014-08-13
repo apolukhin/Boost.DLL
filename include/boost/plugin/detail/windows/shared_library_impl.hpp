@@ -73,22 +73,38 @@ public:
     void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
-        // TODO: I dont have TCHAR_ and MAX_PATH_ on basic_types.hpp, what I should use here?
-        TCHAR szPath[MAX_PATH];
-
+        // 260 == MAX_PATH
+        const boost::detail::winapi::DWORD_ default_path_size = 260;
+        const boost::detail::winapi::DWORD_ ERROR_INSUFFICIENT_BUFFER_ = 0x7A;
+        boost::detail::winapi::WCHAR_ path_hldr[default_path_size];
+        boost::detail::winapi::LPCWSTR_ path = path_hldr;
+        
         // A handle to the loaded module whose path is being requested. 
         // If this parameter is NULL, GetModuleFileName retrieves the path of the 
         // executable file of the current process.
-        if(!boost::detail::winapi::GetModuleFileName(NULL, szPath, MAX_PATH ) )
-        {
-            ec = last_error_code(); return;
+        boost::detail::winapi::GetModuleFileNameW(NULL, path, default_path_size);
+        ec = last_error_code();
+        
+        // In case of ERROR_INSUFFICIENT_BUFFER_ trying to get buffer, big enought to store the whole path
+        for (unsigned i = 2; i < 1025 && ec.value() == ERROR_INSUFFICIENT_BUFFER_; i *= 2) {
+            path = new boost::detail::winapi::WCHAR_[default_path_size * i];
+            boost::detail::winapi::GetModuleFileNameW(NULL, path, default_path_size * i);
+            ec = last_error_code();
         }
-
+        
+        if (ec) {
+            // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough
+            return;
+        }
+        
         // here "handle" will be handle of current process!
-        handle_ = boost::detail::winapi::LoadLibrary(szPath);
-
+        handle_ = boost::detail::winapi::LoadLibraryExW(path, 0, 0);
         if (!handle_) {
             ec = last_error_code();
+        }
+
+        if (path != path_hldr) {
+            delete[] path;
         }
     }
 
