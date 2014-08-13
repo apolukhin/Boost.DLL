@@ -7,11 +7,9 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/config.hpp>
-#include <boost/plugin/alias.hpp>
+#define SUMEXE_PLUGIN_STATIC
+#include "static_plugin.hpp"
 
-extern "C" BOOST_SYMBOL_EXPORT int sumexe(int x, int y)
-{
-   return x+y;
+int sumexe(int x, int y) {
+   return x + y;
 }
-

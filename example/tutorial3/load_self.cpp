@@ -13,17 +13,21 @@
 #include <boost/plugin.hpp>
 #include <iostream>
 
-int main(int argc, char* argv[]) { 
+#define SUMEXE_PLUGIN_LINK_IN
+#include "static_plugin.hpp"
+
+int main(int argc, char* argv[]) {
     std::cout << "Application started" << std::endl;
     
     boost::plugin::shared_library self;
     self.load_self();
-
-    if(self.search_symbol("sumexe"))
-    {
-       std::cout << "Call function 'int sumexe(int x, int y)'" << std::endl;
-       boost::function<int(int, int)> sum = self.get<int(int, int)>("sumexe");
-       std::cout << "Computed Value: " << sum(2,2) << std::endl;
+    try {
+        std::cout << "Call function 'int sumexe(int x, int y)'" << std::endl;
+        boost::function<int(int, int)> sum = boost::plugin::alias<int(int, int)>(self, "sumexe_alias");
+        std::cout << "Computed Value: " << sum(2,2) << std::endl;
+    } catch (const std::exception& e) {
+        std::cout << e.what();
+        throw;
     }
 }
 

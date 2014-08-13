@@ -49,7 +49,7 @@ BOOST_PLUGIN_ALIAS(my_namespace::plugin, plugin)
 
 // platform dependent initialization sample
 //
-
+/*
 #if defined( BOOST_WINDOWS_API )
 
 // return TRUE on success and FALSE if an error occurs. returning
@@ -93,6 +93,6 @@ void my_unload(void)
 }
 
 #endif
-
+*/
 
 
