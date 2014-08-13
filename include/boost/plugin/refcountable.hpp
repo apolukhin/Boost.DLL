@@ -23,6 +23,10 @@
 #include <boost/make_shared.hpp>
 #include <boost/function.hpp>
 
+#ifdef BOOST_HAS_PRAGMA_ONCE
+# pragma once
+#endif
+
 namespace boost { namespace plugin {
 
 namespace detail {
@@ -62,7 +66,7 @@ namespace detail {
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const symbol_type &)`
+* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
 * For importing function by it alias name use boost::plugin::shared_function_alias method.
@@ -81,7 +85,7 @@ namespace detail {
 *
 * \param lib Shared pointer to library to load function from.
 *
-* \param func_name Name of the function to import. Can handle std::string, char*, const char*.
+* \param func_name Null-terminated name of the function to import. Can handle std::string, char*, const char*.
 *
 * \return boost::function<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library.
@@ -99,7 +103,7 @@ boost::function<T> shared_function(const boost::shared_ptr<shared_library>& lib,
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const symbol_type &)`
+* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
 * For importing function by it's alias name use boost::plugin::shared_function_alias method.
@@ -113,7 +117,7 @@ boost::function<T> shared_function(const boost::shared_ptr<shared_library>& lib,
 *
 * \param lib_path Path to the library to load function from.
 *
-* \param func_name Name of the function to import. Can handle std::string, char*, const char*.
+* \param func_name Null-terminated name of the function to import. Can handle std::string, char*, const char*.
 *
 * \return boost::function<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library.
@@ -138,7 +142,7 @@ boost::function<T> shared_function(const boost::filesystem::path& lib_path, boos
 * from the loaded library and refcounts usage of the loaded shared library.  Library won't
 * get unload until all copies of returned value are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const symbol_type &)`
+* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
 * For non alias names use boost::plugin::shared_function method.
@@ -157,7 +161,7 @@ boost::function<T> shared_function(const boost::filesystem::path& lib_path, boos
 *
 * \param lib Shared pointer to library to load function from.
 *
-* \param func_name Name of the function to import. Can handle std::string, char*, const char*.
+* \param func_name Null-terminated name of the function to import. Can handle std::string, char*, const char*.
 *
 * \return boost::function<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library.
@@ -175,7 +179,7 @@ boost::function<T> shared_function_alias(const boost::shared_ptr<shared_library>
 * from the loaded library and refcounts usage of the loaded shared library.  Library won't
 * get unload until all copies of returned value are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const symbol_type &)`
+* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
 * For non alias names use boost::plugin::shared_function method.
@@ -189,7 +193,7 @@ boost::function<T> shared_function_alias(const boost::shared_ptr<shared_library>
 *
 * \param lib_path Path to the library to load function from.
 *
-* \param func_name Name of the function to import. Can handle std::string, char*, const char*.
+* \param func_name Null-terminated name of the function to import. Can handle std::string, char*, const char*.
 *
 * \return boost::function<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library.
@@ -214,7 +218,7 @@ boost::function<T> shared_function_alias(const boost::filesystem::path& lib_path
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const symbol_type &)`
+* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
 * For importing variable by it's alias name use boost::plugin::shared_variable_alias method.
@@ -233,7 +237,7 @@ boost::function<T> shared_function_alias(const boost::filesystem::path& lib_path
 *
 * \param lib Shared pointer to library to load variable from.
 *
-* \param variable_name Name of the variable to import. Can handle std::string, char*, const char*.
+* \param variable_name Null-terminated name of the variable to import. Can handle std::string, char*, const char*.
 *
 * \return boost::shared_ptr<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library.
@@ -251,7 +255,7 @@ boost::shared_ptr<T> shared_variable(const boost::shared_ptr<shared_library>& li
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const symbol_type &)`
+* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
 * For importing variable by it's alias name use boost::plugin::shared_variable_alias method.
@@ -265,7 +269,7 @@ boost::shared_ptr<T> shared_variable(const boost::shared_ptr<shared_library>& li
 *
 * \param lib_path Path to the library to load variable from.
 *
-* \param variable_name Name of the variable to import. Can handle std::string, char*, const char*.
+* \param variable_name Null-terminated name of the variable to import. Can handle std::string, char*, const char*.
 *
 * \return boost::shared_ptr<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library.
@@ -290,7 +294,7 @@ boost::shared_ptr<T> shared_variable(const boost::filesystem::path& lib_path, bo
 * variable from the loaded library and refcounts usage of the loaded shared library.
 * Library won't get unload until all copies of returned value are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const symbol_type &)`
+* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
 * For non alias names use boost::plugin::shared_variable method.
@@ -309,7 +313,7 @@ boost::shared_ptr<T> shared_variable(const boost::filesystem::path& lib_path, bo
 *
 * \param lib Shared pointer to the library to load variable from.
 *
-* \param variable_name Name of the variable to import. Can handle std::string, char*, const char*.
+* \param variable_name Null-terminated name of the variable to import. Can handle std::string, char*, const char*.
 *
 * \return boost::shared_ptr<T> that holds an imported variable from the loaded library and refcounts usage
 * of the loaded shared library.
@@ -327,7 +331,7 @@ boost::shared_ptr<T> shared_variable_alias(const boost::shared_ptr<shared_librar
 * variable from the loaded library and refcounts usage of the loaded shared library.
 * Library won't get unload until all copies of returned value are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const symbol_type &)`
+* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
 * For non alias names use boost::plugin::shared_variable method.
@@ -341,7 +345,7 @@ boost::shared_ptr<T> shared_variable_alias(const boost::shared_ptr<shared_librar
 *
 * \param lib_path Path to the library to load variable from.
 *
-* \param variable_name Name of the variable to import. Can handle std::string, char*, const char*.
+* \param variable_name Null-terminated name of the variable to import. Can handle std::string, char*, const char*.
 *
 * \return boost::shared_ptr<T> that holds an imported variable from the loaded library and refcounts usage
 * of the loaded shared library.

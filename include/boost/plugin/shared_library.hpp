@@ -23,8 +23,6 @@
 
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
-
-#include <boost/plugin/shared_library_load_mode.hpp>
 #include <boost/plugin/detail/system_error.hpp>
 
 #if BOOST_OS_WINDOWS
@@ -70,7 +68,7 @@ public:
     *
     * \throw boost::system::system_error.
     */
-    explicit shared_library(const library_path &sl) {
+    explicit shared_library(const boost::filesystem::path &sl) {
         load(sl);
     }
 
@@ -84,7 +82,7 @@ public:
     *
     * \throw Nothing.
     */
-    shared_library(const library_path &sl, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    shared_library(const boost::filesystem::path &sl, boost::system::error_code &ec) BOOST_NOEXCEPT {
         load(sl, ec);
     }
 
@@ -100,7 +98,7 @@ public:
     * \throw boost::system::system_error.
     *
     */
-    shared_library(const library_path &sl, load_mode::type mode) {
+    shared_library(const boost::filesystem::path &sl, load_mode::type mode) {
         load(sl, mode);
     }
 
@@ -118,7 +116,7 @@ public:
     * \throw Nothing.
     *
     */
-    shared_library(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    shared_library(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         load(sl, mode, ec);
     }
     
@@ -169,7 +167,7 @@ public:
     * \throw boost::system::system_error.
     *
     */
-    void load(const library_path &sl) {
+    void load(const boost::filesystem::path &sl) {
         boost::system::error_code ec;
         base_t::load(sl, load_mode::default_mode, ec);
 
@@ -179,7 +177,7 @@ public:
     }
 
     /*!
-    * Open myself (executable) have access to symbols. 
+    * Open myself (this executable) to have access to symbols. 
     *
     * Note that if some library is already loaded, load will
     * unload it and then load itself.
@@ -218,13 +216,13 @@ public:
     *
     * \throw Nothing.
     */
-    void load(const library_path &sl, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const boost::filesystem::path &sl, boost::system::error_code &ec) BOOST_NOEXCEPT {
         ec.clear();
         base_t::load(sl, load_mode::default_mode, ec);
     }
 
     /*!
-    * Open myself (executable) to have access to symbols. 
+    * Open myself (this executable) to have access to symbols. 
     *
     * Note that if some library is already loaded, load will
     * unload it and then load itself.
@@ -262,7 +260,7 @@ public:
     * \throw boost::system::system_error.
     *
     */
-    void load(const library_path &sl, load_mode::type mode) {
+    void load(const boost::filesystem::path &sl, load_mode::type mode) {
         boost::system::error_code ec;
         base_t::load(sl, mode, ec);
 
@@ -287,7 +285,7 @@ public:
     * \throw Nothing.
     *
     */
-    void load(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         ec.clear();
         base_t::load(sl, mode, ec);
     }
@@ -317,21 +315,21 @@ public:
     /*!
     * Seach for a given symbol on loaded library. Works for all symbols, including alias names.
     *
-    * \param sb Symbol name. Can handle std::string, char*, const char*.
+    * \param sb Null-terminated symbol name. Can handle std::string, char*, const char*.
     *
     * \return `true` if the loaded library contains a symbol with a given name.
     *
     * \throw Nothing.
     *
     */
-    bool search_symbol(const symbol_type &sb) const BOOST_NOEXCEPT {
+    bool search_symbol(const boost::string_ref &sb) const BOOST_NOEXCEPT {
         boost::system::error_code ec;
         return is_loaded() && !!base_t::symbol_addr(sb, ec) && !ec;
     }
 
     /*!
     * Returns reference to the symbol (function or variable) with the given name from the loaded library.
-    * This call will always succeed and throw nothing if call to `search_symbol(const symbol_type &)`
+    * This call will always succeed and throw nothing if call to `search_symbol(const boost::string_ref &)`
     * member function with the same symbol name returned `true`.
     *
     * If using this call for an alias name do not forget to add a pointer to a resulting type.
@@ -345,7 +343,7 @@ public:
     *
     * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
     *
-    * \param sb Symbol name. Can handle std::string, char*, const char*.
+    * \param sb Null-terminated symbol name. Can handle std::string, char*, const char*.
     *
     * \return Reference to the symbol.
     *
@@ -353,7 +351,7 @@ public:
     *
     */
     template <typename T>
-    T& get(const symbol_type &sb) const {
+    T& get(const boost::string_ref &sb) const {
         boost::system::error_code ec;
 
         if (!is_loaded()) {

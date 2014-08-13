@@ -24,10 +24,12 @@
 #include <boost/system/system_error.hpp>
 #include <boost/throw_exception.hpp>
 
-#if BOOST_OS_WINDOWS
-#   include <boost/detail/winapi/GetLastError.hpp>
-#else
-#   include <errno.h>
+#if !BOOST_OS_WINDOWS
+#   include <dlfcn.h>
+#endif
+
+#ifdef BOOST_HAS_PRAGMA_ONCE
+#   pragma once
 #endif
 
 namespace boost { namespace plugin { namespace detail {

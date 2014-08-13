@@ -18,13 +18,19 @@
 #define BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
 
 #include <boost/config.hpp>
-#include <boost/plugin/shared_library_types.hpp>
 #include <boost/plugin/shared_library_load_mode.hpp>
 
 #include <boost/move/move.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/utility/string_ref.hpp>
+
 #include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
+#include <boost/detail/winapi/GetLastError.hpp>
+
+#ifdef BOOST_HAS_PRAGMA_ONCE
+# pragma once
+#endif
 
 namespace boost { namespace plugin {
 
@@ -60,7 +66,7 @@ public:
         handle_ = sl.handle_; sl.handle_ = NULL; return *this;  
     }
 
-    void load(const library_path &sh, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const boost::filesystem::path &sh, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
         boost::detail::winapi::DWORD_ flags = static_cast<boost::detail::winapi::DWORD_>(mode);
@@ -136,11 +142,11 @@ public:
         boost::swap(handle_, rhs.handle_);
     }
 
-    static library_path suffix() {
+    static boost::filesystem::path suffix() {
         return L".dll";
     }
 
-    void* symbol_addr(const symbol_type &sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
+    void* symbol_addr(const boost::string_ref &sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
         // Judging by the documentation and
         // at GetProcAddress there is no version for UNICODE.
         // There can be it and is correct, as in executed

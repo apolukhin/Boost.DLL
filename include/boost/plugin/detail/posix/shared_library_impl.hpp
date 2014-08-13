@@ -19,23 +19,18 @@
 #define BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
 
 #include <boost/config.hpp>
-#include <boost/plugin/shared_library_types.hpp>
 #include <boost/plugin/shared_library_load_mode.hpp>
 
 #include <boost/move/move.hpp>
 #include <boost/swap.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/utility/string_ref.hpp>
 
-#include <signal.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <errno.h>
-
-#include <fcntl.h>
-#include <sys/resource.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <dlfcn.h>
+
+#ifdef BOOST_HAS_PRAGMA_ONCE
+# pragma once
+#endif
 
 namespace boost { namespace plugin {
 
@@ -64,7 +59,7 @@ public:
         handle_ = sl.handle_; sl.handle_ = NULL; return *this;  
     }
 
-    void load(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
         // Do not allow opening NULL paths. User must use load_self() instead
@@ -130,7 +125,7 @@ public:
         boost::swap(handle_, rhs.handle_);
     }
 
-    static library_path suffix() {
+    static boost::filesystem::path suffix() {
         // https://sourceforge.net/p/predef/wiki/OperatingSystems/
 #if defined(__APPLE__)
         return ".dylib";
@@ -139,7 +134,7 @@ public:
 #endif
     }
 
-    void* symbol_addr(const symbol_type &sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
+    void* symbol_addr(const boost::string_ref &sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
         // dlsym - obtain the address of a symbol from a dlopen object
         void* const symbol = dlsym(handle_, sb.data());
         if (symbol == NULL) {

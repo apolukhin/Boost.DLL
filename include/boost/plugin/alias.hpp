@@ -26,7 +26,7 @@
 namespace boost { namespace plugin {
 
 /*!
-* \brief Makes an alias name for exported function or variable
+* \brief Makes an alias name for exported function or variable.
 */
 #define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)            \
     extern "C" BOOST_SYMBOL_EXPORT void *AliasName;             \
@@ -43,12 +43,16 @@ namespace boost { namespace plugin {
 * int& i = alias<int>(lib, "integer_alias_name");
 * \endcode
 *
-* \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
+* \tparam T Type of the symbol that we are going to import. Must be explicitly specified..
+*
+* \param lib Library to load symbol from.
+*
+* \param sb Null-terminated alias symbol name. Can handle std::string, char*, const char*.
 *
 * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
 */
 template <typename T>
-inline T& alias(const shared_library& lib, const symbol_type &symbol) {
+inline T& alias(const shared_library& lib, const boost::string_ref &symbol) {
     // Alias - is just a variable that pointers to original data
     //
     // A few attempts were made to avoid additional indirection:

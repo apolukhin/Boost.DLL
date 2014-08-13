@@ -27,11 +27,15 @@
 #   include <dlfcn.h>
 #endif
 
+#ifdef BOOST_HAS_PRAGMA_ONCE
+# pragma once
+#endif
+
 namespace boost { namespace plugin {
 
    /*! \enum Modes of load library.
     *
-    * Each of system family provides own flags:
+    * Each of system family provides own flags. Flags not supported by a particular platform will be ignored.
     *
     * WINDOWS
     * -------
@@ -167,7 +171,6 @@ namespace boost { namespace plugin {
     /*!
     * Free operators for load_mode::type flag manipulation.
     */
-
     inline load_mode::type operator|(load_mode::type left, load_mode::type right) {
         return (static_cast<load_mode::type>(
             static_cast<unsigned int>(left) | static_cast<unsigned int>(right))
