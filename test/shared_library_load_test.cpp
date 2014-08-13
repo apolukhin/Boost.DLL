@@ -98,6 +98,7 @@ int test_main(int argc, char* argv[])
       boost::system::error_code ec;
       shared_library sl(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global, ec);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(!ec);
    }
 
    {
@@ -117,6 +118,14 @@ int test_main(int argc, char* argv[])
       boost::system::error_code ec;
       sl.load(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global, ec);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(!ec);
+
+      sl.load_self();
+      BOOST_CHECK(sl.is_loaded());
+
+      sl.load_self(ec);
+      BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(!ec);
    }
    
    {  // self_load
@@ -124,6 +133,7 @@ int test_main(int argc, char* argv[])
       boost::system::error_code ec;
       sl.load_self(ec);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(!ec);
    }
 
    {  // unload
@@ -157,6 +167,10 @@ int test_main(int argc, char* argv[])
       shared_library sl3(shared_library_path, ec);
       BOOST_CHECK(!ec);
       BOOST_CHECK(sl3.is_loaded());
+
+      sl.load("", ec);
+      BOOST_CHECK(ec);
+      BOOST_CHECK(!sl.is_loaded());
    }
 
    return 0;

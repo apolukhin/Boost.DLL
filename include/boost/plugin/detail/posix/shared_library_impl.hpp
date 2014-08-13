@@ -67,6 +67,16 @@ public:
     void load(const library_path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
+        // Do not allow opening NULL paths. User must use load_self() instead
+        if (sl.empty()) {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor,
+                boost::system::generic_category()
+            );
+
+            return;
+        }
+
         // Fixing modes
         if (!(mode & RTLD_LAZY || mode & RTLD_NOW)) {
             mode |= load_mode::rtld_lazy;

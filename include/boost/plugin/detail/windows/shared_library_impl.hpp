@@ -87,7 +87,15 @@ public:
         
         // In case of ERROR_INSUFFICIENT_BUFFER_ trying to get buffer big enough to store the whole path
         for (unsigned i = 2; i < 1025 && ec.value() == ERROR_INSUFFICIENT_BUFFER_; i *= 2) {
-            path = new boost::detail::winapi::WCHAR_[default_path_size * i];
+            path = new(std::nothrow) boost::detail::winapi::WCHAR_[default_path_size * i];
+            if (!path) {
+                ec = boost::system::error_code(
+                    boost::system::errc::not_enough_memory,
+                    boost::system::generic_category()
+                );
+                
+                return;
+            }
 
             boost::detail::winapi::GetModuleFileNameW(NULL, path, default_path_size * i);
             ec = last_error_code();
