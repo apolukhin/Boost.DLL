@@ -7,33 +7,22 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/config.hpp>
-#include <boost/plugin/alias.hpp>
 
-// Forward declaration
-int sumexe(int x, int y);
+//[plugcpp_my_plugin_static
 
+#include <boost/plugin.hpp>
+#include "../tutorial_common/plugin_api.hpp"
+
+namespace my_namespace {
+    // Forward declaration
+    boost::shared_ptr<my_plugin_api> create_plugin();
+} // namespace my_namespace
+
+// We define this alias if the plugin is not static library 
+// or if the plugin is a static library and this header used from the executable.
 #if !defined(SUMEXE_PLUGIN_STATIC) || defined(SUMEXE_PLUGIN_LINK_IN)
-    BOOST_PLUGIN_ALIAS(sumexe, sumexe_alias)
+BOOST_PLUGIN_ALIAS(my_namespace::create_plugin, create_plugin)
 #endif
 
+//]
 
-
-/*
-// DLL/DSO with load time linkage
-#if !defined(SUMEXE_PLUGIN_STATIC)
-#   ifdef SUMEXE_PLUGIN_EXPORTS
-#       define SUMEXE_PLUGIN_API BOOST_SYMBOL_EXPORT
-#   else
-#       define SUMEXE_PLUGIN_API BOOST_SYMBOL_IMPORT
-#   endif
-#else
-#   define SUMEXE_PLUGIN_API
-#endif
-
-SUMEXE_PLUGIN_API int sumexe(int x, int y);
-
-#if !defined(SUMEXE_PLUGIN_STATIC) || defined(SUMEXE_LINK_IN)
-    BOOST_PLUGIN_ALIAS(sumexe, sumexe_alias)
-#endif
-*/

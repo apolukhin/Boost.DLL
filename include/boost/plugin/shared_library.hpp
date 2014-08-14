@@ -184,13 +184,11 @@ public:
     *
     * Note that this can be used when DLLs/DSOs is directly linked into the 
     * executable.
-    * 
-    * You must export the symbol even if you are on exe.
     *
-    * \b Example:
-    * \code
-    * extern "C" BOOST_SYMBOL_EXPORT void f() {}
-    * \endcode
+    * Flag '-rdynamic' must be used when linking the plugin into the executable
+    * on Linux OS.
+    *
+    * See Tutorial "Linking plugin into the executable" for usage example.
     *
     * \throw boost::system::system_error.
     */
@@ -231,11 +229,11 @@ public:
     * executable.
     *
     * You must export the symbol even if you are on exe.
+    *
+    * Flag '-rdynamic' must be used when linking the plugin into the executable
+    * on Linux OS.
     * 
-    * \b Example:
-    * \code
-    * extern "C" BOOST_SYMBOL_EXPORT void f() {}
-    * \endcode
+    * See Tutorial "Linking plugin into the executable" for usage example.
     *
     * \param ec Variable that will be set to the result of the operation.
     *

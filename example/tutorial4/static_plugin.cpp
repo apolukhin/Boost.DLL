@@ -7,9 +7,45 @@
 
 // For more information, see http://www.boost.org
 
+
+//[plugcpp_my_plugin_staic_impl
+
 #define SUMEXE_PLUGIN_STATIC
 #include "static_plugin.hpp"
 
-int sumexe(int x, int y) {
-   return x + y;
+#include <boost/make_shared.hpp>
+#include <iostream>
+
+namespace my_namespace {
+
+class my_plugin_static : public my_plugin_api {
+public:
+    my_plugin_static() {
+        std::cout << "Constructing my_plugin_static" << std::endl;
+    }
+   
+    ~my_plugin_static() {
+        std::cout << "Destructing my_plugin_static" << std::endl;
+    }
+
+    float version() const {
+        return 1.0;
+    }
+
+    std::string name() const {
+        return "static";
+    }
+
+    float calculate(float x, float y) {
+        return x - y;
+    }
+};
+
+boost::shared_ptr<my_plugin_api> create_plugin() {
+    return boost::make_shared<my_plugin_static>();
 }
+
+} // namespace my_namespace
+
+//]
+

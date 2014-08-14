@@ -10,24 +10,25 @@
 // This example shows how to use load_self to load symbols direct on executable
 // -------------------------------------------------------------------------------------
 
-#include <boost/plugin.hpp>
-#include <iostream>
+//[plugcpp_my_plugin_load_self
 
 #define SUMEXE_PLUGIN_LINK_IN
 #include "static_plugin.hpp"
+#include <iostream>
 
-int main(int argc, char* argv[]) {
+namespace pl = boost::plugin;
+
+int main() {
     std::cout << "Application started" << std::endl;
     
-    boost::plugin::shared_library self;
+    pl::shared_library self;
     self.load_self();
-    try {
-        std::cout << "Call function 'int sumexe(int x, int y)'" << std::endl;
-        boost::function<int(int, int)> sum = boost::plugin::alias<int(int, int)>(self, "sumexe_alias");
-        std::cout << "Computed Value: " << sum(2,2) << std::endl;
-    } catch (const std::exception& e) {
-        std::cout << e.what();
-        throw;
-    }
+
+    std::cout << "Call function" << std::endl;
+    boost::function<boost::shared_ptr<my_plugin_api>()> creator 
+        = pl::alias<boost::shared_ptr<my_plugin_api>()>(self, "create_plugin");
+
+    std::cout << "Computed Value: " << creator()->calculate(2, 2) << std::endl;
 }
 
+//]

@@ -96,6 +96,50 @@ Destructing my_plugin_sum ;o)
 
 [endsect]
 
+[section Linking plugin into the executable]
+
+Linking plugin into the executable has the advantages of 
+* reducing common size of distibution 
+* simplification of installation of distribution
+* faster load times of plugin
+
+Let's start from creating a linkable in plugin. Such plugin will have a header, 
+common for plugin library itself and for the executable:
+
+[import ../example/tutorial4/static_plugin.hpp]
+[plugcpp_my_plugin_static]
+
+Main trick here is the alias definition. If linking plugin into the executable, the alias *must*
+be instantiated in one of the source files of the executable. Otherwise the linker will optimize
+away our plugin.
+
+Here's how the implementation of the plugin looks like:
+
+[import ../example/tutorial4/static_plugin.cpp]
+[plugcpp_my_plugin_static_impl]
+
+And here is how it can be used from the executable:
+
+[import ../example/tutorial4/load_self.cpp]
+[plugcpp_my_plugin_load_self]
+
+[note Flag '-rdynamic' must be used when linking the plugin into the executable on Linux OS. 
+Otherwise loading symbols from self *will fail*.]
+
+Running the program will output the following:
+
+[pre
+Application started
+Call function
+Constructing my_plugin_static
+Computed Value: 0
+Destructing my_plugin_static
+]
+
+[endsect]
+
+
+
 [endsect]
 
 
