@@ -111,6 +111,17 @@ int test_main(int argc, char* argv[])
       shared_library sl;
       sl.load_self();
       BOOST_CHECK(sl.is_loaded());
+
+
+      boost::system::error_code ec;
+      shared_library sl2;
+      sl2.load_self(ec);
+      BOOST_CHECK(sl2.is_loaded());
+      BOOST_CHECK(!ec);
+      BOOST_CHECK(sl == sl2);
+
+      BOOST_CHECK(!(sl < sl2 || sl2 <sl));
+      BOOST_CHECK(!(sl != sl2));
    }
 
    {

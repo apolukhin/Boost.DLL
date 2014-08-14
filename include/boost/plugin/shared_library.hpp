@@ -422,6 +422,15 @@ inline bool operator==(const shared_library& lhs, const shared_library& rhs) BOO
 }
 
 /*!
+* Check inequality of shared_library, libraries compared using native handles.
+*
+* \throw Nothing.
+*/
+inline bool operator!=(const shared_library& lhs, const shared_library& rhs) BOOST_NOEXCEPT {
+    return lhs.native() != rhs.native();
+}
+
+/*!
 * Less compares loaded libraries using native handles.
 *
 * \throw Nothing.
