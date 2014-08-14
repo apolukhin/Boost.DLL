@@ -33,9 +33,9 @@
 
 </span>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
-  <span class="identifier">T</span> <span class="special">&amp;</span> <span class="identifier">alias</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lib<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">symbol_type</span> <span class="special">&amp;</span> symbol<span class="special">)</span><span class="special">;</span></pre></div>
+  <span class="identifier">T</span> <span class="special">&amp;</span> <span class="identifier">alias</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lib<span class="special">,</span> <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> <span class="special">&amp;</span> symbol<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp71766880"></a><h2>Description</h2>
+<a name="idp34965392"></a><h2>Description</h2>
 <p>Returns a symbol (function or variable) from a shared library by alias name of the symbol.</p>
 <p><span class="bold"><strong>Example:</strong></span> </p>
 <pre class="programlisting"><span class="identifier">shared_library</span> <span class="identifier">lib</span><span class="special">(</span><span class="string">"test_lib.so"</span><span class="special">)</span><span class="special">;</span>
@@ -43,17 +43,28 @@
 </pre>
 <p>
 
+
 </p>
 <div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody>
+<tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term"><code class="computeroutput">lib</code></span></p></td>
+<td><p>Library to load symbol from.</p></td>
+</tr></tbody>
+</table></div></td>
+</tr>
 <tr>
 <td><p><span class="term">Template Parameters:</span></p></td>
 <td><div class="variablelist"><table border="0">
 <col align="left" valign="top">
 <tbody><tr>
 <td><p><span class="term"><code class="computeroutput">T</code></span></p></td>
-<td><p>Type of the symbol that we are going to import. Must be explicitly specified.</p></td>
+<td><p>Type of the symbol that we are going to import. Must be explicitly specified..</p></td>
 </tr></tbody>
 </table></div></td>
 </tr>
