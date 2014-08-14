@@ -109,7 +109,7 @@ common for plugin library itself and for the executable:
 [import ../example/tutorial4/static_plugin.hpp]
 [plugcpp_my_plugin_static]
 
-Main trick here is the alias definition. If linking plugin into the executable, the alias *must*
+Main trick here is the alias definition. When linking plugin into the executable, the alias *must*
 be instantiated in one of the source files of the executable. Otherwise the linker will optimize
 away our plugin.
 

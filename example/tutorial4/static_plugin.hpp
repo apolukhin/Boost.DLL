@@ -18,11 +18,6 @@ namespace my_namespace {
     boost::shared_ptr<my_plugin_api> create_plugin();
 } // namespace my_namespace
 
-// We define this alias if the plugin is not static library 
-// or if the plugin is a static library and this header used from the executable.
-#if !defined(SUMEXE_PLUGIN_STATIC) || defined(SUMEXE_PLUGIN_LINK_IN)
 BOOST_PLUGIN_ALIAS(my_namespace::create_plugin, create_plugin)
-#endif
-
 //]
 

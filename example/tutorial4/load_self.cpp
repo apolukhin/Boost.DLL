@@ -11,8 +11,6 @@
 // -------------------------------------------------------------------------------------
 
 //[plugcpp_my_plugin_load_self
-
-#define SUMEXE_PLUGIN_LINK_IN
 #include "static_plugin.hpp"
 #include <iostream>
 

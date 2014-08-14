@@ -25,13 +25,27 @@
 
 namespace boost { namespace plugin {
 
+#if BOOST_OS_WINDOWS
+
 /*!
 * \brief Makes an alias name for exported function or variable.
 */
 #define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)            \
     extern "C" BOOST_SYMBOL_EXPORT void *AliasName;             \
-    void *AliasName = reinterpret_cast<void*>(&FunctionOrVar);  \
+    __declspec(selectany) void *AliasName = reinterpret_cast<void*>(&FunctionOrVar);  \
     /**/
+
+#else
+
+/*!
+* \brief Makes an alias name for exported function or variable.
+*/
+#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)            \
+    extern "C" BOOST_SYMBOL_EXPORT void *AliasName;             \
+    __attribute__((weak)) void *AliasName = reinterpret_cast<void*>(&FunctionOrVar);  \
+    /**/
+
+#endif
 
 
 /*!

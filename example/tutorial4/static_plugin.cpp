@@ -9,8 +9,6 @@
 
 
 //[plugcpp_my_plugin_staic_impl
-
-#define SUMEXE_PLUGIN_STATIC
 #include "static_plugin.hpp"
 
 #include <boost/make_shared.hpp>
