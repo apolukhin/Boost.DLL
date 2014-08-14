@@ -118,10 +118,15 @@ int test_main(int argc, char* argv[])
       sl2.load_self(ec);
       BOOST_CHECK(sl2.is_loaded());
       BOOST_CHECK(!ec);
-      BOOST_CHECK(sl == sl2);
 
+      BOOST_CHECK(sl == sl2);
       BOOST_CHECK(!(sl < sl2 || sl2 <sl));
       BOOST_CHECK(!(sl != sl2));
+
+      sl.load(shared_library_path);
+      BOOST_CHECK(sl != sl2);
+      BOOST_CHECK(sl < sl2 || sl2 <sl);
+      BOOST_CHECK(!(sl == sl2));
    }
 
    {

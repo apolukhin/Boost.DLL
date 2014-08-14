@@ -27,6 +27,11 @@
 # pragma once
 #endif
 
+/// \file boost/plugin/refcountable.hpp
+/// \brief Includes all the reference counting functions that hold a shared pointer to the instance of
+/// boost::plugin::shared_library. Those methods use boost::shared_ptr<T>
+/// and boost::function<T> classes.
+
 namespace boost { namespace plugin {
 
 namespace detail {

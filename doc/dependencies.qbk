@@ -6,11 +6,17 @@
 
 [section Dependencies]
 
-The Boost.Plugin is a header only library, but it depends on the following libraries, and they must be available in order to compile programs that use Boost.Plugin:
+The Boost.Plugin is a header only library, but it depends on the following libraries
+and they must be available in order to compile programs that use Boost.Plugin:
 
 * Boost.System for the boost::system::error_code and boost::system::system_error classes.
-* Boost.Filesystem to directory manipulation.
-* Boost.Function for creation of a callbak system and others.
+* Boost.Filesystem for directory manipulation.
+* Boost.StringRef simplifies usage of some of the methods.
+
+Refcountable part of Boost.Plugin also depends on:
+
+* Boost.Function for creation of a callbak system.
+* Boost.SharedPtr for reference counting.
 
 [endsect]
 

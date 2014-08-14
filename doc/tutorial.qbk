@@ -116,7 +116,7 @@ away our plugin.
 Here's how the implementation of the plugin looks like:
 
 [import ../example/tutorial4/static_plugin.cpp]
-[plugcpp_my_plugin_static_impl]
+[plugcpp_my_plugin_staic_impl]
 
 And here is how it can be used from the executable:
 

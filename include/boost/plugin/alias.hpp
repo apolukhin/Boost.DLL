@@ -23,6 +23,12 @@
 # pragma once
 #endif
 
+
+/// \file boost/plugin/alias.hpp
+/// \brief Includes alias methods and macro. You can include this header or
+/// boost/plugin/shared_library.hpp to reduce dependencies
+/// in case you do not use the refcountable functions.
+
 namespace boost { namespace plugin {
 
 #if BOOST_OS_WINDOWS
