@@ -138,7 +138,52 @@ Destructing my_plugin_static
 
 [endsect]
 
+[section Symbol shadowing problem (Linux)]
+Let's make an executable, link a plugin into it and attempt to load all the existing plugins:
 
+[import ../example/tutorial5/load_all.cpp]
+[plugcpp_plugins_collector_def]
+[plugcpp_load_all]
+
+With the default flags you'll get a very strange output:
+[pre
+Loaded (0x180db60):"/libs/plugin/test/libmy_plugin_aggregator.so"
+Constructing my_plugin_static
+Destructing my_plugin_static
+...
+
+Unique plugins 2:
+(0x180db60): static
+(0x180e3b0): sum
+Destructing my_plugin_sum ;o)
+]
+
+Why `my_plugin_static` was constructed while we were loading `my_plugin_aggregator`?
+
+That's because function `create_plugin` from `libmy_plugin_aggregator.so` was shadowed by
+the `create_plugin` function from onther plugin. Dynamik linker thought that `create_plugin`
+was already loaded and there is no need to load it again.
+
+[warning Use "-fvisibility=hidden" flag (at least for plugins) while compiling for POSIX platforms.
+This flag makes your code more portable ("-fvisibility=hidden" is the default behavior under Windows),
+reduces size of the binaries and improves binary load time.
+]
+
+Now if we recompile your example with "-fvisibility=hidden" we'll get the following output:
+[pre
+Loaded (0x2406b60):"/home/apolukhin/boost_maintain/modular-boost/bin.v2/libs/plugin/test/libmy_plugin_aggregator.so"
+Loaded (0x2407410):"/home/apolukhin/boost_maintain/modular-boost/bin.v2/libs/plugin/test/libgetting_started_library.so"
+Constructing my_plugin_sum
+...
+
+Unique plugins 3:
+(0x2406b60): aggregator
+(0x7fd1cadce2c8): static
+(0x24073b0): sum
+Destructing my_plugin_sum ;o)
+]
+
+[endsect]
 
 [endsect]
 

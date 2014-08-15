@@ -46,14 +46,6 @@ my_plugin_sum plugin;
 BOOST_PLUGIN_ALIAS(my_namespace::plugin, plugin)
 //]
 
-
-boost::shared_ptr<my_namespace::my_plugin_sum> create_plugin_impl() {
-    return boost::make_shared<my_namespace::my_plugin_sum>();
-}
-
-
-BOOST_PLUGIN_ALIAS(create_plugin_impl, create_plugin)
-
 // platform dependent initialization sample
 //
 /*

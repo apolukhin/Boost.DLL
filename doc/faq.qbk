@@ -12,6 +12,11 @@ different instances of shared_library from different threads even if all the ins
 same library.
 [endsect]
 
+[section Why on Linux symbols from one plugin are seen in another? Can't get symbol with same name from right plugin! ]
+You've run into the symbol shadowing plroblem. Compile your plugins with "-fvisibility=hidden" flag and take a look
+to the Tutorial section.
+[endsect]
+
 [section How Unicode (Windows) is hadled?]
 Boost.Plugin supports Unicode, so that you could provide a unicode paths to it.
 [endsect]

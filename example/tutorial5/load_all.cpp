@@ -10,64 +10,29 @@
 // This example shows how to use load_self to load symbols direct on executable
 // -------------------------------------------------------------------------------------
 
-//[plugcpp_load_all
+
 #include "../tutorial4/static_plugin.hpp"
 #include <boost/make_shared.hpp>
 #include <boost/container/map.hpp>
 #include <boost/filesystem.hpp>
 #include <iostream>
 
+//[plugcpp_plugins_collector_def
 namespace pl = boost::plugin;
 
 class plugins_collector {
+    // Name => plugin
     typedef boost::container::map<std::string, pl::shared_library> plugins_t;
 
     boost::filesystem::path         plugins_directory_;
     plugins_t                       plugins_;
 
-    void load_all() {
-        namespace fs = ::boost::filesystem;
-        typedef fs::path::string_type string_type;
-        const string_type extension = pl::shared_library::suffix().native();        
+    // loads all plugins in plugins_directory_
+    void load_all();
 
-        fs::directory_iterator endit;        
-        for (fs::directory_iterator it(plugins_directory_); it != endit; ++it) {
-            if (!fs::is_regular_file(*it)) {
-                continue;
-            }
-
-            const string_type filename = it->path().filename().native();
-            if (filename.find(extension) != filename.size() - extension.size()) {
-                // Does not ends on '.so' or '.dll'
-                continue;
-            }
-
-            // We have a plugin
-            pl::shared_library plugin(it->path());      
-            std::cout << "Loading " << it->path() << "\nNative:" << plugin.native() << '\n';
-            insert_plugin(boost::move(plugin));
-        }
-        
-        std::cout << "Loading self\n";
-        pl::shared_library plugin;
-        plugin.load_self();      
-        insert_plugin(boost::move(plugin));
-    }
-
-    void insert_plugin(BOOST_RV_REF(pl::shared_library) lib) {
-        std::string plugin_name;
-        if (lib.search_symbol("create_plugin")) {
-            plugin_name = pl::alias<boost::shared_ptr<my_plugin_api>()>(lib, "create_plugin")()->name();
-        } else if (lib.search_symbol("plugin")) {
-            plugin_name = pl::alias<my_plugin_api>(lib, "plugin").name();
-        } else {
-            return;
-        }
-
-        if (plugins_.find(plugin_name) == plugins_.cend()) {
-            plugins_[plugin_name] = boost::move(lib);
-        }
-    }
+    // Gets `my_plugin_api` instance using "create_plugin" or "plugin" imports,
+    // stores plugin with its name in the `plugins_` map.
+    void insert_plugin(BOOST_RV_REF(pl::shared_library) lib);
 
 public:
     plugins_collector(const boost::filesystem::path& plugins_directory)
@@ -76,25 +41,85 @@ public:
         load_all();
     }
 
-    void print_plugins() const {
-        plugins_t::const_iterator const end = plugins_.cend();
-        for (plugins_t::const_iterator it = plugins_.cbegin(); it != end; ++it) {
-            std::cout << it->first << ": " << it->second.native() << '\n';
-        }
-    }
+    void print_plugins() const;
 
-    std::size_t count() const {
-        return plugins_.size();
-    }
-
+    std::size_t count() const;
     // ...   
 };
+//]
 
+
+//[plugcpp_plugins_collector_load_all
+void plugins_collector::load_all() {
+    namespace fs = ::boost::filesystem;
+    typedef fs::path::string_type string_type;
+    const string_type extension = pl::shared_library::suffix().native();        
+
+    // Searching a folder for files with '.so' or '.dll' extension
+    fs::directory_iterator endit;        
+    for (fs::directory_iterator it(plugins_directory_); it != endit; ++it) {
+        if (!fs::is_regular_file(*it)) {
+            continue;
+        }
+
+        const string_type filename = it->path().filename().native();
+        if (filename.find(extension) != filename.size() - extension.size()) {
+            // Does not ends on '.so' or '.dll'
+            continue;
+        }
+
+        // We found a file. Trying to load it
+        pl::shared_library plugin(it->path());      
+        std::cout << "Loaded (" << plugin.native() << "):" << it->path() << '\n';
+
+        // Gets plugin using "create_plugin" or "plugin" function
+        insert_plugin(boost::move(plugin));
+    }
+    
+    pl::shared_library plugin;
+    plugin.load_self();
+    std::cout << "Loaded self\n";
+    insert_plugin(boost::move(plugin));
+}
+//]
+
+//[plugcpp_plugins_collector_insert_plugin
+void plugins_collector::insert_plugin(BOOST_RV_REF(pl::shared_library) lib) {
+    std::string plugin_name;
+    if (lib.search_symbol("create_plugin")) {
+        plugin_name = pl::alias<boost::shared_ptr<my_plugin_api>()>(lib, "create_plugin")()->name();
+    } else if (lib.search_symbol("plugin")) {
+        plugin_name = pl::alias<my_plugin_api>(lib, "plugin").name();
+    } else {
+        return;
+    }
+
+    if (plugins_.find(plugin_name) == plugins_.cend()) {
+        plugins_[plugin_name] = boost::move(lib);
+    }
+}
+//]
+
+void plugins_collector::print_plugins() const {
+    plugins_t::const_iterator const end = plugins_.cend();
+    for (plugins_t::const_iterator it = plugins_.cbegin(); it != end; ++it) {
+        std::cout << '(' << it->second.native() << "): " << it->first << '\n';
+    }
+}
+
+std::size_t plugins_collector::count() const {
+    return plugins_.size();
+}
+
+
+//[plugcpp_load_all
 int main(int argc, char* argv[]) {
     plugins_collector plugins(argv[1]);
 
-    std::cout << "\n\nUnique plugins (" << plugins.count() << ") :\n";
+    std::cout << "\n\nUnique plugins " << plugins.count() << ":\n";
     plugins.print_plugins();
+    // ...
+//]
+    BOOST_ASSERT(plugins.count() == 3);
 }
 
-//]
