@@ -98,7 +98,7 @@ public:
         // "handle" for the dynamic library. If filename is NULL, then the 
         // returned handle is for the main program.
 
-        handle_ = dlopen(NULL, RTLD_LAZY);
+        handle_ = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
 
         if (!handle_) {
             ec = boost::system::error_code(

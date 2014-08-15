@@ -48,6 +48,11 @@ project
         [ run ../example/tutorial1/tutorial1.cpp : $(TEST_DIR) ]
         [ run ../example/tutorial2/tutorial2.cpp : $(TEST_DIR) ]
         [ run ../example/tutorial3/tutorial3.cpp : $(TEST_DIR) ]
-        [ run ../example/tutorial4/load_self.cpp : : : <library>static_plugin <target-os>linux:<linkflags>"-rdynamic" ]
+        [ run ../example/tutorial4/load_self.cpp 
+                : : : <variant>release <library>static_plugin <target-os>linux:<linkflags>"-rdynamic" 
+        ]
+        [ run ../example/tutorial5/load_all.cpp
+                : $(TEST_DIR) : : <variant>release <library>static_plugin <target-os>linux:<linkflags>"-rdynamic"
+        ]
     ;
 }

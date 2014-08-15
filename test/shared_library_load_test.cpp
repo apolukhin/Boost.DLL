@@ -127,6 +127,16 @@ int test_main(int argc, char* argv[])
       BOOST_CHECK(sl != sl2);
       BOOST_CHECK(sl < sl2 || sl2 <sl);
       BOOST_CHECK(!(sl == sl2));
+
+      sl.unload();
+      BOOST_CHECK(sl != sl2);
+      BOOST_CHECK(sl < sl2 || sl2 <sl);
+      BOOST_CHECK(!(sl == sl2));
+    
+      sl2.unload();
+      BOOST_CHECK(sl == sl2);
+      BOOST_CHECK(!(sl < sl2 || sl2 <sl));
+      BOOST_CHECK(!(sl != sl2));
    }
 
    {

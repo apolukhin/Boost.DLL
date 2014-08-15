@@ -149,6 +149,7 @@ namespace boost { namespace plugin {
             rtld_now                              = 0,
             rtld_global                           = 0,
             rtld_local                            = 0,
+            rtld_deepbind                         = 0,
 #else
             // windows
             dont_resolve_dll_references           = 0,
@@ -159,10 +160,11 @@ namespace boost { namespace plugin {
             load_with_altered_search_path         = 0,
 
             // posix
-            rtld_lazy                             = RTLD_LAZY,   // 1
-            rtld_now                              = RTLD_NOW,    // 2
-            rtld_global                           = RTLD_GLOBAL, // 3
-            rtld_local                            = RTLD_LOCAL   // 4
+            rtld_lazy                             = RTLD_LAZY,
+            rtld_now                              = RTLD_NOW,
+            rtld_global                           = RTLD_GLOBAL,
+            rtld_local                            = RTLD_LOCAL,
+            rtld_deepbind                         = RTLD_DEEPBIND
 #endif
         };
     };
