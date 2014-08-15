@@ -42,6 +42,8 @@ namespace boost { namespace plugin {
 *        Dynamic link libraries (DLL's) or Shared Library, also know
 *        as dynamic shared objects (DSO's) and get their exported
 *        symbols (functions and variables).
+*
+* On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recomended for use on Linux/POSIX.
 */
 class shared_library: protected shared_library_impl {
     typedef shared_library_impl base_t;

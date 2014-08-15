@@ -33,22 +33,41 @@ namespace boost { namespace plugin {
 
 #if BOOST_OS_WINDOWS
 
-/*!
-* \brief Makes an alias name for exported function or variable.
-*/
-#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)            \
-    extern "C" BOOST_SYMBOL_EXPORT void *AliasName;             \
-    __declspec(selectany) void *AliasName = reinterpret_cast<void*>(&FunctionOrVar);  \
+#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                                                \
+    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                           \
+    __declspec(selectany) const void *AliasName = reinterpret_cast<const void*>(&FunctionOrVar);    \
     /**/
 
 #else
 
 /*!
 * \brief Makes an alias name for exported function or variable.
+*
+* This macro is usefull in cases of long mangled names.
+*
+* Can be used in any namespace, including global. FunctionOrVar must be fully qualified,
+* so that address of it could be taken. Multiple different alises for a single variable/function
+* are allowed.
+*
+* Make sure that AliasNames are unique per library/executable. Functions or variables
+* in global namespace must not have names same as AliasNames.
+*
+* Same AliasName in different translation units must point to the same FunctionOrVar.
+*
+* \b Example:
+* \code
+* namespace foo {
+*   void bar(std::string&);
+*
+*   BOOST_PLUGIN_ALIAS(foo::bar, foo_bar) // foo::bar function now could be dynamicaly loaded using "foo_bar" name
+* }
+*
+* BOOST_PLUGIN_ALIAS(foo::bar, foo_bar_another_alias_name)
+* \endcode
 */
-#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)            \
-    extern "C" BOOST_SYMBOL_EXPORT void *AliasName;             \
-    __attribute__((weak)) void *AliasName = reinterpret_cast<void*>(&FunctionOrVar);  \
+#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                                                \
+    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                           \
+    __attribute__((weak)) const void *AliasName = reinterpret_cast<const void*>(&FunctionOrVar);    \
     /**/
 
 #endif

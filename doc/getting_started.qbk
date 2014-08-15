@@ -16,12 +16,16 @@ To start with the library you only need to include `<boost/plugin.hpp>` header. 
 [[ In plugin (DLL/DSL) sources: ]           [ In code that uses plugin: ]               [ Function description: ]]
 [[ [getting_started_exports_c_function] ]   [ [getting_started_imports_c_function] ]    [ [funcref boost::plugin::shared_function shared_function ] ]]
 [[ [getting_started_exports_c_variable] ]   [ [getting_started_imports_c_variable] ]    [ [funcref boost::plugin::shared_variable shared_variable ] ]]
-[[ [getting_started_exports_cpp_function] ] [ [getting_started_imports_cpp_function] ]  [ [funcref boost::plugin::shared_function_alias shared_function_alias] ]]
-[[ [getting_started_exports_cpp_variable] ] [ [getting_started_imports_cpp_variable] ]  [ [funcref boost::plugin::shared_variable_alias shared_variable_alias] ]]
+[[ [getting_started_exports_cpp_function] ] [ [getting_started_imports_cpp_function] ]  [ [macroref
+BOOST_PLUGIN_ALIAS] [funcref boost::plugin::shared_function_alias shared_function_alias] ]]
+[[ [getting_started_exports_cpp_variable] ] [ [getting_started_imports_cpp_variable] ]  [ [macroref
+BOOST_PLUGIN_ALIAS] [funcref boost::plugin::shared_variable_alias shared_variable_alias] ]]
 ]
 
-In all the cases above it is safe to use imported variable or function because the `boost::function` or `boost::shared_ptr` internaly hold
-a reference to shread library.
+In all the cases above it is safe to use imported variable or function because the
+`boost::function` or `boost::shared_ptr` internaly hold a reference to shread library.
+
+[note On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recomended for use on Linux/POSIX.]
 
 If you need a low level api [classref boost::plugin::shared_library] and [funcref boost::plugin::alias] will suit you. If you want to load a library,
 just cunstruct that class with a path to the library as a parameter:

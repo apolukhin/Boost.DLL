@@ -35,13 +35,14 @@ public:
     }
 };
 
-boost::shared_ptr<my_plugin_aggregator> create_plugin() {
+boost::shared_ptr<my_plugin_aggregator> create_plugin_aggregator() {
     return boost::make_shared<my_plugin_aggregator>();
 }
 
+BOOST_PLUGIN_ALIAS(my_namespace::create_plugin_aggregator, create_plugin)
+
 } // namespace my_namespace
 
-BOOST_PLUGIN_ALIAS(my_namespace::create_plugin, create_plugin)
 //]
 
 
