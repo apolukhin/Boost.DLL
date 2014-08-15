@@ -50,6 +50,8 @@
       for a symbol in multiple plugins</a></span></dt>
 <dt><span class="section"><a href="boost_plugin/tutorial.html#boost_plugin.tutorial.linking_plugin_into_the_executable">Linking
       plugin into the executable</a></span></dt>
+<dt><span class="section"><a href="boost_plugin/tutorial.html#boost_plugin.tutorial.symbol_shadowing_problem__linux_">Symbol
+      shadowing problem (Linux)</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="plugin/reference.html">Reference</a></span></dt>
 <dd><dl>
@@ -61,6 +63,9 @@
 <dd><dl>
 <dt><span class="section"><a href="boost_plugin/f_a_q_.html#boost_plugin.f_a_q_.is_boost_plugin_thread_safe_">Is
       Boost.Plugin thread-safe?</a></span></dt>
+<dt><span class="section"><a href="boost_plugin/f_a_q_.html#boost_plugin.f_a_q_.why_on_linux_symbols_from_one_plugin_are_seen_in_another__can_t_get_symbol_with_same_name_from_right_plugin__">Why
+      on Linux symbols from one plugin are seen in another? Can't get symbol with
+      same name from right plugin! </a></span></dt>
 <dt><span class="section"><a href="boost_plugin/f_a_q_.html#boost_plugin.f_a_q_.how_unicode__windows__is_hadled_">How
       Unicode (Windows) is hadled?</a></span></dt>
 <dt><span class="section"><a href="boost_plugin/f_a_q_.html#boost_plugin.f_a_q_.can_i_open_an_executable_file_">Can
@@ -78,12 +83,18 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_plugin.introduction"></a><a class="link" href="index.html#boost_plugin.introduction" title="Motivation">Motivation</a>
 </h2></div></div></div>
-<p>
-      [warn This is not an official Boost C++ library. It wasn't reviewed and can't
-      be downloaded from www.boost.org. This beta is available to boost community
-      to know real interest and get comments for refinement. The intention is to
-      submit library to formal review, if community think that it is interesting!]
-    </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        This is not an official Boost C++ library. It wasn't reviewed and can't be
+        downloaded from www.boost.org. This beta is available to boost community
+        to know real interest and get comments for refinement. The intention is to
+        submit library to formal review, if community think that it is interesting!
+      </p></td></tr>
+</table></div>
 <p>
       Adding a specific features to an existing software applications at runtime
       could be usefull in many cases. Such extensions, or *Plugin*s, are usually
@@ -96,7 +107,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: August 14, 2014 at 06:46:25 GMT</small></p></td>
+<td align="left"><p><small>Last revised: August 15, 2014 at 11:15:25 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

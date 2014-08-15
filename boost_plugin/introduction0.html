@@ -78,7 +78,7 @@
             </td>
 <td>
               <p>
-                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_function_idp5702448.html" title="Function template shared_function">shared_function
+                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_function_idp5763392.html" title="Function template shared_function">shared_function
                 </a></code>
               </p>
             </td>
@@ -106,7 +106,7 @@
             </td>
 <td>
               <p>
-                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_variable_idp5741760.html" title="Function template shared_variable">shared_variable
+                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_variable_idp5847264.html" title="Function template shared_variable">shared_variable
                 </a></code>
               </p>
             </td>
@@ -142,7 +142,8 @@
             </td>
 <td>
               <p>
-                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_function_idp5722000.html" title="Function template shared_function_alias">shared_function_alias</a></code>
+                <code class="computeroutput"><a class="link" href="../BOOST_PLUGIN_ALIAS.html" title="Macro BOOST_PLUGIN_ALIAS">BOOST_PLUGIN_ALIAS</a></code>
+                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_function_idp5782848.html" title="Function template shared_function_alias">shared_function_alias</a></code>
               </p>
             </td>
 </tr>
@@ -175,7 +176,8 @@
             </td>
 <td>
               <p>
-                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_variable_idp5869312.html" title="Function template shared_variable_alias">shared_variable_alias</a></code>
+                <code class="computeroutput"><a class="link" href="../BOOST_PLUGIN_ALIAS.html" title="Macro BOOST_PLUGIN_ALIAS">BOOST_PLUGIN_ALIAS</a></code>
+                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_variable_idp5979984.html" title="Function template shared_variable_alias">shared_variable_alias</a></code>
               </p>
             </td>
 </tr>
@@ -187,6 +189,16 @@
       the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span></code> or <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span></code>
       internaly hold a reference to shread library.
     </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        On Linux/POSIX link with library "dl". "-fvisibility=hidden"
+        flag is also recomended for use on Linux/POSIX.
+      </p></td></tr>
+</table></div>
 <p>
       If you need a low level api <code class="computeroutput"><a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">boost::plugin::shared_library</a></code>
       and <code class="computeroutput"><a class="link" href="../boost/plugin/alias.html" title="Function template alias">boost::plugin::alias</a></code>

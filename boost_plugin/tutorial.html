@@ -34,6 +34,8 @@
       for a symbol in multiple plugins</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_plugin.tutorial.linking_plugin_into_the_executable">Linking
       plugin into the executable</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_plugin.tutorial.symbol_shadowing_problem__linux_">Symbol
+      shadowing problem (Linux)</a></span></dt>
 </dl></div>
 <p>
       Tutorial is provided to give you an idea of how to create and use plugins.
@@ -104,7 +106,7 @@
 <p>
       </p>
 <p>
-        Simple application that loads plugin using the <code class="computeroutput"><a class="link" href="../boost/plugin/shared_variable_idp5869312.html" title="Function template shared_variable_alias">boost::plugin::shared_variable_alias</a></code>:
+        Simple application that loads plugin using the <code class="computeroutput"><a class="link" href="../boost/plugin/shared_variable_idp5979984.html" title="Function template shared_variable_alias">boost::plugin::shared_variable_alias</a></code>:
       </p>
 <p>
 </p>
@@ -177,13 +179,13 @@ Destructing my_plugin_sum ;o)
     <span class="special">}</span>
 <span class="special">};</span>
 
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_aggregator</span><span class="special">&gt;</span> <span class="identifier">create_plugin</span><span class="special">()</span> <span class="special">{</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_aggregator</span><span class="special">&gt;</span> <span class="identifier">create_plugin_aggregator</span><span class="special">()</span> <span class="special">{</span>
     <span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">my_plugin_aggregator</span><span class="special">&gt;();</span>
 <span class="special">}</span>
 
-<span class="special">}</span> <span class="comment">// namespace my_namespace</span>
+<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">create_plugin_aggregator</span><span class="special">,</span> <span class="identifier">create_plugin</span><span class="special">)</span>
 
-<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">create_plugin</span><span class="special">,</span> <span class="identifier">create_plugin</span><span class="special">)</span>
+<span class="special">}</span> <span class="comment">// namespace my_namespace</span>
 </pre>
 <p>
       </p>
@@ -218,7 +220,7 @@ Destructing my_plugin_sum ;o)
 <p>
       </p>
 <p>
-        In that application we have imported the factory method using <code class="computeroutput"><a class="link" href="../boost/plugin/shared_function_idp5722000.html" title="Function template shared_function_alias">boost::plugin::shared_function_alias</a></code>.
+        In that application we have imported the factory method using <code class="computeroutput"><a class="link" href="../boost/plugin/shared_function_idp5782848.html" title="Function template shared_function_alias">boost::plugin::shared_function_alias</a></code>.
       </p>
 <div class="caution"><table border="0" summary="Caution">
 <tr>
@@ -420,6 +422,111 @@ Call function
 Constructing my_plugin_static
 Computed Value: 0
 Destructing my_plugin_static
+</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_plugin.tutorial.symbol_shadowing_problem__linux_"></a><a class="link" href="tutorial.html#boost_plugin.tutorial.symbol_shadowing_problem__linux_" title="Symbol shadowing problem (Linux)">Symbol
+      shadowing problem (Linux)</a>
+</h3></div></div></div>
+<p>
+        Let's make an executable, link a plugin into it and attempt to load all the
+        existing plugins:
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">pl</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">;</span>
+
+<span class="keyword">class</span> <span class="identifier">plugins_collector</span> <span class="special">{</span>
+    <span class="comment">// Name =&gt; plugin</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">container</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">pl</span><span class="special">::</span><span class="identifier">shared_library</span><span class="special">&gt;</span> <span class="identifier">plugins_t</span><span class="special">;</span>
+
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span>         <span class="identifier">plugins_directory_</span><span class="special">;</span>
+    <span class="identifier">plugins_t</span>                       <span class="identifier">plugins_</span><span class="special">;</span>
+
+    <span class="comment">// loads all plugins in plugins_directory_</span>
+    <span class="keyword">void</span> <span class="identifier">load_all</span><span class="special">();</span>
+
+    <span class="comment">// Gets `my_plugin_api` instance using "create_plugin" or "plugin" imports,</span>
+    <span class="comment">// stores plugin with its name in the `plugins_` map.</span>
+    <span class="keyword">void</span> <span class="identifier">insert_plugin</span><span class="special">(</span><span class="identifier">BOOST_RV_REF</span><span class="special">(</span><span class="identifier">pl</span><span class="special">::</span><span class="identifier">shared_library</span><span class="special">)</span> <span class="identifier">lib</span><span class="special">);</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">plugins_collector</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span><span class="special">&amp;</span> <span class="identifier">plugins_directory</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">plugins_directory_</span><span class="special">(</span><span class="identifier">plugins_directory</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">load_all</span><span class="special">();</span>
+    <span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="identifier">print_plugins</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">count</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="comment">// ...   </span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">argv</span><span class="special">[])</span> <span class="special">{</span>
+    <span class="identifier">plugins_collector</span> <span class="identifier">plugins</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">]);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\n\nUnique plugins "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugins</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">":\n"</span><span class="special">;</span>
+    <span class="identifier">plugins</span><span class="special">.</span><span class="identifier">print_plugins</span><span class="special">();</span>
+    <span class="comment">// ...</span>
+</pre>
+<p>
+      </p>
+<p>
+        With the default flags you'll get a very strange output:
+      </p>
+<pre class="programlisting">Loaded (0x180db60):"/libs/plugin/test/libmy_plugin_aggregator.so"
+Constructing my_plugin_static
+Destructing my_plugin_static
+...
+
+Unique plugins 2:
+(0x180db60): static
+(0x180e3b0): sum
+Destructing my_plugin_sum ;o)
+</pre>
+<p>
+        Why <code class="computeroutput"><span class="identifier">my_plugin_static</span></code> was
+        constructed while we were loading <code class="computeroutput"><span class="identifier">my_plugin_aggregator</span></code>?
+      </p>
+<p>
+        That's because function <code class="computeroutput"><span class="identifier">create_plugin</span></code>
+        from <code class="computeroutput"><span class="identifier">libmy_plugin_aggregator</span><span class="special">.</span><span class="identifier">so</span></code> was
+        shadowed by the <code class="computeroutput"><span class="identifier">create_plugin</span></code>
+        function from onther plugin. Dynamik linker thought that <code class="computeroutput"><span class="identifier">create_plugin</span></code>
+        was already loaded and there is no need to load it again.
+      </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Use "-fvisibility=hidden" flag (at least for plugins) while compiling
+          for POSIX platforms. This flag makes your code more portable ("-fvisibility=hidden"
+          is the default behavior under Windows), reduces size of the binaries and
+          improves binary load time.
+        </p></td></tr>
+</table></div>
+<p>
+        Now if we recompile your example with "-fvisibility=hidden" we'll
+        get the following output:
+      </p>
+<pre class="programlisting">Loaded (0x2406b60):"/home/apolukhin/boost_maintain/modular-boost/bin.v2/libs/plugin/test/libmy_plugin_aggregator.so"
+Loaded (0x2407410):"/home/apolukhin/boost_maintain/modular-boost/bin.v2/libs/plugin/test/libgetting_started_library.so"
+Constructing my_plugin_sum
+...
+
+Unique plugins 3:
+(0x2406b60): aggregator
+(0x7fd1cadce2c8): static
+(0x24073b0): sum
+Destructing my_plugin_sum ;o)
 </pre>
 </div>
 </div>

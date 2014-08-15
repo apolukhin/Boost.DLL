@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Function template shared_variable</title>
+<title>Function template shared_variable_alias</title>
 <link rel="stylesheet" href="http://www.boost.org/doc/libs/1_55_0/doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
 <link rel="up" href="../../plugin/reference.html#header.boost.plugin.refcountable_hpp" title="Header &lt;boost/plugin/refcountable.hpp&gt;">
-<link rel="prev" href="shared_variable_idp5741760.html" title="Function template shared_variable">
-<link rel="next" href="shared_variable_idp5869312.html" title="Function template shared_variable_alias">
+<link rel="prev" href="shared_variable_idp5979984.html" title="Function template shared_variable_alias">
+<link rel="next" href="../../boost_plugin/dependencies.html" title="Dependencies">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,13 +20,13 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="shared_variable_idp5741760.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../plugin/reference.html#header.boost.plugin.refcountable_hpp"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="shared_variable_idp5869312.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="shared_variable_idp5979984.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../plugin/reference.html#header.boost.plugin.refcountable_hpp"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../../boost_plugin/dependencies.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry">
-<a name="boost.plugin.shared_variable_idp5860224"></a><div class="titlepage"></div>
+<a name="boost.plugin.shared_variable_idp5989456"></a><div class="titlepage"></div>
 <div class="refnamediv">
-<h2><span class="refentrytitle">Function template shared_variable</span></h2>
-<p>boost::plugin::shared_variable</p>
+<h2><span class="refentrytitle">Function template shared_variable_alias</span></h2>
+<p>boost::plugin::shared_variable_alias</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../plugin/reference.html#header.boost.plugin.refcountable_hpp" title="Header &lt;boost/plugin/refcountable.hpp&gt;">boost/plugin/refcountable.hpp</a>&gt;
@@ -34,15 +34,15 @@
 </span>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> 
-  <span class="identifier">shared_variable</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span> lib_path<span class="special">,</span> 
-                  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> variable_name<span class="special">)</span><span class="special">;</span></pre></div>
+  <span class="identifier">shared_variable_alias</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span> lib_path<span class="special">,</span> 
+                        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> variable_name<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp36008416"></a><h2>Description</h2>
-<p>Returns boost::shared_ptr&lt;T&gt; that holds an imported variable from the loaded library and refcounts usage of the loaded shared library, so that it won't get unload until all copies of return value are not destroyed.</p>
+<a name="idp6980352"></a><h2>Description</h2>
+<p>Imports function by it alias name and returns boost::shared_ptr&lt;T&gt; that holds an imported variable from the loaded library and refcounts usage of the loaded shared library. Library won't get unload until all copies of returned value are not destroyed.</p>
 <p>This call will succeed if call to <code class="computeroutput">shared_library::search_symbol(const boost::string_ref &amp;)</code> function with the same symbol name returned <code class="computeroutput">true</code>.</p>
-<p>For importing variable by it's alias name use boost::plugin::shared_variable_alias method.</p>
+<p>For non alias names use boost::plugin::shared_variable method.</p>
 <p><span class="bold"><strong>Example:</strong></span> </p>
-<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">shared_variable</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span><span class="special">(</span><span class="string">"test_lib.so"</span><span class="special">,</span> <span class="string">"integer_name"</span><span class="special">)</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">shared_variable_alias</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span><span class="special">(</span><span class="string">"test_lib.so"</span><span class="special">,</span> <span class="string">"integer_name"</span><span class="special">)</span><span class="special">;</span>
 </pre>
 <p>
 
@@ -80,7 +80,7 @@
 </tr>
 <tr>
 <td><p><span class="term">Returns:</span></p></td>
-<td><p>boost::shared_ptr&lt;T&gt; that holds an imported function from the loaded library and refcounts usage of the loaded shared library.</p></td>
+<td><p>boost::shared_ptr&lt;T&gt; that holds an imported variable from the loaded library and refcounts usage of the loaded shared library.</p></td>
 </tr>
 <tr>
 <td><p><span class="term">Throws:</span></p></td>
@@ -100,7 +100,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="shared_variable_idp5741760.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../plugin/reference.html#header.boost.plugin.refcountable_hpp"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="shared_variable_idp5869312.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="shared_variable_idp5979984.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../plugin/reference.html#header.boost.plugin.refcountable_hpp"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../../boost_plugin/dependencies.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

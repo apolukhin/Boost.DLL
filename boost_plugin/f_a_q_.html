@@ -29,6 +29,9 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="f_a_q_.html#boost_plugin.f_a_q_.is_boost_plugin_thread_safe_">Is
       Boost.Plugin thread-safe?</a></span></dt>
+<dt><span class="section"><a href="f_a_q_.html#boost_plugin.f_a_q_.why_on_linux_symbols_from_one_plugin_are_seen_in_another__can_t_get_symbol_with_same_name_from_right_plugin__">Why
+      on Linux symbols from one plugin are seen in another? Can't get symbol with
+      same name from right plugin! </a></span></dt>
 <dt><span class="section"><a href="f_a_q_.html#boost_plugin.f_a_q_.how_unicode__windows__is_hadled_">How
       Unicode (Windows) is hadled?</a></span></dt>
 <dt><span class="section"><a href="f_a_q_.html#boost_plugin.f_a_q_.can_i_open_an_executable_file_">Can
@@ -48,6 +51,17 @@
         It is safe in the manner as all the C++ Standart Library containers are:
         it is safe to use different instances of shared_library from different threads
         even if all the instances loaded the same library.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_plugin.f_a_q_.why_on_linux_symbols_from_one_plugin_are_seen_in_another__can_t_get_symbol_with_same_name_from_right_plugin__"></a><a class="link" href="f_a_q_.html#boost_plugin.f_a_q_.why_on_linux_symbols_from_one_plugin_are_seen_in_another__can_t_get_symbol_with_same_name_from_right_plugin__" title="Why on Linux symbols from one plugin are seen in another? Can't get symbol with same name from right plugin!">Why
+      on Linux symbols from one plugin are seen in another? Can't get symbol with
+      same name from right plugin! </a>
+</h3></div></div></div>
+<p>
+        You've run into the symbol shadowing plroblem. Compile your plugins with
+        "-fvisibility=hidden" flag and take a look to the Tutorial section.
       </p>
 </div>
 <div class="section">

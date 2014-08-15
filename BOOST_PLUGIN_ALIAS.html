@@ -32,6 +32,23 @@
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="plugin/reference.html#header.boost.plugin.alias_hpp" title="Header &lt;boost/plugin/alias.hpp&gt;">boost/plugin/alias.hpp</a>&gt;
 
 </span>BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)</pre></div>
+<div class="refsect1">
+<a name="idp5836320"></a><h2>Description</h2>
+<p>This macro is usefull in cases of long mangled names.</p>
+<p>Can be used in any namespace, including global. FunctionOrVar must be fully qualified, so that address of it could be taken. Multiple different alises for a single variable/function are allowed.</p>
+<p>Make sure that AliasNames are unique per library/executable. Functions or variables in global namespace must not have names same as AliasNames.</p>
+<p>Same AliasName in different translation units must point to the same FunctionOrVar.</p>
+<p><span class="bold"><strong>Example:</strong></span> </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">foo</span> <span class="special">{</span>
+  <span class="keyword">void</span> <span class="identifier">bar</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+
+  <span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">foo</span><span class="special">::</span><span class="identifier">bar</span><span class="special">,</span> <span class="identifier">foo_bar</span><span class="special">)</span> <span class="comment">// foo::bar function now could be dynamicaly loaded using "foo_bar" name</span>
+<span class="special">}</span>
+
+<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span><span class="identifier">foo</span><span class="special">::</span><span class="identifier">bar</span><span class="special">,</span> <span class="identifier">foo_bar_another_alias_name</span><span class="special">)</span>
+</pre>
+<p> </p>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
