@@ -385,6 +385,65 @@ public:
         return base_t::native();
     }
 
+   /*!
+    * Returns full path of shared module.
+    *
+    * The ability to extract the full file system path of a loaded shared
+    * library can be useful in case that use provide only library name on load, 
+    * and on some time need to get full path of it. 
+    *
+    * \b Example:
+    * \code
+    * shared_library lib("test_lib.dll");
+    * filesystem::path full_path = lib.full_module_path(); // C:\Windows\System32\test_lib.dll
+    * \endcode
+    *
+    * \return The full path of shared module, like:
+    *
+    * c:\temp\mylib.dll (windows)
+    * /temp/mylib.so (unix)
+    * /temp/mylib.dylib (mac)
+    *
+    * \throw boost::system::system_error.
+    */
+    boost::filesystem::path full_module_path() {
+        boost::system::error_code ec;
+        boost::filesystem::path full_path = base_t::full_module_path(ec);
+
+        if (ec) {
+            boost::plugin::detail::report_error(ec, "full_module_path() failed");
+        }
+
+        return full_path;
+    }
+
+   /*!
+    * Returns full path of shared module.
+    *
+    * The ability to extract the full file system path of a loaded shared
+    * library can be useful in case that use provide only library name on load, 
+    * and on some time need to get full path of it. 
+    *
+    * \b Example:
+    * \code
+    * shared_library lib("test_lib.dll");
+    * filesystem::path full_path = lib.full_module_path(); // C:\Windows\System32\test_lib.dll
+    * \endcode
+    *
+    * \return The full path of shared module, like:
+    *
+    * c:\temp\test_lib.dll (windows)
+    * /temp/test_lib.so (unix)
+    * /temp/test_lib.dylib (mac)
+    *
+    * \param ec Variable that will be set to the result of the operation.
+    *
+    * \throw Nothing.
+    */
+    boost::filesystem::path full_module_path(boost::system::error_code &ec) BOOST_NOEXCEPT {
+       return base_t::full_module_path(ec);
+    }
+
     /*!
     * Returns suffix od shared module:
     * in a call to load() or the constructor/load.

@@ -28,6 +28,11 @@
 
 #include <dlfcn.h>
 
+// for dlinfo
+#include <dlfcn.h>
+#include <link.h>
+#include <limits.h>
+
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif
@@ -123,6 +128,32 @@ public:
 
     void swap(shared_library_impl& rhs) BOOST_NOEXCEPT {
         boost::swap(handle_, rhs.handle_);
+    }
+
+    boost::filesystem::path full_module_path(boost::system::error_code &ec) BOOST_NOEXCEPT {
+        // get the full path of the loaded library
+        char full_module_path[PATH_MAX] = { '\0' };
+
+        // RTLD_DI_ORIGIN
+
+        // Obtain the origin of the dynamic object that is  associated  with  
+        // the handle. The p argument is a char pointer (char *p). 
+        //
+        // The dirname(3C) of  the  associated  object's realpath(3C), 
+        // which can be no larger than {PATH_MAX}, is copied to the pointer p.
+
+        // dlinfo() function returns -1 if the request is invalid
+        if (dlinfo(handle_, RTLD_DI_ORIGIN, full_module_path) < 0) 
+        {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor,
+                boost::system::generic_category()
+            );
+
+            return boost::filesystem::path();
+        }
+
+        return boost::filesystem::path(full_module_path);
     }
 
     static boost::filesystem::path suffix() {
