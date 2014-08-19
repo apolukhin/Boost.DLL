@@ -11,6 +11,15 @@
 #include "../example/shared_lib_path.hpp"
 // Unit Tests
 
+inline bool lib_path_equal(const boost::filesystem::path& lhs, const boost::filesystem::path& rhs) {
+    std::size_t size = lhs.native().size();
+    if (size > rhs.native().size()) {
+        size = rhs.native().size();
+    }
+
+    return !rhs.native().compare(0, size, lhs.native(), 0, size);
+}
+
 int test_main(int argc, char* argv[])
 {
    using namespace boost::plugin;
@@ -22,6 +31,7 @@ int test_main(int argc, char* argv[])
    {
       shared_library sl(shared_library_path);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
 
       shared_library sl2;
       BOOST_CHECK(!sl2.is_loaded());
@@ -35,12 +45,14 @@ int test_main(int argc, char* argv[])
       boost::system::error_code ec;
       shared_library sl(shared_library_path, ec);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
       shared_library sl;
       sl.load(shared_library_path);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
@@ -48,23 +60,27 @@ int test_main(int argc, char* argv[])
       boost::system::error_code ec;
       sl.load(shared_library_path, ec);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
       shared_library sl(shared_library_path, load_mode::load_with_altered_search_path );
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
       boost::system::error_code ec;
       shared_library sl(shared_library_path, load_mode::load_with_altered_search_path, ec);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
       shared_library sl;
       sl.load(shared_library_path, load_mode::load_with_altered_search_path);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
@@ -72,26 +88,31 @@ int test_main(int argc, char* argv[])
       boost::system::error_code ec;
       sl.load(shared_library_path, load_mode::load_with_altered_search_path, ec);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
       shared_library sl(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
       shared_library sl(shared_library_path, load_mode::rtld_local);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
       shared_library sl(shared_library_path, load_mode::rtld_now);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
       shared_library sl(shared_library_path, load_mode::rtld_now | load_mode::rtld_global | load_mode::load_library_as_datafile);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
@@ -99,12 +120,14 @@ int test_main(int argc, char* argv[])
       shared_library sl(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global, ec);
       BOOST_CHECK(sl.is_loaded());
       BOOST_CHECK(!ec);
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
    {
       shared_library sl;
       sl.load(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
    
    {  // self_load
@@ -145,6 +168,7 @@ int test_main(int argc, char* argv[])
       sl.load(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global, ec);
       BOOST_CHECK(sl.is_loaded());
       BOOST_CHECK(!ec);
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
 
       sl.load_self();
       BOOST_CHECK(sl.is_loaded());
@@ -165,6 +189,7 @@ int test_main(int argc, char* argv[])
    {  // unload
       shared_library sl(shared_library_path);
       BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
       sl.unload();
       BOOST_CHECK(!sl.is_loaded());
    }

@@ -404,10 +404,23 @@ public:
     * /temp/mylib.so (unix)
     * /temp/mylib.dylib (mac)
     *
-    * \throw boost::system::system_error.
+    * \throw boost::system::system_error, std::bad_alloc.
     */
-    boost::filesystem::path full_module_path() {
+    boost::filesystem::path path() const {
         boost::system::error_code ec;
+        if (!is_loaded()) {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor,
+                boost::system::generic_category()
+            );
+
+            boost::throw_exception(
+                boost::system::system_error(
+                    ec, "full_module_path() failed (no library was loaded)"
+                )
+            );
+        }
+
         boost::filesystem::path full_path = base_t::full_module_path(ec);
 
         if (ec) {
@@ -438,10 +451,19 @@ public:
     *
     * \param ec Variable that will be set to the result of the operation.
     *
-    * \throw Nothing.
+    * \throw std::bad_alloc.
     */
-    boost::filesystem::path full_module_path(boost::system::error_code &ec) BOOST_NOEXCEPT {
-       return base_t::full_module_path(ec);
+    boost::filesystem::path path(boost::system::error_code &ec) const {
+        if (!is_loaded()) {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor,
+                boost::system::generic_category()
+            );
+
+            return boost::filesystem::path();
+        }
+
+        return base_t::full_module_path(ec);
     }
 
     /*!

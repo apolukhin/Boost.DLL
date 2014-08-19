@@ -130,7 +130,7 @@ public:
         boost::swap(handle_, rhs.handle_);
     }
 
-    boost::filesystem::path full_module_path(boost::system::error_code &ec) BOOST_NOEXCEPT {
+    boost::filesystem::path full_module_path(boost::system::error_code &ec) const BOOST_NOEXCEPT {
         // get the full path of the loaded library
         char full_module_path[PATH_MAX] = { '\0' };
 

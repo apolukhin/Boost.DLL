@@ -79,37 +79,10 @@ public:
     void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
-        // 260 == MAX_PATH
-        const boost::detail::winapi::DWORD_ default_path_size = 260;
-        const boost::detail::winapi::DWORD_ ERROR_INSUFFICIENT_BUFFER_ = 0x7A;
         boost::detail::winapi::WCHAR_ path_hldr[default_path_size];
         boost::detail::winapi::LPCWSTR_ path = path_hldr;
-        
-        // A handle to the loaded module whose path is being requested. 
-        // If this parameter is NULL, GetModuleFileName retrieves the path of the 
-        // executable file of the current process.
-        boost::detail::winapi::GetModuleFileNameW(NULL, path, default_path_size);
-        ec = last_error_code();
-        
-        // In case of ERROR_INSUFFICIENT_BUFFER_ trying to get buffer big enough to store the whole path
-        for (unsigned i = 2; i < 1025 && ec.value() == ERROR_INSUFFICIENT_BUFFER_; i *= 2) {
-            path = new(std::nothrow) boost::detail::winapi::WCHAR_[default_path_size * i];
-            if (!path) {
-                ec = boost::system::error_code(
-                    boost::system::errc::not_enough_memory,
-                    boost::system::generic_category()
-                );
-                
-                return;
-            }
 
-            boost::detail::winapi::GetModuleFileNameW(NULL, path, default_path_size * i);
-            ec = last_error_code();
-
-            if (ec) {
-                delete[] path;
-            }
-        }
+        full_module_path_impl(NULL, path, ec);
         
         if (ec) {
             // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough
@@ -142,17 +115,21 @@ public:
         boost::swap(handle_, rhs.handle_);
     }
 
-    boost::filesystem::path full_module_path(boost::system::error_code &ec) BOOST_NOEXCEPT {
-        // 260 == MAX_PATH
-        const boost::detail::winapi::DWORD_ default_path_size = 260;
+private:
+    // 260 == MAX_PATH
+    BOOST_STATIC_CONSTANT(boost::detail::winapi::DWORD_, default_path_size = 260);
+
+    static void full_module_path_impl(
+            native_handle_t h,
+            boost::detail::winapi::LPCWSTR_& path,
+            boost::system::error_code &ec) const BOOST_NOEXCEPT
+    {
         const boost::detail::winapi::DWORD_ ERROR_INSUFFICIENT_BUFFER_ = 0x7A;
-        boost::detail::winapi::WCHAR_ path_hldr[default_path_size];
-        boost::detail::winapi::LPCWSTR_ path = path_hldr;
-        
+
         // A handle to the loaded module whose path is being requested. 
         // If this parameter is NULL, GetModuleFileName retrieves the path of the 
         // executable file of the current process.
-        boost::detail::winapi::GetModuleFileNameW(NULL, path, default_path_size);
+        boost::detail::winapi::GetModuleFileNameW(h, path, default_path_size);
         ec = last_error_code();
 
         // In case of ERROR_INSUFFICIENT_BUFFER_ trying to get buffer big enough to store the whole path
@@ -167,14 +144,22 @@ public:
                 return boost::filesystem::path();
             }
 
-            boost::detail::winapi::GetModuleFileNameW(NULL, path, default_path_size * i);
+            boost::detail::winapi::GetModuleFileNameW(h, path, default_path_size * i);
             ec = last_error_code();
 
             if (ec) {
                 delete[] path;
             }
         }
-        
+    }
+
+public:
+    boost::filesystem::path full_module_path(boost::system::error_code &ec) const {
+        boost::detail::winapi::WCHAR_ path_hldr[default_path_size];
+        boost::detail::winapi::LPCWSTR_ path = path_hldr;
+
+        full_module_path_impl(handle_, path, ec);
+
         if (ec) {
             // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough
             return boost::filesystem::path();
