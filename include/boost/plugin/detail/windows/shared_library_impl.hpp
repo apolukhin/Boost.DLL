@@ -122,7 +122,7 @@ private:
     static void full_module_path_impl(
             native_handle_t h,
             boost::detail::winapi::LPCWSTR_& path,
-            boost::system::error_code &ec) const BOOST_NOEXCEPT
+            boost::system::error_code &ec) BOOST_NOEXCEPT
     {
         const boost::detail::winapi::DWORD_ ERROR_INSUFFICIENT_BUFFER_ = 0x7A;
 
@@ -140,8 +140,7 @@ private:
                     boost::system::errc::not_enough_memory,
                     boost::system::generic_category()
                 );
-                
-                return boost::filesystem::path();
+                return;
             }
 
             boost::detail::winapi::GetModuleFileNameW(h, path, default_path_size * i);
