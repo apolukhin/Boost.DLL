@@ -65,9 +65,10 @@ namespace boost { namespace plugin {
 * BOOST_PLUGIN_ALIAS(foo::bar, foo_bar_another_alias_name)
 * \endcode
 */
-#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                                                \
-    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                           \
-    __attribute__((weak)) const void *AliasName = reinterpret_cast<const void*>(&FunctionOrVar);    \
+#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                            \
+    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                       \
+     __attribute__ ((section ("boost_aliases"))) __attribute__((weak))          \
+        const void *AliasName = reinterpret_cast<const void*>(&FunctionOrVar);  \
     /**/
 
 #endif
