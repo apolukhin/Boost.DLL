@@ -33,12 +33,15 @@ namespace boost { namespace plugin {
 
 #if BOOST_OS_WINDOWS
 
-#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                                                \
-    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                           \
-    __declspec(selectany) const void *AliasName = reinterpret_cast<const void*>(&FunctionOrVar);    \
-    /**/
+#define BOOST_PLUGIN_SELECTANY __declspec(selectany)
+#define BOOST_PLUGIN_SECTION(SectionName) /*TODO:*/
 
 #else
+
+#define BOOST_PLUGIN_SELECTANY __attribute__((weak))
+#define BOOST_PLUGIN_SECTION(SectionName) __attribute__ ((section (SectionName)))
+
+#endif
 
 /*!
 * \brief Makes an alias name for exported function or variable.
@@ -67,11 +70,10 @@ namespace boost { namespace plugin {
 */
 #define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                            \
     extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                       \
-     __attribute__ ((section ("boost_aliases"))) __attribute__((weak))          \
+     BOOST_PLUGIN_SECTION("boost_aliases") BOOST_PLUGIN_SELECTANY               \
         const void *AliasName = reinterpret_cast<const void*>(&FunctionOrVar);  \
     /**/
 
-#endif
 
 
 /*!

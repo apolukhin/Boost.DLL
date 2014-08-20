@@ -15,18 +15,28 @@
 
 int test_main(int argc, char* argv[])
 {
-
     BOOST_CHECK(argc >= 2);
     boost::filesystem::path shared_library_path = shared_lib_path(argv[1], L"test_library");
     std::cout << "Library: " << shared_library_path;
 
     boost::plugin::library_info lib_info(shared_library_path);
     std::vector<std::string> sec = lib_info.sections();
-    std::copy(sec.begin(), sec.end(), std::ostream_iterator<std::string>(std::cout, ",  "));
+    //std::copy(sec.begin(), sec.end(), std::ostream_iterator<std::string>(std::cout, ",  "));
+    BOOST_CHECK(std::find(sec.begin(), sec.end(), "boost_aliases") != sec.end());
+
 
     std::cout << "\n\n\n";
     std::vector<std::string> symb = lib_info.symbols();
     std::copy(symb.begin(), symb.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+    BOOST_CHECK(std::find(symb.begin(), symb.end(), "const_integer_g") != symb.end());
+    BOOST_CHECK(std::find(symb.begin(), symb.end(), "say_hello") != symb.end());
+    
+    symb = lib_info.symbols("boost_aliases");
+    std::copy(symb.begin(), symb.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+    BOOST_CHECK(std::find(symb.begin(), symb.end(), "const_integer_g_alias") != symb.end());
+    BOOST_CHECK(std::find(symb.begin(), symb.end(), "foo_variable") != symb.end());
+    BOOST_CHECK(std::find(symb.begin(), symb.end(), "const_integer_g") == symb.end());
+    BOOST_CHECK(std::find(symb.begin(), symb.end(), "say_hello") == symb.end());
 
     return 0;
 }
