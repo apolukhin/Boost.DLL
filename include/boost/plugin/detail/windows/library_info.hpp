@@ -39,14 +39,50 @@ namespace boost { namespace plugin {
 class library_info : shared_library {
 
 public:
-    explicit library_info(const boost::filesystem::path &sl)
-        : shared_library(sl)
-    {}
+    explicit library_info(const boost::filesystem::path &sl, boost::system::error_code &ec)
+        : shared_library(sl, load_mode::dont_resolve_dll_references, ec) {}
 
-    std::vector<std::string> sections() {
+    // load self test
+    library_info(boost::system::error_code &ec) BOOST_NOEXCEPT {
+       load_self(ec);
+    }
+
+    std::vector<std::string> sections(boost::system::error_code &ec) BOOST_NOEXCEPT {
         std::vector<std::string> ret;
 
-        // TODO:
+        IMAGE_DOS_HEADER* image_dos_header = (IMAGE_DOS_HEADER*)native();
+        if(!image_dos_header) {
+            // ERROR_BAD_EXE_FORMAT 
+            ec = boost::system::error_code(
+                 boost::system::errc::executable_format_error,
+                 boost::system::generic_category()
+                 );
+
+            return ret;
+        }
+
+        IMAGE_NT_HEADERS* image_nt_headers = (IMAGE_NT_HEADERS*)&((boost::detail::winapi::BYTE_*)native())[image_dos_header->e_lfanew];
+        if (image_nt_headers->Signature != IMAGE_NT_SIGNATURE) {
+            // ERROR_BAD_EXE_FORMAT
+            ec = boost::system::error_code(
+                 boost::system::errc::executable_format_error,
+                 boost::system::generic_category()
+                 );
+
+            return ret;
+        }
+
+        IMAGE_SECTION_HEADER * image_section_header;
+        image_section_header = IMAGE_FIRST_SECTION (image_nt_headers);
+
+        // get names, e.g: .text .rdata .data .rsrc .reloc
+        for (int i = 0; i < image_nt_headers->FileHeader.NumberOfSections; i++) { 
+           
+           // There is no terminating null character if the string is exactly eight characters long
+           ret.push_back(std::string(reinterpret_cast<char*>(image_section_header->Name), 8));
+
+           image_section_header++;
+        }
 
         return ret;
     }
@@ -65,15 +101,7 @@ public:
             return ret;
         }
 
-        /*
-        IMAGE_NT_HEADERS* image_nt_headers = (IMAGE_NT_HEADERS*)&((BYTE*)native())[image_dos_header->e_lfanew];
-        if (image_nt_headers->Signature != IMAGE_NT_SIGNATURE) 
-        {
-           // ERROR_BAD_EXE_FORMAT
-        }
-        */
-
-        IMAGE_OPTIONAL_HEADER* image_optional_header = (IMAGE_OPTIONAL_HEADER*)((BYTE*)native() + image_dos_header->e_lfanew + 24);
+        IMAGE_OPTIONAL_HEADER* image_optional_header = (IMAGE_OPTIONAL_HEADER*)((boost::detail::winapi::BYTE_*)native() + image_dos_header->e_lfanew + 24);
         if(!image_optional_header) {
             // ERROR_BAD_EXE_FORMAT 
             ec = boost::system::error_code(
@@ -84,12 +112,11 @@ public:
             return ret;
         }
 
-        IMAGE_EXPORT_DIRECTORY* image_export_directory = (IMAGE_EXPORT_DIRECTORY*)((BYTE*)native() + image_optional_header->DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
+        IMAGE_EXPORT_DIRECTORY* image_export_directory = (IMAGE_EXPORT_DIRECTORY*)((boost::detail::winapi::BYTE_*)native() + image_optional_header->DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress);
 
         if (image_export_directory->NumberOfNames == 0 || image_export_directory->NumberOfFunctions == 0) {
-            // DLL doesn't export anything
-            // ERROR_PROC_NOT_FOUND
-            // TODO: what error we should return here?
+            // we should return nay error here? 
+            // or empty vector is self explicatory, that DLL doesn't export anything.
             return ret;
         }
 
@@ -118,33 +145,14 @@ public:
 
         return ret;
     }
-    /*
-
-    -- start of execution --
-    ??0CConsoleApplication2@@QAE@XZ
-    ??4CConsoleApplication2@@QAEAAV0@ABV0@@Z
-    ?fnConsoleApplication2@@YAHXZ
-    ?nConsoleApplication2@@3HA
-    ?teste_dllexport@@YAHXZ
-    f
-    func
-    gx 
-    Pressione qualquer tecla para continuar. . .
-    -- end of execution --
-
-    gx is a variable all other are function symbols
-
-    */
 
     std::vector<std::string> symbols(boost::string_ref section_name) {
         std::vector<std::string> ret;
 
-         // TODO:
+        // TODO:
 
         return ret;
     }
-
-
 };
 
 }} // namespace boost::plugin
