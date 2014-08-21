@@ -34,11 +34,15 @@
 
 namespace boost { namespace plugin {
 
+// reference:
+// http://www.joachim-bauch.de/tutorials/loading-a-dll-from-memory/
+// http://msdn.microsoft.com/en-us/magazine/ms809762.aspx
+// http://msdn.microsoft.com/en-us/magazine/cc301808.aspx
+//
+
 // work in progress
 // this shoud be an impl class??
 
-// reference:
-// http://msdn.microsoft.com/en-us/library/ms809762.aspx
 class library_info : shared_library {
 
 public:
