@@ -36,6 +36,9 @@ namespace boost { namespace plugin {
 
 // work in progress
 // this shoud be an impl class??
+
+// reference:
+// http://msdn.microsoft.com/en-us/library/ms809762.aspx
 class library_info : shared_library {
 
 public:
@@ -141,6 +144,64 @@ public:
                         ret.push_back(symbol_name);
                 }
             }
+        }
+
+        return ret;
+    }
+
+    // a test method to get dependents modules,
+    // who my plugin imports (1st level only)
+    /*
+    e.g. for myself I get:
+      KERNEL32.dll
+      MSVCP110D.dll
+      boost_system-vc-mt-gd-1_56.dll
+      MSVCR110D.dll
+    */
+    std::vector<std::string> depend_of(boost::system::error_code &ec) BOOST_NOEXCEPT {
+        std::vector<std::string> ret;
+
+        IMAGE_DOS_HEADER* image_dos_header = (IMAGE_DOS_HEADER*)native();
+        if(!image_dos_header) {
+            // ERROR_BAD_EXE_FORMAT 
+            ec = boost::system::error_code(
+                 boost::system::errc::executable_format_error,
+                 boost::system::generic_category()
+                 );
+
+            return ret;
+        }
+
+        IMAGE_OPTIONAL_HEADER* image_optional_header = (IMAGE_OPTIONAL_HEADER*)((boost::detail::winapi::BYTE_*)native() + image_dos_header->e_lfanew + 24);
+        if(!image_optional_header) {
+            // ERROR_BAD_EXE_FORMAT 
+            ec = boost::system::error_code(
+                 boost::system::errc::executable_format_error,
+                 boost::system::generic_category()
+                 );
+
+            return ret;
+        }
+
+        IMAGE_IMPORT_DESCRIPTOR* image_import_descriptor =  (IMAGE_IMPORT_DESCRIPTOR*)((boost::detail::winapi::BYTE_*)native() + image_optional_header->DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress);
+        if(!image_import_descriptor) {
+            // ERROR_BAD_EXE_FORMAT 
+            ec = boost::system::error_code(
+                 boost::system::errc::executable_format_error,
+                 boost::system::generic_category()
+                 );
+
+            return ret;
+        }
+
+        while(image_import_descriptor->FirstThunk) {
+           std::string module_name = reinterpret_cast<char*>((boost::detail::winapi::BYTE_*)native() + image_import_descriptor->Name);
+
+           if(module_name.size()) {
+              ret.push_back(module_name);
+           }
+                
+           image_import_descriptor++;
         }
 
         return ret;
