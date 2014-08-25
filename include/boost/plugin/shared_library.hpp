@@ -24,6 +24,7 @@
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
 #include <boost/plugin/detail/system_error.hpp>
+#include <boost/plugin/detail/aggressive_ptr_cast.hpp>
 
 #if BOOST_OS_WINDOWS
 #   include <boost/plugin/detail/windows/shared_library_impl.hpp>
@@ -351,7 +352,16 @@ public:
     *
     */
     template <typename T>
-    T& get(const boost::string_ref &sb) const {
+    inline T& get(const boost::string_ref &sb) const {
+        return *boost::plugin::detail::aggressive_ptr_cast<T*>(
+            get_impl(sb)
+        );
+    }
+
+private:
+    // get_impl is required to reduce binary size: it does not depend on a template
+    // parameter and will be instantiated only once.
+    void* get_impl(const boost::string_ref &sb) const {
         boost::system::error_code ec;
 
         if (!is_loaded()) {
@@ -368,13 +378,15 @@ public:
             );
         }
 
-        void* ret = base_t::symbol_addr(sb, ec);
+        void* const ret = base_t::symbol_addr(sb, ec);
         if (ec || !ret) {
             boost::plugin::detail::report_error(ec, "get() failed");
         }
 
-        return *reinterpret_cast<T*>(ret);
+        return ret;
     }
+
+public:
 
     /*!
     * Returns the native handler of the loaded library.

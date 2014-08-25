@@ -49,6 +49,6 @@ int c_variable_name = 1;
 namespace my_namespace {
     std::string cpp_function_name(const std::string& param) {
         return param + " Hello from lib!";
-    };
+    }
 }
 

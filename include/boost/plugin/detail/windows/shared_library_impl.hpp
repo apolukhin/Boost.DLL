@@ -19,6 +19,7 @@
 
 #include <boost/config.hpp>
 #include <boost/plugin/shared_library_load_mode.hpp>
+#include <boost/plugin/detail/aggressive_ptr_cast.hpp>
 
 #include <boost/move/move.hpp>
 #include <boost/swap.hpp>
@@ -182,7 +183,7 @@ public:
         // at GetProcAddress there is no version for UNICODE.
         // There can be it and is correct, as in executed
         // units names of functions are stored in narrow characters.
-        void* const symbol = reinterpret_cast<void*>(
+        void* const symbol = boost::plugin::detail::aggressive_ptr_cast<void*>(
             boost::detail::winapi::GetProcAddress(handle_, sb.data())
         );
         if (symbol == NULL) {

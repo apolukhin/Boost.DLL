@@ -18,6 +18,7 @@
 
 #include <boost/config.hpp>
 #include <boost/plugin/shared_library.hpp>
+#include <boost/plugin/detail/aggressive_ptr_cast.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -68,12 +69,15 @@ namespace boost { namespace plugin {
 * BOOST_PLUGIN_ALIAS(foo::bar, foo_bar_another_alias_name)
 * \endcode
 */
-#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                            \
-    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                       \
-     BOOST_PLUGIN_SECTION("boost_aliases") BOOST_PLUGIN_SELECTANY               \
-        const void *AliasName = reinterpret_cast<const void*>(&FunctionOrVar);  \
-    /**/
 
+// Note: we can not use `aggressive_ptr_cast` here, because in that case GCC applies
+// different permissions to the section and it causes Segmentation fault.
+#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                                                        \
+    extern "C" BOOST_PLUGIN_SECTION("boost_aliases") BOOST_PLUGIN_SELECTANY BOOST_SYMBOL_EXPORT             \
+        const void * const AliasName = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(            \
+            &FunctionOrVar                                                                                  \
+        ));                                                                                                 \
+    /**/
 
 
 /*!

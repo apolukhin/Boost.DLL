@@ -59,9 +59,9 @@ namespace namespace1 { namespace namespace2 { namespace namespace3 {
 
 BOOST_PLUGIN_ALIAS(foo::bar, foo_bar)
 BOOST_PLUGIN_ALIAS(foo::variable, foo_variable)
-BOOST_PLUGIN_ALIAS(namespace1::namespace2::namespace3::do_share, do_share);
-BOOST_PLUGIN_ALIAS(namespace1::namespace2::namespace3::info, info);
-BOOST_PLUGIN_ALIAS(const_integer_g, const_integer_g_alias);
+BOOST_PLUGIN_ALIAS(namespace1::namespace2::namespace3::do_share, do_share)
+BOOST_PLUGIN_ALIAS(namespace1::namespace2::namespace3::info, info)
+BOOST_PLUGIN_ALIAS(const_integer_g, const_integer_g_alias)
 
 
 int integer_g = 100;

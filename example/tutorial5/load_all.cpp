@@ -114,6 +114,7 @@ std::size_t plugins_collector::count() const {
 
 //[plugcpp_load_all
 int main(int argc, char* argv[]) {
+    BOOST_ASSERT(argc == 2);
     plugins_collector plugins(argv[1]);
 
     std::cout << "\n\nUnique plugins " << plugins.count() << ":\n";

@@ -48,6 +48,7 @@ public:
         
         const char* name_begin = &names[0];
         const char* const name_end = name_begin + names.size();
+        ret.reserve(header().e_shnum);
         do {
             ret.push_back(name_begin);
             name_begin += ret.back().size() + 1;
