@@ -182,7 +182,9 @@ public:
         // at GetProcAddress there is no version for UNICODE.
         // There can be it and is correct, as in executed
         // units names of functions are stored in narrow characters.
-        void* const symbol = boost::detail::winapi::GetProcAddress(handle_, sb.data());
+        void* const symbol = reinterpret_cast<void*>(
+            boost::detail::winapi::GetProcAddress(handle_, sb.data())
+        );
         if (symbol == NULL) {
             ec = last_error_code();
         }

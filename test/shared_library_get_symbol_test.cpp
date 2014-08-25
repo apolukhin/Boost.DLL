@@ -7,6 +7,10 @@
 
 // For more information, see http://www.boost.org
 
+#ifdef TEST_FORCE_USE_OF_WINDOWS_H
+#include <windows.h>
+#endif
+
 #include <boost/plugin/shared_library.hpp>
 #include <boost/plugin/alias.hpp>
 #include <boost/plugin/refcountable.hpp>

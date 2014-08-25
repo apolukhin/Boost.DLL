@@ -43,6 +43,9 @@ project
         [ run shared_library_load_test.cpp : $(TEST_DIR) ]
         [ run shared_library_search_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
         [ run shared_library_get_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
+        [ run shared_library_get_symbol_test.cpp 
+                : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" <target-os>windows:<define>TEST_FORCE_USE_OF_WINDOWS_H : get_symbol_windows_h_forced 
+        ]
         [ run shared_library_errors.cpp : $(TEST_DIR) : : <test-info>always_show_run_output  ]
         [ run library_info_test.cpp : $(TEST_DIR) : : <test-info>always_show_run_output  ]
         [ run ../example/getting_started.cpp : $(TEST_DIR) ]
