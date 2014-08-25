@@ -37,12 +37,16 @@ namespace boost { namespace plugin {
 #define BOOST_PLUGIN_SELECTANY __declspec(selectany)
 #define BOOST_PLUGIN_SECTION(SectionName) /*TODO:*/
 
+#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                        \
+    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                   \
+    BOOST_PLUGIN_SECTION("boost_aliases") BOOST_PLUGIN_SELECTANY            \
+    const void *AliasName = reinterpret_cast<const void*>(&FunctionOrVar);  \
+    /**/
+
 #else
 
 #define BOOST_PLUGIN_SELECTANY __attribute__((weak))
 #define BOOST_PLUGIN_SECTION(SectionName) __attribute__ ((section (SectionName)))
-
-#endif
 
 /*!
 * \brief Makes an alias name for exported function or variable.
@@ -74,10 +78,12 @@ namespace boost { namespace plugin {
 // different permissions to the section and it causes Segmentation fault.
 #define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                                                        \
     extern "C" BOOST_PLUGIN_SECTION("boost_aliases") BOOST_PLUGIN_SELECTANY BOOST_SYMBOL_EXPORT             \
-        const void * const AliasName = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(            \
+        const void * AliasName = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(            \
             &FunctionOrVar                                                                                  \
         ));                                                                                                 \
     /**/
+#endif
+
 
 
 /*!
