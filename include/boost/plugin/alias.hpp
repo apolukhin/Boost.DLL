@@ -35,18 +35,20 @@ namespace boost { namespace plugin {
 #if BOOST_OS_WINDOWS
 
 #define BOOST_PLUGIN_SELECTANY __declspec(selectany)
-#define BOOST_PLUGIN_SECTION(SectionName) /*TODO:*/
 
-#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                        \
-    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                   \
-    BOOST_PLUGIN_SECTION("boost_aliases") BOOST_PLUGIN_SELECTANY            \
-    const void *AliasName = reinterpret_cast<const void*>(&FunctionOrVar);  \
+#define BOOST_PLUGIN_SECTION(SectionName, Permissions)                              \
+    __pragma(section(SectionName, Permissions)) __declspec(allocate(SectionName))   \
     /**/
 
 #else
 
 #define BOOST_PLUGIN_SELECTANY __attribute__((weak))
-#define BOOST_PLUGIN_SECTION(SectionName) __attribute__ ((section (SectionName)))
+
+// TODO: improve section permissions using following info:
+// http://stackoverflow.com/questions/6252812/what-does-the-aw-flag-in-the-section-attribute-mean
+#define BOOST_PLUGIN_SECTION(SectionName, Permissions) __attribute__ ((section (SectionName)))
+
+#endif
 
 /*!
 * \brief Makes an alias name for exported function or variable.
@@ -73,16 +75,20 @@ namespace boost { namespace plugin {
 * BOOST_PLUGIN_ALIAS(foo::bar, foo_bar_another_alias_name)
 * \endcode
 */
+#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                                                \
+    BOOST_PLUGIN_ALIAS_SECTIONED(FunctionOrVar, AliasName, "boost_aliases")                         \
+    /**/
+
 
 // Note: we can not use `aggressive_ptr_cast` here, because in that case GCC applies
 // different permissions to the section and it causes Segmentation fault.
-#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                                                        \
-    extern "C" BOOST_PLUGIN_SECTION("boost_aliases") BOOST_PLUGIN_SELECTANY BOOST_SYMBOL_EXPORT             \
-        const void * AliasName = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(            \
-            &FunctionOrVar                                                                                  \
-        ));                                                                                                 \
+#define BOOST_PLUGIN_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                             \
+    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                               \
+    BOOST_PLUGIN_SECTION(SectionName, read) BOOST_PLUGIN_SELECTANY                                      \
+    const void * AliasName = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(                  \
+        &FunctionOrVar                                                                                  \
+    ));                                                                                                 \
     /**/
-#endif
 
 
 

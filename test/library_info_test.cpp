@@ -7,6 +7,7 @@
 
 #include <boost/plugin/library_info.hpp>
 #include <boost/test/minimal.hpp>
+#include "../example/tutorial4/static_plugin.hpp"
 
 #include "../example/shared_lib_path.hpp"
 // Unit Tests
@@ -37,6 +38,19 @@ int test_main(int argc, char* argv[])
     BOOST_CHECK(std::find(symb.begin(), symb.end(), "foo_variable") != symb.end());
     BOOST_CHECK(std::find(symb.begin(), symb.end(), "const_integer_g") == symb.end());
     BOOST_CHECK(std::find(symb.begin(), symb.end(), "say_hello") == symb.end());
+
+
+    // Self testing
+    std::cout << "Self: " << argv[0];
+    boost::plugin::library_info self_info(argv[0]);
+
+    sec = self_info.sections();
+    //std::copy(sec.begin(), sec.end(), std::ostream_iterator<std::string>(std::cout, ",  "));
+    BOOST_CHECK(std::find(sec.begin(), sec.end(), "boost_aliases") != sec.end());
+
+    symb = self_info.symbols("boost_aliases");
+    std::copy(symb.begin(), symb.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+    BOOST_CHECK(std::find(symb.begin(), symb.end(), "create_plugin") != symb.end());
 
     return 0;
 }

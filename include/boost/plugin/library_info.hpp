@@ -20,7 +20,7 @@
 #include <boost/predef/os.h>
 
 #if BOOST_OS_WINDOWS
-#error "Not implemented. Sorry"
+#   include <boost/plugin/detail/windows/library_info.hpp>
 #else
 #   include <boost/plugin/detail/posix/library_info.hpp>
 #endif
