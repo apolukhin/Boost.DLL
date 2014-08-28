@@ -10,28 +10,31 @@
 #include <string>
 
 //[getting_started_exports_c_function
-// pure 'C' method
+// exporting pure 'C' method
 extern "C" int BOOST_SYMBOL_EXPORT c_func_name(int);
 //]
 
 //[getting_started_exports_c_variable
-// POD 'C' variable in global namespace
+// exporting POD 'C' variable in global namespace
 extern "C" int BOOST_SYMBOL_EXPORT c_variable_name;
 //]
 
 //[getting_started_exports_cpp_function
-// 'C++' function
+// exporting 'C++' function
 namespace my_namespace {
-    std::string cpp_function_name(const std::string& param);
-}
+
+std::string cpp_function_name(const std::string& param);
 
 BOOST_PLUGIN_ALIAS(
     my_namespace::cpp_function_name, cpp_function_alias_name
 )
+
+} // namespace my_namespace
+
 //]
 
 //[getting_started_exports_cpp_variable
-// 'C++' variable
+// exporting 'C++' variable
 namespace my_namespace {
     std::string cpp_variable_name = "some value";
 }
@@ -39,6 +42,7 @@ namespace my_namespace {
 BOOST_PLUGIN_ALIAS(
     my_namespace::cpp_variable_name, cpp_variable_alias_name
 )
+
 //]
 
 

@@ -1,0 +1,52 @@
+[/
+    Copyright 2014 Renato Tegon Forti, Antony Polukhin
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Design Rationale]
+
+[section ABI portablity across compilers]
+
+During discussion of the library a lot of questions were about ABI stability and should the library
+take care about it. It was decided that making ABI stable could be a useful feature, but it will
+add a lot of overhead and make the library usage less simple. For those who do not require ABI
+stability across compilers such feature will be an overkill.
+
+It was decided to make this library more simple and low level, so that it could be used to make ABI
+stable plugins system for users that require it still not adding overhead for other users.
+
+[endsect]
+
+
+[section User's plugin API]
+
+There are some open C++ plugin systems. Most of them force user to have some predefined API. The
+problem is that all of those API differ.
+
+To be more usable Boost.DLL does not force API. It's up to user to design suitable API.
+
+[endsect]
+
+[section Performance and memory allocations]
+
+Some methods of the library use `boost::filesystem::path` or return `std::vector<std::string>`. This
+may look non optial at first, but there is a reason to do so.
+
+`boost::filesystem::path` allows to transparently use Unicode strings with non-Unicode ones. Using it
+provides a more user-friendly interface for the library while the performance overhead is not noticeable
+because of a slow file system operations that occur in `boost::filesystem::path` accepting methods.
+
+`std::vector<std::string>` variables are returned by the `library_info` methods. Querying a library is a slow
+procedure anyway: it randomly reads parts of file from disc and executes algorithms that sometimes
+have linear complexity from sections or exported symbols count. Returning `std::vector<std::string>`
+simplifies implementation and does not require from user to keep an instance of `library_info` after
+query. Having not a very noticeable performance overhead in rarely called methods seems reasonable.
+
+Other methods are assumed to be hot paths and optimized as much as possible.
+
+[endsect]
+
+
+[endsect]
+

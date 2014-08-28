@@ -99,9 +99,10 @@ Destructing my_plugin_sum ;o)
 [section Linking plugin into the executable]
 
 Linking plugin into the executable has the advantages of 
+
 * reducing common size of distibution 
 * simplification of installation of distribution
-* faster load times of plugin
+* faster plugin load
 
 Let's start from creating a linkable in plugin. Such plugin will have a header, 
 common for plugin library itself and for the executable:

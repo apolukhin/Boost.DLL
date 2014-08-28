@@ -8,7 +8,16 @@
 
 [warning This is not an official Boost C++ library. It wasn't reviewed and can't be downloaded from www.boost.org. This beta is available to boost community to know real interest and get comments for refinement. The intention is to submit library to formal review, if community think that it is interesting!]
 
-Adding a specific features to an existing software applications at runtime could be usefull in many cases. Such extensions, or *Plugin*s, are usually implemented using Dynamic Library Modules (DLL,SO/DSO) loaded at runtime. 
+Adding a specific features to an existing software applications at runtime could be usefull in many cases. Such extensions, or plugins, are usually implemented using Dynamic Library Modules (DLL,SO/DSO) loaded at runtime. 
 
-Plugin library was designed to simplify plugin development using C++ in a portable cross-platform manner.
+This library was designed to simplify plugin development using C++ in a portable cross-platform manner. 
+
+Library provides a portable across platforms way to:
+
+* load libraries
+* import any native functions and variables
+* make alias names for C++ mangled functions and symbols
+* query libraries for sections and exported symbols
+* self loading and querying
+
 [endsect]

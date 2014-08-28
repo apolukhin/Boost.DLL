@@ -6,33 +6,58 @@
 
 [section F.A.Q.]
 
-[section Is Boost.Plugin thread-safe?]
-It is safe in the manner as all the C++ Standart Library containers are: it is safe to use
-different instances of shared_library from different threads even if all the instances loaded the
-same library.
-[endsect]
+* [*Question:]  Is Boost.Plugin thread-safe?
+  * [*Answer:]  It is safe in the manner as all the C++ Standart Library containers are: it is safe to use
+different instances of shared_library from different threads even if all the instances loaded the same library.
 
-[section Why on Linux symbols from one plugin are seen in another? Can't get symbol with same name from right plugin! ]
-You've run into the symbol shadowing plroblem. Compile your plugins with "-fvisibility=hidden" flag and take a look
-to the Tutorial section.
-[endsect]
+[pre
+]
 
-[section How Unicode (Windows) is hadled?]
-Boost.Plugin supports Unicode, so that you could provide a unicode paths to it.
-[endsect]
+* [*Question:]  Why on Linux symbols from one plugin are seen in another? Can't get symbol with same name from right plugin!
+  * [*Answer:]  You've run into the symbol shadowing plroblem. Compile your plugins with "-fvisibility=hidden"
+flag and take a look to the Tutorial section.
 
-[section Can I open an executable file?]
-Yes, you can. Symbols need be exported using in the executable using BOOST_SYMBOL_EXPORT or BOOST_PLUGIN_ALIAS.
-You can use 'shared_library::load_self()' method to load yourself. Refer to the Tutorial section for more info.
-[endsect]
+[pre
+]
 
-[section What if I specify wrong type in `shared_library::get<T>` or `shared_function<T>`?]
-Usualy you'll end up with `Segmentation Fault`. However it is safe to make types more strict, for example
-making `const int` from an `int` will not harm.
-[endsect]
+* [*Question:]  How Unicode (Windows) is hadled?
+  * [*Answer:]  Boost.Plugin supports Unicode, so that you could provide a unicode paths to it.
 
-[section I have found a bug, how do I notify?]
-Create an [@https://github.com/apolukhin/Boost.Plugin/issues issue at github] with a detailed description.
+[pre
+]
+
+* [*Question:]  Can I open an executable file?
+  * [*Answer:]  Yes, you can. Symbols need be exported using in the executable using `BOOST_SYMBOL_EXPORT`
+or `BOOST_PLUGIN_ALIAS`. You can use 'shared_library::load_self()' method to load yourself. Refer to
+the Tutorial section for more info. You can also query executables, just provide a path to the executable
+to `library_info` class.
+
+[pre
+]
+
+* [*Question:]  What if I specify wrong type in `shared_library::get<T>` or `shared_function<T>`?
+  * [*Answer:]  Usualy you'll end up with `Segmentation Fault`. However it is safe to make types
+more strict, for example making `const int` from an `int` will not harm.
+
+[pre
+]
+
+* [*Question:]  Does your library gurantee ABI stability of methods?
+  * [*Answer:]  Library only gurarntees that alias names created using the `BOOST_PLUGIN_ALIAS` macros
+will not change with the change of compiler or platform. You must take care of functions ABI and API
+stability by your own.
+
+[pre
+]
+
+* [*Question:]  Are there any function signature restrictions for the exported/imported functions?
+  * [*Answer:]  No. You may import/export functions with any signature and any return parameter.
+
+[pre
+]
+
+* [*Question:]  I have found a bug, how do I notify?]
+  * [*Answer:]  Create an [@https://github.com/apolukhin/Boost.Plugin/issues issue at github] with a detailed description.
 [endsect]
 
 [endsect]

@@ -15,16 +15,15 @@
 
 // Unit Tests
 int test_main(int argc, char* argv[]) {
-    using namespace boost::plugin;
+    using namespace boost;
 
     BOOST_CHECK(argc >= 2);
-    boost::filesystem::path path_to_shared_library = shared_lib_path(argv[1], L"getting_started_library");
+    filesystem::path path_to_shared_library = shared_lib_path(argv[1], L"getting_started_library");
     
     //[getting_started_imports_c_function
-    boost::function<int(int)> c_func 
-        = boost::plugin::shared_function<int(int)>(
-            path_to_shared_library, "c_func_name"
-        );
+    function<int(int)> c_func = plugin::shared_function<int(int)>(
+        path_to_shared_library, "c_func_name"
+    );
     //]
 
     int c_func_res = c_func(1); // calling the function
@@ -32,10 +31,9 @@ int test_main(int argc, char* argv[]) {
 
 
     //[getting_started_imports_c_variable
-    boost::shared_ptr<int> c_var 
-        = boost::plugin::shared_variable<int>(
-            path_to_shared_library, "c_variable_name"
-        );
+    shared_ptr<int> c_var = plugin::shared_variable<int>(
+        path_to_shared_library, "c_variable_name"
+    );
     //]
 
     int c_var_old_contents = *c_var; // using the variable
@@ -44,10 +42,10 @@ int test_main(int argc, char* argv[]) {
 
 
     //[getting_started_imports_cpp_function
-    typedef std::string(cpp_func_type)(const std::string&);
+    typedef std::string(func_type)(const std::string&);
 
-    boost::function<cpp_func_type> cpp_func 
-        = boost::plugin::shared_function_alias<cpp_func_type>(
+    function<func_type> cpp_func
+        = plugin::shared_function_alias<func_type>(
             path_to_shared_library, "cpp_function_alias_name"
         );
     //]
@@ -57,8 +55,8 @@ int test_main(int argc, char* argv[]) {
     BOOST_CHECK(cpp_func_res == "In importer. Hello from lib!");
 
     //[getting_started_imports_cpp_variable    
-    boost::shared_ptr<std::string> cpp_var 
-        = boost::plugin::shared_variable_alias<std::string>(
+    shared_ptr<std::string> cpp_var
+        = plugin::shared_variable_alias<std::string>(
             path_to_shared_library, "cpp_variable_alias_name"
         );
     //]

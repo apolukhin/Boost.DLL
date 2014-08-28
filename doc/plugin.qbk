@@ -26,6 +26,7 @@
 [xinclude autodoc_shared_library_refcountable.xml]
 [endsect]
 
-[include dependencies.qbk]
 [include faq.qbk]
+[include design_rationale.qbk]
+[include dependencies.qbk]
 [include revisionhistory.qbk]
