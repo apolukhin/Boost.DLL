@@ -18,9 +18,9 @@ namespace my_namespace {
 
 class my_plugin_aggregator : public my_plugin_api {
     float aggr_;
-public:
     my_plugin_aggregator() : aggr_(0) {}
 
+public:
     float version() const {
         return 1.0;
     }
@@ -33,13 +33,20 @@ public:
         aggr_ += x + y;
         return aggr_;
     }
+
+    // Factory method
+    static boost::shared_ptr<my_plugin_aggregator> create() {
+        return boost::shared_ptr<my_plugin_aggregator>(
+            new my_plugin_aggregator()
+        );
+    }
 };
 
-boost::shared_ptr<my_plugin_aggregator> create_plugin_aggregator() {
-    return boost::make_shared<my_plugin_aggregator>();
-}
 
-BOOST_PLUGIN_ALIAS(my_namespace::create_plugin_aggregator, create_plugin)
+BOOST_PLUGIN_ALIAS(
+    my_namespace::my_plugin_aggregator::create,
+    create_plugin
+)
 
 } // namespace my_namespace
 
