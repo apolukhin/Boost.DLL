@@ -17,17 +17,17 @@
 #define BOOST_PLUGIN_ALIAS_HPP
 
 #include <boost/config.hpp>
-#include <boost/plugin/shared_library.hpp>
-#include <boost/plugin/detail/aggressive_ptr_cast.hpp>
+#include <boost/dll/shared_library.hpp>
+#include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif
 
 
-/// \file boost/plugin/alias.hpp
+/// \file boost/dll/alias.hpp
 /// \brief Includes alias methods and macro. You can include this header or
-/// boost/plugin/shared_library.hpp to reduce dependencies
+/// boost/dll/shared_library.hpp to reduce dependencies
 /// in case you do not use the refcountable functions.
 
 namespace boost { namespace dll {

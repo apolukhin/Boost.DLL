@@ -10,7 +10,7 @@
 
 //[plugcpp_my_plugin_static
 
-#include <boost/plugin.hpp>
+#include <boost/dll.hpp>
 #include "../tutorial_common/plugin_api.hpp"
 
 namespace my_namespace {

@@ -5,7 +5,7 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/plugin/shared_library.hpp>
+#include <boost/dll/shared_library.hpp>
 #include <boost/test/minimal.hpp>
 
 #include "../example/shared_lib_path.hpp"

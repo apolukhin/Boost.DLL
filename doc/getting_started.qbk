@@ -6,7 +6,7 @@
 
 [section:introduction Getting started]
 
-To start with the library you only need to include `<boost/plugin.hpp>` header. After that you are free to import and export functions and variables:
+To start with the library you only need to include `<boost/dll.hpp>` header. After that you are free to import and export functions and variables:
 
 
 [import ../example/getting_started.cpp]

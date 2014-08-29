@@ -5,7 +5,7 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/plugin/library_info.hpp>
+#include <boost/dll/library_info.hpp>
 #include <boost/test/minimal.hpp>
 #include "../example/tutorial4/static_plugin.hpp"
 

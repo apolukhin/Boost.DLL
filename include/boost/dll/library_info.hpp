@@ -20,9 +20,9 @@
 #include <boost/predef/os.h>
 
 #if BOOST_OS_WINDOWS
-#   include <boost/plugin/detail/windows/library_info.hpp>
+#   include <boost/dll/detail/windows/library_info.hpp>
 #else
-#   include <boost/plugin/detail/posix/library_info.hpp>
+#   include <boost/dll/detail/posix/library_info.hpp>
 #endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE

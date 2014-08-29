@@ -6,7 +6,7 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/plugin.hpp>
+#include <boost/dll.hpp>
 #include <string>
 
 //[getting_started_exports_c_function

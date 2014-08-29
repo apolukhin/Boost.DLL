@@ -8,7 +8,7 @@
 // For more information, see http://www.boost.org
 
 #include <boost/config.hpp>
-#include <boost/plugin/alias.hpp>
+#include <boost/dll/alias.hpp>
 #include <iostream>
 #include <vector>
 

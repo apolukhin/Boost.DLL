@@ -14,7 +14,7 @@
 
 //[callplugcpp_tutorial3
 
-#include <boost/plugin.hpp>
+#include <boost/dll.hpp>
 #include <boost/make_shared.hpp>
 
 #include <iostream>

@@ -17,19 +17,19 @@
 #ifndef BOOST_PLUGIN_SHARED_LIBRARY_HPP
 #define BOOST_PLUGIN_SHARED_LIBRARY_HPP
 
-/// \file boost/plugin/shared_library.hpp
+/// \file boost/dll/shared_library.hpp
 /// \brief Contains the boost::dll::shared_library class, main class for all the
 /// DLL/DSO operations.
 
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
-#include <boost/plugin/detail/system_error.hpp>
-#include <boost/plugin/detail/aggressive_ptr_cast.hpp>
+#include <boost/dll/detail/system_error.hpp>
+#include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
 #if BOOST_OS_WINDOWS
-#   include <boost/plugin/detail/windows/shared_library_impl.hpp>
+#   include <boost/dll/detail/windows/shared_library_impl.hpp>
 #else
-#   include <boost/plugin/detail/posix/shared_library_impl.hpp>
+#   include <boost/dll/detail/posix/shared_library_impl.hpp>
 #endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE

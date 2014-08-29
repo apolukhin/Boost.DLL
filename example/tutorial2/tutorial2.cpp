@@ -13,7 +13,7 @@
 #include "../shared_lib_path.hpp"
 
 //[callplugcpp_tutorial2
-#include <boost/plugin.hpp>
+#include <boost/dll.hpp>
 #include <iostream>
 #include "../tutorial_common/plugin_api.hpp"
 

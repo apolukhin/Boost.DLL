@@ -30,7 +30,7 @@
 
 // TODO: add to dll2.hpp
 #include <windows.h>
-#include <boost/plugin/shared_library.hpp>
+#include <boost/dll/shared_library.hpp>
 
 namespace boost { namespace dll {
 

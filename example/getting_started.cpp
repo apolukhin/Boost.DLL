@@ -8,7 +8,7 @@
 // For more information, see http://www.boost.org
 
 #include <boost/test/minimal.hpp>
-#include <boost/plugin.hpp>
+#include <boost/dll.hpp>
 #include <string>
 
 #include "shared_lib_path.hpp"

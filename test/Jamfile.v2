@@ -11,7 +11,7 @@
 import testing ;
 import path ;
 
-path-constant TEST_DIR : $(BOOST_ROOT)/bin.v2/libs/plugin/test ;
+path-constant TEST_DIR : $(BOOST_ROOT)/bin.v2/libs/dll/test ;
 
 # Static library that is not linked with any of the boost libs
 lib static_plugin : ../example/tutorial4/static_plugin.cpp : <link>static : : <target-os>linux:<cxxflags>"-rdynamic" ;

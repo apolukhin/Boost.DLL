@@ -148,7 +148,7 @@ Let's make an executable, link a plugin into it and attempt to load all the exis
 
 With the default flags you'll get a very strange output:
 [pre
-Loaded (0x180db60):"/libs/plugin/test/libmy_plugin_aggregator.so"
+Loaded (0x180db60):"/libs/dll/test/libmy_plugin_aggregator.so"
 Constructing my_plugin_static
 Destructing my_plugin_static
 ...
@@ -172,8 +172,8 @@ reduces size of the binaries and improves binary load time.
 
 Now if we recompile your example with "-fvisibility=hidden" we'll get the following output:
 [pre
-Loaded (0x2406b60):"/home/apolukhin/boost_maintain/modular-boost/bin.v2/libs/plugin/test/libmy_plugin_aggregator.so"
-Loaded (0x2407410):"/home/apolukhin/boost_maintain/modular-boost/bin.v2/libs/plugin/test/libgetting_started_library.so"
+Loaded (0x2406b60):"/home/apolukhin/boost_maintain/modular-boost/bin.v2/libs/dll/test/libmy_plugin_aggregator.so"
+Loaded (0x2407410):"/home/apolukhin/boost_maintain/modular-boost/bin.v2/libs/dll/test/libgetting_started_library.so"
 Constructing my_plugin_sum
 ...
 

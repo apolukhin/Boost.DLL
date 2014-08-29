@@ -18,8 +18,8 @@
 #define BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
 
 #include <boost/config.hpp>
-#include <boost/plugin/shared_library_load_mode.hpp>
-#include <boost/plugin/detail/aggressive_ptr_cast.hpp>
+#include <boost/dll/shared_library_load_mode.hpp>
+#include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
 #include <boost/move/move.hpp>
 #include <boost/swap.hpp>

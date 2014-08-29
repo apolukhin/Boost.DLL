@@ -12,7 +12,7 @@
 //[plugcpp_my_plugin_sum
    
 #include "../tutorial_common/plugin_api.hpp"
-#include <boost/plugin.hpp>
+#include <boost/dll.hpp>
 
 namespace my_namespace {
 

@@ -17,8 +17,8 @@
 #define BOOST_PLUGIN_REFCOUNTABLE_HPP
 
 #include <boost/config.hpp>
-#include <boost/plugin/shared_library.hpp>
-#include <boost/plugin/alias.hpp>
+#include <boost/dll/shared_library.hpp>
+#include <boost/dll/alias.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/function.hpp>
@@ -27,7 +27,7 @@
 # pragma once
 #endif
 
-/// \file boost/plugin/refcountable.hpp
+/// \file boost/dll/refcountable.hpp
 /// \brief Includes all the reference counting functions that hold a shared pointer to the instance of
 /// boost::dll::shared_library. Those methods use boost::shared_ptr<T>
 /// and boost::function<T> classes.
