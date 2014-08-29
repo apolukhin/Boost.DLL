@@ -36,7 +36,7 @@ typedef boost::shared_ptr<do_share_res_t> (do_share_t)(
         );
 
 void refcountable_test(boost::filesystem::path shared_library_path) {
-    using namespace boost::plugin;
+    using namespace boost::dll;
     using namespace boost::fusion;
 
     std::vector<int> v(1000);
@@ -115,7 +115,7 @@ extern "C" int BOOST_SYMBOL_EXPORT exef() {
 
 // Unit Tests
 int test_main(int argc, char* argv[]) {
-    using namespace boost::plugin;
+    using namespace boost::dll;
 
     BOOST_CHECK(argc >= 2);
     boost::filesystem::path shared_library_path = shared_lib_path(argv[1], L"test_library");

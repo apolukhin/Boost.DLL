@@ -31,7 +31,7 @@
 # pragma once
 #endif
 
-namespace boost { namespace plugin {
+namespace boost { namespace dll {
 
    /*! \enum Modes of load library.
     *
@@ -184,6 +184,6 @@ namespace boost { namespace plugin {
         return (left);
     }
 
-}} // boost::plugin
+}} // boost::dll
 
 #endif // BOOST_PLUGIN_SHARED_LIBRARY_MODE_HPP

@@ -28,7 +28,7 @@
 #include <boost/type_traits/is_const.hpp>
 #include <stdint.h> // cstdint is not good because it does not define std::uintptr_t
 
-namespace boost { namespace plugin { namespace detail {
+namespace boost { namespace dll { namespace detail {
 
 // GCC warns when reinterpret_cast between function pointer and object pointer occur.
 // This method supress the warnings and ensures that such casts are safe.
@@ -49,7 +49,7 @@ BOOST_FORCEINLINE To aggressive_ptr_cast(From* v) BOOST_NOEXCEPT {
     );
 }
 
-}}} // boost::plugin::detail
+}}} // boost::dll::detail
 
 #endif // BOOST_PLUGIN_DETAIL_AGGRESSIVE_PTR_CAST_HPP
 

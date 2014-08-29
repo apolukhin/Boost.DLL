@@ -21,7 +21,7 @@
 
 #include "../tutorial_common/plugin_api.hpp"
 
-namespace pl = boost::plugin;
+namespace pl = boost::dll;
 
 std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugins) {
     std::size_t plugins_found = 0;

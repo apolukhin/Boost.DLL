@@ -14,7 +14,7 @@
 #include "static_plugin.hpp"
 #include <iostream>
 
-namespace pl = boost::plugin;
+namespace pl = boost::dll;
 
 int main() {
     std::cout << "Application started" << std::endl;

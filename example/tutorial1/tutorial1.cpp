@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Loading the plugin" << std::endl;
     boost::shared_ptr<my_plugin_api> plugin
-        = boost::plugin::shared_variable_alias<my_plugin_api>(
+        = boost::dll::shared_variable_alias<my_plugin_api>(
             shared_library_path, "plugin"
         );
 

@@ -18,7 +18,7 @@
 #include <iostream>
 
 //[plugcpp_plugins_collector_def
-namespace pl = boost::plugin;
+namespace pl = boost::dll;
 
 class plugins_collector {
     // Name => plugin

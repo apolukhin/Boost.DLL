@@ -37,7 +37,7 @@
 # pragma once
 #endif
 
-namespace boost { namespace plugin {
+namespace boost { namespace dll {
 
 class shared_library_impl {
 
@@ -191,7 +191,7 @@ private:
     native_handle_t handle_;
 };
 
-}} // boost::plugin
+}} // boost::dll
 
 #endif // BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
 

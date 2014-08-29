@@ -32,7 +32,7 @@
 #include <windows.h>
 #include <boost/plugin/shared_library.hpp>
 
-namespace boost { namespace plugin {
+namespace boost { namespace dll {
 
 // reference:
 // http://www.joachim-bauch.de/tutorials/loading-a-dll-from-memory/
@@ -220,6 +220,6 @@ public:
     }
 };
 
-}} // namespace boost::plugin
+}} // namespace boost::dll
 
 #endif // BOOST_PLUGIN_DETAIL_WINDOWS_LIBRARY_INFO_HPP

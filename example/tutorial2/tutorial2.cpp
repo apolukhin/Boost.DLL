@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 
     typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
     boost::function<pluginapi_create_t> creator
-        = boost::plugin::shared_function_alias<pluginapi_create_t>(shared_library_path, "create_plugin");
+        = boost::dll::shared_function_alias<pluginapi_create_t>(shared_library_path, "create_plugin");
 
     boost::shared_ptr<my_plugin_api> plugin = creator();
 

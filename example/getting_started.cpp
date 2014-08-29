@@ -21,7 +21,7 @@ int test_main(int argc, char* argv[]) {
     filesystem::path path_to_shared_library = shared_lib_path(argv[1], L"getting_started_library");
     
     //[getting_started_imports_c_function
-    function<int(int)> c_func = plugin::shared_function<int(int)>(
+    function<int(int)> c_func = dll::shared_function<int(int)>(
         path_to_shared_library, "c_func_name"
     );
     //]
@@ -31,7 +31,7 @@ int test_main(int argc, char* argv[]) {
 
 
     //[getting_started_imports_c_variable
-    shared_ptr<int> c_var = plugin::shared_variable<int>(
+    shared_ptr<int> c_var = dll::shared_variable<int>(
         path_to_shared_library, "c_variable_name"
     );
     //]
@@ -45,7 +45,7 @@ int test_main(int argc, char* argv[]) {
     typedef std::string(func_type)(const std::string&);
 
     function<func_type> cpp_func
-        = plugin::shared_function_alias<func_type>(
+        = dll::shared_function_alias<func_type>(
             path_to_shared_library, "cpp_function_alias_name"
         );
     //]
@@ -56,7 +56,7 @@ int test_main(int argc, char* argv[]) {
 
     //[getting_started_imports_cpp_variable    
     shared_ptr<std::string> cpp_var
-        = plugin::shared_variable_alias<std::string>(
+        = dll::shared_variable_alias<std::string>(
             path_to_shared_library, "cpp_variable_alias_name"
         );
     //]

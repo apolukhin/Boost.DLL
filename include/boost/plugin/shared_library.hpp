@@ -18,7 +18,7 @@
 #define BOOST_PLUGIN_SHARED_LIBRARY_HPP
 
 /// \file boost/plugin/shared_library.hpp
-/// \brief Contains the boost::plugin::shared_library class, main class for all the
+/// \brief Contains the boost::dll::shared_library class, main class for all the
 /// DLL/DSO operations.
 
 #include <boost/config.hpp>
@@ -36,7 +36,7 @@
 # pragma once
 #endif
 
-namespace boost { namespace plugin {
+namespace boost { namespace dll {
 
 /*!
 * \brief This class can be used to load a
@@ -175,7 +175,7 @@ public:
         base_t::load(sl, load_mode::default_mode, ec);
 
         if (ec) {
-            boost::plugin::detail::report_error(ec, "load() failed");
+            boost::dll::detail::report_error(ec, "load() failed");
         }
     }
 
@@ -200,7 +200,7 @@ public:
         base_t::load_self(ec);
 
         if (ec) {
-            boost::plugin::detail::report_error(ec, "load_self() failed");
+            boost::dll::detail::report_error(ec, "load_self() failed");
         }
     }
 
@@ -266,7 +266,7 @@ public:
         base_t::load(sl, mode, ec);
 
         if (ec) {
-            boost::plugin::detail::report_error(ec, "load() failed");
+            boost::dll::detail::report_error(ec, "load() failed");
         }
     }
 
@@ -353,7 +353,7 @@ public:
     */
     template <typename T>
     inline T& get(const boost::string_ref &sb) const {
-        return *boost::plugin::detail::aggressive_ptr_cast<T*>(
+        return *boost::dll::detail::aggressive_ptr_cast<T*>(
             get_impl(sb)
         );
     }
@@ -380,7 +380,7 @@ private:
 
         void* const ret = base_t::symbol_addr(sb, ec);
         if (ec || !ret) {
-            boost::plugin::detail::report_error(ec, "get() failed");
+            boost::dll::detail::report_error(ec, "get() failed");
         }
 
         return ret;
@@ -436,7 +436,7 @@ public:
         boost::filesystem::path full_path = base_t::full_module_path(ec);
 
         if (ec) {
-            boost::plugin::detail::report_error(ec, "full_module_path() failed");
+            boost::dll::detail::report_error(ec, "full_module_path() failed");
         }
 
         return full_path;
@@ -544,7 +544,7 @@ inline void swap(shared_library& lhs, shared_library& rhs) BOOST_NOEXCEPT {
     lhs.swap(rhs);
 }
 
-}} // boost::plugin
+}} // boost::dll
 
 #endif // BOOST_PLUGIN_SHARED_LIBRARY_HPP
 

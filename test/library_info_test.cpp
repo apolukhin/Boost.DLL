@@ -20,7 +20,7 @@ int test_main(int argc, char* argv[])
     boost::filesystem::path shared_library_path = shared_lib_path(argv[1], L"test_library");
     std::cout << "Library: " << shared_library_path;
 
-    boost::plugin::library_info lib_info(shared_library_path);
+    boost::dll::library_info lib_info(shared_library_path);
     std::vector<std::string> sec = lib_info.sections();
     //std::copy(sec.begin(), sec.end(), std::ostream_iterator<std::string>(std::cout, ",  "));
     BOOST_CHECK(std::find(sec.begin(), sec.end(), "boost_aliases") != sec.end());
@@ -42,7 +42,7 @@ int test_main(int argc, char* argv[])
 
     // Self testing
     std::cout << "Self: " << argv[0];
-    boost::plugin::library_info self_info(argv[0]);
+    boost::dll::library_info self_info(argv[0]);
 
     sec = self_info.sections();
     //std::copy(sec.begin(), sec.end(), std::ostream_iterator<std::string>(std::cout, ",  "));

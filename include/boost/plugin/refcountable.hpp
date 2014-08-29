@@ -29,10 +29,10 @@
 
 /// \file boost/plugin/refcountable.hpp
 /// \brief Includes all the reference counting functions that hold a shared pointer to the instance of
-/// boost::plugin::shared_library. Those methods use boost::shared_ptr<T>
+/// boost::dll::shared_library. Those methods use boost::shared_ptr<T>
 /// and boost::function<T> classes.
 
-namespace boost { namespace plugin {
+namespace boost { namespace dll {
 
 namespace detail {
 
@@ -74,7 +74,7 @@ namespace detail {
 * This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
-* For importing function by it alias name use boost::plugin::shared_function_alias method.
+* For importing function by it alias name use boost::dll::shared_function_alias method.
 *
 * This method has an overload that accepts boost::filesystem::path as a first argument.
 *
@@ -100,7 +100,7 @@ namespace detail {
 */
 template <class T>
 boost::function<T> shared_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::plugin::detail::refc_function<T>(lib, &lib->get<T>(func_name));
+    return boost::dll::detail::refc_function<T>(lib, &lib->get<T>(func_name));
 }
 
 /*!
@@ -111,7 +111,7 @@ boost::function<T> shared_function(const boost::shared_ptr<shared_library>& lib,
 * This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
-* For importing function by it's alias name use boost::plugin::shared_function_alias method.
+* For importing function by it's alias name use boost::dll::shared_function_alias method.
 *
 * \b Example:
 * \code
@@ -150,7 +150,7 @@ boost::function<T> shared_function(const boost::filesystem::path& lib_path, boos
 * This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
-* For non alias names use boost::plugin::shared_function method.
+* For non alias names use boost::dll::shared_function method.
 *
 * This method has an overload that accepts boost::filesystem::path as a first argument.
 *
@@ -176,7 +176,7 @@ boost::function<T> shared_function(const boost::filesystem::path& lib_path, boos
 */
 template <class T>
 boost::function<T> shared_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::plugin::detail::refc_function<T>(lib, lib->get<T*>(func_name));
+    return boost::dll::detail::refc_function<T>(lib, lib->get<T*>(func_name));
 }
 
 /*!
@@ -187,7 +187,7 @@ boost::function<T> shared_function_alias(const boost::shared_ptr<shared_library>
 * This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
-* For non alias names use boost::plugin::shared_function method.
+* For non alias names use boost::dll::shared_function method.
 *
 * \b Example:
 * \code
@@ -226,7 +226,7 @@ boost::function<T> shared_function_alias(const boost::filesystem::path& lib_path
 * This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
-* For importing variable by it's alias name use boost::plugin::shared_variable_alias method.
+* For importing variable by it's alias name use boost::dll::shared_variable_alias method.
 *
 * This method has an overload that accepts boost::filesystem::path as a first argument.
 *
@@ -252,7 +252,7 @@ boost::function<T> shared_function_alias(const boost::filesystem::path& lib_path
 */
 template <class T>
 boost::shared_ptr<T> shared_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<T>(&lib->get<T>(variable_name), boost::plugin::detail::ptr_holding_empty_deleter(lib));
+    return boost::shared_ptr<T>(&lib->get<T>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
 }
 
 /*!
@@ -263,7 +263,7 @@ boost::shared_ptr<T> shared_variable(const boost::shared_ptr<shared_library>& li
 * This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
-* For importing variable by it's alias name use boost::plugin::shared_variable_alias method.
+* For importing variable by it's alias name use boost::dll::shared_variable_alias method.
 *
 * \b Example:
 * \code
@@ -302,7 +302,7 @@ boost::shared_ptr<T> shared_variable(const boost::filesystem::path& lib_path, bo
 * This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
-* For non alias names use boost::plugin::shared_variable method.
+* For non alias names use boost::dll::shared_variable method.
 *
 * This method has an overload that accepts boost::filesystem::path as a first argument.
 *
@@ -328,7 +328,7 @@ boost::shared_ptr<T> shared_variable(const boost::filesystem::path& lib_path, bo
 */
 template <class T>
 boost::shared_ptr<T> shared_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<T>(lib->get<T*>(variable_name), boost::plugin::detail::ptr_holding_empty_deleter(lib));
+    return boost::shared_ptr<T>(lib->get<T*>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
 }
 
 /*!
@@ -339,7 +339,7 @@ boost::shared_ptr<T> shared_variable_alias(const boost::shared_ptr<shared_librar
 * This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
 * function with the same symbol name returned `true`.
 *
-* For non alias names use boost::plugin::shared_variable method.
+* For non alias names use boost::dll::shared_variable method.
 *
 * \b Example:
 * \code
@@ -367,7 +367,7 @@ boost::shared_ptr<T> shared_variable_alias(const boost::filesystem::path& lib_pa
     );
 }
 
-}} // boost::plugin
+}} // boost::dll
 
 #endif // BOOST_PLUGIN_REFCOUNTABLE_HPP
 

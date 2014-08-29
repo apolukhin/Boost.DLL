@@ -33,7 +33,7 @@
 # pragma once
 #endif
 
-namespace boost { namespace plugin {
+namespace boost { namespace dll {
 
 class shared_library_impl {
 
@@ -183,7 +183,7 @@ public:
         // at GetProcAddress there is no version for UNICODE.
         // There can be it and is correct, as in executed
         // units names of functions are stored in narrow characters.
-        void* const symbol = boost::plugin::detail::aggressive_ptr_cast<void*>(
+        void* const symbol = boost::dll::detail::aggressive_ptr_cast<void*>(
             boost::detail::winapi::GetProcAddress(handle_, sb.data())
         );
         if (symbol == NULL) {
@@ -201,7 +201,7 @@ private:
     native_handle_t handle_;
 };
 
-}} // boost::plugin
+}} // boost::dll
 
 #endif // BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
 

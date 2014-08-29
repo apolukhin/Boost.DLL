@@ -32,7 +32,7 @@
 #   pragma once
 #endif
 
-namespace boost { namespace plugin { namespace detail {
+namespace boost { namespace dll { namespace detail {
 
     inline void report_error(const boost::system::error_code& ec, const char* message) {
 #if !BOOST_OS_WINDOWS
@@ -54,7 +54,7 @@ namespace boost { namespace plugin { namespace detail {
         );
     }
 
-}}} // boost::plugin::detail
+}}} // boost::dll::detail
 
 #endif // BOOST_PLUGIN_SYSTEM_ERROR_HPP
 

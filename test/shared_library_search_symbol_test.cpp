@@ -18,7 +18,7 @@ extern "C" void BOOST_SYMBOL_EXPORT exef() {
 
 int test_main(int argc, char* argv[])
 {
-   using namespace boost::plugin;
+   using namespace boost::dll;
 
    BOOST_CHECK(argc >= 2);
    boost::filesystem::path shared_library_path = shared_lib_path(argv[1], L"test_library");

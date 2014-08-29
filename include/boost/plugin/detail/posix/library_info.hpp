@@ -31,7 +31,7 @@
 #include <link.h>
 #include <elf.h>
 
-namespace boost { namespace plugin {
+namespace boost { namespace dll {
 
 class library_info {
     boost::filesystem::ifstream f_;
@@ -170,6 +170,6 @@ public:
     }
 };
 
-}} // namespace boost::plugin
+}} // namespace boost::dll
 
 #endif // BOOST_PLUGIN_DETAIL_POSIX_LIBRARY_INFO_HPP

@@ -30,7 +30,7 @@
 /// boost/plugin/shared_library.hpp to reduce dependencies
 /// in case you do not use the refcountable functions.
 
-namespace boost { namespace plugin {
+namespace boost { namespace dll {
 
 #if BOOST_OS_WINDOWS
 
@@ -133,7 +133,7 @@ inline T& alias(const shared_library& lib, const boost::string_ref &symbol) {
     return *lib.get<T*>(symbol);
 }
 
-}} // boost::plugin
+}} // boost::dll
 
 #endif // BOOST_PLUGIN_ALIAS_HPP
 
