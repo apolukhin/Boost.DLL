@@ -13,8 +13,8 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_PLUGIN_PLUGIN_HPP
-#define BOOST_PLUGIN_PLUGIN_HPP
+#ifndef BOOST_DLL_DLL_HPP
+#define BOOST_DLL_DLL_HPP
 
 /// \file boost/dll.hpp
 /// \brief Includes all the set headers of the Boost.Plugin library.
@@ -28,5 +28,5 @@
 # pragma once
 #endif
 
-#endif // BOOST_PLUGIN_PLUGIN_HPP
+#endif // BOOST_DLL_DLL_HPP
 

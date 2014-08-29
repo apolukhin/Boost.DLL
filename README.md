@@ -1,4 +1,4 @@
-Boost.Plugin
+Boost Dynamic Library Load (Boost.DLL)
 ============
 
 Library for comfortable work with DLL and DSO.
@@ -9,13 +9,13 @@ This is not an official Boost C++ library. It wasn't reviewed and can't be downl
 
 
 ### Docs
-[Documentation of Boost.Plugin](http://apolukhin.github.io/Boost.Plugin/index.html)
+[Documentation of Boost.DLL](http://apolukhin.github.io/Boost.Plugin/index.html)
 
 
 ### Hello World (importing a "C" function)
 
 ```cpp
-#include <boost/plugin.hpp>
+#include <boost/dll.hpp>
 
 ...
 

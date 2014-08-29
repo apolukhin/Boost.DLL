@@ -13,8 +13,8 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_PLUGIN_ALIAS_HPP
-#define BOOST_PLUGIN_ALIAS_HPP
+#ifndef BOOST_DLL_ALIAS_HPP
+#define BOOST_DLL_ALIAS_HPP
 
 #include <boost/config.hpp>
 #include <boost/dll/shared_library.hpp>
@@ -34,19 +34,19 @@ namespace boost { namespace dll {
 
 #if BOOST_OS_WINDOWS
 
-#define BOOST_PLUGIN_SELECTANY __declspec(selectany)
+#define BOOST_DLL_SELECTANY __declspec(selectany)
 
-#define BOOST_PLUGIN_SECTION(SectionName, Permissions)                              \
+#define BOOST_DLL_SECTION(SectionName, Permissions)                              \
     __pragma(section(SectionName, Permissions)) __declspec(allocate(SectionName))   \
     /**/
 
 #else
 
-#define BOOST_PLUGIN_SELECTANY __attribute__((weak))
+#define BOOST_DLL_SELECTANY __attribute__((weak))
 
 // TODO: improve section permissions using following info:
 // http://stackoverflow.com/questions/6252812/what-does-the-aw-flag-in-the-section-attribute-mean
-#define BOOST_PLUGIN_SECTION(SectionName, Permissions) __attribute__ ((section (SectionName)))
+#define BOOST_DLL_SECTION(SectionName, Permissions) __attribute__ ((section (SectionName)))
 
 #endif
 
@@ -69,22 +69,22 @@ namespace boost { namespace dll {
 * namespace foo {
 *   void bar(std::string&);
 *
-*   BOOST_PLUGIN_ALIAS(foo::bar, foo_bar) // foo::bar function now could be dynamicaly loaded using "foo_bar" name
+*   BOOST_DLL_ALIAS(foo::bar, foo_bar) // foo::bar function now could be dynamicaly loaded using "foo_bar" name
 * }
 *
-* BOOST_PLUGIN_ALIAS(foo::bar, foo_bar_another_alias_name)
+* BOOST_DLL_ALIAS(foo::bar, foo_bar_another_alias_name)
 * \endcode
 */
-#define BOOST_PLUGIN_ALIAS(FunctionOrVar, AliasName)                                                \
-    BOOST_PLUGIN_ALIAS_SECTIONED(FunctionOrVar, AliasName, "boost_aliases")                         \
+#define BOOST_DLL_ALIAS(FunctionOrVar, AliasName)                                                \
+    BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, "boost_aliases")                         \
     /**/
 
 
 // Note: we can not use `aggressive_ptr_cast` here, because in that case GCC applies
 // different permissions to the section and it causes Segmentation fault.
-#define BOOST_PLUGIN_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                             \
+#define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                             \
     extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                               \
-    BOOST_PLUGIN_SECTION(SectionName, read) BOOST_PLUGIN_SELECTANY                                      \
+    BOOST_DLL_SECTION(SectionName, read) BOOST_DLL_SELECTANY                                      \
     const void * AliasName = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(                  \
         &FunctionOrVar                                                                                  \
     ));                                                                                                 \
@@ -135,5 +135,5 @@ inline T& alias(const shared_library& lib, const boost::string_ref &symbol) {
 
 }} // boost::dll
 
-#endif // BOOST_PLUGIN_ALIAS_HPP
+#endif // BOOST_DLL_ALIAS_HPP
 

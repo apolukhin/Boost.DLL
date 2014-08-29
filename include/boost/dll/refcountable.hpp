@@ -13,8 +13,8 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_PLUGIN_REFCOUNTABLE_HPP
-#define BOOST_PLUGIN_REFCOUNTABLE_HPP
+#ifndef BOOST_DLL_REFCOUNTABLE_HPP
+#define BOOST_DLL_REFCOUNTABLE_HPP
 
 #include <boost/config.hpp>
 #include <boost/dll/shared_library.hpp>
@@ -369,5 +369,5 @@ boost::shared_ptr<T> shared_variable_alias(const boost::filesystem::path& lib_pa
 
 }} // boost::dll
 
-#endif // BOOST_PLUGIN_REFCOUNTABLE_HPP
+#endif // BOOST_DLL_REFCOUNTABLE_HPP
 

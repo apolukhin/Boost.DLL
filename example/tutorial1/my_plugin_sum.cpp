@@ -43,7 +43,7 @@ my_plugin_sum plugin;
 
 } // namespace my_namespace
 
-BOOST_PLUGIN_ALIAS(my_namespace::plugin, plugin)
+BOOST_DLL_ALIAS(my_namespace::plugin, plugin)
 //]
 
 // platform dependent initialization sample

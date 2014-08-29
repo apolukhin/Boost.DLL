@@ -5,8 +5,8 @@
 
 // For more information, see http://www.boost.org
 
-#ifndef BOOST_PLUGIN_MY_PLUGIN_API_HPP
-#define BOOST_PLUGIN_MY_PLUGIN_API_HPP
+#ifndef BOOST_DLL_MY_PLUGIN_API_HPP
+#define BOOST_DLL_MY_PLUGIN_API_HPP
 
 //[plugapi
 #include <string>
@@ -20,5 +20,5 @@ public:
 };
 //]
    
-#endif // BOOST_PLUGIN_MY_PLUGIN_API_HPP
+#endif // BOOST_DLL_MY_PLUGIN_API_HPP
 

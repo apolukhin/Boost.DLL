@@ -43,7 +43,7 @@ public:
 };
 
 
-BOOST_PLUGIN_ALIAS(
+BOOST_DLL_ALIAS(
     my_namespace::my_plugin_aggregator::create,
     create_plugin
 )

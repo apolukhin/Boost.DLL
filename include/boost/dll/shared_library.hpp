@@ -14,8 +14,8 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_PLUGIN_SHARED_LIBRARY_HPP
-#define BOOST_PLUGIN_SHARED_LIBRARY_HPP
+#ifndef BOOST_DLL_SHARED_LIBRARY_HPP
+#define BOOST_DLL_SHARED_LIBRARY_HPP
 
 /// \file boost/dll/shared_library.hpp
 /// \brief Contains the boost::dll::shared_library class, main class for all the
@@ -546,5 +546,5 @@ inline void swap(shared_library& lhs, shared_library& rhs) BOOST_NOEXCEPT {
 
 }} // boost::dll
 
-#endif // BOOST_PLUGIN_SHARED_LIBRARY_HPP
+#endif // BOOST_DLL_SHARED_LIBRARY_HPP
 

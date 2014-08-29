@@ -21,7 +21,7 @@ project boost/libs/dll/doc ;
 # 
 
 local doxygen_params =
-  <doxygen:param>PREDEFINED=BOOST_PLUGIN_DOXYGEN
+  <doxygen:param>PREDEFINED=BOOST_DLL_DOXYGEN
   <doxygen:param>HIDE_UNDOC_CLASSES=YES
   <doxygen:param>HIDE_UNDOC_MEMBERS=YES
 ;

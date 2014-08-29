@@ -13,8 +13,8 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_PLUGIN_LIBRARY_INFO_HPP
-#define BOOST_PLUGIN_LIBRARY_INFO_HPP
+#ifndef BOOST_DLL_LIBRARY_INFO_HPP
+#define BOOST_DLL_LIBRARY_INFO_HPP
 
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
@@ -29,4 +29,4 @@
 # pragma once
 #endif
 
-#endif // BOOST_PLUGIN_LIBRARY_INFO_HPP
+#endif // BOOST_DLL_LIBRARY_INFO_HPP

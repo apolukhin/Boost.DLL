@@ -6,8 +6,8 @@
 
 // For more information, see http://www.boost.org
 
-#ifndef BOOST_PLUGIN_EXAMPLE_COMMON_SHARED_LIB_PATH_HPP
-#define BOOST_PLUGIN_EXAMPLE_COMMON_SHARED_LIB_PATH_HPP
+#ifndef BOOST_DLL_EXAMPLE_COMMON_SHARED_LIB_PATH_HPP
+#define BOOST_DLL_EXAMPLE_COMMON_SHARED_LIB_PATH_HPP
 
 #include <boost/filesystem.hpp>
 boost::filesystem::path shared_lib_path(const boost::filesystem::path& root, const std::wstring& filename_part) {
@@ -23,5 +23,5 @@ boost::filesystem::path shared_lib_path(const boost::filesystem::path& root, con
     throw std::runtime_error("Failed to find library");
 }
    
-#endif // BOOST_PLUGIN_EXAMPLE_COMMON_SHARED_LIB_PATH_HPP
+#endif // BOOST_DLL_EXAMPLE_COMMON_SHARED_LIB_PATH_HPP
 

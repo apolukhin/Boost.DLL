@@ -15,8 +15,8 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_PLUGIN_DETAIL_AGGRESSIVE_PTR_CAST_HPP
-#define BOOST_PLUGIN_DETAIL_AGGRESSIVE_PTR_CAST_HPP
+#ifndef BOOST_DLL_DETAIL_AGGRESSIVE_PTR_CAST_HPP
+#define BOOST_DLL_DETAIL_AGGRESSIVE_PTR_CAST_HPP
 
 #include <boost/config.hpp>
 #ifdef BOOST_HAS_PRAGMA_ONCE
@@ -51,5 +51,5 @@ BOOST_FORCEINLINE To aggressive_ptr_cast(From* v) BOOST_NOEXCEPT {
 
 }}} // boost::dll::detail
 
-#endif // BOOST_PLUGIN_DETAIL_AGGRESSIVE_PTR_CAST_HPP
+#endif // BOOST_DLL_DETAIL_AGGRESSIVE_PTR_CAST_HPP
 

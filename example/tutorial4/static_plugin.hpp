@@ -18,6 +18,6 @@ namespace my_namespace {
     boost::shared_ptr<my_plugin_api> create_plugin();
 } // namespace my_namespace
 
-BOOST_PLUGIN_ALIAS(my_namespace::create_plugin, create_plugin)
+BOOST_DLL_ALIAS(my_namespace::create_plugin, create_plugin)
 //]
 

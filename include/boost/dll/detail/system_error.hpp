@@ -15,8 +15,8 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_PLUGIN_SYSTEM_ERROR_HPP
-#define BOOST_PLUGIN_SYSTEM_ERROR_HPP
+#ifndef BOOST_DLL_SYSTEM_ERROR_HPP
+#define BOOST_DLL_SYSTEM_ERROR_HPP
 
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
@@ -56,5 +56,5 @@ namespace boost { namespace dll { namespace detail {
 
 }}} // boost::dll::detail
 
-#endif // BOOST_PLUGIN_SYSTEM_ERROR_HPP
+#endif // BOOST_DLL_SYSTEM_ERROR_HPP
 

@@ -15,8 +15,8 @@
 //
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
-#define BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
+#ifndef BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
+#define BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
 
 #include <boost/config.hpp>
 #include <boost/dll/shared_library_load_mode.hpp>
@@ -193,5 +193,5 @@ private:
 
 }} // boost::dll
 
-#endif // BOOST_PLUGIN_SHARED_LIBRARY_IMPL_HPP
+#endif // BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
 

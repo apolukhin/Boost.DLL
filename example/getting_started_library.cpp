@@ -25,7 +25,7 @@ namespace my_namespace {
 
 std::string cpp_function_name(const std::string& param);
 
-BOOST_PLUGIN_ALIAS(
+BOOST_DLL_ALIAS(
     my_namespace::cpp_function_name, cpp_function_alias_name
 )
 
@@ -39,7 +39,7 @@ namespace my_namespace {
     std::string cpp_variable_name = "some value";
 }
 
-BOOST_PLUGIN_ALIAS(
+BOOST_DLL_ALIAS(
     my_namespace::cpp_variable_name, cpp_variable_alias_name
 )
 

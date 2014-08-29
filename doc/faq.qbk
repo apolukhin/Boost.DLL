@@ -28,7 +28,7 @@ flag and take a look to the Tutorial section.
 
 * [*Question:]  Can I open an executable file?
   * [*Answer:]  Yes, you can. Symbols need be exported using in the executable using `BOOST_SYMBOL_EXPORT`
-or `BOOST_PLUGIN_ALIAS`. You can use 'shared_library::load_self()' method to load yourself. Refer to
+or `BOOST_DLL_ALIAS`. You can use 'shared_library::load_self()' method to load yourself. Refer to
 the Tutorial section for more info. You can also query executables, just provide a path to the executable
 to `library_info` class.
 
@@ -43,7 +43,7 @@ more strict, for example making `const int` from an `int` will not harm.
 ]
 
 * [*Question:]  Does your library gurantee ABI stability of methods?
-  * [*Answer:]  Library only gurarntees that alias names created using the `BOOST_PLUGIN_ALIAS` macros
+  * [*Answer:]  Library only gurarntees that alias names created using the `BOOST_DLL_ALIAS` macros
 will not change with the change of compiler or platform. You must take care of functions ABI and API
 stability by your own.
 
