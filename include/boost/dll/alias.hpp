@@ -16,6 +16,8 @@
 #ifndef BOOST_DLL_ALIAS_HPP
 #define BOOST_DLL_ALIAS_HPP
 
+#define BOOST_ALL_DYN_LINK
+
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/dll/shared_library.hpp>
