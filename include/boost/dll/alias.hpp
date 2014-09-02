@@ -17,6 +17,7 @@
 #define BOOST_DLL_ALIAS_HPP
 
 #include <boost/config.hpp>
+#include <boost/static_assert.hpp>
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
@@ -74,20 +75,26 @@ namespace boost { namespace dll {
 *
 * BOOST_DLL_ALIAS(foo::bar, foo_bar_another_alias_name)
 * \endcode
+*
+* Puts all the aliases into the "boostdll" read only section of the binary.
 */
-#define BOOST_DLL_ALIAS(FunctionOrVar, AliasName)                                                \
-    BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, "boost_aliases")                         \
+#define BOOST_DLL_ALIAS(FunctionOrVar, AliasName)                                               \
+    BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, "boostdll")                             \
     /**/
 
 
 // Note: we can not use `aggressive_ptr_cast` here, because in that case GCC applies
 // different permissions to the section and it causes Segmentation fault.
-#define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                             \
-    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                               \
-    BOOST_DLL_SECTION(SectionName, read) BOOST_DLL_SELECTANY                                      \
-    const void * AliasName = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(                  \
-        &FunctionOrVar                                                                                  \
-    ));                                                                                                 \
+#define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
+    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                       \
+    BOOST_DLL_SECTION(SectionName, read) BOOST_DLL_SELECTANY                                    \
+    const void * AliasName = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(          \
+        &FunctionOrVar                                                                          \
+    ));                                                                                         \
+    BOOST_STATIC_ASSERT_MSG(                                                                    \
+        sizeof(SectionName) < 10,                                                               \
+        "Some platforms require section names to be at most 8 bytest"                           \
+    );                                                                                          \
     /**/
 
 

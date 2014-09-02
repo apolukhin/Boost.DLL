@@ -58,5 +58,6 @@ project
         [ run ../example/tutorial5/load_all.cpp
                 : $(TEST_DIR) : : <library>static_plugin <target-os>linux:<linkflags>"-rdynamic"
         ]
+        [ compile-fail section_name_too_big.cpp ]
     ;
 }

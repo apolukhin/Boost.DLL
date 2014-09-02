@@ -23,7 +23,7 @@ int test_main(int argc, char* argv[])
     boost::dll::library_info lib_info(shared_library_path);
     std::vector<std::string> sec = lib_info.sections();
     //std::copy(sec.begin(), sec.end(), std::ostream_iterator<std::string>(std::cout, ",  "));
-    BOOST_CHECK(std::find(sec.begin(), sec.end(), "boost_aliases") != sec.end());
+    BOOST_CHECK(std::find(sec.begin(), sec.end(), "boostdll") != sec.end());
 
 
     std::cout << "\n\n\n";
@@ -32,7 +32,7 @@ int test_main(int argc, char* argv[])
     BOOST_CHECK(std::find(symb.begin(), symb.end(), "const_integer_g") != symb.end());
     BOOST_CHECK(std::find(symb.begin(), symb.end(), "say_hello") != symb.end());
     
-    symb = lib_info.symbols("boost_aliases");
+    symb = lib_info.symbols("boostdll");
     std::copy(symb.begin(), symb.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
     BOOST_CHECK(std::find(symb.begin(), symb.end(), "const_integer_g_alias") != symb.end());
     BOOST_CHECK(std::find(symb.begin(), symb.end(), "foo_variable") != symb.end());
@@ -46,9 +46,9 @@ int test_main(int argc, char* argv[])
 
     sec = self_info.sections();
     //std::copy(sec.begin(), sec.end(), std::ostream_iterator<std::string>(std::cout, ",  "));
-    BOOST_CHECK(std::find(sec.begin(), sec.end(), "boost_aliases") != sec.end());
+    BOOST_CHECK(std::find(sec.begin(), sec.end(), "boostdll") != sec.end());
 
-    symb = self_info.symbols("boost_aliases");
+    symb = self_info.symbols("boostdll");
     std::copy(symb.begin(), symb.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
     BOOST_CHECK(std::find(symb.begin(), symb.end(), "create_plugin") != symb.end());
 

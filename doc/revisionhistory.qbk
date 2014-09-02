@@ -6,6 +6,13 @@
 
 [section Revision History]
 
+[h5 0.2]
+
+Improved docs and applied comments from "Boost query interest" mails:
+* Project was renamed to Boost.DLL.
+* Added library_info class.
+* Aliases now use "boostdll" section.
+
 [h5 0.1]
 
 Boost.Plugin 0.1 (Initial Solo Prototype)
