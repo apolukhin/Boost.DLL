@@ -36,15 +36,22 @@ project
     lib getting_started_library : ../example/getting_started_library.cpp ;
     lib my_plugin_sum : ../example/tutorial1/my_plugin_sum.cpp ;
     lib my_plugin_aggregator : ../example/tutorial2/my_plugin_aggregator.cpp ;
-    install install-bin : test_library my_plugin_sum my_plugin_aggregator getting_started_library : <location>$(TEST_DIR) ;
+    lib on_unload_lib : ../example/tutorial6/on_unload_lib.cpp ;
+    install install-bin
+        : test_library my_plugin_sum my_plugin_aggregator on_unload_lib getting_started_library
+        : <location>$(TEST_DIR)
+    ;
   
     test-suite application
         : 
         [ run shared_library_load_test.cpp : $(TEST_DIR) ]
         [ run shared_library_search_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
         [ run shared_library_get_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
-        [ run shared_library_get_symbol_test.cpp 
-                : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" <target-os>windows:<define>TEST_FORCE_USE_OF_WINDOWS_H : get_symbol_windows_h_forced 
+        [ run shared_library_get_symbol_test.cpp
+                : $(TEST_DIR)
+                :
+                : <target-os>linux:<linkflags>"-rdynamic" <target-os>windows:<define>TEST_FORCE_USE_OF_WINDOWS_H
+                : get_symbol_windows_h_forced
         ]
         [ run shared_library_errors.cpp : $(TEST_DIR) : : <test-info>always_show_run_output  ]
         [ run library_info_test.cpp : $(TEST_DIR) : : <library>static_plugin <test-info>always_show_run_output  ]
@@ -58,6 +65,7 @@ project
         [ run ../example/tutorial5/load_all.cpp
                 : $(TEST_DIR) : : <library>static_plugin <target-os>linux:<linkflags>"-rdynamic"
         ]
+        [ run ../example/tutorial6/tutorial6.cpp : $(TEST_DIR) ]
         [ compile-fail section_name_too_big.cpp ]
     ;
 }

@@ -186,6 +186,31 @@ Destructing my_plugin_sum ;o)
 
 [endsect]
 
+[section On library unload callbacks]
+Boost.DLL provides no out of the box mechanism for catching library unloads. However such task could be easily implemnted.
+
+[import ../example/tutorial6/on_unload_lib.cpp]
+
+All you need to do, is write a simple class that stores callbacks and calles them at destruction:
+[plugcpp_on_unload]
+
+In the example above `my_namespace::on_unload` is a singleton structure that holds a vector of callbacks and
+calls all the callbacks at destruction.
+
+Now we can load this library and provide a callback:
+[callplugcpp_tutorial6]
+
+If we run the example we'll get the following output:
+
+[pre
+Before library unload.
+unloaded
+After library unload.
+]
+
+[endsect]
+
+
 [endsect]
 
 
