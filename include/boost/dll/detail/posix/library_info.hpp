@@ -39,7 +39,9 @@ class library_info {
 public:
     explicit library_info(const boost::filesystem::path& library_path)
         : f_(library_path, std::ios_base::in | std::ios_base::binary)
-    {}
+    {
+        f_.exceptions( boost::filesystem::ifstream::failbit | boost::filesystem::ifstream::badbit | boost::filesystem::ifstream::eofbit);
+    }
 
     std::vector<std::string> sections() {
         std::vector<std::string> ret;
