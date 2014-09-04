@@ -9,7 +9,7 @@ This is not an official Boost C++ library. It wasn't reviewed and can't be downl
 
 
 ### Docs
-[Documentation of Boost.DLL](http://apolukhin.github.io/Boost.Plugin/index.html)
+[Documentation of Boost.DLL](http://apolukhin.github.io/Boost.DLL/index.html)
 
 
 ### Hello World (importing a "C" function)
