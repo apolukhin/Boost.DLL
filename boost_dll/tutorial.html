@@ -36,8 +36,10 @@
       plugin into the executable</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.symbol_shadowing_problem__linux_">Symbol
       shadowing problem (Linux)</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.on_library_unload_callbacks">On library
-      unload callbacks</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.executing_callbacks_on_library_unload">Executing
+      callbacks on library unload</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.querying_libraries_for_symbols">Querying
+      libraries for symbols</a></span></dt>
 </dl></div>
 <p>
       Tutorial is provided to give you an idea of how to create and use plugins.
@@ -108,7 +110,7 @@
 <p>
       </p>
 <p>
-        Simple application that loads plugin using the <code class="computeroutput"><a class="link" href="../boost/dll/import_variable_idp5924784.html" title="Function template import_variable_alias">boost::dll::import_variable_alias</a></code>:
+        Simple application that loads plugin using the <code class="computeroutput"><a class="link" href="../boost/dll/import_variable_idp6468288.html" title="Function template import_variable_alias">boost::dll::import_variable_alias</a></code>:
       </p>
 <p>
 </p>
@@ -229,7 +231,7 @@ Destructing my_plugin_sum ;o)
 <p>
       </p>
 <p>
-        In that application we have imported the factory method using <code class="computeroutput"><a class="link" href="../boost/dll/import_function_idp5949264.html" title="Function template import_function_alias">boost::dll::import_function_alias</a></code>.
+        In that application we have imported the factory method using <code class="computeroutput"><a class="link" href="../boost/dll/import_function_idp6493200.html" title="Function template import_function_alias">boost::dll::import_function_alias</a></code>.
       </p>
 <div class="caution"><table border="0" summary="Caution">
 <tr>
@@ -550,8 +552,8 @@ Destructing my_plugin_sum ;o)
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_dll.tutorial.on_library_unload_callbacks"></a><a class="link" href="tutorial.html#boost_dll.tutorial.on_library_unload_callbacks" title="On library unload callbacks">On library
-      unload callbacks</a>
+<a name="boost_dll.tutorial.executing_callbacks_on_library_unload"></a><a class="link" href="tutorial.html#boost_dll.tutorial.executing_callbacks_on_library_unload" title="Executing callbacks on library unload">Executing
+      callbacks on library unload</a>
 </h3></div></div></div>
 <p>
         Boost.DLL provides no out of the box mechanism for catching library unloads.
@@ -613,6 +615,110 @@ Destructing my_plugin_sum ;o)
 unloaded
 After library unload.
 </pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_dll.tutorial.querying_libraries_for_symbols"></a><a class="link" href="tutorial.html#boost_dll.tutorial.querying_libraries_for_symbols" title="Querying libraries for symbols">Querying
+      libraries for symbols</a>
+</h3></div></div></div>
+<p>
+        Situation when we do not know names of functions in plugin could occur. In
+        that case querieing library could be useful.
+      </p>
+<p>
+        Imagine the sitauation: we have a project called 'Anna' that is capable of
+        loading and using plugins that contain functions with sugnature <code class="computeroutput"><span class="keyword">void</span><span class="special">(</span><span class="keyword">const</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>.
+        We do not know function names, but wish to find out them somehow.
+      </p>
+<p>
+        Solution would be pretty simple. Let's agree with plugin developers, that
+        they can name functions as they like, but all the plugin functions aliases
+        must be located in section named 'Anna':
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">void</span> <span class="identifier">print</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Hello, "</span> <span class="special">&lt;&lt;</span> <span class="identifier">s</span> <span class="special">&lt;&lt;</span> <span class="char">'!'</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="identifier">BOOST_DLL_ALIAS_SECTIONED</span><span class="special">(</span><span class="identifier">print</span><span class="special">,</span> <span class="identifier">print_hello</span><span class="special">,</span> <span class="identifier">Anna</span><span class="special">)</span>
+</pre>
+<p>
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">void</span> <span class="identifier">print_howdy</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"How're you doing, "</span> <span class="special">&lt;&lt;</span> <span class="identifier">s</span> <span class="special">&lt;&lt;</span> <span class="char">'?'</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">print_bored</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Are you bored, "</span> <span class="special">&lt;&lt;</span> <span class="identifier">s</span> <span class="special">&lt;&lt;</span> <span class="char">'?'</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="identifier">BOOST_DLL_ALIAS_SECTIONED</span><span class="special">(</span><span class="identifier">print_howdy</span><span class="special">,</span> <span class="identifier">howdy</span><span class="special">,</span> <span class="identifier">Anna</span><span class="special">)</span>
+<span class="identifier">BOOST_DLL_ALIAS_SECTIONED</span><span class="special">(</span><span class="identifier">print_bored</span><span class="special">,</span> <span class="identifier">are_you_bored</span><span class="special">,</span> <span class="identifier">Anna</span><span class="special">)</span>
+</pre>
+<p>
+      </p>
+<p>
+        Now we can easily get those functions using the <code class="computeroutput">boost::dll::library_info</code>:
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">void</span> <span class="identifier">load_and_execute</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span><span class="special">*</span> <span class="identifier">libraries</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">libs_count</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">username</span> <span class="special">=</span> <span class="string">"User"</span><span class="special">;</span>
+
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">libs_count</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// Class `library_info` can extract information from a library</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">library_info</span> <span class="identifier">inf</span><span class="special">(</span><span class="identifier">libraries</span><span class="special">[</span><span class="identifier">i</span><span class="special">]);</span>
+
+        <span class="comment">// Getting symbols exported from 'Anna' section</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="identifier">exports</span> <span class="special">=</span> <span class="identifier">inf</span><span class="special">.</span><span class="identifier">symbols</span><span class="special">(</span><span class="string">"Anna"</span><span class="special">);</span>
+
+        <span class="comment">// Loading library and importing symbols from it</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">shared_library</span> <span class="identifier">lib</span><span class="special">(</span><span class="identifier">libraries</span><span class="special">[</span><span class="identifier">i</span><span class="special">]);</span>
+        <span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">j</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">j</span> <span class="special">&lt;</span> <span class="identifier">exports</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">++</span><span class="identifier">j</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nFunction '"</span> <span class="special">&lt;&lt;</span> <span class="identifier">exports</span><span class="special">[</span><span class="identifier">j</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="string">"' prints:\n\t"</span><span class="special">;</span>
+            <span class="identifier">lib</span><span class="special">.</span><span class="identifier">get_alias</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)&gt;(</span><span class="identifier">exports</span><span class="special">[</span><span class="identifier">j</span><span class="special">])</span> <span class="comment">// importing function</span>
+                <span class="special">(</span><span class="identifier">username</span><span class="special">);</span>                                     <span class="comment">// calling function</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        If we run the example we'll get the following output:
+      </p>
+<pre class="programlisting">Function 'print_hello' prints:
+	Hello, User!
+
+Function 'are_you_bored' prints:
+	Are you bored, User?
+
+Function 'howdy' prints:
+	How're you doing, User?
+</pre>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          <code class="computeroutput"><span class="identifier">BOOST_DLL_ALIAS</span></code> macro by
+          default places all the aliases into the "boostdll" section.
+        </p></td></tr>
+</table></div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
