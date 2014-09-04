@@ -2,7 +2,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Getting started</title>
-<link rel="stylesheet" href="http://www.boost.org/doc/libs/1_55_0/doc/src/boostbook.css" type="text/css">
+<link rel="stylesheet" href="http://www.boost.org/doc/libs/1_56_0/doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
@@ -11,24 +11,30 @@
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
-<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="http://www.boost.org/doc/libs/1_55_0/boost.png"></td>
-<td align="center"><a href="http://www.boost.org/doc/libs/1_55_0/index.html">Home</a></td>
-<td align="center"><a href="http://www.boost.org/doc/libs/1_55_0/libs/libraries.htm">Libraries</a></td>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="http://www.boost.org/doc/libs/1_56_0/boost.png"></td>
+<td align="center"><a href="http://www.boost.org/doc/libs/1_56_0/index.html">Home</a></td>
+<td align="center"><a href="http://www.boost.org/doc/libs/1_56_0/libs/libraries.htm">Libraries</a></td>
 <td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
 <td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
-<td align="center"><a href="http://www.boost.org/doc/libs/1_55_0/more/index.htm">More</a></td>
+<td align="center"><a href="http://www.boost.org/doc/libs/1_56_0/more/index.htm">More</a></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="boost_plugin.introduction0"></a><a class="link" href="introduction0.html" title="Getting started">Getting started</a>
 </h2></div></div></div>
 <p>
-      To start with the library you only need to include <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">plugin</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+      To start with the library you only need to include <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
       header. After that you are free to import and export functions and variables:
+    </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
+</pre>
+<p>
     </p>
 <div class="informaltable">
 <a name="boost_plugin.introduction.starting"></a><table class="table">
@@ -40,12 +46,12 @@
 <thead><tr>
 <th>
               <p>
-                In plugin (DLL/DSL) sources:
+                In DLL/DSL sources:
               </p>
             </th>
 <th>
               <p>
-                In code that uses plugin:
+                In code that uses DLL/DSL:
               </p>
             </th>
 <th>
@@ -59,7 +65,7 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// pure 'C' method</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// exporting pure 'C' method</span>
 <span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">int</span> <span class="identifier">BOOST_SYMBOL_EXPORT</span> <span class="identifier">c_func_name</span><span class="special">(</span><span class="keyword">int</span><span class="special">);</span>
 </pre>
 <p>
@@ -68,17 +74,16 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;</span> <span class="identifier">c_func</span>
-    <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;(</span>
-        <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_func_name"</span>
-    <span class="special">);</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;</span> <span class="identifier">c_func</span> <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)&gt;(</span>
+    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_func_name"</span>
+<span class="special">);</span>
 </pre>
 <p>
               </p>
             </td>
 <td>
               <p>
-                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_function_idp5763392.html" title="Function template shared_function">shared_function
+                <code class="computeroutput"><a class="link" href="../boost/dll/import_function_idp5926016.html" title="Function template import_function">import_function
                 </a></code>
               </p>
             </td>
@@ -87,7 +92,7 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// POD 'C' variable in global namespace</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// exporting POD 'C' variable in global namespace</span>
 <span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">int</span> <span class="identifier">BOOST_SYMBOL_EXPORT</span> <span class="identifier">c_variable_name</span><span class="special">;</span>
 </pre>
 <p>
@@ -96,17 +101,16 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">c_var</span>
-    <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_variable</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span>
-        <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_variable_name"</span>
-    <span class="special">);</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">c_var</span> <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_variable</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span>
+    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_variable_name"</span>
+<span class="special">);</span>
 </pre>
 <p>
               </p>
             </td>
 <td>
               <p>
-                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_variable_idp5847264.html" title="Function template shared_variable">shared_variable
+                <code class="computeroutput"><a class="link" href="../boost/dll/import_variable_idp5954880.html" title="Function template import_variable">import_variable
                 </a></code>
               </p>
             </td>
@@ -115,14 +119,16 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// 'C++' function</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// exporting 'C++' function</span>
 <span class="keyword">namespace</span> <span class="identifier">my_namespace</span> <span class="special">{</span>
-    <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">cpp_function_name</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">param</span><span class="special">);</span>
-<span class="special">}</span>
 
-<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">cpp_function_name</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">param</span><span class="special">);</span>
+
+<span class="identifier">BOOST_DLL_ALIAS</span><span class="special">(</span>
     <span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">cpp_function_name</span><span class="special">,</span> <span class="identifier">cpp_function_alias_name</span>
 <span class="special">)</span>
+
+<span class="special">}</span> <span class="comment">// namespace my_namespace</span>
 </pre>
 <p>
               </p>
@@ -130,10 +136,10 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">cpp_func_type</span><span class="special">)(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;);</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">(</span><span class="identifier">func_type</span><span class="special">)(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;);</span>
 
-<span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">cpp_func_type</span><span class="special">&gt;</span> <span class="identifier">cpp_func</span>
-    <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_function_alias</span><span class="special">&lt;</span><span class="identifier">cpp_func_type</span><span class="special">&gt;(</span>
+<span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">func_type</span><span class="special">&gt;</span> <span class="identifier">cpp_func</span>
+    <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_function_alias</span><span class="special">&lt;</span><span class="identifier">func_type</span><span class="special">&gt;(</span>
         <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"cpp_function_alias_name"</span>
     <span class="special">);</span>
 </pre>
@@ -142,8 +148,7 @@
             </td>
 <td>
               <p>
-                <code class="computeroutput"><a class="link" href="../BOOST_PLUGIN_ALIAS.html" title="Macro BOOST_PLUGIN_ALIAS">BOOST_PLUGIN_ALIAS</a></code>
-                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_function_idp5782848.html" title="Function template shared_function_alias">shared_function_alias</a></code>
+                <code class="computeroutput"><a class="link" href="../BOOST_DLL_ALIAS.html" title="Macro BOOST_DLL_ALIAS">BOOST_DLL_ALIAS</a></code> <code class="computeroutput"><a class="link" href="../boost/dll/import_function_idp5998848.html" title="Function template import_function_alias">import_function_alias</a></code>
               </p>
             </td>
 </tr>
@@ -151,12 +156,12 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// 'C++' variable</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// exporting 'C++' variable</span>
 <span class="keyword">namespace</span> <span class="identifier">my_namespace</span> <span class="special">{</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">cpp_variable_name</span> <span class="special">=</span> <span class="string">"some value"</span><span class="special">;</span>
 <span class="special">}</span>
 
-<span class="identifier">BOOST_PLUGIN_ALIAS</span><span class="special">(</span>
+<span class="identifier">BOOST_DLL_ALIAS</span><span class="special">(</span>
     <span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">cpp_variable_name</span><span class="special">,</span> <span class="identifier">cpp_variable_alias_name</span>
 <span class="special">)</span>
 </pre>
@@ -166,8 +171,8 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="identifier">cpp_var</span>
-    <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_variable_alias</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;(</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="identifier">cpp_var</span>
+    <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_variable_alias</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;(</span>
         <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"cpp_variable_alias_name"</span>
     <span class="special">);</span>
 </pre>
@@ -176,8 +181,7 @@
             </td>
 <td>
               <p>
-                <code class="computeroutput"><a class="link" href="../BOOST_PLUGIN_ALIAS.html" title="Macro BOOST_PLUGIN_ALIAS">BOOST_PLUGIN_ALIAS</a></code>
-                <code class="computeroutput"><a class="link" href="../boost/plugin/shared_variable_idp5979984.html" title="Function template shared_variable_alias">shared_variable_alias</a></code>
+                <code class="computeroutput"><a class="link" href="../BOOST_DLL_ALIAS.html" title="Macro BOOST_DLL_ALIAS">BOOST_DLL_ALIAS</a></code> <code class="computeroutput"><a class="link" href="../boost/dll/import_variable_idp5974656.html" title="Function template import_variable_alias">import_variable_alias</a></code>
               </p>
             </td>
 </tr>
@@ -189,9 +193,14 @@
       the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span></code> or <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span></code>
       internaly hold a reference to shread library.
     </p>
+<p>
+      <code class="computeroutput">BOOST_SYMBOL_EXPORT</code> is just
+      a macro from Boost.Config that expands into the <code class="computeroutput"><span class="identifier">__declspec</span><span class="special">(</span><span class="identifier">dllexport</span><span class="special">)</span></code> or <code class="computeroutput"><span class="identifier">__attribute__</span><span class="special">((</span><span class="identifier">visibility</span><span class="special">(</span><span class="string">"default"</span><span class="special">)))</span></code>. You are free to use your own macro for
+      exports.
+    </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/note.png"></td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/note.png"></td>
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
@@ -200,12 +209,11 @@
       </p></td></tr>
 </table></div>
 <p>
-      If you need a low level api <code class="computeroutput"><a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">boost::plugin::shared_library</a></code>
-      and <code class="computeroutput"><a class="link" href="../boost/plugin/alias.html" title="Function template alias">boost::plugin::alias</a></code>
-      will suit you. If you want to load a library, just cunstruct that class with
+      If you need a low level api <code class="computeroutput"><a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">boost::dll::shared_library</a></code>
+      will suit you. If you want to load a library, just construct that class with
       a path to the library as a parameter:
 </p>
-<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span> <span class="identifier">lib</span><span class="special">(</span><span class="string">"/test/boost/application/libtest_library.so"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">shared_library</span> <span class="identifier">lib</span><span class="special">(</span><span class="string">"/test/boost/application/libtest_library.so"</span><span class="special">);</span>
 </pre>
 <p>
       Now you can easily import symbols from that library using the <code class="computeroutput"><span class="identifier">get</span></code> member function:
@@ -214,9 +222,8 @@
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">lib</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">()&gt;(</span><span class="string">"function_returning_int"</span><span class="special">);</span>
 </pre>
 <p>
-      In case of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span></code> it is safe to use imported
-      symbols only until instance <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">::</span><span class="identifier">shared_library</span></code>
-      is not destroyed.
+      In case of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">shared_library</span></code>
+      it is safe to use imported symbols only until <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">shared_library</span></code> instance is not destroyed.
     </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -229,7 +236,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

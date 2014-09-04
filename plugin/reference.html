@@ -2,25 +2,25 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 <title>Reference</title>
-<link rel="stylesheet" href="http://www.boost.org/doc/libs/1_55_0/doc/src/boostbook.css" type="text/css">
+<link rel="stylesheet" href="http://www.boost.org/doc/libs/1_56_0/doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
 <link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
 <link rel="prev" href="../boost_plugin/tutorial.html" title="Tutorial">
-<link rel="next" href="../boost/plugin/alias.html" title="Function template alias">
+<link rel="next" href="../BOOST_DLL_SELECTANY.html" title="Macro BOOST_DLL_SELECTANY">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
-<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="http://www.boost.org/doc/libs/1_55_0/boost.png"></td>
-<td align="center"><a href="http://www.boost.org/doc/libs/1_55_0/index.html">Home</a></td>
-<td align="center"><a href="http://www.boost.org/doc/libs/1_55_0/libs/libraries.htm">Libraries</a></td>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="http://www.boost.org/doc/libs/1_56_0/boost.png"></td>
+<td align="center"><a href="http://www.boost.org/doc/libs/1_56_0/index.html">Home</a></td>
+<td align="center"><a href="http://www.boost.org/doc/libs/1_56_0/libs/libraries.htm">Libraries</a></td>
 <td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
 <td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
-<td align="center"><a href="http://www.boost.org/doc/libs/1_55_0/more/index.htm">More</a></td>
+<td align="center"><a href="http://www.boost.org/doc/libs/1_56_0/more/index.htm">More</a></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../boost_plugin/tutorial.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/plugin/alias.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../boost_plugin/tutorial.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../BOOST_DLL_SELECTANY.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -34,47 +34,44 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="shared_library_reference"></a>Shared Library Reference</h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="reference.html#header.boost.plugin.alias_hpp">Header &lt;boost/plugin/alias.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="reference.html#header.boost.plugin.shared_library_hpp">Header &lt;boost/plugin/shared_library.hpp&gt;</a></span></dt>
-<dt><span class="section"><a href="reference.html#header.boost.plugin.shared_library_load_mode_hpp">Header &lt;boost/plugin/shared_library_load_mode.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.dll.alias_hpp">Header &lt;boost/dll/alias.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.dll.shared_library_hpp">Header &lt;boost/dll/shared_library.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.dll.shared_library_load_mode_hpp">Header &lt;boost/dll/shared_library_load_mode.hpp&gt;</a></span></dt>
 </dl></div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="header.boost.plugin.alias_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_55_0/boost/plugin/alias.hpp" target="_top">boost/plugin/alias.hpp</a>&gt;</h4></div></div></div>
-<p>Includes alias methods and macro. You can include this header or boost/plugin/shared_library.hpp to reduce dependencies in case you do not use the refcountable functions. </p>
+<a name="header.boost.dll.alias_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_56_0/boost/dll/alias.hpp" target="_top">boost/dll/alias.hpp</a>&gt;</h4></div></div></div>
+<p>Includes alias methods and macro. You can include this header or boost/dll/shared_library.hpp to reduce dependencies in case you do not use the refcountable functions. </p>
 <pre class="synopsis">
 
-<a class="link" href="../BOOST_PLUGIN_ALIAS.html" title="Macro BOOST_PLUGIN_ALIAS">BOOST_PLUGIN_ALIAS</a>(FunctionOrVar, AliasName)</pre>
+<a class="link" href="../BOOST_DLL_SELECTANY.html" title="Macro BOOST_DLL_SELECTANY">BOOST_DLL_SELECTANY</a>
+<a class="link" href="../BOOST_DLL_SECTION.html" title="Macro BOOST_DLL_SECTION">BOOST_DLL_SECTION</a>(SectionName, Permissions)
+<a class="link" href="../BOOST_DLL_ALIAS.html" title="Macro BOOST_DLL_ALIAS">BOOST_DLL_ALIAS</a>(FunctionOrVar, AliasName)
+<a class="link" href="../BOOST_DLL_ALIAS_SECTIONED.html" title="Macro BOOST_DLL_ALIAS_SECTIONED">BOOST_DLL_ALIAS_SECTIONED</a>(FunctionOrVar, AliasName, SectionName)</pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.dll.shared_library_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_56_0/boost/dll/shared_library.hpp" target="_top">boost/dll/shared_library.hpp</a>&gt;</h4></div></div></div>
+<p>Contains the <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">boost::dll::shared_library</a> class, main class for all the DLL/DSO operations. </p>
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-  <span class="keyword">namespace</span> <span class="identifier">plugin</span> <span class="special">{</span>
-    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
-      <span class="identifier">T</span> <span class="special">&amp;</span> <a class="link" href="../boost/plugin/alias.html" title="Function template alias"><span class="identifier">alias</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">namespace</span> <span class="identifier">dll</span> <span class="special">{</span>
+    <span class="keyword">class</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a><span class="special">;</span>
+    <span class="keyword">bool</span> <a class="link" href="../boost/dll/operator__.html" title="Function operator=="><span class="keyword">operator</span><span class="special">==</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">bool</span> <a class="link" href="../boost/dll/operator__.html" title="Function operator!="><span class="keyword">operator</span><span class="special">!=</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">bool</span> <a class="link" href="../boost/dll/operator_idp6126176.html" title="Function operator&lt;"><span class="keyword">operator</span><span class="special">&lt;</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="keyword">void</span> <a class="link" href="../boost/dll/swap.html" title="Function swap"><span class="identifier">swap</span></a><span class="special">(</span><a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
   <span class="special">}</span>
 <span class="special">}</span></pre>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="header.boost.plugin.shared_library_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_55_0/boost/plugin/shared_library.hpp" target="_top">boost/plugin/shared_library.hpp</a>&gt;</h4></div></div></div>
-<p>Contains the <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">boost::plugin::shared_library</a> class, main class for all the DLL/DSO operations. </p>
+<a name="header.boost.dll.shared_library_load_mode_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_56_0/boost/dll/shared_library_load_mode.hpp" target="_top">boost/dll/shared_library_load_mode.hpp</a>&gt;</h4></div></div></div>
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-  <span class="keyword">namespace</span> <span class="identifier">plugin</span> <span class="special">{</span>
-    <span class="keyword">class</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a><span class="special">;</span>
-    <span class="keyword">bool</span> <a class="link" href="../boost/plugin/operator__.html" title="Function operator=="><span class="keyword">operator</span><span class="special">==</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-    <span class="keyword">bool</span> <a class="link" href="../boost/plugin/operator__.html" title="Function operator!="><span class="keyword">operator</span><span class="special">!=</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-    <span class="keyword">bool</span> <a class="link" href="../boost/plugin/operator_idp5950544.html" title="Function operator&lt;"><span class="keyword">operator</span><span class="special">&lt;</span></a><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-    <span class="keyword">void</span> <a class="link" href="../boost/plugin/swap.html" title="Function swap"><span class="identifier">swap</span></a><span class="special">(</span><a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">,</span> <a class="link" href="../boost/plugin/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
-  <span class="special">}</span>
-<span class="special">}</span></pre>
-</div>
-<div class="section">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="header.boost.plugin.shared_library_load_mode_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_55_0/boost/plugin/shared_library_load_mode.hpp" target="_top">boost/plugin/shared_library_load_mode.hpp</a>&gt;</h4></div></div></div>
-<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-  <span class="keyword">namespace</span> <span class="identifier">plugin</span> <span class="special">{</span>
-    <span class="keyword">struct</span> <a class="link" href="../boost/plugin/load_mode.html" title="Struct load_mode">load_mode</a><span class="special">;</span>
-    <span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span> <a class="link" href="../boost/plugin/operator_idp5968848.html" title="Function operator|"><span class="keyword">operator</span><span class="special">|</span></a><span class="special">(</span><span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">namespace</span> <span class="identifier">dll</span> <span class="special">{</span>
+    <span class="keyword">struct</span> <a class="link" href="../boost/dll/load_mode.html" title="Struct load_mode">load_mode</a><span class="special">;</span>
+    <span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span> <a class="link" href="../boost/dll/operator_idp6144480.html" title="Function operator|"><span class="keyword">operator</span><span class="special">|</span></a><span class="special">(</span><span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span><span class="special">,</span> <span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span><span class="special">)</span><span class="special">;</span>
     <span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span> <span class="special">&amp;</span> 
-    <a name="boost.plugin.operator_=_idp5971232"></a><span class="keyword">operator</span><span class="special">|=</span><span class="special">(</span><span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span> <span class="special">&amp;</span> left<span class="special">,</span> <span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span> right<span class="special">)</span><span class="special">;</span>
+    <a name="boost.dll.operator_=_idp6146864"></a><span class="keyword">operator</span><span class="special">|=</span><span class="special">(</span><span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span> <span class="special">&amp;</span> left<span class="special">,</span> <span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">type</span> right<span class="special">)</span><span class="special">;</span>
   <span class="special">}</span>
 <span class="special">}</span></pre>
 </div>
@@ -82,42 +79,42 @@
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="shared_library_refcountable_reference"></a>Shared Library Refcountable Reference</h3></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="reference.html#header.boost.plugin.refcountable_hpp">Header &lt;boost/plugin/refcountable.hpp&gt;</a></span></dt></dl></div>
+<div class="toc"><dl><dt><span class="section"><a href="reference.html#header.boost.dll.refcountable_hpp">Header &lt;boost/dll/refcountable.hpp&gt;</a></span></dt></dl></div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="header.boost.plugin.refcountable_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_55_0/boost/plugin/refcountable.hpp" target="_top">boost/plugin/refcountable.hpp</a>&gt;</h4></div></div></div>
-<p>Includes all the reference counting functions that hold a shared pointer to the instance of boost::plugin::shared_library. Those methods use boost::shared_ptr&lt;T&gt; and boost::function&lt;T&gt; classes. </p>
+<a name="header.boost.dll.refcountable_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_56_0/boost/dll/refcountable.hpp" target="_top">boost/dll/refcountable.hpp</a>&gt;</h4></div></div></div>
+<p>Includes all the reference counting functions that hold a shared pointer to the instance of boost::dll::shared_library. Those methods use boost::shared_ptr&lt;T&gt; and boost::function&lt;T&gt; classes. </p>
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
-  <span class="keyword">namespace</span> <span class="identifier">plugin</span> <span class="special">{</span>
+  <span class="keyword">namespace</span> <span class="identifier">dll</span> <span class="special">{</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
       <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> 
-      <a class="link" href="../boost/plugin/shared_function_idp5763392.html" title="Function template shared_function"><span class="identifier">shared_function</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
+      <a class="link" href="../boost/dll/import_function_idp5926016.html" title="Function template import_function"><span class="identifier">import_function</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
                       <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
       <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> 
-      <a class="link" href="../boost/plugin/shared_function_idp5773184.html" title="Function template shared_function"><span class="identifier">shared_function</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
+      <a class="link" href="../boost/dll/import_function_idp5989280.html" title="Function template import_function"><span class="identifier">import_function</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
       <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> 
-      <a class="link" href="../boost/plugin/shared_function_idp5782848.html" title="Function template shared_function_alias"><span class="identifier">shared_function_alias</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
+      <a class="link" href="../boost/dll/import_function_idp5998848.html" title="Function template import_function_alias"><span class="identifier">import_function_alias</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
                             <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
       <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> 
-      <a class="link" href="../boost/plugin/shared_function_idp5837584.html" title="Function template shared_function_alias"><span class="identifier">shared_function_alias</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span><span class="special">,</span> 
+      <a class="link" href="../boost/dll/import_function_idp6008928.html" title="Function template import_function_alias"><span class="identifier">import_function_alias</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span><span class="special">,</span> 
                             <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
       <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> 
-      <a class="link" href="../boost/plugin/shared_variable_idp5847264.html" title="Function template shared_variable"><span class="identifier">shared_variable</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
+      <a class="link" href="../boost/dll/import_variable_idp5954880.html" title="Function template import_variable"><span class="identifier">import_variable</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
                       <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
       <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> 
-      <a class="link" href="../boost/plugin/shared_variable_idp5857232.html" title="Function template shared_variable"><span class="identifier">shared_variable</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
+      <a class="link" href="../boost/dll/import_variable_idp5964928.html" title="Function template import_variable"><span class="identifier">import_variable</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
       <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> 
-      <a class="link" href="../boost/plugin/shared_variable_idp5979984.html" title="Function template shared_variable_alias"><span class="identifier">shared_variable_alias</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
+      <a class="link" href="../boost/dll/import_variable_idp5974656.html" title="Function template import_variable_alias"><span class="identifier">import_variable_alias</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span><span class="special">,</span> 
                             <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
       <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> 
-      <a class="link" href="../boost/plugin/shared_variable_idp5989456.html" title="Function template shared_variable_alias"><span class="identifier">shared_variable_alias</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span><span class="special">,</span> 
+      <a class="link" href="../boost/dll/import_variable_idp5984736.html" title="Function template import_variable_alias"><span class="identifier">import_variable_alias</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span><span class="special">,</span> 
                             <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
   <span class="special">}</span>
 <span class="special">}</span></pre>
@@ -134,7 +131,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../boost_plugin/tutorial.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../boost/plugin/alias.html"><img src="http://www.boost.org/doc/libs/1_55_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../boost_plugin/tutorial.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../BOOST_DLL_SELECTANY.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
