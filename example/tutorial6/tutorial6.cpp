@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 
     // loading library and getting a function from it
     boost::function<void(const callback_t&)> on_unload
-        = boost::dll::shared_function_alias<void(const callback_t&)>(
+        = boost::dll::import_function_alias<void(const callback_t&)>(
             shared_library_path, "on_unload"
         );
 

@@ -7,7 +7,7 @@
 // For more information, see http://www.boost.org
 
 // -------------------------------------------------------------------------------------
-// This example shows how to shared_variable_alias function to load a plugin of a DSO.
+// This example shows how to import_variable_alias function to load a plugin of a DSO.
 // -------------------------------------------------------------------------------------
 
 #include "../shared_lib_path.hpp"
@@ -38,7 +38,7 @@ std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugi
         // library has symbol, importing...
         typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
         boost::function<pluginapi_create_t> creator
-            = pl::shared_function_alias<pluginapi_create_t>(lib, "create_plugin");
+            = pl::import_function_alias<pluginapi_create_t>(lib, "create_plugin");
 
         std::cout << "Matching plugin name: " << creator()->name() << std::endl;
         ++ plugins_found;

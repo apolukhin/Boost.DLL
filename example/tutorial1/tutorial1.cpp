@@ -7,7 +7,7 @@
 // For more information, see http://www.boost.org
 
 // -------------------------------------------------------------------------------------
-// This example shows how to shared_variable_alias function to load a plugin of a DSO.
+// This example shows how to import_variable_alias function to load a plugin of a DSO.
 // -------------------------------------------------------------------------------------
 
 #include "../shared_lib_path.hpp"
@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Loading the plugin" << std::endl;
     boost::shared_ptr<my_plugin_api> plugin
-        = boost::dll::shared_variable_alias<my_plugin_api>(
+        = boost::dll::import_variable_alias<my_plugin_api>(
             shared_library_path, "plugin"
         );
 

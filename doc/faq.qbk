@@ -35,7 +35,7 @@ to `library_info` class.
 [pre
 ]
 
-* [*Question:]  What if I specify wrong type in `shared_library::get<T>` or `shared_function<T>`?
+* [*Question:]  What if I specify wrong type in `shared_library::get<T>` or `import_function<T>`?
   * [*Answer:]  Usualy you'll end up with `Segmentation Fault`. However it is safe to make types
 more strict, for example making `const int` from an `int` will not harm.
 

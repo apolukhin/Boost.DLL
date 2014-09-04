@@ -43,7 +43,7 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
 
     {
         boost::function<say_hello_func> sz2
-            = shared_function<say_hello_func>(shared_library_path, "say_hello");
+            = import_function<say_hello_func>(shared_library_path, "say_hello");
 
         sz2();
         sz2();
@@ -52,7 +52,7 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
 
     {
         boost::function<std::size_t(const std::vector<int>&)> sz
-            = shared_function_alias<std::size_t(const std::vector<int>&)>(shared_library_path, "foo_bar");
+            = import_function_alias<std::size_t(const std::vector<int>&)>(shared_library_path, "foo_bar");
         BOOST_CHECK(sz(v) == 1000);
     }
 
@@ -61,7 +61,7 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
         boost::function<do_share_t> f;
 
         {
-            boost::function<do_share_t> f2 = shared_function_alias<do_share_t>(shared_library_path, "do_share");
+            boost::function<do_share_t> f2 = import_function_alias<do_share_t>(shared_library_path, "do_share");
             f = f2;
         }
 
@@ -81,7 +81,7 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
     }
 
     {
-        boost::shared_ptr<int> i = shared_variable<int>(shared_library_path, "integer_g");
+        boost::shared_ptr<int> i = import_variable<int>(shared_library_path, "integer_g");
         BOOST_CHECK(*i == 100);
 
         boost::shared_ptr<int> i2;
@@ -90,7 +90,7 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
     }
 
     {
-        boost::shared_ptr<const int> i = shared_variable<const int>(shared_library_path, "const_integer_g");
+        boost::shared_ptr<const int> i = import_variable<const int>(shared_library_path, "const_integer_g");
         BOOST_CHECK(*i == 777);
 
         boost::shared_ptr<const int> i2 = i;
@@ -99,7 +99,7 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
     }
 
     {
-        boost::shared_ptr<std::string> s = shared_variable_alias<std::string>(shared_library_path, "info");
+        boost::shared_ptr<std::string> s = import_variable_alias<std::string>(shared_library_path, "info");
         BOOST_CHECK(*s == "I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
 
         boost::shared_ptr<std::string> s2;

@@ -20,7 +20,7 @@ This is not an official Boost C++ library. It wasn't reviewed and can't be downl
 ...
 
 boost::function<int(int)> c_func
-    = boost::dll::shared_function<int(int)>(
+    = boost::dll::import_function<int(int)>(
         path_to_shared_library, "c_func_name"
     );
 
