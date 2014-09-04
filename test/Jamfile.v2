@@ -37,8 +37,10 @@ project
     lib my_plugin_sum : ../example/tutorial1/my_plugin_sum.cpp ;
     lib my_plugin_aggregator : ../example/tutorial2/my_plugin_aggregator.cpp ;
     lib on_unload_lib : ../example/tutorial6/on_unload_lib.cpp ;
+    lib library1 : ../example/tutorial7/library1.cpp ;
+    lib library2 : ../example/tutorial7/library2.cpp ;
     install install-bin
-        : test_library my_plugin_sum my_plugin_aggregator on_unload_lib getting_started_library
+        : test_library my_plugin_sum my_plugin_aggregator on_unload_lib getting_started_library library1 library2
         : <location>$(TEST_DIR)
     ;
   
@@ -66,6 +68,7 @@ project
                 : $(TEST_DIR) : : <library>static_plugin <target-os>linux:<linkflags>"-rdynamic"
         ]
         [ run ../example/tutorial6/tutorial6.cpp : $(TEST_DIR) ]
+        [ run ../example/tutorial7/tutorial7.cpp : $(TEST_DIR) ]
         [ compile-fail section_name_too_big.cpp ]
     ;
 }

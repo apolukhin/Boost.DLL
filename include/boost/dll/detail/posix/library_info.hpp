@@ -123,6 +123,9 @@ public:
         for (std::size_t i = 0; i < symbols.size(); ++i) {
             if (is_visible(symbols[i])) {
                 ret.push_back(&text[0] + symbols[i].st_name);
+                if (ret.back().empty()) {
+                    ret.pop_back(); // Do not show empty names
+                }
             }
         }
 
@@ -165,6 +168,9 @@ public:
         for (std::size_t i = 0; i < symbols.size(); ++i) {
             if (symbols[i].st_shndx == index && is_visible(symbols[i])) {
                 ret.push_back(&text[0] + symbols[i].st_name);
+                if (ret.back().empty()) {
+                    ret.pop_back(); // Do not show empty names
+                }
             }
         }
 

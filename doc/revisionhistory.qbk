@@ -1,5 +1,5 @@
 [/
-    Copyright 2013 Renato Tegon Forti
+    Copyright 2014 Renato Tegon Forti, Antony Polukhin
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
@@ -9,9 +9,15 @@
 [h5 0.2]
 
 Improved docs and applied comments from "Boost query interest" mails:
+
 * Project was renamed to Boost.DLL.
 * Added library_info class.
 * Aliases now use "boostdll" section.
+* *TODO:*
+    * Mach-O and COFF file format support
+    * Improve `boost::dll::library_info` docs
+    * Structures of `boost::dll::library_info` must be declared inplace (do not use OS specific files)
+    * Make `boost::dll::library_info` recognize foreign platform file formats
 
 [h5 0.1]
 

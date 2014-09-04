@@ -186,7 +186,7 @@ Destructing my_plugin_sum ;o)
 
 [endsect]
 
-[section On library unload callbacks]
+[section Executing callbacks on library unload]
 Boost.DLL provides no out of the box mechanism for catching library unloads. However such task could be easily implemnted.
 
 [import ../example/tutorial6/on_unload_lib.cpp]
@@ -210,6 +210,44 @@ After library unload.
 
 [endsect]
 
+[section Querying libraries for symbols]
+
+Situation when we do not know names of functions in plugin could occur. In that case querieing library could
+be useful.
+
+Imagine the sitauation: we have a project called 'Anna' that is capable of loading and using plugins that contain
+functions with sugnature `void(const std::string&)`. We do not know function names, but wish to find out them somehow.
+
+Solution would be pretty simple. Let's agree with plugin developers, that they can name functions as they like,
+but all the plugin functions aliases must be located in section named 'Anna':
+
+[import ../example/tutorial7/library1.cpp]
+[plugcpp_tutorial7_library1]
+
+[import ../example/tutorial7/library2.cpp]
+[plugcpp_tutorial7_library2]
+
+Now we can easily get those functions using the [classref boost::dll::library_info]:
+
+[import ../example/tutorial7/tutorial7.cpp]
+[callplugcpp_tutorial7]
+
+If we run the example we'll get the following output:
+
+[pre
+Function 'print_hello' prints:
+	Hello, User!
+
+Function 'are_you_bored' prints:
+	Are you bored, User?
+
+Function 'howdy' prints:
+	How're you doing, User?
+]
+
+[note `BOOST_DLL_ALIAS` macro by default places all the aliases into the "boostdll" section. ]
+
+[endsect]
 
 [endsect]
 

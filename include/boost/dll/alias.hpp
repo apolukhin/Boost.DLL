@@ -37,8 +37,8 @@ namespace boost { namespace dll {
 
 #define BOOST_DLL_SELECTANY __declspec(selectany)
 
-#define BOOST_DLL_SECTION(SectionName, Permissions)                              \
-    __pragma(section(SectionName, Permissions)) __declspec(allocate(SectionName))   \
+#define BOOST_DLL_SECTION(SectionName, Permissions)                                 \
+    __pragma(section(#SectionName, Permissions)) __declspec(allocate(#SectionName)) \
     /**/
 
 #else
@@ -47,7 +47,7 @@ namespace boost { namespace dll {
 
 // TODO: improve section permissions using following info:
 // http://stackoverflow.com/questions/6252812/what-does-the-aw-flag-in-the-section-attribute-mean
-#define BOOST_DLL_SECTION(SectionName, Permissions) __attribute__ ((section (SectionName)))
+#define BOOST_DLL_SECTION(SectionName, Permissions) __attribute__ ((section (#SectionName)))
 
 #endif
 
@@ -99,7 +99,7 @@ namespace boost { namespace dll {
 * Puts all the aliases into the "boostdll" read only section of the binary.
 */
 #define BOOST_DLL_ALIAS(FunctionOrVar, AliasName)                                               \
-    BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, "boostdll")                             \
+    BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, boostdll)                             \
     /**/
 
 
@@ -112,7 +112,7 @@ namespace boost { namespace dll {
         &FunctionOrVar                                                                          \
     ));                                                                                         \
     BOOST_STATIC_ASSERT_MSG(                                                                    \
-        sizeof(SectionName) < 10,                                                               \
+        sizeof(#SectionName) < 10,                                                              \
         "Some platforms require section names to be at most 8 bytest"                           \
     );                                                                                          \
     /**/

@@ -23,6 +23,7 @@
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/alias.hpp>
 #include <boost/dll/refcountable.hpp>
+#include <boost/dll/library_info.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
