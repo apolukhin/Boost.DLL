@@ -87,9 +87,9 @@ void plugins_collector::load_all() {
 void plugins_collector::insert_plugin(BOOST_RV_REF(pl::shared_library) lib) {
     std::string plugin_name;
     if (lib.search_symbol("create_plugin")) {
-        plugin_name = pl::alias<boost::shared_ptr<my_plugin_api>()>(lib, "create_plugin")()->name();
+        plugin_name = lib.get_alias<boost::shared_ptr<my_plugin_api>()>("create_plugin")()->name();
     } else if (lib.search_symbol("plugin")) {
-        plugin_name = pl::alias<my_plugin_api>(lib, "plugin").name();
+        plugin_name = lib.get_alias<my_plugin_api>("plugin").name();
     } else {
         return;
     }

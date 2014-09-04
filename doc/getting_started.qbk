@@ -33,7 +33,7 @@ In all the cases above it is safe to use imported variable or function because t
 
 [note On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recomended for use on Linux/POSIX.]
 
-If you need a low level api [classref boost::dll::shared_library] and [funcref boost::dll::alias] will suit you. If you want to load a library,
+If you need a low level api [classref boost::dll::shared_library] will suit you. If you want to load a library,
 just construct that class with a path to the library as a parameter:
 ```
 boost::dll::shared_library lib("/test/boost/application/libtest_library.so");
@@ -44,6 +44,7 @@ Now you can easily import symbols from that library using the `get` member funct
 int plugin_constant = lib.get<const int>("integer_variable");
 boost::function<int()> f = lib.get<int()>("function_returning_int");
 ```
-In case of `boost::dll::shared_library` it is safe to use imported symbols only until instance `boost::dll::shared_library` is not destroyed.
+In case of `boost::dll::shared_library` it is safe to use imported symbols only until `boost::dll::shared_library`
+instance is not destroyed.
 
 [endsect]

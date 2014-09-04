@@ -24,7 +24,7 @@ int main() {
 
     std::cout << "Call function" << std::endl;
     boost::function<boost::shared_ptr<my_plugin_api>()> creator 
-        = pl::alias<boost::shared_ptr<my_plugin_api>()>(self, "create_plugin");
+        = self.get_alias<boost::shared_ptr<my_plugin_api>()>("create_plugin");
 
     std::cout << "Computed Value: " << creator()->calculate(2, 2) << std::endl;
 }

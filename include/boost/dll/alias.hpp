@@ -51,6 +51,26 @@ namespace boost { namespace dll {
 
 #endif
 
+// Alias - is just a variable that pointers to original data
+//
+// A few attempts were made to avoid additional indirection:
+// 1) 
+//          // Does not work on Windows, work on Linux
+//          extern "C" BOOST_SYMBOL_EXPORT void AliasName() {
+//              reinterpret_cast<void (*)()>(Function)();
+//          }
+//
+// 2) 
+//          // Does not work on Linux (changes permissions of .text section and produces incorrect DSO)
+//          extern "C" BOOST_SYMBOL_EXPORT void* __attribute__ ((section(".text#"))) 
+//                  func_ptr = *reinterpret_cast<std::ptrdiff_t**>(&foo::bar);
+//
+// 3)       // requires mangled name of `Function` 
+//          //  AliasName() __attribute__ ((weak, alias ("Function")))  
+//
+//          // hard to use
+//          `#pragma comment(linker, "/alternatename:_pWeakValue=_pDefaultWeakValue")`
+
 /*!
 * \brief Makes an alias name for exported function or variable.
 *
@@ -96,49 +116,6 @@ namespace boost { namespace dll {
         "Some platforms require section names to be at most 8 bytest"                           \
     );                                                                                          \
     /**/
-
-
-
-/*!
-* Returns a symbol (function or variable) from a shared library by alias name of the symbol.
-*
-* \b Example:
-* \code
-* shared_library lib("test_lib.so");
-* int& i = alias<int>(lib, "integer_alias_name");
-* \endcode
-*
-* \tparam T Type of the symbol that we are going to import. Must be explicitly specified..
-*
-* \param lib Library to load symbol from.
-*
-* \param sb Null-terminated alias symbol name. Can handle std::string, char*, const char*.
-*
-* \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
-*/
-template <typename T>
-inline T& alias(const shared_library& lib, const boost::string_ref &symbol) {
-    // Alias - is just a variable that pointers to original data
-    //
-    // A few attempts were made to avoid additional indirection:
-    // 1) 
-    //          // Does not work on Windows, work on Linux
-    //          extern "C" BOOST_SYMBOL_EXPORT void AliasName() {
-    //              reinterpret_cast<void (*)()>(Function)();
-    //          }
-    //
-    // 2) 
-    //          // Does not work on Linux (changes permissions of .text section and produces incorrect DSO)
-    //          extern "C" BOOST_SYMBOL_EXPORT void* __attribute__ ((section(".text#"))) 
-    //                  func_ptr = *reinterpret_cast<std::ptrdiff_t**>(&foo::bar);
-    //
-    // 3)       // requires mangled name of `Function` 
-    //          //  AliasName() __attribute__ ((weak, alias ("Function")))  
-    //
-    //          // hard to use
-    //          `#pragma comment(linker, "/alternatename:_pWeakValue=_pDefaultWeakValue")`
-    return *lib.get<T*>(symbol);
-}
 
 }} // boost::dll
 

@@ -358,6 +358,26 @@ public:
         );
     }
 
+    /*!
+    * Returns a symbol (function or variable) from a shared library by alias name of the symbol.
+    *
+    * \b Example:
+    * \code
+    * shared_library lib("test_lib.so");
+    * int& i = lib.get_alias<int>("integer_alias_name");
+    * \endcode
+    *
+    * \tparam T Type of the symbol that we are going to import. Must be explicitly specified..
+    *
+    * \param sb Null-terminated alias symbol name. Can handle std::string, char*, const char*.
+    *
+    * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+    */
+    template <typename T>
+    inline T& get_alias(const boost::string_ref &sb) const {
+        return *get<T*>(sb);
+    }
+
 private:
     // get_impl is required to reduce binary size: it does not depend on a template
     // parameter and will be instantiated only once.

@@ -158,11 +158,11 @@ int test_main(int argc, char* argv[]) {
 
     // Checking aliases
     boost::function<std::size_t(const std::vector<int>&)> sz 
-        = alias<std::size_t(const std::vector<int>&)>(sl, "foo_bar");
+        = sl.get_alias<std::size_t(const std::vector<int>&)>("foo_bar");
 
     std::vector<int> v(10);
     BOOST_CHECK(sz(v) == 10);
-    BOOST_CHECK(alias<std::size_t>(sl, "foo_variable") == 42);
+    BOOST_CHECK(sl.get_alias<std::size_t>("foo_variable") == 42);
 
 
     sz = sl.get<std::size_t(*)(const std::vector<int>&)>("foo_bar");
