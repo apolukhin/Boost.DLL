@@ -4,10 +4,10 @@
 <title>Tutorial</title>
 <link rel="stylesheet" href="http://www.boost.org/doc/libs/1_56_0/doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
-<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
+<link rel="home" href="../index.html" title="Chapter&#160;1.&#160;Boost.DLL">
+<link rel="up" href="../index.html" title="Chapter&#160;1.&#160;Boost.DLL">
 <link rel="prev" href="introduction0.html" title="Getting started">
-<link rel="next" href="../plugin/reference.html" title="Reference">
+<link rel="next" href="../dll/reference.html" title="Reference">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,31 +20,31 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="introduction0.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../plugin/reference.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="introduction0.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../dll/reference.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="boost_plugin.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
+<a name="boost_dll.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial">Tutorial</a>
 </h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="tutorial.html#boost_plugin.tutorial.plugin_basics">Plugin basics</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_plugin.tutorial.factory_method_in_plugin">Factory
+<dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.plugin_basics">Plugin basics</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.factory_method_in_plugin">Factory
       method in plugin</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_plugin.tutorial.searching_for_a_symbol_in_multiple_plugins">Searching
+<dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.searching_for_a_symbol_in_multiple_plugins">Searching
       for a symbol in multiple plugins</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_plugin.tutorial.linking_plugin_into_the_executable">Linking
+<dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.linking_plugin_into_the_executable">Linking
       plugin into the executable</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_plugin.tutorial.symbol_shadowing_problem__linux_">Symbol
+<dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.symbol_shadowing_problem__linux_">Symbol
       shadowing problem (Linux)</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#boost_plugin.tutorial.on_library_unload_callbacks">On
-      library unload callbacks</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.on_library_unload_callbacks">On library
+      unload callbacks</a></span></dt>
 </dl></div>
 <p>
       Tutorial is provided to give you an idea of how to create and use plugins.
     </p>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_plugin.tutorial.plugin_basics"></a><a class="link" href="tutorial.html#boost_plugin.tutorial.plugin_basics" title="Plugin basics">Plugin basics</a>
+<a name="boost_dll.tutorial.plugin_basics"></a><a class="link" href="tutorial.html#boost_dll.tutorial.plugin_basics" title="Plugin basics">Plugin basics</a>
 </h3></div></div></div>
 <p>
         The first thing to do when creating your own plugins is define the plugin
@@ -108,7 +108,7 @@
 <p>
       </p>
 <p>
-        Simple application that loads plugin using the <code class="computeroutput"><a class="link" href="../boost/dll/import_variable_idp5974656.html" title="Function template import_variable_alias">boost::dll::import_variable_alias</a></code>:
+        Simple application that loads plugin using the <code class="computeroutput"><a class="link" href="../boost/dll/import_variable_idp5924784.html" title="Function template import_variable_alias">boost::dll::import_variable_alias</a></code>:
       </p>
 <p>
 </p>
@@ -148,7 +148,7 @@ Destructing my_plugin_sum ;o)
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_plugin.tutorial.factory_method_in_plugin"></a><a class="link" href="tutorial.html#boost_plugin.tutorial.factory_method_in_plugin" title="Factory method in plugin">Factory
+<a name="boost_dll.tutorial.factory_method_in_plugin"></a><a class="link" href="tutorial.html#boost_dll.tutorial.factory_method_in_plugin" title="Factory method in plugin">Factory
       method in plugin</a>
 </h3></div></div></div>
 <p>
@@ -229,7 +229,7 @@ Destructing my_plugin_sum ;o)
 <p>
       </p>
 <p>
-        In that application we have imported the factory method using <code class="computeroutput"><a class="link" href="../boost/dll/import_function_idp5998848.html" title="Function template import_function_alias">boost::dll::import_function_alias</a></code>.
+        In that application we have imported the factory method using <code class="computeroutput"><a class="link" href="../boost/dll/import_function_idp5949264.html" title="Function template import_function_alias">boost::dll::import_function_alias</a></code>.
       </p>
 <div class="caution"><table border="0" summary="Caution">
 <tr>
@@ -254,7 +254,7 @@ Plugin Name:  aggregator
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_plugin.tutorial.searching_for_a_symbol_in_multiple_plugins"></a><a class="link" href="tutorial.html#boost_plugin.tutorial.searching_for_a_symbol_in_multiple_plugins" title="Searching for a symbol in multiple plugins">Searching
+<a name="boost_dll.tutorial.searching_for_a_symbol_in_multiple_plugins"></a><a class="link" href="tutorial.html#boost_dll.tutorial.searching_for_a_symbol_in_multiple_plugins" title="Searching for a symbol in multiple plugins">Searching
       for a symbol in multiple plugins</a>
 </h3></div></div></div>
 <p>
@@ -312,7 +312,7 @@ Destructing my_plugin_sum ;o)
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_plugin.tutorial.linking_plugin_into_the_executable"></a><a class="link" href="tutorial.html#boost_plugin.tutorial.linking_plugin_into_the_executable" title="Linking plugin into the executable">Linking
+<a name="boost_dll.tutorial.linking_plugin_into_the_executable"></a><a class="link" href="tutorial.html#boost_dll.tutorial.linking_plugin_into_the_executable" title="Linking plugin into the executable">Linking
       plugin into the executable</a>
 </h3></div></div></div>
 <p>
@@ -444,7 +444,7 @@ Destructing my_plugin_static
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_plugin.tutorial.symbol_shadowing_problem__linux_"></a><a class="link" href="tutorial.html#boost_plugin.tutorial.symbol_shadowing_problem__linux_" title="Symbol shadowing problem (Linux)">Symbol
+<a name="boost_dll.tutorial.symbol_shadowing_problem__linux_"></a><a class="link" href="tutorial.html#boost_dll.tutorial.symbol_shadowing_problem__linux_" title="Symbol shadowing problem (Linux)">Symbol
       shadowing problem (Linux)</a>
 </h3></div></div></div>
 <p>
@@ -550,8 +550,8 @@ Destructing my_plugin_sum ;o)
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_plugin.tutorial.on_library_unload_callbacks"></a><a class="link" href="tutorial.html#boost_plugin.tutorial.on_library_unload_callbacks" title="On library unload callbacks">On
-      library unload callbacks</a>
+<a name="boost_dll.tutorial.on_library_unload_callbacks"></a><a class="link" href="tutorial.html#boost_dll.tutorial.on_library_unload_callbacks" title="On library unload callbacks">On library
+      unload callbacks</a>
 </h3></div></div></div>
 <p>
         Boost.DLL provides no out of the box mechanism for catching library unloads.
@@ -625,7 +625,7 @@ After library unload.
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="introduction0.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../plugin/reference.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="introduction0.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="../dll/reference.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

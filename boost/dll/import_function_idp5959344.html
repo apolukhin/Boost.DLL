@@ -4,10 +4,10 @@
 <title>Function template import_function_alias</title>
 <link rel="stylesheet" href="http://www.boost.org/doc/libs/1_56_0/doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
-<link rel="up" href="../../plugin/reference.html#header.boost.dll.refcountable_hpp" title="Header &lt;boost/dll/refcountable.hpp&gt;">
-<link rel="prev" href="import_function_idp5989280.html" title="Function template import_function">
-<link rel="next" href="import_function_idp6008928.html" title="Function template import_function_alias">
+<link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.DLL">
+<link rel="up" href="../../dll/reference.html#header.boost.dll.refcountable_hpp" title="Header &lt;boost/dll/refcountable.hpp&gt;">
+<link rel="prev" href="import_function_idp5949264.html" title="Function template import_function_alias">
+<link rel="next" href="import_variable_idp5905008.html" title="Function template import_variable">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,33 +20,29 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="import_function_idp5989280.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../plugin/reference.html#header.boost.dll.refcountable_hpp"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="import_function_idp6008928.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="import_function_idp5949264.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../dll/reference.html#header.boost.dll.refcountable_hpp"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="import_variable_idp5905008.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry">
-<a name="boost.dll.import_function_idp5998848"></a><div class="titlepage"></div>
+<a name="boost.dll.import_function_idp5959344"></a><div class="titlepage"></div>
 <div class="refnamediv">
 <h2><span class="refentrytitle">Function template import_function_alias</span></h2>
 <p>boost::dll::import_function_alias</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
-<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../plugin/reference.html#header.boost.dll.refcountable_hpp" title="Header &lt;boost/dll/refcountable.hpp&gt;">boost/dll/refcountable.hpp</a>&gt;
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="comment">// In header: &lt;<a class="link" href="../../dll/reference.html#header.boost.dll.refcountable_hpp" title="Header &lt;boost/dll/refcountable.hpp&gt;">boost/dll/refcountable.hpp</a>&gt;
 
 </span>
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> 
   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span> <span class="identifier">T</span> <span class="special">&gt;</span> 
-  <span class="identifier">import_function_alias</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span> lib<span class="special">,</span> 
+  <span class="identifier">import_function_alias</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span> lib_path<span class="special">,</span> 
                         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> func_name<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp6596944"></a><h2>Description</h2>
+<a name="idp6934688"></a><h2>Description</h2>
 <p>Imports function by it alias name and returns boost::function&lt;T&gt; that holds the function from the loaded library and refcounts usage of the loaded shared library. Library won't get unload until all copies of returned value are not destroyed.</p>
 <p>This call will succeed if call to <code class="computeroutput">shared_library::search_symbol(const boost::string_ref &amp;)</code> function with the same symbol name returned <code class="computeroutput">true</code>.</p>
 <p>For non alias names use boost::dll::import_function method.</p>
-<p>This method has an overload that accepts boost::filesystem::path as a first argument.</p>
 <p><span class="bold"><strong>Example:</strong></span> </p>
-<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span><span class="special">&gt;</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">import_function_alias</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span><span class="special">&gt;</span><span class="special">(</span>
-          <span class="identifier">boost</span><span class="special">::</span><span class="identifier">make_shared</span><span class="special">&lt;</span><span class="identifier">shared_library</span><span class="special">&gt;</span><span class="special">(</span><span class="string">"test_lib.so"</span><span class="special">)</span><span class="special">,</span>
-          <span class="string">"integer_func_alias_name"</span>
-<span class="special">)</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span><span class="special">&gt;</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">import_function_alias</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span><span class="special">&gt;</span><span class="special">(</span><span class="string">"test_lib.so"</span><span class="special">,</span> <span class="string">"integer_func_alias_name"</span><span class="special">)</span><span class="special">;</span>
 </pre>
 <p>
 
@@ -66,8 +62,8 @@
 <td><p>Null-terminated name of the function to import. Can handle std::string, char*, const char*.</p></td>
 </tr>
 <tr>
-<td><p><span class="term"><code class="computeroutput">lib</code></span></p></td>
-<td><p>Shared pointer to library to load function from.</p></td>
+<td><p><span class="term"><code class="computeroutput">lib_path</code></span></p></td>
+<td><p>Path to the library to load function from.</p></td>
 </tr>
 </tbody>
 </table></div></td>
@@ -88,7 +84,7 @@
 </tr>
 <tr>
 <td><p><span class="term">Throws:</span></p></td>
-<td>boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded. </td>
+<td>boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded. std::bad_alloc in case of insufficient memory. </td>
 </tr>
 </tbody>
 </table></div>
@@ -104,7 +100,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="import_function_idp5989280.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../plugin/reference.html#header.boost.dll.refcountable_hpp"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="import_function_idp6008928.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="import_function_idp5949264.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../dll/reference.html#header.boost.dll.refcountable_hpp"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="import_variable_idp5905008.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

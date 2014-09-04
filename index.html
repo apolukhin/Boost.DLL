@@ -1,11 +1,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
-<title>Chapter&#160;1.&#160;Boost.Plugin</title>
+<title>Chapter&#160;1.&#160;Boost.DLL</title>
 <link rel="stylesheet" href="http://www.boost.org/doc/libs/1_56_0/doc/src/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.Plugin">
-<link rel="next" href="boost_plugin/introduction0.html" title="Getting started">
+<link rel="home" href="index.html" title="Chapter&#160;1.&#160;Boost.DLL">
+<link rel="next" href="boost_dll/introduction0.html" title="Getting started">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -17,11 +17,11 @@
 <td align="center"><a href="http://www.boost.org/doc/libs/1_56_0/more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="boost_plugin/introduction0.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_dll/introduction0.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a></div>
 <div class="chapter">
 <div class="titlepage"><div>
 <div><h2 class="title">
-<a name="plugin"></a>Chapter&#160;1.&#160;Boost.Plugin</h2></div>
+<a name="dll"></a>Chapter&#160;1.&#160;Boost.DLL</h2></div>
 <div><div class="author"><h3 class="author">
 <span class="firstname">Renato</span> <span class="surname">Forti</span>
 </h3></div></div>
@@ -30,7 +30,7 @@
 </h3></div></div>
 <div><p class="copyright">Copyright &#169; 2014 Renato Tegon Forti, Antony Polukhin</p></div>
 <div><div class="legalnotice">
-<a name="plugin.legal"></a><p>
+<a name="dll.legal"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
       </p>
@@ -39,44 +39,44 @@
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl>
-<dt><span class="section"><a href="index.html#boost_plugin.introduction">Motivation</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/introduction0.html">Getting started</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/tutorial.html">Tutorial</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_dll.introduction">Motivation</a></span></dt>
+<dt><span class="section"><a href="boost_dll/introduction0.html">Getting started</a></span></dt>
+<dt><span class="section"><a href="boost_dll/tutorial.html">Tutorial</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="boost_plugin/tutorial.html#boost_plugin.tutorial.plugin_basics">Plugin basics</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/tutorial.html#boost_plugin.tutorial.factory_method_in_plugin">Factory
+<dt><span class="section"><a href="boost_dll/tutorial.html#boost_dll.tutorial.plugin_basics">Plugin basics</a></span></dt>
+<dt><span class="section"><a href="boost_dll/tutorial.html#boost_dll.tutorial.factory_method_in_plugin">Factory
       method in plugin</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/tutorial.html#boost_plugin.tutorial.searching_for_a_symbol_in_multiple_plugins">Searching
+<dt><span class="section"><a href="boost_dll/tutorial.html#boost_dll.tutorial.searching_for_a_symbol_in_multiple_plugins">Searching
       for a symbol in multiple plugins</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/tutorial.html#boost_plugin.tutorial.linking_plugin_into_the_executable">Linking
+<dt><span class="section"><a href="boost_dll/tutorial.html#boost_dll.tutorial.linking_plugin_into_the_executable">Linking
       plugin into the executable</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/tutorial.html#boost_plugin.tutorial.symbol_shadowing_problem__linux_">Symbol
+<dt><span class="section"><a href="boost_dll/tutorial.html#boost_dll.tutorial.symbol_shadowing_problem__linux_">Symbol
       shadowing problem (Linux)</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/tutorial.html#boost_plugin.tutorial.on_library_unload_callbacks">On
-      library unload callbacks</a></span></dt>
+<dt><span class="section"><a href="boost_dll/tutorial.html#boost_dll.tutorial.on_library_unload_callbacks">On library
+      unload callbacks</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="plugin/reference.html">Reference</a></span></dt>
+<dt><span class="section"><a href="dll/reference.html">Reference</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="plugin/reference.html#shared_library_reference">Shared Library Reference</a></span></dt>
-<dt><span class="section"><a href="plugin/reference.html#shared_library_refcountable_reference">Shared Library Refcountable Reference</a></span></dt>
+<dt><span class="section"><a href="dll/reference.html#shared_library_reference">Shared Library Reference</a></span></dt>
+<dt><span class="section"><a href="dll/reference.html#shared_library_refcountable_reference">Shared Library Refcountable Reference</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="boost_plugin/f_a_q_.html">F.A.Q.</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/design_rationale.html">Design Rationale</a></span></dt>
+<dt><span class="section"><a href="boost_dll/f_a_q_.html">F.A.Q.</a></span></dt>
+<dt><span class="section"><a href="boost_dll/design_rationale.html">Design Rationale</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="boost_plugin/design_rationale.html#boost_plugin.design_rationale.abi_portablity_across_compilers">ABI
+<dt><span class="section"><a href="boost_dll/design_rationale.html#boost_dll.design_rationale.abi_portablity_across_compilers">ABI
       portablity across compilers</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/design_rationale.html#boost_plugin.design_rationale.user_s_plugin_api">User's
+<dt><span class="section"><a href="boost_dll/design_rationale.html#boost_dll.design_rationale.user_s_plugin_api">User's
       plugin API</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/design_rationale.html#boost_plugin.design_rationale.performance_and_memory_allocations">Performance
+<dt><span class="section"><a href="boost_dll/design_rationale.html#boost_dll.design_rationale.performance_and_memory_allocations">Performance
       and memory allocations</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="boost_plugin/dependencies.html">Dependencies</a></span></dt>
-<dt><span class="section"><a href="boost_plugin/revision_history.html">Revision History</a></span></dt>
+<dt><span class="section"><a href="boost_dll/dependencies.html">Dependencies</a></span></dt>
+<dt><span class="section"><a href="boost_dll/revision_history.html">Revision History</a></span></dt>
 </dl>
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="boost_plugin.introduction"></a><a class="link" href="index.html#boost_plugin.introduction" title="Motivation">Motivation</a>
+<a name="boost_dll.introduction"></a><a class="link" href="index.html#boost_dll.introduction" title="Motivation">Motivation</a>
 </h2></div></div></div>
 <div class="warning"><table border="0" summary="Warning">
 <tr>
@@ -122,10 +122,10 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: September 04, 2014 at 10:59:27 GMT</small></p></td>
+<td align="left"><p><small>Last revised: September 04, 2014 at 11:09:45 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="boost_plugin/introduction0.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_dll/introduction0.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a></div>
 </body>
 </html>
