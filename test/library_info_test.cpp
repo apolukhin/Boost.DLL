@@ -22,7 +22,7 @@ int test_main(int argc, char* argv[])
 
     boost::dll::library_info lib_info(shared_library_path);
     std::vector<std::string> sec = lib_info.sections();
-    //std::copy(sec.begin(), sec.end(), std::ostream_iterator<std::string>(std::cout, ",  "));
+    std::copy(sec.begin(), sec.end(), std::ostream_iterator<std::string>(std::cout, ",  "));
     BOOST_CHECK(std::find(sec.begin(), sec.end(), "boostdll") != sec.end());
 
 
