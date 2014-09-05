@@ -33,21 +33,41 @@
 
 </span>BOOST_DLL_ALIAS(FunctionOrVar, AliasName)</pre></div>
 <div class="refsect1">
-<a name="idp6005968"></a><h2>Description</h2>
+<a name="idp5723360"></a><h2>Description</h2>
 <p>This macro is usefull in cases of long mangled names.</p>
 <p>Can be used in any namespace, including global. FunctionOrVar must be fully qualified, so that address of it could be taken. Multiple different alises for a single variable/function are allowed.</p>
 <p>Make sure that AliasNames are unique per library/executable. Functions or variables in global namespace must not have names same as AliasNames.</p>
 <p>Same AliasName in different translation units must point to the same FunctionOrVar.</p>
-<p><span class="bold"><strong>Example:</strong></span> </p>
+<p>
+<span class="bold"><strong>Example:</strong></span> </p>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">foo</span> <span class="special">{</span>
   <span class="keyword">void</span> <span class="identifier">bar</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="identifier">BOOST_DLL_ALIAS</span><span class="special">(</span><span class="identifier">foo</span><span class="special">::</span><span class="identifier">bar</span><span class="special">,</span> <span class="identifier">foo_bar</span><span class="special">)</span> <span class="comment">// foo::bar function now could be dynamicaly loaded using "foo_bar" name</span>
+  <span class="identifier">BOOST_DLL_ALIAS</span><span class="special">(</span><span class="identifier">foo</span><span class="special">::</span><span class="identifier">bar</span><span class="special">,</span> <span class="identifier">foo_bar</span><span class="special">)</span>
 <span class="special">}</span>
 
 <span class="identifier">BOOST_DLL_ALIAS</span><span class="special">(</span><span class="identifier">foo</span><span class="special">::</span><span class="identifier">bar</span><span class="special">,</span> <span class="identifier">foo_bar_another_alias_name</span><span class="special">)</span>
 </pre>
 <p>Puts all the aliases into the "boostdll" read only section of the binary. </p>
+<div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody><tr>
+<td><p><span class="term">Parameters:</span></p></td>
+<td><div class="variablelist"><table border="0">
+<col align="left" valign="top">
+<tbody>
+<tr>
+<td><p><span class="term"><code class="computeroutput">AliasName</code></span></p></td>
+<td><p>Name of the alias. Must be a valid C identifier.</p></td>
+</tr>
+<tr>
+<td><p><span class="term"><code class="computeroutput">FunctionOrVar</code></span></p></td>
+<td><p>Function or variable for wich an alias must be made. </p></td>
+</tr>
+</tbody>
+</table></div></td>
+</tr></tbody>
+</table></div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
