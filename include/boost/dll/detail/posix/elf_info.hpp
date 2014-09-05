@@ -13,8 +13,8 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_DLL_DETAIL_POSIX_LIBRARY_INFO_HPP
-#define BOOST_DLL_DETAIL_POSIX_LIBRARY_INFO_HPP
+#ifndef BOOST_DLL_DETAIL_POSIX_ELF_INFO_HPP
+#define BOOST_DLL_DETAIL_POSIX_ELF_INFO_HPP
 
 #include <boost/config.hpp>
 
@@ -22,7 +22,6 @@
 # pragma once
 #endif
 
-#include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/utility/string_ref.hpp>
 #include <string>
@@ -31,17 +30,16 @@
 #include <link.h>
 #include <elf.h>
 
-namespace boost { namespace dll {
+namespace boost { namespace dll { namespace detail {
 
-class library_info {
-    boost::filesystem::ifstream f_;
+class elf_info {
+    boost::filesystem::ifstream& f_;
     typedef ElfW(Ehdr) header_t;
+
 public:
-    explicit library_info(const boost::filesystem::path& library_path)
-        : f_(library_path, std::ios_base::in | std::ios_base::binary)
-    {
-        f_.exceptions( boost::filesystem::ifstream::failbit | boost::filesystem::ifstream::badbit | boost::filesystem::ifstream::eofbit);
-    }
+    explicit elf_info(boost::filesystem::ifstream& f) BOOST_NOEXCEPT
+        : f_(f)
+    {}
 
     std::vector<std::string> sections() {
         std::vector<std::string> ret;
@@ -178,6 +176,6 @@ public:
     }
 };
 
-}} // namespace boost::dll
+}}} // namespace boost::dll::detail
 
-#endif // BOOST_DLL_DETAIL_POSIX_LIBRARY_INFO_HPP
+#endif // BOOST_DLL_DETAIL_POSIX_ELF_INFO_HPP

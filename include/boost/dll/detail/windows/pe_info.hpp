@@ -13,8 +13,8 @@
 
 // -----------------------------------------------------------------------------
 
-#ifndef BOOST_DLL_DETAIL_WINDOWS_LIBRARY_INFO_HPP
-#define BOOST_DLL_DETAIL_WINDOWS_LIBRARY_INFO_HPP
+#ifndef BOOST_DLL_DETAIL_WINDOWS_PE_INFO_HPP
+#define BOOST_DLL_DETAIL_WINDOWS_PE_INFO_HPP
 
 #include <boost/config.hpp>
 
@@ -22,7 +22,6 @@
 # pragma once
 #endif
 
-#include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/utility/string_ref.hpp>
 #include <string>
@@ -31,7 +30,7 @@
 // TODO: add to dll2.hpp
 #include <windows.h>
 
-namespace boost { namespace dll {
+namespace boost { namespace dll { namespace detail {
 
 // reference:
 // http://www.joachim-bauch.de/tutorials/loading-a-dll-from-memory/
@@ -39,22 +38,18 @@ namespace boost { namespace dll {
 // http://msdn.microsoft.com/en-us/magazine/cc301808.aspx
 //
 
-// work in progress
-// this shoud be an impl class??
+class pe_info {
+    boost::filesystem::ifstream&    f_;
 
-class library_info {
-    boost::filesystem::ifstream f_;
     typedef IMAGE_NT_HEADERS        header_t;
     typedef IMAGE_EXPORT_DIRECTORY  exports_t;
     typedef IMAGE_SECTION_HEADER    section_t;
     typedef IMAGE_DOS_HEADER        dos_t;
 
 public:
-    explicit library_info(const boost::filesystem::path& library_path)
-        : f_(library_path, std::ios_base::in | std::ios_base::binary)
-    {
-        f_.exceptions( boost::filesystem::ifstream::failbit | boost::filesystem::ifstream::badbit | boost::filesystem::ifstream::eofbit);
-    }
+    explicit pe_info(boost::filesystem::ifstream& f) BOOST_NOEXCEPT
+        : f_(f)
+    {}
 
 private:
     inline header_t header() {
@@ -267,16 +262,9 @@ public:
 
         return ret;
     }
-
-    std::vector<std::string> symbols(boost::string_ref section_name) {
-        std::vector<std::string> ret;
-
-        // TODO:
-
-        return ret;
-    }*/
+*/
 };
 
-}}// namespace boost::dll
+}}} // namespace boost::dll::detail
 
-#endif // BOOST_DLL_DETAIL_WINDOWS_LIBRARY_INFO_HPP
+#endif // BOOST_DLL_DETAIL_WINDOWS_PE_INFO_HPP
