@@ -43,10 +43,20 @@ namespace boost { namespace dll {
 
 #else
 
+/*!
+* \brief Macro that allows linker to select any occurence of this symbol instead of
+* failing with 'multiple definitions' error at linktime.
+*/
 #define BOOST_DLL_SELECTANY __attribute__((weak))
 
 // TODO: improve section permissions using following info:
 // http://stackoverflow.com/questions/6252812/what-does-the-aw-flag-in-the-section-attribute-mean
+
+/*!
+* \brief Macro that pust symbol to a specific section.
+* \param SectionName Name of the section. Must be a valid C identifier without quotes not longer than 8 bytes.
+* \param Permissions Can be "read" or "write" (without quotes!).
+*/
 #define BOOST_DLL_SECTION(SectionName, Permissions) __attribute__ ((section (#SectionName)))
 
 #endif
@@ -85,12 +95,15 @@ namespace boost { namespace dll {
 *
 * Same AliasName in different translation units must point to the same FunctionOrVar.
 *
+* \param FunctionOrVar Function or variable for wich an alias must be made.
+* \param AliasName Name of the alias. Must be a valid C identifier.
+*
 * \b Example:
 * \code
 * namespace foo {
 *   void bar(std::string&);
 *
-*   BOOST_DLL_ALIAS(foo::bar, foo_bar) // foo::bar function now could be dynamicaly loaded using "foo_bar" name
+*   BOOST_DLL_ALIAS(foo::bar, foo_bar)
 * }
 *
 * BOOST_DLL_ALIAS(foo::bar, foo_bar_another_alias_name)
@@ -98,13 +111,30 @@ namespace boost { namespace dll {
 *
 * Puts all the aliases into the "boostdll" read only section of the binary.
 */
-#define BOOST_DLL_ALIAS(FunctionOrVar, AliasName)                                               \
-    BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, boostdll)                             \
+#define BOOST_DLL_ALIAS(FunctionOrVar, AliasName)                       \
+    BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, boostdll)       \
     /**/
 
 
 // Note: we can not use `aggressive_ptr_cast` here, because in that case GCC applies
 // different permissions to the section and it causes Segmentation fault.
+/*!
+* \brief Same as BOOST_DLL_ALIAS but puts alias name into the user specified section.
+*
+* \param FunctionOrVar Function or variable for wich an alias must be made.
+* \param AliasName Name of the alias. Must be a valid C identifier.
+* \param SectionName Name of the section. Must be a valid C identifier without quotes not longer than 8 bytes.
+*
+* \b Example:
+* \code
+* namespace foo {
+*   void bar(std::string&);
+*
+*   BOOST_DLL_ALIAS_SECTIONED(foo::bar, foo_bar, sect_1) // section "sect_1" now exports "foo_bar"
+* }
+* \endcode
+*
+*/
 #define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
     extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                       \
     BOOST_DLL_SECTION(SectionName, read) BOOST_DLL_SELECTANY                                    \

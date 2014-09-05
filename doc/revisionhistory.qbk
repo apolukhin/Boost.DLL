@@ -15,9 +15,10 @@ Improved docs and applied comments from "Boost query interest" mails:
 * Aliases now use "boostdll" section.
 * *TODO:*
     * Mach-O and COFF file format support
-    * Improve `boost::dll::library_info` docs
     * Structures of `boost::dll::library_info` must be declared inplace (do not use OS specific files)
     * Make `boost::dll::library_info` recognize foreign platform file formats
+    * Add `path this_binary()` and function to find binary name by symbol
+    * improve `load_mode`
 
 [h5 0.1]
 
