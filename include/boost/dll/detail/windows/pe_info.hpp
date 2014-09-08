@@ -27,8 +27,7 @@
 #include <string>
 #include <vector>
 
-// TODO: add to dll2.hpp
-#include <windows.h>
+#include <boost/detail/winapi/basic_types.hpp>
 
 namespace boost { namespace dll { namespace detail {
 
@@ -38,13 +37,134 @@ namespace boost { namespace dll { namespace detail {
 // http://msdn.microsoft.com/en-us/magazine/cc301808.aspx
 //
 
+struct IMAGE_DOS_HEADER_ { // 32/64 independent header
+    boost::detail::winapi::WORD_    e_magic;        // Magic number
+    boost::detail::winapi::WORD_    e_cblp;         // Bytes on last page of file
+    boost::detail::winapi::WORD_    e_cp;           // Pages in file
+    boost::detail::winapi::WORD_    e_crlc;         // Relocations
+    boost::detail::winapi::WORD_    e_cparhdr;      // Size of header in paragraphs
+    boost::detail::winapi::WORD_    e_minalloc;     // Minimum extra paragraphs needed
+    boost::detail::winapi::WORD_    e_maxalloc;     // Maximum extra paragraphs needed
+    boost::detail::winapi::WORD_    e_ss;           // Initial (relative) SS value
+    boost::detail::winapi::WORD_    e_sp;           // Initial SP value
+    boost::detail::winapi::WORD_    e_csum;         // Checksum
+    boost::detail::winapi::WORD_    e_ip;           // Initial IP value
+    boost::detail::winapi::WORD_    e_cs;           // Initial (relative) CS value
+    boost::detail::winapi::WORD_    e_lfarlc;       // File address of relocation table
+    boost::detail::winapi::WORD_    e_ovno;         // Overlay number
+    boost::detail::winapi::WORD_    e_res[4];       // Reserved words
+    boost::detail::winapi::WORD_    e_oemid;        // OEM identifier (for e_oeminfo)
+    boost::detail::winapi::WORD_    e_oeminfo;      // OEM information; e_oemid specific
+    boost::detail::winapi::WORD_    e_res2[10];     // Reserved words
+    boost::detail::winapi::LONG_    e_lfanew;       // File address of new exe header
+};
+
+struct IMAGE_FILE_HEADER_ { // 32/64 independent header
+    boost::detail::winapi::WORD_    Machine;
+    boost::detail::winapi::WORD_    NumberOfSections;
+    boost::detail::winapi::DWORD_   TimeDateStamp;
+    boost::detail::winapi::DWORD_   PointerToSymbolTable;
+    boost::detail::winapi::DWORD_   NumberOfSymbols;
+    boost::detail::winapi::WORD_    SizeOfOptionalHeader;
+    boost::detail::winapi::WORD_    Characteristics;
+};
+
+struct IMAGE_DATA_DIRECTORY_ { // 32/64 independent header
+    boost::detail::winapi::DWORD_   VirtualAddress;
+    boost::detail::winapi::DWORD_   Size;
+};
+
+struct IMAGE_EXPORT_DIRECTORY_ {
+    boost::detail::winapi::DWORD_   Characteristics;
+    boost::detail::winapi::DWORD_   TimeDateStamp;
+    boost::detail::winapi::WORD_    MajorVersion;
+    boost::detail::winapi::WORD_    MinorVersion;
+    boost::detail::winapi::DWORD_   Name;
+    boost::detail::winapi::DWORD_   Base;
+    boost::detail::winapi::DWORD_   NumberOfFunctions;
+    boost::detail::winapi::DWORD_   NumberOfNames;
+    boost::detail::winapi::DWORD_   AddressOfFunctions;
+    boost::detail::winapi::DWORD_   AddressOfNames;
+    boost::detail::winapi::DWORD_   AddressOfNameOrdinals;
+};
+
+struct IMAGE_SECTION_HEADER_ {
+    static const std::size_t IMAGE_SIZEOF_SHORT_NAME_ = 8;
+
+    boost::detail::winapi::BYTE_    Name[IMAGE_SIZEOF_SHORT_NAME_];
+    union {
+        boost::detail::winapi::DWORD_   PhysicalAddress;
+        boost::detail::winapi::DWORD_   VirtualSize;
+    } Misc;
+    boost::detail::winapi::DWORD_   VirtualAddress;
+    boost::detail::winapi::DWORD_   SizeOfRawData;
+    boost::detail::winapi::DWORD_   PointerToRawData;
+    boost::detail::winapi::DWORD_   PointerToRelocations;
+    boost::detail::winapi::DWORD_   PointerToLinenumbers;
+    boost::detail::winapi::WORD_    NumberOfRelocations;
+    boost::detail::winapi::WORD_    NumberOfLinenumbers;
+    boost::detail::winapi::DWORD_   Characteristics;
+};
+
+
+template <class AddressOffsetT>
+struct IMAGE_OPTIONAL_HEADER_template {
+    static const std::size_t IMAGE_NUMBEROF_DIRECTORY_ENTRIES_ = 16;
+
+    boost::detail::winapi::WORD_    Magic;
+    boost::detail::winapi::BYTE_    MajorLinkerVersion;
+    boost::detail::winapi::BYTE_    MinorLinkerVersion;
+    boost::detail::winapi::DWORD_   SizeOfCode;
+    boost::detail::winapi::DWORD_   SizeOfInitializedData;
+    boost::detail::winapi::DWORD_   SizeOfUninitializedData;
+    boost::detail::winapi::DWORD_   AddressOfEntryPoint;
+    boost::detail::winapi::DWORD_   BaseOfCode;
+    boost::detail::winapi::DWORD_   BaseOfData /* in x64 version this does not exist: */
+        : sizeof(AddressOffsetT) == sizeof(boost::detail::winapi::ULONGLONG_) ? 0 : sizeof(boost::detail::winapi::DWORD_) * 8;
+
+    AddressOffsetT                  ImageBase;
+    boost::detail::winapi::DWORD_   SectionAlignment;
+    boost::detail::winapi::DWORD_   FileAlignment;
+    boost::detail::winapi::WORD_    MajorOperatingSystemVersion;
+    boost::detail::winapi::WORD_    MinorOperatingSystemVersion;
+    boost::detail::winapi::WORD_    MajorImageVersion;
+    boost::detail::winapi::WORD_    MinorImageVersion;
+    boost::detail::winapi::WORD_    MajorSubsystemVersion;
+    boost::detail::winapi::WORD_    MinorSubsystemVersion;
+    boost::detail::winapi::DWORD_   Win32VersionValue;
+    boost::detail::winapi::DWORD_   SizeOfImage;
+    boost::detail::winapi::DWORD_   SizeOfHeaders;
+    boost::detail::winapi::DWORD_   CheckSum;
+    boost::detail::winapi::WORD_    Subsystem;
+    boost::detail::winapi::WORD_    DllCharacteristics;
+    AddressOffsetT                  SizeOfStackReserve;
+    AddressOffsetT                  SizeOfStackCommit;
+    AddressOffsetT                  SizeOfHeapReserve;
+    AddressOffsetT                  SizeOfHeapCommit;
+    boost::detail::winapi::DWORD_   LoaderFlags;
+    boost::detail::winapi::DWORD_   NumberOfRvaAndSizes;
+    IMAGE_DATA_DIRECTORY_           DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES_];
+};
+
+template <class AddressOffsetT>
+struct IMAGE_NT_HEADERS_template {
+    boost::detail::winapi::DWORD_                   Signature;
+    IMAGE_FILE_HEADER_                              FileHeader;
+    IMAGE_OPTIONAL_HEADER_template<AddressOffsetT>  OptionalHeader;
+};
+
+
 class pe_info {
     boost::filesystem::ifstream&    f_;
 
-    typedef IMAGE_NT_HEADERS        header_t;
-    typedef IMAGE_EXPORT_DIRECTORY  exports_t;
-    typedef IMAGE_SECTION_HEADER    section_t;
-    typedef IMAGE_DOS_HEADER        dos_t;
+#if BOOST_ARCH_X86_64
+    typedef IMAGE_NT_HEADERS_template<boost::detail::winapi::ULONGLONG_>        header_t;
+#else
+    typedef IMAGE_NT_HEADERS_template<boost::detail::winapi::DWORD_>            header_t;
+#endif
+    typedef IMAGE_EXPORT_DIRECTORY_ exports_t;
+    typedef IMAGE_SECTION_HEADER_   section_t;
+    typedef IMAGE_DOS_HEADER_       dos_t;
 
 public:
     explicit pe_info(boost::filesystem::ifstream& f) BOOST_NOEXCEPT
@@ -111,12 +231,12 @@ public:
 
         // get names, e.g: .text .rdata .data .rsrc .reloc
         section_t image_section_header;
-        char name_helper[9];
+        char name_helper[section_t::IMAGE_SIZEOF_SHORT_NAME_ + 1];
         std::memset(name_helper, 0, sizeof(name_helper));
         for (std::size_t i = 0;i < h.FileHeader.NumberOfSections;++i) {
             // There is no terminating null character if the string is exactly eight characters long
             f_.read((char*)&image_section_header, sizeof(image_section_header));
-            std::memcpy(name_helper, image_section_header.Name, 8);
+            std::memcpy(name_helper, image_section_header.Name, section_t::IMAGE_SIZEOF_SHORT_NAME_);
             ret.push_back(name_helper);
         }
 
@@ -132,7 +252,7 @@ public:
         const std::size_t fixed_names_addr = get_file_offset(exprt.AddressOfNames, h);
 
         ret.reserve(exported_symbols);
-        DWORD name_offset;
+        boost::detail::winapi::DWORD_ name_offset;
         std::string symbol_name;
         for (std::size_t i = 0;i < exported_symbols;++i) {
             f_.seekg(fixed_names_addr + i * sizeof(name_offset));
@@ -155,12 +275,12 @@ public:
         
         {   // getting address range for the section
             section_t image_section_header;
-            char name_helper[9];
+            char name_helper[section_t::IMAGE_SIZEOF_SHORT_NAME_ + 1];
             std::memset(name_helper, 0, sizeof(name_helper));
             for (std::size_t i = 0;i < h.FileHeader.NumberOfSections;++i) {
                 // There is no terminating null character if the string is exactly eight characters long
                 f_.read((char*)&image_section_header, sizeof(image_section_header));
-                std::memcpy(name_helper, image_section_header.Name, 8);
+                std::memcpy(name_helper, image_section_header.Name, section_t::IMAGE_SIZEOF_SHORT_NAME_);
                 if (!std::strcmp(section_name.data(), name_helper)) {
                     section_begin_addr = image_section_header.PointerToRawData;
                     section_end_addr = section_begin_addr + image_section_header.SizeOfRawData;
@@ -177,8 +297,8 @@ public:
         const std::size_t fixed_functions_addr = get_file_offset(exprt.AddressOfFunctions, h);
 
         ret.reserve(exported_symbols);
-        DWORD ptr;
-        WORD ordinal;
+        boost::detail::winapi::DWORD_ ptr;
+        boost::detail::winapi::WORD_ ordinal;
         std::string symbol_name;
         for (std::size_t i = 0;i < exported_symbols;++i) {
             // getting ordinal
