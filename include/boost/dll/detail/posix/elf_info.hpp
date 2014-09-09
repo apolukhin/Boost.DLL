@@ -177,14 +177,14 @@ private:
             if (section.sh_type == SHT_SYMTAB_) {
                 symbols.resize(section.sh_size / section.sh_entsize);
 
-                const std::size_t pos = f_.tellg();
+                const boost::filesystem::ifstream::pos_type pos = f_.tellg();
                 f_.seekg(section.sh_offset);
                 f_.read((char*)&symbols[0], section.sh_size);
                 f_.seekg(pos);
             } else if (section.sh_type == SHT_STRTAB_) {
                 text.resize(section.sh_size);
 
-                const std::size_t pos = f_.tellg();
+                const boost::filesystem::ifstream::pos_type pos = f_.tellg();
                 f_.seekg(section.sh_offset);
                 f_.read(&text[0], section.sh_size);
                 f_.seekg(pos);

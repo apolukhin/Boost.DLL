@@ -46,72 +46,72 @@ typedef boost::int64_t LONGLONG_;
 typedef boost::uint64_t ULONGLONG_;
 
 struct IMAGE_DOS_HEADER_ { // 32/64 independent header
-    boost::dll::detail::WORD_    e_magic;        // Magic number
-    boost::dll::detail::WORD_    e_cblp;         // Bytes on last page of file
-    boost::dll::detail::WORD_    e_cp;           // Pages in file
-    boost::dll::detail::WORD_    e_crlc;         // Relocations
-    boost::dll::detail::WORD_    e_cparhdr;      // Size of header in paragraphs
-    boost::dll::detail::WORD_    e_minalloc;     // Minimum extra paragraphs needed
-    boost::dll::detail::WORD_    e_maxalloc;     // Maximum extra paragraphs needed
-    boost::dll::detail::WORD_    e_ss;           // Initial (relative) SS value
-    boost::dll::detail::WORD_    e_sp;           // Initial SP value
-    boost::dll::detail::WORD_    e_csum;         // Checksum
-    boost::dll::detail::WORD_    e_ip;           // Initial IP value
-    boost::dll::detail::WORD_    e_cs;           // Initial (relative) CS value
-    boost::dll::detail::WORD_    e_lfarlc;       // File address of relocation table
-    boost::dll::detail::WORD_    e_ovno;         // Overlay number
-    boost::dll::detail::WORD_    e_res[4];       // Reserved words
-    boost::dll::detail::WORD_    e_oemid;        // OEM identifier (for e_oeminfo)
-    boost::dll::detail::WORD_    e_oeminfo;      // OEM information; e_oemid specific
-    boost::dll::detail::WORD_    e_res2[10];     // Reserved words
-    boost::dll::detail::LONG_    e_lfanew;       // File address of new exe header
+    boost::dll::detail::WORD_   e_magic;        // Magic number
+    boost::dll::detail::WORD_   e_cblp;         // Bytes on last page of file
+    boost::dll::detail::WORD_   e_cp;           // Pages in file
+    boost::dll::detail::WORD_   e_crlc;         // Relocations
+    boost::dll::detail::WORD_   e_cparhdr;      // Size of header in paragraphs
+    boost::dll::detail::WORD_   e_minalloc;     // Minimum extra paragraphs needed
+    boost::dll::detail::WORD_   e_maxalloc;     // Maximum extra paragraphs needed
+    boost::dll::detail::WORD_   e_ss;           // Initial (relative) SS value
+    boost::dll::detail::WORD_   e_sp;           // Initial SP value
+    boost::dll::detail::WORD_   e_csum;         // Checksum
+    boost::dll::detail::WORD_   e_ip;           // Initial IP value
+    boost::dll::detail::WORD_   e_cs;           // Initial (relative) CS value
+    boost::dll::detail::WORD_   e_lfarlc;       // File address of relocation table
+    boost::dll::detail::WORD_   e_ovno;         // Overlay number
+    boost::dll::detail::WORD_   e_res[4];       // Reserved words
+    boost::dll::detail::WORD_   e_oemid;        // OEM identifier (for e_oeminfo)
+    boost::dll::detail::WORD_   e_oeminfo;      // OEM information; e_oemid specific
+    boost::dll::detail::WORD_   e_res2[10];     // Reserved words
+    boost::dll::detail::LONG_   e_lfanew;       // File address of new exe header
 };
 
 struct IMAGE_FILE_HEADER_ { // 32/64 independent header
-    boost::dll::detail::WORD_    Machine;
-    boost::dll::detail::WORD_    NumberOfSections;
-    boost::dll::detail::DWORD_   TimeDateStamp;
-    boost::dll::detail::DWORD_   PointerToSymbolTable;
-    boost::dll::detail::DWORD_   NumberOfSymbols;
-    boost::dll::detail::WORD_    SizeOfOptionalHeader;
-    boost::dll::detail::WORD_    Characteristics;
+    boost::dll::detail::WORD_   Machine;
+    boost::dll::detail::WORD_   NumberOfSections;
+    boost::dll::detail::DWORD_  TimeDateStamp;
+    boost::dll::detail::DWORD_  PointerToSymbolTable;
+    boost::dll::detail::DWORD_  NumberOfSymbols;
+    boost::dll::detail::WORD_   SizeOfOptionalHeader;
+    boost::dll::detail::WORD_   Characteristics;
 };
 
 struct IMAGE_DATA_DIRECTORY_ { // 32/64 independent header
-    boost::dll::detail::DWORD_   VirtualAddress;
-    boost::dll::detail::DWORD_   Size;
+    boost::dll::detail::DWORD_  VirtualAddress;
+    boost::dll::detail::DWORD_  Size;
 };
 
-struct IMAGE_EXPORT_DIRECTORY_ {
-    boost::dll::detail::DWORD_   Characteristics;
-    boost::dll::detail::DWORD_   TimeDateStamp;
-    boost::dll::detail::WORD_    MajorVersion;
-    boost::dll::detail::WORD_    MinorVersion;
-    boost::dll::detail::DWORD_   Name;
-    boost::dll::detail::DWORD_   Base;
-    boost::dll::detail::DWORD_   NumberOfFunctions;
-    boost::dll::detail::DWORD_   NumberOfNames;
-    boost::dll::detail::DWORD_   AddressOfFunctions;
-    boost::dll::detail::DWORD_   AddressOfNames;
-    boost::dll::detail::DWORD_   AddressOfNameOrdinals;
+struct IMAGE_EXPORT_DIRECTORY_ { // 32/64 independent header
+    boost::dll::detail::DWORD_  Characteristics;
+    boost::dll::detail::DWORD_  TimeDateStamp;
+    boost::dll::detail::WORD_   MajorVersion;
+    boost::dll::detail::WORD_   MinorVersion;
+    boost::dll::detail::DWORD_  Name;
+    boost::dll::detail::DWORD_  Base;
+    boost::dll::detail::DWORD_  NumberOfFunctions;
+    boost::dll::detail::DWORD_  NumberOfNames;
+    boost::dll::detail::DWORD_  AddressOfFunctions;
+    boost::dll::detail::DWORD_  AddressOfNames;
+    boost::dll::detail::DWORD_  AddressOfNameOrdinals;
 };
 
-struct IMAGE_SECTION_HEADER_ {
-    static const std::size_t IMAGE_SIZEOF_SHORT_NAME_ = 8;
+struct IMAGE_SECTION_HEADER_ { // 32/64 independent header
+    static const std::size_t    IMAGE_SIZEOF_SHORT_NAME_ = 8;
 
-    boost::dll::detail::BYTE_    Name[IMAGE_SIZEOF_SHORT_NAME_];
+    boost::dll::detail::BYTE_   Name[IMAGE_SIZEOF_SHORT_NAME_];
     union {
         boost::dll::detail::DWORD_   PhysicalAddress;
         boost::dll::detail::DWORD_   VirtualSize;
     } Misc;
-    boost::dll::detail::DWORD_   VirtualAddress;
-    boost::dll::detail::DWORD_   SizeOfRawData;
-    boost::dll::detail::DWORD_   PointerToRawData;
-    boost::dll::detail::DWORD_   PointerToRelocations;
-    boost::dll::detail::DWORD_   PointerToLinenumbers;
-    boost::dll::detail::WORD_    NumberOfRelocations;
-    boost::dll::detail::WORD_    NumberOfLinenumbers;
-    boost::dll::detail::DWORD_   Characteristics;
+    boost::dll::detail::DWORD_  VirtualAddress;
+    boost::dll::detail::DWORD_  SizeOfRawData;
+    boost::dll::detail::DWORD_  PointerToRawData;
+    boost::dll::detail::DWORD_  PointerToRelocations;
+    boost::dll::detail::DWORD_  PointerToLinenumbers;
+    boost::dll::detail::WORD_   NumberOfRelocations;
+    boost::dll::detail::WORD_   NumberOfLinenumbers;
+    boost::dll::detail::DWORD_  Characteristics;
 };
 
 
@@ -119,57 +119,62 @@ template <class AddressOffsetT>
 struct IMAGE_OPTIONAL_HEADER_template {
     static const std::size_t IMAGE_NUMBEROF_DIRECTORY_ENTRIES_ = 16;
 
-    boost::dll::detail::WORD_       Magic;
-    boost::dll::detail::BYTE_       MajorLinkerVersion;
-    boost::dll::detail::BYTE_       MinorLinkerVersion;
-    boost::dll::detail::DWORD_      SizeOfCode;
-    boost::dll::detail::DWORD_      SizeOfInitializedData;
-    boost::dll::detail::DWORD_      SizeOfUninitializedData;
-    boost::dll::detail::DWORD_      AddressOfEntryPoint;
+    boost::dll::detail::WORD_   Magic;
+    boost::dll::detail::BYTE_   MajorLinkerVersion;
+    boost::dll::detail::BYTE_   MinorLinkerVersion;
+    boost::dll::detail::DWORD_  SizeOfCode;
+    boost::dll::detail::DWORD_  SizeOfInitializedData;
+    boost::dll::detail::DWORD_  SizeOfUninitializedData;
+    boost::dll::detail::DWORD_  AddressOfEntryPoint;
     union {
         boost::dll::detail::DWORD_   BaseOfCode;
-        unsigned char padding_[sizeof(AddressOffsetT)]; // in x64 version BaseOfData does not exist
+        unsigned char padding_[sizeof(AddressOffsetT) == 8 ? 4 : 8]; // in x64 version BaseOfData does not exist
     } BaseOfCode_and_BaseOfData;
 
-    AddressOffsetT                  ImageBase;
-    boost::dll::detail::DWORD_      SectionAlignment;
-    boost::dll::detail::DWORD_      FileAlignment;
-    boost::dll::detail::WORD_       MajorOperatingSystemVersion;
-    boost::dll::detail::WORD_       MinorOperatingSystemVersion;
-    boost::dll::detail::WORD_       MajorImageVersion;
-    boost::dll::detail::WORD_       MinorImageVersion;
-    boost::dll::detail::WORD_       MajorSubsystemVersion;
-    boost::dll::detail::WORD_       MinorSubsystemVersion;
-    boost::dll::detail::DWORD_      Win32VersionValue;
-    boost::dll::detail::DWORD_      SizeOfImage;
-    boost::dll::detail::DWORD_      SizeOfHeaders;
-    boost::dll::detail::DWORD_      CheckSum;
-    boost::dll::detail::WORD_       Subsystem;
-    boost::dll::detail::WORD_       DllCharacteristics;
-    AddressOffsetT                  SizeOfStackReserve;
-    AddressOffsetT                  SizeOfStackCommit;
-    AddressOffsetT                  SizeOfHeapReserve;
-    AddressOffsetT                  SizeOfHeapCommit;
-    boost::dll::detail::DWORD_      LoaderFlags;
-    boost::dll::detail::DWORD_      NumberOfRvaAndSizes;
-    IMAGE_DATA_DIRECTORY_           DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES_];
+    AddressOffsetT              ImageBase;
+    boost::dll::detail::DWORD_  SectionAlignment;
+    boost::dll::detail::DWORD_  FileAlignment;
+    boost::dll::detail::WORD_   MajorOperatingSystemVersion;
+    boost::dll::detail::WORD_   MinorOperatingSystemVersion;
+    boost::dll::detail::WORD_   MajorImageVersion;
+    boost::dll::detail::WORD_   MinorImageVersion;
+    boost::dll::detail::WORD_   MajorSubsystemVersion;
+    boost::dll::detail::WORD_   MinorSubsystemVersion;
+    boost::dll::detail::DWORD_  Win32VersionValue;
+    boost::dll::detail::DWORD_  SizeOfImage;
+    boost::dll::detail::DWORD_  SizeOfHeaders;
+    boost::dll::detail::DWORD_  CheckSum;
+    boost::dll::detail::WORD_   Subsystem;
+    boost::dll::detail::WORD_   DllCharacteristics;
+    AddressOffsetT              SizeOfStackReserve;
+    AddressOffsetT              SizeOfStackCommit;
+    AddressOffsetT              SizeOfHeapReserve;
+    AddressOffsetT              SizeOfHeapCommit;
+    boost::dll::detail::DWORD_  LoaderFlags;
+    boost::dll::detail::DWORD_  NumberOfRvaAndSizes;
+    IMAGE_DATA_DIRECTORY_       DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES_];
 };
+
+typedef IMAGE_OPTIONAL_HEADER_template<boost::dll::detail::DWORD_>      IMAGE_OPTIONAL_HEADER32_;
+typedef IMAGE_OPTIONAL_HEADER_template<boost::dll::detail::ULONGLONG_>  IMAGE_OPTIONAL_HEADER64_;
 
 template <class AddressOffsetT>
 struct IMAGE_NT_HEADERS_template {
-    boost::dll::detail::DWORD_                   Signature;
+    boost::dll::detail::DWORD_                      Signature;
     IMAGE_FILE_HEADER_                              FileHeader;
     IMAGE_OPTIONAL_HEADER_template<AddressOffsetT>  OptionalHeader;
 };
 
+typedef IMAGE_NT_HEADERS_template<boost::dll::detail::DWORD_>      IMAGE_NT_HEADERS32_;
+typedef IMAGE_NT_HEADERS_template<boost::dll::detail::ULONGLONG_>  IMAGE_NT_HEADERS64_;
 
 class pe_info {
     boost::filesystem::ifstream&    f_;
 
 #if BOOST_ARCH_X86_64
-    typedef IMAGE_NT_HEADERS_template<boost::dll::detail::ULONGLONG_>        header_t;
+    typedef IMAGE_NT_HEADERS64_     header_t;
 #else
-    typedef IMAGE_NT_HEADERS_template<boost::dll::detail::DWORD_>            header_t;
+    typedef IMAGE_NT_HEADERS32_     header_t;
 #endif
     typedef IMAGE_EXPORT_DIRECTORY_ exports_t;
     typedef IMAGE_SECTION_HEADER_   section_t;
