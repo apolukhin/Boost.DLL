@@ -37,8 +37,6 @@ int test_main(int argc, char* argv[]) {
         std::cout << e.what() << '\n';
     }
 
-/*  // Following two tests will fail on Linux. linux allows to open "" paths
-    // and loads current executable as a DSO
     try {
         shared_library lib("");
         BOOST_CHECK(false);
@@ -46,14 +44,13 @@ int test_main(int argc, char* argv[]) {
         std::cout << e.what() << '\n';
     }
 
-
     try {
         shared_library lib("\0\0");
         BOOST_CHECK(false);
     } catch (const boost::system::system_error& e) {
         std::cout << e.what() << '\n';
     }
-*/
+
     shared_library sl(shared_library_path);
     try {
         sl.get<int>("variable_or_function_that_does_not_exist");

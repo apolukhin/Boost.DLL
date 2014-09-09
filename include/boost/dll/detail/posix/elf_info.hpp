@@ -48,8 +48,8 @@ struct Elf_Ehdr_template {
   boost::uint16_t   e_shstrndx;     /* Section header string table index */
 };
 
-typedef Elf_Ehdr_template<boost::uint32_t> Elf32_Ehdr;
-typedef Elf_Ehdr_template<boost::uint64_t> Elf64_Ehdr;
+typedef Elf_Ehdr_template<boost::uint32_t> Elf32_Ehdr_;
+typedef Elf_Ehdr_template<boost::uint64_t> Elf64_Ehdr_;
 
 template <class AddressOffsetT>
 struct Elf_Shdr_template {
@@ -65,8 +65,8 @@ struct Elf_Shdr_template {
   AddressOffsetT   sh_entsize;      /* Entry size if section holds table */
 };
 
-typedef Elf_Shdr_template<boost::uint32_t> Elf32_Shdr;
-typedef Elf_Shdr_template<boost::uint64_t> Elf64_Shdr;
+typedef Elf_Shdr_template<boost::uint32_t> Elf32_Shdr_;
+typedef Elf_Shdr_template<boost::uint64_t> Elf64_Shdr_;
 
 template <class AddressOffsetT>
 struct Elf_Sym_template;
@@ -96,8 +96,8 @@ struct Elf_Sym_template<boost::uint64_t> {
 };
 
 
-typedef Elf_Sym_template<boost::uint32_t> Elf32_Sym;
-typedef Elf_Sym_template<boost::uint64_t> Elf64_Sym;
+typedef Elf_Sym_template<boost::uint32_t> Elf32_Sym_;
+typedef Elf_Sym_template<boost::uint64_t> Elf64_Sym_;
 
 
 
@@ -105,13 +105,13 @@ class elf_info {
     boost::filesystem::ifstream& f_;
 
 #if BOOST_ARCH_X86_64
-    typedef boost::dll::detail::Elf64_Ehdr  header_t;
-    typedef boost::dll::detail::Elf64_Shdr  section_t;
-    typedef boost::dll::detail::Elf64_Sym   symbol_t;
+    typedef boost::dll::detail::Elf64_Ehdr_  header_t;
+    typedef boost::dll::detail::Elf64_Shdr_  section_t;
+    typedef boost::dll::detail::Elf64_Sym_   symbol_t;
 #else
-    typedef boost::dll::detail::Elf32_Ehdr  header_t;
-    typedef boost::dll::detail::Elf32_Shdr  section_t;
-    typedef boost::dll::detail::Elf32_Sym   symbol_t;
+    typedef boost::dll::detail::Elf32_Ehdr_  header_t;
+    typedef boost::dll::detail::Elf32_Shdr_  section_t;
+    typedef boost::dll::detail::Elf32_Sym_   symbol_t;
 #endif
 
     BOOST_STATIC_CONSTANT(boost::uint32_t, SHT_SYMTAB_ = 2);
