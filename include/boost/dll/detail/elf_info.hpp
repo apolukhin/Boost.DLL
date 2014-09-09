@@ -23,10 +23,7 @@
 #endif
 
 #include <boost/filesystem/fstream.hpp>
-#include <boost/utility/string_ref.hpp>
-#include <boost/cstdint.hpp>
-#include <string>
-#include <vector>
+#include <boost/dll/detail/x_info_interface.hpp>
 
 namespace boost { namespace dll { namespace detail {
 
@@ -99,20 +96,13 @@ struct Elf_Sym_template<boost::uint64_t> {
 typedef Elf_Sym_template<boost::uint32_t> Elf32_Sym_;
 typedef Elf_Sym_template<boost::uint64_t> Elf64_Sym_;
 
-
-
-class elf_info {
+template <class AddressOffsetT>
+class elf_info: public x_info_interface {
     boost::filesystem::ifstream& f_;
 
-#if BOOST_ARCH_X86_64
-    typedef boost::dll::detail::Elf64_Ehdr_  header_t;
-    typedef boost::dll::detail::Elf64_Shdr_  section_t;
-    typedef boost::dll::detail::Elf64_Sym_   symbol_t;
-#else
-    typedef boost::dll::detail::Elf32_Ehdr_  header_t;
-    typedef boost::dll::detail::Elf32_Shdr_  section_t;
-    typedef boost::dll::detail::Elf32_Sym_   symbol_t;
-#endif
+    typedef boost::dll::detail::Elf_Ehdr_template<AddressOffsetT>  header_t;
+    typedef boost::dll::detail::Elf_Shdr_template<AddressOffsetT>  section_t;
+    typedef boost::dll::detail::Elf_Sym_template<AddressOffsetT>   symbol_t;
 
     BOOST_STATIC_CONSTANT(boost::uint32_t, SHT_SYMTAB_ = 2);
     BOOST_STATIC_CONSTANT(boost::uint32_t, SHT_STRTAB_ = 3);
@@ -124,6 +114,24 @@ class elf_info {
     BOOST_STATIC_CONSTANT(unsigned char, STV_PROTECTED_ = 3);    /* Not preemptible, not exported */
 
 public:
+    static bool parsing_supported(boost::filesystem::ifstream& f) {
+        const unsigned char magic_bytes[5] = { 
+            0x7f, 'E', 'L', 'F', sizeof(boost::uint32_t) == sizeof(AddressOffsetT) ? 1 : 2
+        };
+
+        unsigned char ch;
+        f.seekg(0);
+        for (std::size_t i = 0; i < sizeof(magic_bytes); ++i) {
+            f >> ch;
+            if (ch != magic_bytes[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
     explicit elf_info(boost::filesystem::ifstream& f) BOOST_NOEXCEPT
         : f_(f)
     {}
@@ -262,6 +270,9 @@ public:
         return ret;
     }
 };
+
+typedef elf_info<boost::uint32_t> elf_info32;
+typedef elf_info<boost::uint64_t> elf_info64;
 
 }}} // namespace boost::dll::detail
 

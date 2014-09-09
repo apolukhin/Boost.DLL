@@ -23,9 +23,7 @@
 #endif
 
 #include <boost/filesystem/fstream.hpp>
-#include <boost/utility/string_ref.hpp>
-#include <string>
-#include <vector>
+#include <boost/dll/detail/x_info_interface.hpp>
 
 namespace boost { namespace dll { namespace detail {
 
@@ -168,19 +166,35 @@ struct IMAGE_NT_HEADERS_template {
 typedef IMAGE_NT_HEADERS_template<boost::dll::detail::DWORD_>      IMAGE_NT_HEADERS32_;
 typedef IMAGE_NT_HEADERS_template<boost::dll::detail::ULONGLONG_>  IMAGE_NT_HEADERS64_;
 
-class pe_info {
+
+template <class AddressOffsetT>
+class pe_info: public x_info_interface {
     boost::filesystem::ifstream&    f_;
 
-#if BOOST_ARCH_X86_64
-    typedef IMAGE_NT_HEADERS64_     header_t;
-#else
-    typedef IMAGE_NT_HEADERS32_     header_t;
-#endif
-    typedef IMAGE_EXPORT_DIRECTORY_ exports_t;
-    typedef IMAGE_SECTION_HEADER_   section_t;
-    typedef IMAGE_DOS_HEADER_       dos_t;
+    typedef IMAGE_NT_HEADERS_template<AddressOffsetT>   header_t;
+    typedef IMAGE_EXPORT_DIRECTORY_                     exports_t;
+    typedef IMAGE_SECTION_HEADER_                       section_t;
+    typedef IMAGE_DOS_HEADER_                           dos_t;
 
 public:
+    static bool parsing_supported(boost::filesystem::ifstream& f) {
+        dos_t dos;
+        f.seekg(0);
+        f.read((char*)&dos, sizeof(dos));
+
+        // 'MZ' and 'ZM' according to Wikipedia
+        if (dos.e_magic != 0x4D5A && dos.e_magic != 0x5A4D) {
+            return false;
+        }
+
+        header_t h;
+        f.seekg(dos.e_lfanew);
+        f.read((char*)&h, sizeof(h));
+
+        return h.Signature == 0x00004550; // 'PE00'
+    }
+
+
     explicit pe_info(boost::filesystem::ifstream& f) BOOST_NOEXCEPT
         : f_(f)
     {}
@@ -398,6 +412,9 @@ public:
     }
 */
 };
+
+typedef pe_info<boost::dll::detail::DWORD_>      pe_info32;
+typedef pe_info<boost::dll::detail::ULONGLONG_>  pe_info64;
 
 }}} // namespace boost::dll::detail
 

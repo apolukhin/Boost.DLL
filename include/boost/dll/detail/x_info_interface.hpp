@@ -1,0 +1,41 @@
+// library_info.hpp ------------------------------------------------------------
+// -----------------------------------------------------------------------------
+
+// Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+
+// Distributed under the Boost Software License, Version 1.0.
+// See http://www.boost.org/LICENSE_1_0.txt
+
+// -----------------------------------------------------------------------------
+
+// Revision History
+// 20-08-2014 dd-mm-yyyy - Initial Release
+
+// -----------------------------------------------------------------------------
+
+#ifndef BOOST_DLL_DETAIL_X_INFO_INTERFACE_HPP
+#define BOOST_DLL_DETAIL_X_INFO_INTERFACE_HPP
+
+#include <boost/config.hpp>
+#ifdef BOOST_HAS_PRAGMA_ONCE
+# pragma once
+#endif
+
+#include <boost/utility/string_ref.hpp>
+#include <string>
+#include <vector>
+
+namespace boost { namespace dll { namespace detail {
+
+class x_info_interface {
+public:
+    virtual std::vector<std::string> sections() = 0;
+    virtual std::vector<std::string> symbols() = 0;
+    virtual std::vector<std::string> symbols(boost::string_ref section_name) = 0;
+
+    virtual ~x_info_interface() BOOST_NOEXCEPT {}
+};
+
+}}} // namespace boost::dll::detail
+
+#endif // BOOST_DLL_DETAIL_X_INFO_INTERFACE_HPP
