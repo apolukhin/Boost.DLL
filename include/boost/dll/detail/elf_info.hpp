@@ -169,7 +169,7 @@ private:
         f_.seekg(elf.e_shoff + elf.e_shstrndx * sizeof(section_t));
         f_.read((char*)&section_names_section, sizeof(section_names_section));
 
-        sections.resize(section_names_section.sh_size);
+        sections.resize(static_cast<std::size_t>(section_names_section.sh_size));
         f_.seekg(section_names_section.sh_offset);
         f_.read(&sections[0], section_names_section.sh_size);
     }
@@ -183,7 +183,7 @@ private:
             f_.read((char*)&section, sizeof(section));
 
             if (section.sh_type == SHT_SYMTAB_) {
-                symbols.resize(section.sh_size / section.sh_entsize);
+                symbols.resize(static_cast<std::size_t>(section.sh_size / section.sh_entsize));
 
                 const boost::filesystem::ifstream::pos_type pos = f_.tellg();
                 f_.seekg(section.sh_offset);
@@ -242,7 +242,7 @@ public:
                 f_.read((char*)&section, sizeof(section));
             
                 if (&names[0] + section.sh_name == section_name) {
-                    ptrs_in_section_count = section.sh_size / sizeof(void*);
+                    ptrs_in_section_count = static_cast<std::size_t>(section.sh_size / sizeof(void*));
                     break;
                 }
             }                        

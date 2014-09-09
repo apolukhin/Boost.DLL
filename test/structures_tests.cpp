@@ -6,8 +6,8 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/dll/detail/posix/elf_info.hpp>
-#include <boost/dll/detail/windows/pe_info.hpp>
+#include <boost/dll/detail/elf_info.hpp>
+#include <boost/dll/detail/pe_info.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/test/minimal.hpp>
 
