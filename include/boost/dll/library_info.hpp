@@ -21,6 +21,7 @@
 #include <boost/mpl/vector_c.hpp>
 #include <boost/aligned_storage.hpp>
 #include <boost/predef/os.h>
+#include <boost/predef/architecture.h>
 
 #include <boost/dll/detail/pe_info.hpp>
 #include <boost/dll/detail/elf_info.hpp>

@@ -241,7 +241,7 @@ public:
                 f_.seekg(elf.e_shoff + index * sizeof(section_t));
                 f_.read((char*)&section, sizeof(section));
             
-                if (&names[0] + section.sh_name == section_name) {
+                if (boost::string_ref(&names[0] + section.sh_name) == section_name) {
                     ptrs_in_section_count = static_cast<std::size_t>(section.sh_size / sizeof(void*));
                     break;
                 }
