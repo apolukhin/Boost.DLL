@@ -2,11 +2,6 @@ os:
     - linux
     - osx
 
-compiler:
-    - gcc
-    - clang
-
-
 env:
     - CXX_STANDARD=c++98
     - CXX_STANDARD=c++0x
@@ -24,4 +19,4 @@ before_install:
 script:
     - if [ "$CCFLAGS" != "" ]; then FLAGS="cxxflags=\"$CCFLAGS\" linkflags=\"$LINKFLAGS\""; else FLAGS=""; fi
     - cd $BOOST/libs/dll/test/
-    - ../../../b2 toolset=$CC cxxflags=\"-std=$CXX_STANDARD\"
+    - ../../../b2 toolset=clang cxxflags=\"-std=$CXX_STANDARD\"
