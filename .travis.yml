@@ -1,17 +1,15 @@
-language: cpp
-
 os:
-#    - linux
+    - linux
     - osx
 
 compiler:
     - gcc
-#    - clang
+    - clang
 
 
 env:
     - CXX_STANDARD=c++98
-#    - CXX_STANDARD=c++0x
+    - CXX_STANDARD=c++0x
 
 before_install:
     - wget https://github.com/ned14/boost-release/archive/master.tar.gz
