@@ -7,7 +7,7 @@ env:
     - CXX_STANDARD=c++0x
 
 before_install:
-    - echo "OS: $TRAVIS_OS_NAME"
+    - echo OS is $TRAVIS_OS_NAME
     - wget https://github.com/ned14/boost-release/archive/master.tar.gz
     - tar xf master.tar.gz
     - mv boost-release-master $HOME/boost-local
