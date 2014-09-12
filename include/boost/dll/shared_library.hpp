@@ -323,14 +323,14 @@ public:
     * \throw Nothing.
     *
     */
-    bool search_symbol(const boost::string_ref &sb) const BOOST_NOEXCEPT {
+    bool search_symbol(boost::string_ref sb) const BOOST_NOEXCEPT {
         boost::system::error_code ec;
         return is_loaded() && !!base_t::symbol_addr(sb, ec) && !ec;
     }
 
     /*!
     * Returns reference to the symbol (function or variable) with the given name from the loaded library.
-    * This call will always succeed and throw nothing if call to `search_symbol(const boost::string_ref &)`
+    * This call will always succeed and throw nothing if call to `search_symbol(boost::string_ref )`
     * member function with the same symbol name returned `true`.
     *
     * If using this call for an alias name do not forget to add a pointer to a resulting type.
@@ -352,7 +352,7 @@ public:
     *
     */
     template <typename T>
-    inline T& get(const boost::string_ref &sb) const {
+    inline T& get(boost::string_ref sb) const {
         return *boost::dll::detail::aggressive_ptr_cast<T*>(
             get_impl(sb)
         );
@@ -374,14 +374,14 @@ public:
     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
     */
     template <typename T>
-    inline T& get_alias(const boost::string_ref &sb) const {
+    inline T& get_alias(boost::string_ref sb) const {
         return *get<T*>(sb);
     }
 
 private:
     // get_impl is required to reduce binary size: it does not depend on a template
     // parameter and will be instantiated only once.
-    void* get_impl(const boost::string_ref &sb) const {
+    void* get_impl(boost::string_ref sb) const {
         boost::system::error_code ec;
 
         if (!is_loaded()) {

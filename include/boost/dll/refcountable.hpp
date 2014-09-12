@@ -71,7 +71,7 @@ namespace detail {
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
+* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
 * For importing function by it alias name use boost::dll::import_function_alias method.
@@ -108,7 +108,7 @@ boost::function<T> import_function(const boost::shared_ptr<shared_library>& lib,
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
+* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
 * For importing function by it's alias name use boost::dll::import_function_alias method.
@@ -147,7 +147,7 @@ boost::function<T> import_function(const boost::filesystem::path& lib_path, boos
 * from the loaded library and refcounts usage of the loaded shared library.  Library won't
 * get unload until all copies of returned value are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
+* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
 * For non alias names use boost::dll::import_function method.
@@ -184,7 +184,7 @@ boost::function<T> import_function_alias(const boost::shared_ptr<shared_library>
 * from the loaded library and refcounts usage of the loaded shared library.  Library won't
 * get unload until all copies of returned value are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
+* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
 * For non alias names use boost::dll::import_function method.
@@ -223,7 +223,7 @@ boost::function<T> import_function_alias(const boost::filesystem::path& lib_path
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
+* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
 * For importing variable by it's alias name use boost::dll::import_variable_alias method.
@@ -260,7 +260,7 @@ boost::shared_ptr<T> import_variable(const boost::shared_ptr<shared_library>& li
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
+* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
 * For importing variable by it's alias name use boost::dll::import_variable_alias method.
@@ -299,7 +299,7 @@ boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib_path, bo
 * variable from the loaded library and refcounts usage of the loaded shared library.
 * Library won't get unload until all copies of returned value are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
+* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
 * For non alias names use boost::dll::import_variable method.
@@ -336,7 +336,7 @@ boost::shared_ptr<T> import_variable_alias(const boost::shared_ptr<shared_librar
 * variable from the loaded library and refcounts usage of the loaded shared library.
 * Library won't get unload until all copies of returned value are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(const boost::string_ref &)`
+* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
 * For non alias names use boost::dll::import_variable method.

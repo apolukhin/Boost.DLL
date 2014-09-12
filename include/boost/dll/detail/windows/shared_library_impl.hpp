@@ -178,7 +178,7 @@ public:
         return L".dll";
     }
 
-    void* symbol_addr(const boost::string_ref &sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
+    void* symbol_addr(boost::string_ref sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
         // Judging by the documentation and
         // at GetProcAddress there is no version for UNICODE.
         // There can be it and is correct, as in executed

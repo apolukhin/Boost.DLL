@@ -165,7 +165,7 @@ public:
 #endif
     }
 
-    void* symbol_addr(const boost::string_ref &sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
+    void* symbol_addr(boost::string_ref sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
         // dlsym - obtain the address of a symbol from a dlopen object
         void* const symbol = dlsym(handle_, sb.data());
         if (symbol == NULL) {
