@@ -66,34 +66,34 @@ public:
     /*!
     * Creates a shared_library object and loads a library by specified path.
     *
-    * \param sl Library file name. Can handle std::string, char*, std::wstring,
+    * \param lib_path Library file name. Can handle std::string, char*, std::wstring,
     *           wchar_t* or boost::filesystem::path.
     *
     * \throw boost::system::system_error.
     */
-    explicit shared_library(const boost::filesystem::path &sl) {
-        load(sl);
+    explicit shared_library(const boost::filesystem::path& lib_path) {
+        load(lib_path);
     }
 
     /*!
     * Creates a shared_library object and loads a library by specified path.
     *
-    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
     *           wchar_t or filesystem path.
     *
     * \param ec Variable that will be set to the result of the operation.
     *
     * \throw Nothing.
     */
-    shared_library(const boost::filesystem::path &sl, boost::system::error_code &ec) BOOST_NOEXCEPT {
-        load(sl, ec);
+    shared_library(const boost::filesystem::path& lib_path, boost::system::error_code &ec) BOOST_NOEXCEPT {
+        load(lib_path, ec);
     }
 
     /*!
     * Creates a shared_library object and loads a library by specified path
     * with a specified mode.
     *
-    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
     *           wchar_t or filesystem path.
     *
     * \param mode An mode that will be used on library load.
@@ -101,15 +101,15 @@ public:
     * \throw boost::system::system_error.
     *
     */
-    shared_library(const boost::filesystem::path &sl, load_mode::type mode) {
-        load(sl, mode);
+    shared_library(const boost::filesystem::path& lib_path, load_mode::type mode) {
+        load(lib_path, mode);
     }
 
     /*!
     * Creates a shared_library object and loads a library by specified path
     * with a specified mode.
     *
-    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
     *           wchar_t or filesystem path.
     *
     * \param ec Variable that will be set to the result of the operation.
@@ -119,32 +119,30 @@ public:
     * \throw Nothing.
     *
     */
-    shared_library(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
-        load(sl, mode, ec);
+    shared_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+        load(lib_path, mode, ec);
     }
     
    /*!
     * Move a shared_library object.
     *
-    * \param sl a shared_library to move from.
+    * \param lib_path a shared_library to move from.
     *
     * \throw Nothing.
     */
-    shared_library(BOOST_RV_REF(shared_library) sl) BOOST_NOEXCEPT // Move ctor
-        : base_t(boost::move(static_cast<base_t&>(sl)))
-    {  
-    }
+    shared_library(BOOST_RV_REF(shared_library) lib) BOOST_NOEXCEPT // Move ctor
+        : base_t(boost::move(static_cast<base_t&>(lib)))
+    {}
 
    /*!
-    * Move a shared_library object.
+    * Move assign a shared_library object.
     *
-    * \param sl a shared_library to move from.
+    * \param lib_path a shared_library to move from.
     *
     * \throw Nothing.
     */
-    shared_library& operator=(BOOST_RV_REF(shared_library) sl) BOOST_NOEXCEPT // Move assign
-    {
-        base_t::operator=(boost::move(static_cast<base_t&>(sl)));
+    shared_library& operator=(BOOST_RV_REF(shared_library) lib) BOOST_NOEXCEPT {
+        base_t::operator=(boost::move(static_cast<base_t&>(lib)));
         return *this;
     }
 
@@ -164,15 +162,15 @@ public:
     * Note that if some library is already loaded, load will
     * unload it and then load the new provided library.
     *
-    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
     *           wchar_t or filesystem path.
     *
     * \throw boost::system::system_error.
     *
     */
-    void load(const boost::filesystem::path &sl) {
+    void load(const boost::filesystem::path& lib_path) {
         boost::system::error_code ec;
-        base_t::load(sl, load_mode::default_mode, ec);
+        base_t::load(lib_path, load_mode::default_mode, ec);
 
         if (ec) {
             boost::dll::detail::report_error(ec, "load() failed");
@@ -210,16 +208,16 @@ public:
     * Note that if some library is already loaded, load will
     * unload it and then load the new provided library.
     *
-    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
     *           wchar_t or filesystem path.
     *
     * \param ec Variable that will be set to the result of the operation.
     *
     * \throw Nothing.
     */
-    void load(const boost::filesystem::path &sl, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const boost::filesystem::path& lib_path, boost::system::error_code &ec) BOOST_NOEXCEPT {
         ec.clear();
-        base_t::load(sl, load_mode::default_mode, ec);
+        base_t::load(lib_path, load_mode::default_mode, ec);
     }
 
     /*!
@@ -253,7 +251,7 @@ public:
     * Note that if some library is already loaded, load will
     * unload it and then load the new provided library.
     *
-    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
     *           wchar_t or filesystem path.
     *
     * \param mode An mode that will be used on library load.
@@ -261,9 +259,9 @@ public:
     * \throw boost::system::system_error.
     *
     */
-    void load(const boost::filesystem::path &sl, load_mode::type mode) {
+    void load(const boost::filesystem::path& lib_path, load_mode::type mode) {
         boost::system::error_code ec;
-        base_t::load(sl, mode, ec);
+        base_t::load(lib_path, mode, ec);
 
         if (ec) {
             boost::dll::detail::report_error(ec, "load() failed");
@@ -276,7 +274,7 @@ public:
     * Note that if some library is already loaded, load will
     * unload it and then load the new provided library.
     *
-    * \param sl Library file name. Can handle std::string, char, std::wstring,
+    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
     *           wchar_t or filesystem path.
     *
     * \param ec Variable that will be set to the result of the operation.
@@ -286,9 +284,9 @@ public:
     * \throw Nothing.
     *
     */
-    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         ec.clear();
-        base_t::load(sl, mode, ec);
+        base_t::load(lib_path, mode, ec);
     }
 
     /*!
@@ -316,16 +314,16 @@ public:
     /*!
     * Seach for a given symbol on loaded library. Works for all symbols, including alias names.
     *
-    * \param sb Null-terminated symbol name. Can handle std::string, char*, const char*.
+    * \param symbol Null-terminated symbol name. Can handle std::string, char*, const char*.
     *
     * \return `true` if the loaded library contains a symbol with a given name.
     *
     * \throw Nothing.
     *
     */
-    bool search_symbol(boost::string_ref sb) const BOOST_NOEXCEPT {
+    bool search_symbol(boost::string_ref symbol_name) const BOOST_NOEXCEPT {
         boost::system::error_code ec;
-        return is_loaded() && !!base_t::symbol_addr(sb, ec) && !ec;
+        return is_loaded() && !!base_t::symbol_addr(symbol_name, ec) && !ec;
     }
 
     /*!
@@ -344,7 +342,7 @@ public:
     *
     * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
     *
-    * \param sb Null-terminated symbol name. Can handle std::string, char*, const char*.
+    * \param symbol Null-terminated symbol name. Can handle std::string, char*, const char*.
     *
     * \return Reference to the symbol.
     *
@@ -352,9 +350,9 @@ public:
     *
     */
     template <typename T>
-    inline T& get(boost::string_ref sb) const {
+    inline T& get(boost::string_ref symbol_name) const {
         return *boost::dll::detail::aggressive_ptr_cast<T*>(
-            get_impl(sb)
+            get_impl(symbol_name)
         );
     }
 
@@ -369,13 +367,13 @@ public:
     *
     * \tparam T Type of the symbol that we are going to import. Must be explicitly specified..
     *
-    * \param sb Null-terminated alias symbol name. Can handle std::string, char*, const char*.
+    * \param alias_name Null-terminated alias symbol name. Can handle std::string, char*, const char*.
     *
     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
     */
     template <typename T>
-    inline T& get_alias(boost::string_ref sb) const {
-        return *get<T*>(sb);
+    inline T& get_alias(boost::string_ref alias_name) const {
+        return *get<T*>(alias_name);
     }
 
 private:
