@@ -19,4 +19,7 @@ before_install:
 script:
     - if [ "$CCFLAGS" != "" ]; then FLAGS="cxxflags=\"$CCFLAGS\" linkflags=\"$LINKFLAGS\""; else FLAGS=""; fi
     - cd $BOOST/libs/dll/test
-    - ../../../b2 $DEBUGBUILD toolset=$CC $FLAGS
+    - ls
+    - ls ../../../
+    - echo "$BOOST"
+    - ../../../b2 toolset=$CC $FLAGS
