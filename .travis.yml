@@ -1,0 +1,24 @@
+language: cpp
+
+compiler:
+    - gcc
+    - clang
+
+before_install:
+    - wget https://github.com/ned14/boost-release/archive/master.tar.gz
+    - tar xf master.tar.gz
+    - mv boost-release-master $HOME/boost-local
+    - BOOST="$HOME/boost-local"
+    - PROJECTPATH="$HOME/build/BoostGSoC13/boost.afio"
+    - ln -s $PROJECTPATH $BOOST/libs/dll
+    - cd $BOOST
+    - ./bootstrap.sh
+    - ./b2 headers
+
+
+script:
+    - if [ "$CCFLAGS" != "" ]; then FLAGS="cxxflags=\"$CCFLAGS\" linkflags=\"$LINKFLAGS\""; else FLAGS=""; fi
+    - if [ $GCOV -eq 1 ]; then FLAGS="$FLAGS --test-all"; fi
+    - if [ $SANITIZE -eq 1 ]; then FLAGS="$FLAGS --sanitize --running-in-ci"; fi
+    - cd $BOOST/libs/dll/test
+    - eval "./b2 libs/afio/test $DEBUGBUILD link=shared toolset=$CC $FLAGS"
