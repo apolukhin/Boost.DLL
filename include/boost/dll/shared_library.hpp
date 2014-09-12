@@ -126,7 +126,7 @@ public:
    /*!
     * Move a shared_library object.
     *
-    * \param lib_path a shared_library to move from.
+    * \param lib A shared_library to move from.
     *
     * \throw Nothing.
     */
@@ -137,7 +137,7 @@ public:
    /*!
     * Move assign a shared_library object.
     *
-    * \param lib_path a shared_library to move from.
+    * \param lib A shared_library to move from.
     *
     * \throw Nothing.
     */
@@ -314,7 +314,7 @@ public:
     /*!
     * Seach for a given symbol on loaded library. Works for all symbols, including alias names.
     *
-    * \param symbol Null-terminated symbol name. Can handle std::string, char*, const char*.
+    * \param symbol_name Null-terminated symbol name. Can handle std::string, char*, const char*.
     *
     * \return `true` if the loaded library contains a symbol with a given name.
     *
@@ -342,7 +342,7 @@ public:
     *
     * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
     *
-    * \param symbol Null-terminated symbol name. Can handle std::string, char*, const char*.
+    * \param symbol_name Null-terminated symbol name. Can handle std::string, char*, const char*.
     *
     * \return Reference to the symbol.
     *
@@ -428,11 +428,7 @@ public:
     * filesystem::path full_path = lib.full_module_path(); // C:\Windows\System32\test_lib.dll
     * \endcode
     *
-    * \return The full path of shared module, like:
-    *
-    * c:\temp\mylib.dll (windows)
-    * /temp/mylib.so (unix)
-    * /temp/mylib.dylib (mac)
+    * \return Full path to the shared library.
     *
     * \throw boost::system::system_error, std::bad_alloc.
     */
@@ -473,13 +469,9 @@ public:
     * filesystem::path full_path = lib.full_module_path(); // C:\Windows\System32\test_lib.dll
     * \endcode
     *
-    * \return The full path of shared module, like:
-    *
-    * c:\temp\test_lib.dll (windows)
-    * /temp/test_lib.so (unix)
-    * /temp/test_lib.dylib (mac)
-    *
     * \param ec Variable that will be set to the result of the operation.
+    *    
+    * \return Full path to the shared library.
     *
     * \throw std::bad_alloc.
     */
