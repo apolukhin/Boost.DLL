@@ -109,7 +109,7 @@ boost::function<T> import_function(const boost::shared_ptr<shared_library>& lib,
 template <class T>
 boost::function<T> import_function(const boost::filesystem::path& lib, boost::string_ref func_name) {
     return import_function<T>(
-        boost::make_shared<shared_library>(lib_path),
+        boost::make_shared<shared_library>(lib),
         func_name
     );
 }
@@ -158,7 +158,7 @@ boost::function<T> import_function_alias(const boost::shared_ptr<shared_library>
 template <class T>
 boost::function<T> import_function_alias(const boost::filesystem::path& lib, boost::string_ref func_name) {
     return import_function_alias<T>(
-        boost::make_shared<shared_library>(lib_path),
+        boost::make_shared<shared_library>(lib),
         func_name
     );
 }
@@ -210,9 +210,9 @@ boost::shared_ptr<T> import_variable(const boost::shared_ptr<shared_library>& li
 
 //! \overload boost::dll::import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name)
 template <class T>
-boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib_path, boost::string_ref variable_name) {
+boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::string_ref variable_name) {
     return import_variable<T>(
-        boost::make_shared<shared_library>(lib_path),
+        boost::make_shared<shared_library>(lib),
         variable_name
     );
 }
@@ -262,9 +262,9 @@ boost::shared_ptr<T> import_variable_alias(const boost::shared_ptr<shared_librar
 
 //! \overload boost::dll::import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name)
 template <class T>
-boost::shared_ptr<T> import_variable_alias(const boost::filesystem::path& lib_path, boost::string_ref variable_name) {
+boost::shared_ptr<T> import_variable_alias(const boost::filesystem::path& lib, boost::string_ref variable_name) {
     return import_variable_alias<T>(
-        boost::make_shared<shared_library>(lib_path),
+        boost::make_shared<shared_library>(lib),
         variable_name
     );
 }
