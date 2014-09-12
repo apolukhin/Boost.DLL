@@ -1,5 +1,4 @@
 os:
-    - linux
     - osx
 
 env:
@@ -19,4 +18,4 @@ before_install:
 script:
     - if [ "$CCFLAGS" != "" ]; then FLAGS="cxxflags=\"$CCFLAGS\" linkflags=\"$LINKFLAGS\""; else FLAGS=""; fi
     - cd $BOOST/libs/dll/test/
-    - ../../../b2 toolset=clang cxxflags=\"-std=$CXX_STANDARD\"
+    - ../../../b2 cxxflags=\"-std=$CXX_STANDARD\"
