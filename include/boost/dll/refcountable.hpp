@@ -76,9 +76,7 @@ namespace detail {
 *
 * For importing function by it alias name use boost::dll::import_function_alias method.
 *
-* This method has an overload that accepts boost::filesystem::path as a first argument.
-*
-* \b Example:
+* \b Examples:
 * \code
 * boost::function<int(int)> f = import_function<int(int)>(
 *           boost::make_shared<shared_library>("test_lib.so"),
@@ -86,16 +84,20 @@ namespace detail {
 * );
 * \endcode
 *
+* \code
+* boost::function<int(int)> f = import_function<int(int)>("test_lib.so", "integer_func_name");
+* \endcode
+*
 * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
 *
-* \param lib Shared pointer to library to load function from.
-*
+* \param lib Path or shared pointer to library to load function from.
 * \param func_name Null-terminated name of the function to import. Can handle std::string, char*, const char*.
 *
 * \return boost::function<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library.
 *
 * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+*       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 *
 */
 template <class T>
@@ -103,45 +105,15 @@ boost::function<T> import_function(const boost::shared_ptr<shared_library>& lib,
     return boost::dll::detail::refc_function<T>(lib, &lib->get<T>(func_name));
 }
 
-/*!
-* Returns boost::function<T> that holds an imported function from the loaded library and refcounts usage
-* of the loaded shared library, so that it won't get unload until all copies of return value
-* are not destroyed.
-*
-* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
-* function with the same symbol name returned `true`.
-*
-* For importing function by it's alias name use boost::dll::import_function_alias method.
-*
-* \b Example:
-* \code
-* boost::function<int(int)> f = import_function<int(int)>("test_lib.so", "integer_func_name");
-* \endcode
-*
-* \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
-*
-* \param lib_path Path to the library to load function from.
-*
-* \param func_name Null-terminated name of the function to import. Can handle std::string, char*, const char*.
-*
-* \return boost::function<T> that holds an imported function from the loaded library and refcounts usage
-* of the loaded shared library.
-*
-* \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
-*        std::bad_alloc in case of insufficient memory.
-*
-*/
+//! \overload boost::dll::import_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name)
 template <class T>
-boost::function<T> import_function(const boost::filesystem::path& lib_path, boost::string_ref func_name) {
+boost::function<T> import_function(const boost::filesystem::path& lib, boost::string_ref func_name) {
     return import_function<T>(
         boost::make_shared<shared_library>(lib_path),
         func_name
     );
 }
 
-
-
-//////////////////////////////////////// import_function_alias methods //////////////////////////////////////////
 /*!
 * Imports function by it alias name and returns boost::function<T> that holds the function
 * from the loaded library and refcounts usage of the loaded shared library.  Library won't
@@ -152,14 +124,16 @@ boost::function<T> import_function(const boost::filesystem::path& lib_path, boos
 *
 * For non alias names use boost::dll::import_function method.
 *
-* This method has an overload that accepts boost::filesystem::path as a first argument.
-*
-* \b Example:
+* \b Examples:
 * \code
 * boost::function<int(int)> f = import_function_alias<int(int)>(
 *           boost::make_shared<shared_library>("test_lib.so"),
 *           "integer_func_alias_name"
 * );
+* \endcode
+*
+* \code
+* boost::function<int(int)> f = import_function_alias<int(int)>("test_lib.so", "integer_func_alias_name");
 * \endcode
 *
 * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
@@ -172,6 +146,7 @@ boost::function<T> import_function(const boost::filesystem::path& lib_path, boos
 * of the loaded shared library.
 *
 * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+*       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 *
 */
 template <class T>
@@ -179,36 +154,9 @@ boost::function<T> import_function_alias(const boost::shared_ptr<shared_library>
     return boost::dll::detail::refc_function<T>(lib, lib->get<T*>(func_name));
 }
 
-/*!
-* Imports function by it alias name and returns boost::function<T> that holds the function
-* from the loaded library and refcounts usage of the loaded shared library.  Library won't
-* get unload until all copies of returned value are not destroyed.
-*
-* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
-* function with the same symbol name returned `true`.
-*
-* For non alias names use boost::dll::import_function method.
-*
-* \b Example:
-* \code
-* boost::function<int(int)> f = import_function_alias<int(int)>("test_lib.so", "integer_func_alias_name");
-* \endcode
-*
-* \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
-*
-* \param lib_path Path to the library to load function from.
-*
-* \param func_name Null-terminated name of the function to import. Can handle std::string, char*, const char*.
-*
-* \return boost::function<T> that holds an imported function from the loaded library and refcounts usage
-* of the loaded shared library.
-*
-* \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
-*        std::bad_alloc in case of insufficient memory.
-*
-*/
+//! \overload boost::dll::import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name)
 template <class T>
-boost::function<T> import_function_alias(const boost::filesystem::path& lib_path, boost::string_ref func_name) {
+boost::function<T> import_function_alias(const boost::filesystem::path& lib, boost::string_ref func_name) {
     return import_function_alias<T>(
         boost::make_shared<shared_library>(lib_path),
         func_name
@@ -230,12 +178,16 @@ boost::function<T> import_function_alias(const boost::filesystem::path& lib_path
 *
 * This method has an overload that accepts boost::filesystem::path as a first argument.
 *
-* \b Example:
+* \b Examples:
 * \code
 * boost::shared_ptr<int> i = import_variable<int>(
 *           boost::make_shared<shared_library>("test_lib.so"),
 *           "integer_name"
 * );
+* \endcode
+*
+* \code
+* boost::shared_ptr<int> i = import_variable<int>("test_lib.so", "integer_name");
 * \endcode
 *
 * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
@@ -248,6 +200,7 @@ boost::function<T> import_function_alias(const boost::filesystem::path& lib_path
 * of the loaded shared library.
 *
 * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+*       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 *
 */
 template <class T>
@@ -255,34 +208,7 @@ boost::shared_ptr<T> import_variable(const boost::shared_ptr<shared_library>& li
     return boost::shared_ptr<T>(&lib->get<T>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
 }
 
-/*!
-* Returns boost::shared_ptr<T> that holds an imported variable from the loaded library and refcounts usage
-* of the loaded shared library, so that it won't get unload until all copies of return value
-* are not destroyed.
-*
-* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
-* function with the same symbol name returned `true`.
-*
-* For importing variable by it's alias name use boost::dll::import_variable_alias method.
-*
-* \b Example:
-* \code
-* boost::shared_ptr<int> i = import_variable<int>("test_lib.so", "integer_name");
-* \endcode
-*
-* \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
-*
-* \param lib_path Path to the library to load variable from.
-*
-* \param variable_name Null-terminated name of the variable to import. Can handle std::string, char*, const char*.
-*
-* \return boost::shared_ptr<T> that holds an imported function from the loaded library and refcounts usage
-* of the loaded shared library.
-*
-* \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
-*        std::bad_alloc in case of insufficient memory.
-*
-*/
+//! \overload boost::dll::import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name)
 template <class T>
 boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib_path, boost::string_ref variable_name) {
     return import_variable<T>(
@@ -304,14 +230,16 @@ boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib_path, bo
 *
 * For non alias names use boost::dll::import_variable method.
 *
-* This method has an overload that accepts boost::filesystem::path as a first argument.
-*
-* \b Example:
+* \b Examples:
 * \code
 * boost::shared_ptr<int> i = import_variable_alias<int>(
 *           boost::make_shared<shared_library>("test_lib.so"),
 *           "integer_name"
 * );
+* \endcode
+*
+* \code
+* boost::shared_ptr<int> i = import_variable_alias<int>("test_lib.so", "integer_name");
 * \endcode
 *
 * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
@@ -324,6 +252,7 @@ boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib_path, bo
 * of the loaded shared library.
 *
 * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+*       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 *
 */
 template <class T>
@@ -331,34 +260,7 @@ boost::shared_ptr<T> import_variable_alias(const boost::shared_ptr<shared_librar
     return boost::shared_ptr<T>(lib->get<T*>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
 }
 
-/*!
-* Imports function by it alias name and returns boost::shared_ptr<T> that holds an imported
-* variable from the loaded library and refcounts usage of the loaded shared library.
-* Library won't get unload until all copies of returned value are not destroyed.
-*
-* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
-* function with the same symbol name returned `true`.
-*
-* For non alias names use boost::dll::import_variable method.
-*
-* \b Example:
-* \code
-* boost::shared_ptr<int> i = import_variable_alias<int>("test_lib.so", "integer_name");
-* \endcode
-*
-* \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
-*
-* \param lib_path Path to the library to load variable from.
-*
-* \param variable_name Null-terminated name of the variable to import. Can handle std::string, char*, const char*.
-*
-* \return boost::shared_ptr<T> that holds an imported variable from the loaded library and refcounts usage
-* of the loaded shared library.
-*
-* \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
-*        std::bad_alloc in case of insufficient memory.
-*
-*/
+//! \overload boost::dll::import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name)
 template <class T>
 boost::shared_ptr<T> import_variable_alias(const boost::filesystem::path& lib_path, boost::string_ref variable_name) {
     return import_variable_alias<T>(

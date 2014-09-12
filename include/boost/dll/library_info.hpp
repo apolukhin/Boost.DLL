@@ -37,6 +37,7 @@ namespace boost { namespace dll {
 * Currently understands ELF and PE formats on all the platforms.
 */
 class library_info {
+private:
     boost::filesystem::ifstream f_;
 
     boost::aligned_storage< // making my own std::aligned_union from scratch. TODO: move to TypeTraits

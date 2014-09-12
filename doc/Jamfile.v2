@@ -1,0 +1,77 @@
+# Copyright (c) 2014 Renato Tegon Forti, Antony Polukhin.
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+using quickbook ;
+using boostbook ;
+using doxygen ;
+using xsltproc ;
+
+import set ;
+import doxygen ;
+import xsltproc ;
+import notfile ;
+import path ;
+
+project dll/doc ;
+
+#
+# Common params for doxygen
+# 
+
+local doxygen_params =
+    <doxygen:param>HIDE_UNDOC_MEMBERS=YES
+    <doxygen:param>HIDE_UNDOC_CLASSES=YES
+    <doxygen:param>HIDE_SCOPE_NAMES=YES
+    <doxygen:param>EXTRACT_ALL=NO
+    <doxygen:param>EXTRACT_PRIVATE=NO
+    <doxygen:param>BUILTIN_STL_SUPPORT=YES
+    <doxygen:param>ENABLE_PREPROCESSING=YES
+    <doxygen:param>MACRO_EXPANSION=YES
+    <doxygen:param>"PREDEFINED=\"BOOST_RV_REF(T)=T&&\" \\
+                               \"BOOST_RV_REF(shared_library)=shared_library&&\" \\
+                               \"BOOST_DLL_DOXYGEN\" "
+    ;
+
+#
+# Ref Sessions Generation
+#
+doxygen autodoc_shared_library_core
+    :
+        [ glob 
+            ../../../boost/dll/shared_library.hpp
+            ../../../boost/dll/shared_library_load_mode.hpp
+            ../../../boost/dll/library_info.hpp
+            ../../../boost/dll/alias.hpp
+        ]
+    :
+        $(doxygen_params)
+        <xsl:param>"boost.doxygen.reftitle=Shared Library Reference"
+    ;
+
+doxygen autodoc_shared_library_refcountable
+    :
+        [ glob
+            ../../../boost/dll/refcountable.hpp
+        ]
+    :
+        $(doxygen_params)
+        <xsl:param>"boost.doxygen.reftitle=Shared Library Refcountable Reference"
+    ;
+
+
+#
+# Docs Generation
+#
+boostbook dll-doc
+    :
+        dll.qbk
+    :
+        <dependency>autodoc_shared_library_core
+        <dependency>autodoc_shared_library_refcountable
+        <xsl:param>boost.root=http://www.boost.org/doc/libs/1_56_0
+        #<xsl:param>boost.root=../../../.
+        <xml:param>html.stylesheet=../../../../doc/src/boostbook.css
+    ;
+
