@@ -9,8 +9,8 @@ before_install:
     - tar xf master.tar.gz
     - mv boost-release-master $HOME/boost-local
     - BOOST="$HOME/boost-local"
-    - PROJECTPATH="./"
-    - ln -s $PROJECTPATH $BOOST/libs/dll
+    - cd $BOOST/libs
+    - git clone https://github.com/apolukhin/Boost.DLL dll
     - cd $BOOST
     - ./bootstrap.sh
     - ./b2 headers
