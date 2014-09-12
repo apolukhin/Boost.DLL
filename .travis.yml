@@ -9,12 +9,10 @@ before_install:
     - tar xf master.tar.gz
     - mv boost-release-master $HOME/boost-local
     - BOOST="$HOME/boost-local"
-    - cd $BOOST/libs
-    - git clone https://github.com/apolukhin/Boost.DLL dll
+    - mkdir $BOOST/libs/dll
+    - cp -rf ../Boost.DLL/* $BOOST/libs/dll/
     - cd $BOOST
     - ./bootstrap.sh
-    - ./b2 headers
-
 
 script:
     - if [ "$CCFLAGS" != "" ]; then FLAGS="cxxflags=\"$CCFLAGS\" linkflags=\"$LINKFLAGS\""; else FLAGS=""; fi
