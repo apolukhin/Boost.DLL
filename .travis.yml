@@ -1,5 +1,6 @@
-os:
-    - osx
+# Forcing Mac OS X
+language:
+    - objective-c
 
 env:
     - CXX_STANDARD=c++98
