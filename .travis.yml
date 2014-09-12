@@ -19,6 +19,5 @@ before_install:
 script:
     - if [ "$CCFLAGS" != "" ]; then FLAGS="cxxflags=\"$CCFLAGS\" linkflags=\"$LINKFLAGS\""; else FLAGS=""; fi
     - if [ $GCOV -eq 1 ]; then FLAGS="$FLAGS --test-all"; fi
-    - if [ $SANITIZE -eq 1 ]; then FLAGS="$FLAGS --sanitize --running-in-ci"; fi
     - cd $BOOST/libs/dll/test
     - eval "./b2 libs/afio/test $DEBUGBUILD link=shared toolset=$CC $FLAGS"
