@@ -1,12 +1,13 @@
 language: cpp
 
+os:
+#    - linux
+    - osx
+
 compiler:
     - gcc
 #    - clang
 
-os:
-#    - linux
-    - osx
 
 env:
     - CXX_STANDARD=c++98
