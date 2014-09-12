@@ -35,33 +35,33 @@
 <span class="keyword">class</span> <a class="link" href="library_info.html" title="Class library_info">library_info</a> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
   <span class="comment">// <a class="link" href="library_info.html#boost.dll.library_infoconstruct-copy-destruct">construct/copy/destruct</a></span>
-  <span class="keyword">explicit</span> <a class="link" href="library_info.html#idp6228864-bb"><span class="identifier">library_info</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">bool</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">)</span><span class="special">;</span>
-  <a class="link" href="library_info.html#idp6232192-bb"><span class="special">~</span><span class="identifier">library_info</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">explicit</span> <a class="link" href="library_info.html#idp6231056-bb"><span class="identifier">library_info</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span><span class="special">,</span> <span class="keyword">bool</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">)</span><span class="special">;</span>
+  <a class="link" href="library_info.html#idp6234304-bb"><span class="special">~</span><span class="identifier">library_info</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="library_info.html#idm23584-bb">private member functions</a></span>
-  <span class="emphasis"><em><span class="identifier">unspecified</span></em></span> <a class="link" href="library_info.html#idm23008-bb"><span class="identifier">impl</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span>
-  <span class="keyword">void</span> <a class="link" href="library_info.html#idm21760-bb"><span class="identifier">init</span></a><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="library_info.html#idm23696-bb">private member functions</a></span>
+  <span class="emphasis"><em><span class="identifier">unspecified</span></em></span> <a class="link" href="library_info.html#idm23120-bb"><span class="identifier">impl</span></a><span class="special">(</span><span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span>
+  <span class="keyword">void</span> <a class="link" href="library_info.html#idm21872-bb"><span class="identifier">init</span></a><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="library_info.html#idm20064-bb">private static functions</a></span>
-  <span class="keyword">static</span> <span class="keyword">void</span> <a class="link" href="library_info.html#idm19488-bb"><span class="identifier">throw_if_in_32bit</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">static</span> <span class="keyword">void</span> <a class="link" href="library_info.html#idm18368-bb"><span class="identifier">throw_if_in_windows</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="keyword">static</span> <span class="keyword">void</span> <a class="link" href="library_info.html#idm17248-bb"><span class="identifier">throw_if_in_posix</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="library_info.html#idm20176-bb">private static functions</a></span>
+  <span class="keyword">static</span> <span class="keyword">void</span> <a class="link" href="library_info.html#idm19600-bb"><span class="identifier">throw_if_in_32bit</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">static</span> <span class="keyword">void</span> <a class="link" href="library_info.html#idm18480-bb"><span class="identifier">throw_if_in_windows</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="keyword">static</span> <span class="keyword">void</span> <a class="link" href="library_info.html#idm17360-bb"><span class="identifier">throw_if_in_posix</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
 
-  <span class="comment">// <a class="link" href="library_info.html#idm15968-bb">public member functions</a></span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a class="link" href="library_info.html#idm15408-bb"><span class="identifier">sections</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a class="link" href="library_info.html#idm13744-bb"><span class="identifier">symbols</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a class="link" href="library_info.html#idm11984-bb"><span class="identifier">symbols</span></a><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
+  <span class="comment">// <a class="link" href="library_info.html#idm16080-bb">public member functions</a></span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a class="link" href="library_info.html#idm15520-bb"><span class="identifier">sections</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a class="link" href="library_info.html#idm13856-bb"><span class="identifier">symbols</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a class="link" href="library_info.html#idm12096-bb"><span class="identifier">symbols</span></a><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span><span class="special">)</span><span class="special">;</span>
 <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp35186784"></a><h2>Description</h2>
+<a name="idp5901024"></a><h2>Description</h2>
 <div class="refsect2">
-<a name="idp35187168"></a><h3>
+<a name="idp5901408"></a><h3>
 <a name="boost.dll.library_infoconstruct-copy-destruct"></a><code class="computeroutput">library_info</code> 
         public
        construct/copy/destruct</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6228864-bb"></a><span class="identifier">library_info</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span> library_path<span class="special">,</span> 
+<pre class="literallayout"><span class="keyword">explicit</span> <a name="idp6231056-bb"></a><span class="identifier">library_info</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="special">&amp;</span> library_path<span class="special">,</span> 
                       <span class="keyword">bool</span> throw_if_not_native_format <span class="special">=</span> <span class="keyword">true</span><span class="special">)</span><span class="special">;</span></pre>
 <p>Opens file with specified path and prepares for information extraction. 
 </p>
@@ -85,32 +85,32 @@
 </tr></tbody>
 </table></div>
 </li>
-<li class="listitem"><pre class="literallayout"><a name="idp6232192-bb"></a><span class="special">~</span><span class="identifier">library_info</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><a name="idp6234304-bb"></a><span class="special">~</span><span class="identifier">library_info</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp35208080"></a><h3>
-<a name="idm23584-bb"></a><code class="computeroutput">library_info</code> private member functions</h3>
+<a name="idp5921232"></a><h3>
+<a name="idm23696-bb"></a><code class="computeroutput">library_info</code> private member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem"><pre class="literallayout"><span class="emphasis"><em><span class="identifier">unspecified</span></em></span> <a name="idm23008-bb"></a><span class="identifier">impl</span><span class="special">(</span><span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">void</span> <a name="idm21760-bb"></a><span class="identifier">init</span><span class="special">(</span><span class="keyword">bool</span> throw_if_not_native<span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="emphasis"><em><span class="identifier">unspecified</span></em></span> <a name="idm23120-bb"></a><span class="identifier">impl</span><span class="special">(</span><span class="special">)</span> <span class="keyword">noexcept</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">void</span> <a name="idm21872-bb"></a><span class="identifier">init</span><span class="special">(</span><span class="keyword">bool</span> throw_if_not_native<span class="special">)</span><span class="special">;</span></pre></li>
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp35220288"></a><h3>
-<a name="idm20064-bb"></a><code class="computeroutput">library_info</code> private static functions</h3>
+<a name="idp5932144"></a><h3>
+<a name="idm20176-bb"></a><code class="computeroutput">library_info</code> private static functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
-<li class="listitem"><pre class="literallayout"><span class="keyword">static</span> <span class="keyword">void</span> <a name="idm19488-bb"></a><span class="identifier">throw_if_in_32bit</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">static</span> <span class="keyword">void</span> <a name="idm18368-bb"></a><span class="identifier">throw_if_in_windows</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
-<li class="listitem"><pre class="literallayout"><span class="keyword">static</span> <span class="keyword">void</span> <a name="idm17248-bb"></a><span class="identifier">throw_if_in_posix</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">static</span> <span class="keyword">void</span> <a name="idm19600-bb"></a><span class="identifier">throw_if_in_32bit</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">static</span> <span class="keyword">void</span> <a name="idm18480-bb"></a><span class="identifier">throw_if_in_windows</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
+<li class="listitem"><pre class="literallayout"><span class="keyword">static</span> <span class="keyword">void</span> <a name="idm17360-bb"></a><span class="identifier">throw_if_in_posix</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre></li>
 </ol></div>
 </div>
 <div class="refsect2">
-<a name="idp35237344"></a><h3>
-<a name="idm15968-bb"></a><code class="computeroutput">library_info</code> public member functions</h3>
+<a name="idp5947392"></a><h3>
+<a name="idm16080-bb"></a><code class="computeroutput">library_info</code> public member functions</h3>
 <div class="orderedlist"><ol class="orderedlist" type="1">
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a name="idm15408-bb"></a><span class="identifier">sections</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a name="idm15520-bb"></a><span class="identifier">sections</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -122,7 +122,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a name="idm13744-bb"></a><span class="identifier">symbols</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a name="idm13856-bb"></a><span class="identifier">symbols</span><span class="special">(</span><span class="special">)</span><span class="special">;</span></pre>
 <p>
 </p>
 <div class="variablelist"><table border="0">
@@ -134,7 +134,7 @@
 </table></div>
 </li>
 <li class="listitem">
-<pre class="literallayout"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a name="idm11984-bb"></a><span class="identifier">symbols</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> section_name<span class="special">)</span><span class="special">;</span></pre>
+<pre class="literallayout"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <a name="idm12096-bb"></a><span class="identifier">symbols</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> section_name<span class="special">)</span><span class="special">;</span></pre>
 <p>
 
 </p>
