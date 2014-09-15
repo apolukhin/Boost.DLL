@@ -31,6 +31,9 @@ local doxygen_params =
     <doxygen:param>MACRO_EXPANSION=YES
     <doxygen:param>"PREDEFINED=\"BOOST_RV_REF(T)=T&&\" \\
                                \"BOOST_RV_REF(shared_library)=shared_library&&\" \\
+                               \"BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library)= \\
+                                    shared_library(const shared_library&) = delete; \\
+                                    shared_library& operator=(const shared_library&) = delete; \" \\
                                \"BOOST_DLL_DOXYGEN\" "
     ;
 
@@ -40,10 +43,10 @@ local doxygen_params =
 doxygen autodoc_shared_library_core
     :
         [ glob 
-            ../../../boost/dll/shared_library.hpp
-            ../../../boost/dll/shared_library_load_mode.hpp
-            ../../../boost/dll/library_info.hpp
-            ../../../boost/dll/alias.hpp
+            ../include/boost/dll/shared_library.hpp
+            ../include/boost/dll/shared_library_load_mode.hpp
+            ../include/boost/dll/library_info.hpp
+            ../include/boost/dll/alias.hpp
         ]
     :
         $(doxygen_params)
@@ -53,7 +56,7 @@ doxygen autodoc_shared_library_core
 doxygen autodoc_shared_library_refcountable
     :
         [ glob
-            ../../../boost/dll/refcountable.hpp
+            ../include/boost/dll/refcountable.hpp
         ]
     :
         $(doxygen_params)

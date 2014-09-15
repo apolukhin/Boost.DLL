@@ -260,7 +260,7 @@ void generic_header_check(const T& v1, const dd::section_template<AddrT>& v2) {
 }
 
 template <class T>
-void generic_header_check(const T& v1, const dd::symtab_command& v2) {
+void generic_header_check(const T& v1, const dd::symtab_command_& v2) {
     BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
     
     CHECK_FIELD(cmd);    

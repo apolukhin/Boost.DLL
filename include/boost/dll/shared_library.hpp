@@ -46,7 +46,11 @@ namespace boost { namespace dll {
 *
 * On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recomended for use on Linux/POSIX.
 */
-class shared_library: protected shared_library_impl {
+class shared_library
+/// @cond
+    : protected shared_library_impl 
+/// @endcond
+{
     typedef shared_library_impl base_t;
     
     // The 'shared library' is not enabled to be copied but can be movable.
@@ -54,7 +58,11 @@ class shared_library: protected shared_library_impl {
     BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library)
 
 public:
+#ifdef BOOST_DLL_DOXYGEN
+    typedef platform_specific native_handle_t;
+#else 
     typedef shared_library_impl::native_handle_t native_handle_t;
+#endif
 
     /*!
     * Creates empty shared_library.

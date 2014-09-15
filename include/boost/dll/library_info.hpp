@@ -20,6 +20,7 @@
 #include <boost/mpl/max_element.hpp>
 #include <boost/mpl/vector_c.hpp>
 #include <boost/aligned_storage.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/predef/os.h>
 #include <boost/predef/architecture.h>
 
@@ -37,7 +38,7 @@ namespace boost { namespace dll {
 * \brief Class that is capable of extracting different information from a library or binary file.
 * Currently understands ELF and PE formats on all the platforms.
 */
-class library_info {
+class library_info: private boost::noncopyable {
 private:
     boost::filesystem::ifstream f_;
 
@@ -159,6 +160,9 @@ public:
         return impl().symbols(section_name);
     }
 
+    /*!
+    * \throw Nothing.
+    */
     ~library_info() BOOST_NOEXCEPT {
         typedef boost::dll::detail::x_info_interface T;
         impl().~T();
