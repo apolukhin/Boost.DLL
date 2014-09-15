@@ -13,6 +13,8 @@
 
 #if BOOST_OS_WINDOWS
     #include <windows.h>
+#elif BOOST_OS_MACOS || BOOST_OS_IOS
+    #include <mach-o/loader.h>
 #else
     #include <elf.h>
 #endif
@@ -224,6 +226,8 @@ int test_main(int argc, char* argv[]) {
     generic_header_check(::IMAGE_OPTIONAL_HEADER64(), dd::IMAGE_OPTIONAL_HEADER64_());
     generic_header_check(::IMAGE_NT_HEADERS32(), dd::IMAGE_NT_HEADERS32_());
     generic_header_check(::IMAGE_NT_HEADERS64(), dd::IMAGE_NT_HEADERS64_());
+#elif BOOST_OS_MACOS || BOOST_OS_IOS
+    
 #else
     elf_header_checks(::Elf32_Ehdr(), dd::Elf32_Ehdr_());
     elf_header_checks(::Elf64_Ehdr(), dd::Elf64_Ehdr_());

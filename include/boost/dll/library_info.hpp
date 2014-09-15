@@ -25,6 +25,7 @@
 
 #include <boost/dll/detail/pe_info.hpp>
 #include <boost/dll/detail/elf_info.hpp>
+#include <boost/dll/detail/macho_info.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -47,7 +48,9 @@ private:
                     sizeof(boost::dll::detail::elf_info32),
                     sizeof(boost::dll::detail::elf_info64),
                     sizeof(boost::dll::detail::pe_info32),
-                    sizeof(boost::dll::detail::pe_info64)
+                    sizeof(boost::dll::detail::pe_info64),
+                    sizeof(boost::dll::detail::macho_info32),
+                    sizeof(boost::dll::detail::macho_info64)                    
                 >
             >::type
         >::type::value
@@ -75,24 +78,38 @@ private:
 #endif
     }
 
+    static void throw_if_in_macos() {
+#if BOOST_OS_MACOS || BOOST_OS_IOS
+        boost::throw_exception(std::runtime_error("Not native format: not an Mach-O binary"));
+#endif
+    }
+
     void init(bool throw_if_not_native) {
 
         if (boost::dll::detail::elf_info32::parsing_supported(f_)) {
-            if (throw_if_not_native) { throw_if_in_windows(); }
+            if (throw_if_not_native) { throw_if_in_windows(); throw_if_in_macos(); }
 
             new (impl_.address()) boost::dll::detail::elf_info32(f_);
         } else if (boost::dll::detail::elf_info64::parsing_supported(f_)) {
-            if (throw_if_not_native) { throw_if_in_windows(); throw_if_in_32bit(); }
+            if (throw_if_not_native) { throw_if_in_windows(); throw_if_in_macos(); throw_if_in_32bit(); }
 
             new (impl_.address()) boost::dll::detail::elf_info64(f_);
         } else if (boost::dll::detail::pe_info32::parsing_supported(f_)) {
-            if (throw_if_not_native) { throw_if_in_posix(); }
+            if (throw_if_not_native) { throw_if_in_posix(); throw_if_in_macos(); }
 
             new (impl_.address()) boost::dll::detail::pe_info32(f_);
         } else if (boost::dll::detail::pe_info64::parsing_supported(f_)) {
-            if (throw_if_not_native) { throw_if_in_posix(); throw_if_in_32bit(); }
+            if (throw_if_not_native) { throw_if_in_posix(); throw_if_in_macos(); throw_if_in_32bit(); }
 
             new (impl_.address()) boost::dll::detail::pe_info64(f_);
+        } else if (boost::dll::detail::macho_info32::parsing_supported(f_)) {
+            if (throw_if_not_native) { throw_if_in_posix(); throw_if_in_windows(); }
+
+            new (impl_.address()) boost::dll::detail::macho_info32(f_);
+        } else if (boost::dll::detail::macho_info64::parsing_supported(f_)) {
+            if (throw_if_not_native) { throw_if_in_posix(); throw_if_in_windows(); throw_if_in_32bit(); }
+
+            new (impl_.address()) boost::dll::detail::macho_info64(f_);
         } else {
             boost::throw_exception(std::runtime_error("Unsupported binary format"));
         }
