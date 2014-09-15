@@ -119,6 +119,15 @@ struct symtab_command {
 };
 
 template <class AddressOffsetT>
+struct nlist_template {
+    uint32_t n_strx;
+    uint8_t n_type;
+    uint8_t n_sect;
+    uint16_t n_desc;
+    AddressOffsetT n_value;
+};
+
+template <class AddressOffsetT>
 class macho_info: public x_info_interface {
     boost::filesystem::ifstream& f_;
 
@@ -126,6 +135,8 @@ class macho_info: public x_info_interface {
     typedef boost::dll::detail::load_command_                               load_command_t;
     typedef boost::dll::detail::segment_command_template<AddressOffsetT>    segment_t;
     typedef boost::dll::detail::section_template<AddressOffsetT>            section_t;
+    typedef boost::dll::detail::symtab_command                              symbol_header_t;
+    typedef boost::dll::detail::nlist_template<AddressOffsetT>              nlist_t;
 
 public:
     static bool parsing_supported(boost::filesystem::ifstream& f) {
@@ -141,22 +152,34 @@ public:
         : f_(f)
     {}
 
-    std::vector<std::string> sections() {
-        std::vector<std::string> ret;
-
+private:
+    template <class F>
+    void command_finder(uint32_t cmd_num, F callback_f) {
         const header_t h = header();
         load_command_t command;
         f_.seekg(sizeof(header_t));
         for (std::size_t i = 0; i < h.ncmds; ++i) {
+            const boost::filesystem::ifstream::pos_type pos = f_.tellg();
             f_.read((char*)&command, sizeof(command));
-            if (command.cmd != load_command_types::LC_SEGMENT) {
-                f_.seekg(f_.tellg() + static_cast<boost::filesystem::ifstream::pos_type>(command.cmdsize));
+            if (command.cmd != cmd_num) {
+                f_.seekg(pos + static_cast<boost::filesystem::ifstream::pos_type>(command.cmdsize));
                 continue;
             }
 
             f_.seekg(static_cast<boost::filesystem::ifstream::pos_type>(
                 f_.tellg() - static_cast<boost::filesystem::ifstream::pos_type>(sizeof(command))
             ));
+
+            callback_f();
+            f_.seekg(pos + static_cast<boost::filesystem::ifstream::pos_type>(command.cmdsize));
+        }
+    }
+
+    struct section_names_gather {
+        std::vector<std::string>&       ret;
+        boost::filesystem::ifstream&    f_;
+
+        void operator()() const {
             segment_t segment;
             f_.read((char*)&segment, sizeof(segment));
 
@@ -173,7 +196,47 @@ public:
                 }
             }
         }
+    };
 
+    struct symbol_names_gather {
+        std::vector<std::string>&       ret;
+        boost::filesystem::ifstream&    f_;
+        std::size_t                     section_index;
+
+        void operator()() const {
+            symbol_header_t symbh;
+            f_.read((char*)&symbh, sizeof(symbh));
+            ret.reserve(ret.size() + symbh.nsyms);
+
+            nlist_t symbol;
+            std::string symbol_name;
+            for (std::size_t j = 0; j < symbh.nsyms; ++j) {
+                f_.seekg(symbh.symoff + j * sizeof(nlist_t));
+                f_.read((char*)&symbol, sizeof(symbol));
+                if (!symbol.n_strx) {
+                    continue; // Symbol has no name
+                }
+
+                if ((symbol.n_type & 0x0e) != 0xe || !symbol.n_sect) {
+                    continue; // Symbol has no section
+                }
+
+                if (section_index && section_index != symbol.n_sect) {
+                    continue; // Not in the required section
+                }
+
+                f_.seekg(symbh.symoff + symbol.n_strx);
+                getline(f_, symbol_name, '\0');
+                ret.push_back(symbol_name);
+            }
+        }
+    };
+
+public:
+    std::vector<std::string> sections() {
+        std::vector<std::string> ret;
+        section_names_gather f = { ret, f_ };
+        command_finder(load_command_types::LC_SEGMENT, f);
         return ret;
     }
 
@@ -190,13 +253,25 @@ private:
 public:
     std::vector<std::string> symbols() {
         std::vector<std::string> ret;
-        boost::throw_exception(std::runtime_error("macho_info::symbols() is not implemented"));
+        symbol_names_gather f = { ret, f_, 0 };
+        command_finder(load_command_types::LC_SYMTAB, f);
         return ret;
     }
 
     std::vector<std::string> symbols(boost::string_ref section_name) {
-        std::vector<std::string> ret;
-        boost::throw_exception(std::runtime_error("macho_info::symbols(boost::string_ref) is not implemented"));
+        // Not very optimal solution
+        std::vector<std::string> ret = sections();
+        std::vector<std::string>::iterator it = std::find(ret.begin(), ret.end(), section_name);
+        if (it == ret.end()) {
+            // No section with such name
+            ret.clear();
+            return ret;
+        }
+
+        // section indexes start from 1
+        symbol_names_gather f = { ret, f_, 1 + (ret.begin() - it) };
+        ret.clear();
+        command_finder(load_command_types::LC_SYMTAB, f);
         return ret;
     }
 };
