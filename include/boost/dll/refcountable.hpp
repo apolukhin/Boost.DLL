@@ -30,7 +30,9 @@
 /// \file boost/dll/refcountable.hpp
 /// \brief Includes all the reference counting functions that hold a shared pointer to the instance of
 /// boost::dll::shared_library. Those methods use boost::shared_ptr<T>
-/// and boost::function<T> classes.
+/// and boost::function<T> classes. All those methods share reference count to an actual DLL/DSO, so it
+/// is safe to import multiple symbols from the same DLL/DSO.
+
 
 namespace boost { namespace dll {
 
@@ -62,10 +64,9 @@ namespace detail {
 
         inline void operator()(const void*) const BOOST_NOEXCEPT { /*do nothing*/ }
     };
-}
+} // namespace detail
 
 
-///////////////////////////////// import_function methods ////////////////////////////////////////////
 /*!
 * Returns boost::function<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library, so that it won't get unload until all copies of return value
@@ -113,6 +114,7 @@ boost::function<T> import_function(const boost::filesystem::path& lib, boost::st
         func_name
     );
 }
+
 
 /*!
 * Imports function by it alias name and returns boost::function<T> that holds the function
@@ -165,7 +167,6 @@ boost::function<T> import_function_alias(const boost::filesystem::path& lib, boo
 
 
 
-//////////////////////////////////////////// import_variable methods /////////////////////////////////////////////////
 /*!
 * Returns boost::shared_ptr<T> that holds an imported variable from the loaded library and refcounts usage
 * of the loaded shared library, so that it won't get unload until all copies of return value
@@ -219,7 +220,6 @@ boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::
 
 
 
-//////////////////////////////////////////////// import_variable_alias methods //////////////////////////////////////////////
 /*!
 * Imports function by it alias name and returns boost::shared_ptr<T> that holds an imported
 * variable from the loaded library and refcounts usage of the loaded shared library.

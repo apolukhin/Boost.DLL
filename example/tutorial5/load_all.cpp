@@ -18,11 +18,11 @@
 #include <iostream>
 
 //[plugcpp_plugins_collector_def
-namespace pl = boost::dll;
+namespace dll = boost::dll;
 
 class plugins_collector {
     // Name => plugin
-    typedef boost::container::map<std::string, pl::shared_library> plugins_t;
+    typedef boost::container::map<std::string, dll::shared_library> plugins_t;
 
     boost::filesystem::path         plugins_directory_;
     plugins_t                       plugins_;
@@ -32,7 +32,7 @@ class plugins_collector {
 
     // Gets `my_plugin_api` instance using "create_plugin" or "plugin" imports,
     // stores plugin with its name in the `plugins_` map.
-    void insert_plugin(BOOST_RV_REF(pl::shared_library) lib);
+    void insert_plugin(BOOST_RV_REF(dll::shared_library) lib);
 
 public:
     plugins_collector(const boost::filesystem::path& plugins_directory)
@@ -53,7 +53,7 @@ public:
 void plugins_collector::load_all() {
     namespace fs = ::boost::filesystem;
     typedef fs::path::string_type string_type;
-    const string_type extension = pl::shared_library::suffix().native();        
+    const string_type extension = dll::shared_library::suffix().native();        
 
     // Searching a folder for files with '.so' or '.dll' extension
     fs::directory_iterator endit;        
@@ -69,14 +69,14 @@ void plugins_collector::load_all() {
         }
 
         // We found a file. Trying to load it
-        pl::shared_library plugin(it->path());      
+        dll::shared_library plugin(it->path());      
         std::cout << "Loaded (" << plugin.native() << "):" << it->path() << '\n';
 
         // Gets plugin using "create_plugin" or "plugin" function
         insert_plugin(boost::move(plugin));
     }
     
-    pl::shared_library plugin;
+    dll::shared_library plugin;
     plugin.load_self();
     std::cout << "Loaded self\n";
     insert_plugin(boost::move(plugin));
@@ -84,7 +84,7 @@ void plugins_collector::load_all() {
 //]
 
 //[plugcpp_plugins_collector_insert_plugin
-void plugins_collector::insert_plugin(BOOST_RV_REF(pl::shared_library) lib) {
+void plugins_collector::insert_plugin(BOOST_RV_REF(dll::shared_library) lib) {
     std::string plugin_name;
     if (lib.search_symbol("create_plugin")) {
         plugin_name = lib.get_alias<boost::shared_ptr<my_plugin_api>()>("create_plugin")()->name();

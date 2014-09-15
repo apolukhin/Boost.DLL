@@ -21,11 +21,11 @@
 
 #include "../tutorial_common/plugin_api.hpp"
 
-namespace pl = boost::dll;
+namespace dll = boost::dll;
 
 std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugins) {
     std::size_t plugins_found = 0;
-    boost::shared_ptr<pl::shared_library> lib = boost::make_shared<pl::shared_library>();
+    boost::shared_ptr<dll::shared_library> lib = boost::make_shared<dll::shared_library>();
 
     for (std::size_t i = 0; i < plugins.size(); ++i) {
         std::cout << "Loading plugin: " << plugins[i] << '\n';
@@ -38,7 +38,7 @@ std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugi
         // library has symbol, importing...
         typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
         boost::function<pluginapi_create_t> creator
-            = pl::import_function_alias<pluginapi_create_t>(lib, "create_plugin");
+            = dll::import_function_alias<pluginapi_create_t>(lib, "create_plugin");
 
         std::cout << "Matching plugin name: " << creator()->name() << std::endl;
         ++ plugins_found;

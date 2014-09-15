@@ -188,16 +188,16 @@ public:
     /*!
     * Open myself (this executable) to have access to symbols. 
     *
-    * Note that if some library is already loaded, load will
-    * unload it and then load itself.
-    *
-    * Note that this can be used when DLLs/DSOs is directly linked into the 
+    * This can be used when DLLs/DSOs is directly linked into the 
     * executable.
     *
+    * Calls unload() if `this->is_loaded()` is true.
+    *
+    * You must export the symbol even if you are on exe. 
     * Flag '-rdynamic' must be used when linking the plugin into the executable
     * on Linux OS.
     *
-    * See Tutorial "Linking plugin into the executable" for usage example.
+    * See Tutorial "Linking plugin into the executable" for a usage example.
     *
     * \throw boost::system::system_error.
     */
@@ -229,15 +229,16 @@ public:
     }
 
     /*!
-    * Open myself (this executable) to have access to symbols. 
+    * Open myself (this executable) to have access to symbols.
     *
-    * Note that if some library is already loaded, load will
-    * unload it and then load itself.
-    *
-    * Note that this can be used when DLLs/DSOs is directly linked into the 
+    * This can be used when DLLs/DSOs is directly linked into the 
     * executable.
     *
-    * You must export the symbol even if you are on exe.
+    * Calls unload() if `this->is_loaded()` is true.
+    *
+    * You must export the symbol even if you are on exe. 
+    * Flag '-rdynamic' must be used when linking the plugin into the executable
+    * on Linux OS.
     *
     * Flag '-rdynamic' must be used when linking the plugin into the executable
     * on Linux OS.
@@ -300,8 +301,7 @@ public:
     /*!
     * Unloads a shared library. If library was loaded multiple times
     * by different instances of shared_library, the actual DLL/DSO won't be unloaded until
-    * there is at least one instance of shared_library.
-    *
+    * there is at least one instance of shared_library holding a reference to it.
     */
     void unload() BOOST_NOEXCEPT {
         base_t::unload();
@@ -527,40 +527,22 @@ public:
     }
 };
 
-
-/*!
-* Check equality of shared_library, libraries compared using native handles.
-*
-* \throw Nothing.
-*/
+/// Very fast equality check that compares the actual DLL/DSO objects. Throws nothing.
 inline bool operator==(const shared_library& lhs, const shared_library& rhs) BOOST_NOEXCEPT {
     return lhs.native() == rhs.native();
 }
 
-/*!
-* Check inequality of shared_library, libraries compared using native handles.
-*
-* \throw Nothing.
-*/
+/// Very fast inequality check that compares the actual DLL/DSO objects. Throws nothing.
 inline bool operator!=(const shared_library& lhs, const shared_library& rhs) BOOST_NOEXCEPT {
     return lhs.native() != rhs.native();
 }
 
-/*!
-* Less compares loaded libraries using native handles.
-*
-* \throw Nothing.
-*/
+/// Compare the actual DLL/DSO objects without any guarantee to be stable between runs. Throws nothing.
 inline bool operator<(const shared_library& lhs, const shared_library& rhs) BOOST_NOEXCEPT {
     return lhs.native() < rhs.native();
 }
 
-/*!
-* Swaps two shared libraries.
-* Does not invalidate existing symbols and functions loaded from libraries.
-*
-* \throw Nothing.
-*/
+/// Swaps two shared libraries. Does not invalidate symbols and functions loaded from libraries. Throws nothing.
 inline void swap(shared_library& lhs, shared_library& rhs) BOOST_NOEXCEPT {
     lhs.swap(rhs);
 }

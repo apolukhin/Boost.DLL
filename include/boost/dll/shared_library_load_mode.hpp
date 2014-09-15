@@ -31,16 +31,30 @@
 # pragma once
 #endif
 
-namespace boost { namespace dll {
+namespace boost { namespace dll { namespace load_mode {
 
-   /*! \enum Modes of load library.
+/*! Library load modes.
+*
+* Each of system family provides own modes. Flags not supported by a particular platform will be silently ignored.
+*
+* For a detailed description of platform specific options see:
+* <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms684179(v=vs.85).aspx">Windows specific options</a>,
+* <a href="http://pubs.opengroup.org/onlinepubs/000095399/functions/dlopen.html">POSIX specific options</a>.
+*
+*/
+
+enum type {
+#ifdef BOOST_DLL_DOXYGEN
+    /*!
+    * Default open mode. See the \b Default: comments below to find out the flags that are enabled by default.
+    */
+    default_mode,
+
+    /*!
+    * \b Platforms: Windows
     *
-    * Each of system family provides own flags. Flags not supported by a particular platform will be ignored.
+    * \b Default: disabled
     *
-    * WINDOWS
-    * -------
-    *
-    * DONT_RESOLVE_DLL_REFERENCES
     * If this value is used, and the executable module is a DLL, the system does
     * not call DllMain for process and thread initialization and termination.
     * Also, the system does not load additional executable modules that are
@@ -50,22 +64,46 @@ namespace boost { namespace dll {
     * If you are planning to access only data or resources in the DLL, use
     * LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE or LOAD_LIBRARY_AS_IMAGE_RESOURCE
     * or both.
+    */
+    dont_resolve_dll_references,
+
+    /*!
+    * \b Platforms: Windows
     *
-    * LOAD_IGNORE_CODE_AUTHZ_LEVEL
+    * \b Default: disabled
+    *
     * If this value is used, the system does not check AppLocker rules or
     * apply Software Restriction Policies for the DLL.
+    */
+    load_ignore_code_authz_level,
+
+    /*!
+    * \b Platforms: Windows
     *
-    * LOAD_LIBRARY_AS_DATAFILE
+    * \b Default: disabled
+    *
     * If this value is used, the system maps the file into the calling
     * process's virtual address space as if it were a data file.
+    */
+    load_library_as_datafile,
+
+    /*!
+    * \b Platforms: Windows
     *
-    * LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE
+    * \b Default: disabled
+    *
     * Similar to LOAD_LIBRARY_AS_DATAFILE, except that the DLL file is opened
     * with exclusive write access for the calling process. Other processes
     * cannot open the DLL file for write access while it is in use.
     * However, the DLL can still be opened by other processes.
+    */
+    load_library_as_datafile_exclusive,
+
+    /*!
+    * \b Platforms: Windows
     *
-    * LOAD_LIBRARY_AS_IMAGE_RESOURCE
+    * \b Default: disabled
+    *
     * If this value is used, the system maps the file into the process's virtual
     * address space as an image file. However, the loader does not load the
     * static imports or perform the other usual initialization steps.
@@ -75,23 +113,26 @@ namespace boost { namespace dll {
     *
     * If forced integrity checking is desired for the loaded file then
     * LOAD_LIBRARY_AS_IMAGE is recommended instead.
+    */
+    load_library_as_image_resource,
+
+    /*!
+    * \b Platforms: Windows
     *
+    * \b Default: disabled
     *
-    * All the LOAD_LIBRARY_SEARCH_* macro are not used... because of portability issues, even on Windows.
-    *
-    * LOAD_WITH_ALTERED_SEARCH_PATH
     * If this value is used and lpFileName specifies an absolute path,
     * the system uses the alternate file search strategy.
     *
     * This value cannot be combined with any LOAD_LIBRARY_SEARCH flag.
+    */
+    load_with_altered_search_path,
+
+    /*!
+    * \b Platforms: POSIX
     *
-    * Source :
-    * http://msdn.microsoft.com/en-us/library/windows/desktop/ms684179(v=vs.85).aspx
+    * \b Default: enabled
     *
-    * POSIX
-    * -----
-    *
-    * RTLD_LAZY
     * Relocations shall be performed at an implementation-defined time, ranging
     * from the time of the dlopen() call until the first reference to a given
     * symbol occurs.
@@ -101,89 +142,88 @@ namespace boost { namespace dll {
     * the functions in any given object. And, for systems supporting dynamic
     * symbol resolution for normal process execution, this behavior mimics
     * the normal handling of process execution.
+    */
+    rtld_lazy,
+
+    /*!
+    * \b Platforms: POSIX
     *
-    * RTLD_NOW
+    * \b Default: disabled
+    *
     * All necessary relocations shall be performed when the object is first
     * loaded. This may waste some processing if relocations are performed for
     * functions that are never referenced. This behavior may be useful for
     * plugins that need to know as soon as an object is loaded that all
     * symbols referenced during execution are available.
+    */
+    rtld_now,
+
+    /*!
+    * \b Platforms: POSIX
     *
-    * Any object loaded by dlopen() that requires relocations against global
-    * symbols can reference the symbols in the original process image file,
-    * any objects loaded at program start-up, from the object itself as well
-    * as any other object included in the same dlopen() invocation, and any
-    * objects that were loaded in any dlopen() invocation and which
-    * specified the RTLD_GLOBAL flag. To determine the scope of visibility
-    * for the symbols loaded with a dlopen() invocation, the mode parameter
-    * should be a bitwise-inclusive OR with one of the following values:
+    * \b Default: disabled
     *
-    * RTLD_GLOBAL
     * The object's symbols shall be made available for the relocation
     * processing of any other object. In addition, symbol lookup using
     * dlopen(0, mode) and an associated dlsym() allows objects loaded
     * with this mode to be searched.
+    */
+    rtld_global,
+
+    /*!
+    * \b Platforms: POSIX
     *
-    * RTLD_LOCAL
+    * \b Default: enabled
+    *
     * The object's symbols shall not be made available for the relocation
     * processing of any other object.
     *
-    * Source :
-    * http://pubs.opengroup.org/onlinepubs/000095399/functions/dlopen.html
-    *
+    * This is a default Windows behavior that can not be changed.
     */
-    struct load_mode {
-        enum type {
-            default_mode                          = 0,
-#if BOOST_OS_WINDOWS
-            // windows
-            dont_resolve_dll_references           = boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
-            load_ignore_code_authz_level          = boost::detail::winapi::LOAD_IGNORE_CODE_AUTHZ_LEVEL_,
-            load_library_as_datafile              = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_,
-            load_library_as_datafile_exclusive    = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE_,
-            load_library_as_image_resource        = boost::detail::winapi::LOAD_LIBRARY_AS_IMAGE_RESOURCE_,
-            load_with_altered_search_path         = boost::detail::winapi::LOAD_WITH_ALTERED_SEARCH_PATH_,
-
-            // posix
-            rtld_lazy                             = 0,
-            rtld_now                              = 0,
-            rtld_global                           = 0,
-            rtld_local                            = 0,
-            rtld_deepbind                         = 0,
+    rtld_local,
+    rtld_deepbind
+#elif BOOST_OS_WINDOWS
+    default_mode                          = 0,
+    dont_resolve_dll_references           = boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
+    load_ignore_code_authz_level          = boost::detail::winapi::LOAD_IGNORE_CODE_AUTHZ_LEVEL_,
+    load_library_as_datafile              = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_,
+    load_library_as_datafile_exclusive    = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE_,
+    load_library_as_image_resource        = boost::detail::winapi::LOAD_LIBRARY_AS_IMAGE_RESOURCE_,
+    load_with_altered_search_path         = boost::detail::winapi::LOAD_WITH_ALTERED_SEARCH_PATH_,
+    rtld_lazy                             = 0,
+    rtld_now                              = 0,
+    rtld_global                           = 0,
+    rtld_local                            = 0,
+    rtld_deepbind                         = 0,
 #else
-            // windows
-            dont_resolve_dll_references           = 0,
-            load_ignore_code_authz_level          = 0,
-            load_library_as_datafile              = 0,
-            load_library_as_datafile_exclusive    = 0,
-            load_library_as_image_resource        = 0,
-            load_with_altered_search_path         = 0,
-
-            // posix
-            rtld_lazy                             = RTLD_LAZY,
-            rtld_now                              = RTLD_NOW,
-            rtld_global                           = RTLD_GLOBAL,
-            rtld_local                            = RTLD_LOCAL,
-            rtld_deepbind                         = RTLD_DEEPBIND
+    default_mode                          = 0,
+    dont_resolve_dll_references           = 0,
+    load_ignore_code_authz_level          = 0,
+    load_library_as_datafile              = 0,
+    load_library_as_datafile_exclusive    = 0,
+    load_library_as_image_resource        = 0,
+    load_with_altered_search_path         = 0,
+    rtld_lazy                             = RTLD_LAZY,
+    rtld_now                              = RTLD_NOW,
+    rtld_global                           = RTLD_GLOBAL,
+    rtld_local                            = RTLD_LOCAL,
+    rtld_deepbind                         = RTLD_DEEPBIND
 #endif
-        };
-    };
+};
 
 
-    /*!
-    * Free operators for load_mode::type flag manipulation.
-    */
-    inline load_mode::type operator|(load_mode::type left, load_mode::type right) {
-        return (static_cast<load_mode::type>(
-            static_cast<unsigned int>(left) | static_cast<unsigned int>(right))
-        );
-    }
+/// Free operators for load_mode::type flag manipulation.
+inline type operator|(type left, type right) BOOST_NOEXCEPT {
+    return (static_cast<type>(
+        static_cast<unsigned int>(left) | static_cast<unsigned int>(right))
+    );
+}
 
-    inline load_mode::type& operator|=(load_mode::type& left, load_mode::type right) {
-        left = left | right;
-        return (left);
-    }
+inline type& operator|=(type& left, type right) BOOST_NOEXCEPT {
+    left = left | right;
+    return (left);
+}
 
-}} // boost::dll
+}}} // boost::dll::load_mode
 
 #endif // BOOST_DLL_SHARED_LIBRARY_MODE_HPP

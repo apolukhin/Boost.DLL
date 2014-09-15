@@ -14,12 +14,12 @@
 #include "static_plugin.hpp"
 #include <iostream>
 
-namespace pl = boost::dll;
+namespace dll = boost::dll;
 
 int main() {
     std::cout << "Application started" << std::endl;
     
-    pl::shared_library self;
+    dll::shared_library self;
     self.load_self();
 
     std::cout << "Call function" << std::endl;
