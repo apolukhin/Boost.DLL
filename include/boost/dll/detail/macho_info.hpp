@@ -31,62 +31,62 @@ typedef integer_t cpu_subtype_t;
 
 template <class AddressOffsetT>
 struct mach_header_template {
-    uint32_t        magic;
-    cpu_type_t      cputype;
-    cpu_subtype_t   cpusubtype;
-    uint32_t        filetype;
-    uint32_t        ncmds;
-    uint32_t        sizeofcmds;
-    uint32_t        flags[sizeof(AddressOffsetT) / sizeof(uint32_t)]; // Flags and reserved
+    boost::uint32_t     magic;
+    cpu_type_t          cputype;
+    cpu_subtype_t       cpusubtype;
+    boost::uint32_t     filetype;
+    boost::uint32_t     ncmds;
+    boost::uint32_t     sizeofcmds;
+    boost::uint32_t     flags[sizeof(AddressOffsetT) / sizeof(uint32_t)]; // Flags and reserved
 };
 
 typedef mach_header_template<boost::uint32_t> mach_header_32_;
 typedef mach_header_template<boost::uint64_t> mach_header_64_;
 
 struct load_command_ {
-    uint32_t        cmd;        /* type of command */
-    uint32_t        cmdsize;
+    boost::uint32_t        cmd;        /* type of command */
+    boost::uint32_t        cmdsize;
 };
 
 struct load_command_types {
-    BOOST_STATIC_CONSTANT(uint32_t, LC_SEGMENT          = 0x1);   /* segment of this file to be mapped */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_SYMTAB           = 0x2);   /* link-edit stab symbol table info */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_SYMSEG           = 0x3);   /* link-edit gdb symbol table info (obsolete) */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_THREAD           = 0x4);   /* thread */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_UNIXTHREAD       = 0x5);   /* unix thread (includes a stack) */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_LOADFVMLIB       = 0x6);   /* load a specified fixed VM shared library */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_IDFVMLIB         = 0x7);   /* fixed VM shared library identification */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_IDENT            = 0x8);   /* object identification info (obsolete) */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_FVMFILE          = 0x9);   /* fixed VM file inclusion (internal use) */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_PREPAGE          = 0xa);   /* prepage command (internal use) */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_DYSYMTAB         = 0xb);   /* dynamic link-edit symbol table info */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_LOAD_DYLIB       = 0xc);   /* load a dynamically linked shared library */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_ID_DYLIB         = 0xd);   /* dynamically linked shared lib ident */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_LOAD_DYLINKER    = 0xe);   /* load a dynamic linker */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_ID_DYLINKER      = 0xf);   /* dynamic linker identification */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_PREBOUND_DYLIB   = 0x10);  /* modules prebound for a dynamically linked shared library */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_ROUTINES         = 0x11);  /* image routines */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_SUB_FRAMEWORK    = 0x12);  /* sub framework */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_SUB_UMBRELLA     = 0x13);  /* sub umbrella */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_SUB_CLIENT       = 0x14);  /* sub client */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_SUB_LIBRARY      = 0x15);  /* sub library */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_TWOLEVEL_HINTS   = 0x16);  /* two-level namespace lookup hints */
-    BOOST_STATIC_CONSTANT(uint32_t, LC_PREBIND_CKSUM    = 0x17);  /* prebind checksum */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SEGMENT          = 0x1);   /* segment of this file to be mapped */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SYMTAB           = 0x2);   /* link-edit stab symbol table info */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SYMSEG           = 0x3);   /* link-edit gdb symbol table info (obsolete) */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_THREAD           = 0x4);   /* thread */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_UNIXTHREAD       = 0x5);   /* unix thread (includes a stack) */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LOADFVMLIB       = 0x6);   /* load a specified fixed VM shared library */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_IDFVMLIB         = 0x7);   /* fixed VM shared library identification */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_IDENT            = 0x8);   /* object identification info (obsolete) */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_FVMFILE          = 0x9);   /* fixed VM file inclusion (internal use) */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_PREPAGE          = 0xa);   /* prepage command (internal use) */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_DYSYMTAB         = 0xb);   /* dynamic link-edit symbol table info */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LOAD_DYLIB       = 0xc);   /* load a dynamically linked shared library */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ID_DYLIB         = 0xd);   /* dynamically linked shared lib ident */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LOAD_DYLINKER    = 0xe);   /* load a dynamic linker */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ID_DYLINKER      = 0xf);   /* dynamic linker identification */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_PREBOUND_DYLIB   = 0x10);  /* modules prebound for a dynamically linked shared library */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ROUTINES         = 0x11);  /* image routines */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_FRAMEWORK    = 0x12);  /* sub framework */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_UMBRELLA     = 0x13);  /* sub umbrella */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_CLIENT       = 0x14);  /* sub client */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_LIBRARY      = 0x15);  /* sub library */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_TWOLEVEL_HINTS   = 0x16);  /* two-level namespace lookup hints */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_PREBIND_CKSUM    = 0x17);  /* prebind checksum */
 };
 
 template <class AddressOffsetT>
 struct segment_command_template {
-    uint32_t        cmd;            /* LC_SEGMENT */
-    uint32_t        cmdsize;        /* includes sizeof section structs */
-    char            segname[16];    /* segment name */
-    AddressOffsetT  vmaddr;         /* memory address of this segment */
-    AddressOffsetT  vmsize;         /* memory size of this segment */
-    AddressOffsetT  fileoff;        /* file offset of this segment */
-    AddressOffsetT  filesize;       /* amount to map from the file */
-    vm_prot_t       maxprot;        /* maximum VM protection */
-    vm_prot_t       initprot;       /* initial VM protection */
-    uint32_t        nsects;         /* number of sections in segment */
-    uint32_t        flags;          /* flags */
+    boost::uint32_t     cmd;            /* LC_SEGMENT */
+    boost::uint32_t     cmdsize;        /* includes sizeof section structs */
+    char                segname[16];    /* segment name */
+    AddressOffsetT      vmaddr;         /* memory address of this segment */
+    AddressOffsetT      vmsize;         /* memory size of this segment */
+    AddressOffsetT      fileoff;        /* file offset of this segment */
+    AddressOffsetT      filesize;       /* amount to map from the file */
+    vm_prot_t           maxprot;        /* maximum VM protection */
+    vm_prot_t           initprot;       /* initial VM protection */
+    boost::uint32_t     nsects;         /* number of sections in segment */
+    boost::uint32_t     flags;          /* flags */
 };
 
 typedef segment_command_template<boost::uint32_t> segment_command_32_;
@@ -98,34 +98,37 @@ struct section_template { /* for 32-bit architectures */
     char                segname[16];    /* segment this section goes in */
     AddressOffsetT      addr;           /* memory address of this section */
     AddressOffsetT      size;           /* size in bytes of this section */
-    uint32_t            offset;         /* file offset of this section */
-    uint32_t            align;          /* section alignment (power of 2) */
-    uint32_t            reloff;         /* file offset of relocation entries */
-    uint32_t            nreloc;         /* number of relocation entries */
-    uint32_t            flags;          /* flags (section type and attributes)*/
-    uint32_t            reserved[1 + sizeof(AddressOffsetT) / sizeof(uint32_t)];
+    boost::uint32_t     offset;         /* file offset of this section */
+    boost::uint32_t     align;          /* section alignment (power of 2) */
+    boost::uint32_t     reloff;         /* file offset of relocation entries */
+    boost::uint32_t     nreloc;         /* number of relocation entries */
+    boost::uint32_t     flags;          /* flags (section type and attributes)*/
+    boost::uint32_t     reserved[1 + sizeof(AddressOffsetT) / sizeof(uint32_t)];
 };
 
 typedef section_template<boost::uint32_t> section_32_;
 typedef section_template<boost::uint64_t> section_64_;
 
-struct symtab_command {
-    uint32_t    cmd;        /* LC_SYMTAB */
-    uint32_t    cmdsize;    /* sizeof(struct symtab_command) */
-    uint32_t    symoff;     /* symbol table offset */
-    uint32_t    nsyms;      /* number of symbol table entries */
-    uint32_t    stroff;     /* string table offset */
-    uint32_t    strsize;    /* string table size in bytes */
+struct symtab_command_ {
+    boost::uint32_t    cmd;        /* LC_SYMTAB */
+    boost::uint32_t    cmdsize;    /* sizeof(struct symtab_command) */
+    boost::uint32_t    symoff;     /* symbol table offset */
+    boost::uint32_t    nsyms;      /* number of symbol table entries */
+    boost::uint32_t    stroff;     /* string table offset */
+    boost::uint32_t    strsize;    /* string table size in bytes */
 };
 
 template <class AddressOffsetT>
 struct nlist_template {
-    uint32_t n_strx;
-    uint8_t n_type;
-    uint8_t n_sect;
-    uint16_t n_desc;
-    AddressOffsetT n_value;
+    boost::uint32_t     n_strx;
+    boost::uint8_t      n_type;
+    boost::uint8_t      n_sect;
+    boost::uint16_t     n_desc;
+    AddressOffsetT      n_value;
 };
+
+typedef nlist_template<boost::uint32_t> nlist_32_;
+typedef nlist_template<boost::uint64_t> nlist_64_;
 
 template <class AddressOffsetT>
 class macho_info: public x_info_interface {
@@ -135,7 +138,7 @@ class macho_info: public x_info_interface {
     typedef boost::dll::detail::load_command_                               load_command_t;
     typedef boost::dll::detail::segment_command_template<AddressOffsetT>    segment_t;
     typedef boost::dll::detail::section_template<AddressOffsetT>            section_t;
-    typedef boost::dll::detail::symtab_command                              symbol_header_t;
+    typedef boost::dll::detail::symtab_command_                             symbol_header_t;
     typedef boost::dll::detail::nlist_template<AddressOffsetT>              nlist_t;
 
 public:

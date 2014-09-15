@@ -8,6 +8,7 @@
 
 #include <boost/dll/detail/elf_info.hpp>
 #include <boost/dll/detail/pe_info.hpp>
+#include <boost/dll/detail/macho_info.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/test/minimal.hpp>
 
@@ -212,6 +213,84 @@ void generic_header_check(const T& v1, const dd::IMAGE_NT_HEADERS_template<AddrT
     CHECK_FIELD(FileHeader);
     CHECK_FIELD(OptionalHeader);
 }
+template <class T, class AddrT>
+void generic_header_check(const T& v1, const dd::mach_header_template<AddrT>& v2) {
+    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+
+    CHECK_FIELD(magic);
+    CHECK_FIELD(cputype);
+    CHECK_FIELD(cpusubtype);
+    CHECK_FIELD(filetype);
+    CHECK_FIELD(ncmds);
+    CHECK_FIELD(sizeofcmds);
+    CHECK_FIELD(flags);
+}
+
+template <class T, class AddrT>
+void generic_header_check(const T& v1, const dd::segment_command_template<AddrT>& v2) {
+    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+
+    CHECK_FIELD(cmd);          
+    CHECK_FIELD(cmdsize);      
+    CHECK_FIELD(segname);  
+    CHECK_FIELD(vmaddr);       
+    CHECK_FIELD(vmsize);       
+    CHECK_FIELD(fileoff);      
+    CHECK_FIELD(filesize);     
+    CHECK_FIELD(maxprot);      
+    CHECK_FIELD(initprot);     
+    CHECK_FIELD(nsects);       
+    CHECK_FIELD(flags);        
+}
+
+template <class T, class AddrT>
+void generic_header_check(const T& v1, const dd::section_template<AddrT>& v2) {
+    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+
+    CHECK_FIELD(sectname);
+    CHECK_FIELD(segname); 
+    CHECK_FIELD(addr);    
+    CHECK_FIELD(size);    
+    CHECK_FIELD(offset);  
+    CHECK_FIELD(align);   
+    CHECK_FIELD(reloff);  
+    CHECK_FIELD(nreloc);  
+    CHECK_FIELD(flags);   
+    CHECK_FIELD(reserved);
+}
+
+template <class T>
+void generic_header_check(const T& v1, const dd::symtab_command& v2) {
+    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    
+    CHECK_FIELD(cmd);    
+    CHECK_FIELD(cmdsize);
+    CHECK_FIELD(symoff); 
+    CHECK_FIELD(nsyms);  
+    CHECK_FIELD(stroff); 
+    CHECK_FIELD(strsize);
+}
+
+template <class T, class AddrT>
+void generic_header_check(const T& v1, const dd::nlist_template<AddrT>& v2) {
+    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    
+    CHECK_FIELD(n_strx);
+    CHECK_FIELD(n_type);
+    CHECK_FIELD(n_sect);
+    CHECK_FIELD(n_desc);
+    CHECK_FIELD(n_value);
+}
+
+template <class T, class AddrT>
+void generic_header_check(const T& v1, const dd::load_command_& v2) {
+    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    
+    CHECK_FIELD(cmd);    
+    CHECK_FIELD(cmdsize);
+}
+
+
 
 // Unit Tests
 int test_main(int argc, char* argv[]) {
@@ -227,7 +306,21 @@ int test_main(int argc, char* argv[]) {
     generic_header_check(::IMAGE_NT_HEADERS32(), dd::IMAGE_NT_HEADERS32_());
     generic_header_check(::IMAGE_NT_HEADERS64(), dd::IMAGE_NT_HEADERS64_());
 #elif BOOST_OS_MACOS || BOOST_OS_IOS
-    
+    generic_header_check(::mach_header(), dd::mach_header_32_());
+    generic_header_check(::mach_header_64(), dd::mach_header_64_());
+
+    generic_header_check(::segment_command(), dd::segment_command_32_());
+    generic_header_check(::segment_command_64(), dd::segment_command_64_());
+
+    generic_header_check(::section(), dd::section_32_());
+    generic_header_check(::section_64(), dd::section_64_());
+
+    generic_header_check(::load_command(), dd::load_command_())
+    generic_header_check(::symtab_command(), dd::symtab_command_());
+
+    generic_header_check(::nlist(), dd::nlist_32_());
+    generic_header_check(::nlist_64(), dd::nlist_64_());
+
 #else
     elf_header_checks(::Elf32_Ehdr(), dd::Elf32_Ehdr_());
     elf_header_checks(::Elf64_Ehdr(), dd::Elf64_Ehdr_());
