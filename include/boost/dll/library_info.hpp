@@ -56,6 +56,7 @@ private:
         >::type::value
     >::type impl_;
 
+    /// @cond
     boost::dll::detail::x_info_interface& impl() BOOST_NOEXCEPT {
         return *reinterpret_cast<boost::dll::detail::x_info_interface*>(impl_.address());
     }
@@ -114,6 +115,7 @@ private:
             boost::throw_exception(std::runtime_error("Unsupported binary format"));
         }
     }
+    /// @endcond
 
 public:
     /*!

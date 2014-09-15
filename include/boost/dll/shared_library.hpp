@@ -377,6 +377,8 @@ public:
     }
 
 private:
+
+    /// @cond
     // get_impl is required to reduce binary size: it does not depend on a template
     // parameter and will be instantiated only once.
     void* get_impl(boost::string_ref sb) const {
@@ -403,6 +405,7 @@ private:
 
         return ret;
     }
+    /// @endcond
 
 public:
 
