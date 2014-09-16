@@ -8,7 +8,7 @@
 
 [template example_ref[path] '''<ulink url="https://github.com/apolukhin/Boost.DLL/blob/master/example/'''[path]'''">example/'''[path]'''</ulink>''']
 
-[def __to_top [link boost_dll.tutorial Back to the Tutorials Table of Contents]]
+[def __to_top [link boost_dll.tutorial Back to the Top]]
 
 [section Tutorial]
 

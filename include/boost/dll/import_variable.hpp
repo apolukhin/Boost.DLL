@@ -42,11 +42,10 @@ namespace detail {
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
+* This call will succeed if call to \forcedlink{shared_library}`::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
-* For importing variable by it's alias name use
-* \boosbook{ <link linkend="boost.dll.import_variable_alias">boost::dll::import_variable_alias</link> } method.
+* For importing variable by it's \b alias name use \forcedlink{import_variable_alias} method.
 *
 * \b Examples:
 * \code
@@ -90,15 +89,14 @@ boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::
 
 
 /*!
-* Imports function by it alias name and returns boost::shared_ptr<T> that holds an imported
+* Imports variable by it alias name and returns boost::shared_ptr<T> that holds an imported
 * variable from the loaded library and refcounts usage of the loaded shared library.
 * Library won't get unload until all copies of returned value are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
+* This call will succeed if call to \forcedlink{shared_library}`::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
-* For non alias names use
-* \boosbook{ <link linkend="boost.dll.import_variable">boost::dll::import_variable</link> } method.
+* For \b non \b alias names use \forcedlink{import_variable} method.
 *
 * \b Examples:
 * \code

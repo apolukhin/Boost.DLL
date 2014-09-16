@@ -51,11 +51,10 @@ namespace detail {
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
+* This call will succeed if call to \forcedlink{shared_library}`::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
-* For importing function by its \b alias \b name use 
-* \boosbook{ <link linkend="boost.dll.import_function_alias">boost::dll::import_function_alias</link> } method.
+* For importing function by its \b alias name use \forcedlink{import_function_alias} method.
 *
 * \b Examples:
 * \code
@@ -100,10 +99,10 @@ boost::function<T> import_function(const boost::filesystem::path& lib, boost::st
 * from the loaded library and refcounts usage of the loaded shared library.  Library won't
 * get unload until all copies of returned value are not destroyed.
 *
-* This call will succeed if call to `shared_library::search_symbol(boost::string_ref )`
+* This call will succeed if call to \forcedlink{shared_library}`::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
-* For non alias names use \boosbook{ <link linkend="boost.dll.import_function">boost::dll::import_function</link> } method.
+* For \b non \b alias names use \forcedlink{import_function} method.
 *
 * \b Examples:
 * \code
