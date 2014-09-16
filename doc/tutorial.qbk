@@ -4,11 +4,15 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
 
+[/ // TODO: repalce https://raw.githubusercontent.com/apolukhin/Boost.DLL/master/example with @boost:libs/dll/example /]
+
+[template example_ref[path] '''<ulink url="https://github.com/apolukhin/Boost.DLL/blob/master/example/'''[path]'''">example/'''[path]'''</ulink>''']
+
+[def __to_top [link boost_dll.tutorial Back to the Tutorials Table of Contents]]
+
 [section Tutorial]
 
 Tutorial is provided to give you an idea of how to create and use plugins.
-
-
 
 [section Plugin basics]
 
@@ -39,6 +43,14 @@ Plugin Version: 1
 Plugin Method:  3
 Destructing my_plugin_sum ;o)
 ]
+
+[*Full sources:]
+
+* [example_ref tutorial_common/plugin_api.hpp]
+* [example_ref tutorial1/my_plugin_sum.cpp]
+* [example_ref tutorial1/tutorial1.cpp]
+
+__to_top
 
 [endsect]
 
@@ -74,6 +86,13 @@ Plugin Method second call:  6
 Plugin Name:  aggregator
 ]
 
+[*Full sources:]
+
+* [example_ref tutorial2/my_plugin_aggregator.cpp]
+* [example_ref tutorial2/tutorial2.cpp]
+
+__to_top
+
 [endsect]
 
 [section Searching for a symbol in multiple plugins]
@@ -93,6 +112,15 @@ Loading plugin: "/test/libmy_plugin_sum.so.1.56"
 Constructing my_plugin_sum
 Destructing my_plugin_sum ;o)
 ]
+
+[*Full sources:]
+
+* [example_ref tutorial3/tutorial3.cpp]
+* [example_ref tutorial2/my_plugin_aggregator.cpp]
+* [example_ref tutorial1/my_plugin_sum.cpp]
+
+__to_top
+
 
 [endsect]
 
@@ -136,6 +164,13 @@ Constructing my_plugin_static
 Computed Value: 0
 Destructing my_plugin_static
 ]
+
+[*Full sources:]
+
+* [example_ref tutorial4/static_plugin.cpp]
+* [example_ref tutorial4/load_self.cpp]
+
+__to_top
 
 [endsect]
 
@@ -184,6 +219,15 @@ Unique plugins 3:
 Destructing my_plugin_sum ;o)
 ]
 
+[*Full sources:]
+
+* [example_ref tutorial5/load_all.cpp]
+* [example_ref tutorial4/static_plugin.cpp]
+* [example_ref tutorial2/my_plugin_aggregator.cpp]
+* [example_ref tutorial1/my_plugin_sum.cpp]
+
+__to_top
+
 [endsect]
 
 [section Executing callbacks on library unload]
@@ -207,6 +251,12 @@ Before library unload.
 unloaded
 After library unload.
 ]
+
+[*Full sources:]
+
+* [example_ref tutorial6/on_unload_lib.cpp]
+
+__to_top
 
 [endsect]
 
@@ -246,6 +296,14 @@ Function 'howdy' prints:
 ]
 
 [note `BOOST_DLL_ALIAS` macro by default places all the aliases into the "boostdll" section. ]
+
+[*Full sources:]
+
+* [example_ref tutorial7/library1.cpp]
+* [example_ref tutorial7/library2.cpp]
+* [example_ref tutorial7/tutorial7.cpp]
+
+__to_top
 
 [endsect]
 

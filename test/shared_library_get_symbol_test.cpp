@@ -11,9 +11,7 @@
 #include <windows.h>
 #endif
 
-#include <boost/dll/shared_library.hpp>
-#include <boost/dll/alias.hpp>
-#include <boost/dll/refcountable.hpp>
+#include <boost/dll.hpp>
 #include <boost/test/minimal.hpp>
 #include <boost/function.hpp>
 #include <boost/fusion/container.hpp>

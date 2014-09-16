@@ -29,6 +29,7 @@ local doxygen_params =
     <doxygen:param>BUILTIN_STL_SUPPORT=YES
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>MACRO_EXPANSION=YES
+    <doxygen:param>"ALIASES=\"boosbook{1}=\\xmlonly \\1 \\endxmlonly\" "
     <doxygen:param>"PREDEFINED=\"BOOST_RV_REF(T)=T&&\" \\
                                \"BOOST_RV_REF(shared_library)=shared_library&&\" \\
                                \"BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library)= \\
@@ -56,7 +57,8 @@ doxygen autodoc_shared_library_core
 doxygen autodoc_shared_library_refcountable
     :
         [ glob
-            ../include/boost/dll/refcountable.hpp
+            ../include/boost/dll/import_function.hpp
+            ../include/boost/dll/import_variable.hpp
         ]
     :
         $(doxygen_params)

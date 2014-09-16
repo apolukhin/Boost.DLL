@@ -44,6 +44,9 @@ namespace boost { namespace dll {
 *        as dynamic shared objects (DSO's) and get their exported
 *        symbols (functions and variables).
 *
+* All the shared_library instances share reference count to an actual DLL/DSO, so it
+* is safe to have multiple instances of shared_library referencing the same DLL/DSO.
+*
 * On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recomended for use on Linux/POSIX.
 */
 class shared_library
