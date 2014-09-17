@@ -12,7 +12,6 @@ before_install:
     - tar xf master.tar.gz
     - mv boost-release-master $HOME/boost-local
     - BOOST="$HOME/boost-local"
-    - mkdir $BOOST/libs/dll
     - mv ../Boost.DLL/ $BOOST/libs/dll
     - cd $BOOST
     - ./bootstrap.sh
