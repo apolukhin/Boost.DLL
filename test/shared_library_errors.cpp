@@ -84,13 +84,12 @@ int test_main(int argc, char* argv[]) {
     }
 
     try {
-        std::string prog_name = argv[0];
-#if BOOST_OS_WINDOWS
-        prog_name.erase(prog_name.rfind('.'));
-#endif
-        prog_name += ".output";
-        std::cout << "Attempt to open " << prog_name << '\n';
-        library_info lib(prog_name);
+        boost::filesystem::path not_a_binary(argv[1]);
+        not_a_binary /= "not_a_binary";
+        boost::filesystem::ofstream ofs(not_a_binary);
+        ofs << "This is not a binary file, so library_info must report 'Unsupported binary format'";
+        ofs.close();
+        library_info lib(not_a_binary);
         BOOST_CHECK(false);
     } catch (const std::exception& e) {
         std::cout << e.what() << '\n';
