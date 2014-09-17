@@ -21,7 +21,7 @@ script:
     - echo OS is ${TRAVIS_OS_NAME}
     - if [ "$CCFLAGS" != "" ]; then FLAGS="cxxflags=\"$CCFLAGS\" linkflags=\"$LINKFLAGS\""; else FLAGS=""; fi
     - cd $BOOST/libs/dll/test/
-    - ../../../b2 cxxflags=\"--coverage -std=$CXX_STANDARD\" linkflags="--coverage"
+    - ../../../b2 cxxflags=\"--coverage -std=$CXX_STANDARD\" linkflags=\"--coverage\"
 
 after_success:
     - find ../../../bin.v2/ -name "*.gcda" -exec cp "{}" ./ \;
