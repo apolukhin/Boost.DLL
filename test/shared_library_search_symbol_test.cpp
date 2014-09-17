@@ -38,7 +38,9 @@ int test_main(int argc, char* argv[])
       BOOST_CHECK(sl.search_symbol("exef"));
       BOOST_CHECK(!sl.search_symbol("i_do_not_exist"));
    }
-   
+
+
+   exef(); // Make sure that this function still callable in traditional way
    return 0;
 }
 

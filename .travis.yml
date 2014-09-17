@@ -13,7 +13,7 @@ before_install:
     - mv boost-release-master $HOME/boost-local
     - BOOST="$HOME/boost-local"
     - mkdir $BOOST/libs/dll
-    - cp -rf ../Boost.DLL/* $BOOST/libs/dll/
+    - mv ../Boost.DLL/ $BOOST/libs/dll
     - cd $BOOST
     - ./bootstrap.sh
 
@@ -30,4 +30,4 @@ after_success:
     - lcov --directory ./ --base-directory ./ --capture --output-file coverage.info
     - lcov --remove coverage.info '/usr*' '*/filesystem*' '*/container*' '*/core/*' '*/exception/*' '*/intrusive/*' '*/smart_ptr/*' '*/move/*' '*/fusion/*' '*/io/*' '*/function/*' '*/iterator/*' '*/preprocessor/*' '*/system/*' '*/boost/test/*' '*/boost/detail/*' '*/utility/*' -o coverage.info
     - gem install coveralls-lcov
-    - coveralls-lcov coverage.info
+    - cd .. && coveralls-lcov test/coverage.info

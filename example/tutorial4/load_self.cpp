@@ -10,6 +10,8 @@
 // This example shows how to use load_self to load symbols direct on executable
 // -------------------------------------------------------------------------------------
 
+#include <boost/test/minimal.hpp>
+
 //[plugcpp_my_plugin_load_self
 #include "static_plugin.hpp"
 #include <iostream>
@@ -27,6 +29,17 @@ int main() {
         = self.get_alias<boost::shared_ptr<my_plugin_api>()>("create_plugin");
 
     std::cout << "Computed Value: " << creator()->calculate(2, 2) << std::endl;
+
+    //<-
+    {
+        // This block is invisible for Quickbook documentation
+        float v = creator()->version();
+        BOOST_CHECK(v < 1.001 && v > 0.999);
+
+        float res = creator()->calculate(10, 10);
+        BOOST_CHECK(res > -0.0001 && res < 0.00001);
+    }
+    //->
 }
 
 //]
