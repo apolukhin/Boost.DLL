@@ -27,6 +27,6 @@ after_success:
     - find ../../../bin.v2/ -name "*.gcno" -exec cp "{}" ./ \;
     - sudo apt-get install -qq python-yaml lcov
     - lcov --directory ./ --base-directory ./ --capture --output-file coverage.info
-    - lcov --remove coverage.info '/usr*' '*/filesystem*' '*/container*' '*/core/*' '*/exception/*' '*/intrusive/*' '*/smart_ptr/*' '*/move/*' '*/fusion/*' '*/io/*' '*/function/*' '*/iterator/*' '*/preprocessor/*' '*/system/*' '*/boost/test/*' '*/boost/detail/*' '*/utility/*' -o coverage.info
+    - lcov --remove coverage.info '/usr*' '*/filesystem*' '*/container*' '*/core/*' '*/exception/*' '*/intrusive/*' '*/smart_ptr/*' '*/move/*' '*/fusion/*' '*/io/*' '*/function/*' '*/iterator/*' '*/preprocessor/*' '*/system/*' '*/boost/test/*' '*/boost/detail/*' '*/utility/*' '*/pe_info.hpp' -o coverage.info
     - gem install coveralls-lcov
     - cd .. && coveralls-lcov test/coverage.info
