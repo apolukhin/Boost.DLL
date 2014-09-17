@@ -51,10 +51,8 @@ This library was derived from the [Boost.Application](https://github.com/retf/Bo
 
 @               | Build         | Tests coverage
 ----------------|-------------- | -------------
-Develop branch: | [![Build Status](https://travis-ci.org/apolukhin/Boost.DLL.svg?branch=develop)]
- (https://travis-ci.org/apolukhin/Boost.DLL)  | [![Coverage Status](https://img.shields.io/coveralls/apolukhin/Boost.DLL.svg)](https://coveralls.io/r/apolukhin/Boost.DLL?branch=develop)
-Master branch:  | [![Build Status](https://travis-ci.org/apolukhin/Boost.DLL.svg?branch=master)]
- (https://travis-ci.org/apolukhin/Boost.DLL)  | [![Coverage Status](https://img.shields.io/coveralls/apolukhin/Boost.DLL.svg)](https://coveralls.io/r/apolukhin/Boost.DLL?branch=master)
+Develop branch: | [![Build Status](https://travis-ci.org/apolukhin/Boost.DLL.svg?branch=develop)](https://travis-ci.org/apolukhin/Boost.DLL)  | [![Coverage Status](https://img.shields.io/coveralls/apolukhin/Boost.DLL.svg)](https://coveralls.io/r/apolukhin/Boost.DLL?branch=develop)
+Master branch:  | [![Build Status](https://travis-ci.org/apolukhin/Boost.DLL.svg?branch=master)](https://travis-ci.org/apolukhin/Boost.DLL)  | [![Coverage Status](https://img.shields.io/coveralls/apolukhin/Boost.DLL.svg)](https://coveralls.io/r/apolukhin/Boost.DLL?branch=master)
 
 
 ### License
