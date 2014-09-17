@@ -51,6 +51,22 @@ int test_main(int argc, char* argv[]) {
         std::cout << e.what() << '\n';
     }
 
+    try {
+        shared_library lib;
+        lib.path();
+        BOOST_CHECK(false);
+    } catch (const boost::system::system_error& e) {
+        std::cout << e.what() << '\n';
+    }
+
+    try {
+        shared_library lib;
+        lib.load("\0\0", load_mode::rtld_global);
+        BOOST_CHECK(false);
+    } catch (const boost::system::system_error& e) {
+        std::cout << e.what() << '\n';
+    }
+
     shared_library sl(shared_library_path);
     try {
         sl.get<int>("variable_or_function_that_does_not_exist");
