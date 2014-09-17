@@ -8,6 +8,7 @@
 // For more information, see http://www.boost.org
 
 #include <boost/dll/shared_library.hpp>
+#include <boost/dll/library_info.hpp>
 #include <boost/test/minimal.hpp>
 #include <boost/function.hpp>
 
@@ -75,6 +76,25 @@ int test_main(int argc, char* argv[]) {
         std::cout << e.what() << '\n';
     }
 
+    try {
+        library_info lib("\0");
+        BOOST_CHECK(false);
+    } catch (const std::exception& e) {
+        std::cout << e.what() << '\n';
+    }
+
+    try {
+        std::string prog_name = argv[0];
+#if BOOST_OS_WINDOWS
+        prog_name.erase(prog_name.rfind('.'));
+#endif
+        prog_name += ".output";
+        std::cout << "Attempt to open " << prog_name << '\n';
+        library_info lib(prog_name);
+        BOOST_CHECK(false);
+    } catch (const std::exception& e) {
+        std::cout << e.what() << '\n';
+    }
     return 0;
 }
 
