@@ -109,6 +109,34 @@ int test_main(int argc, char* argv[])
       BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
    }
 
+
+   {
+      boost::filesystem::path platform_independent_path = shared_library_path;
+      platform_independent_path.replace_extension();
+      if (platform_independent_path.filename().wstring().find(L"lib") == 0) {
+        platform_independent_path
+            = platform_independent_path.parent_path() / platform_independent_path.filename().wstring().substr(3);
+      }
+
+      shared_library sl(platform_independent_path, load_mode::append_native_decorations);
+      BOOST_CHECK(sl.is_loaded());
+      BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
+
+
+      boost::filesystem::copy_file(shared_library_path, boost::filesystem::current_path() / shared_library_path.filename());
+      sl.load("./test_library", load_mode::append_native_decorations);
+      BOOST_CHECK(sl.is_loaded());
+
+      boost::system::error_code ec;
+      sl.load("./test_library", ec);
+      BOOST_CHECK(ec);
+      BOOST_CHECK(!sl.is_loaded());
+
+      sl.unload();
+
+      boost::filesystem::remove(shared_library_path.filename());
+   }
+
    {
       shared_library sl(shared_library_path, load_mode::rtld_now | load_mode::rtld_global | load_mode::load_library_as_datafile);
       BOOST_CHECK(sl.is_loaded());

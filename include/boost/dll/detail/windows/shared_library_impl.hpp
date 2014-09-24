@@ -25,6 +25,7 @@
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/utility/string_ref.hpp>
+#include "boost/detail/no_exceptions_support.hpp"
 
 #include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
 #include <boost/detail/winapi/GetLastError.hpp>
@@ -67,11 +68,25 @@ public:
         handle_ = sl.handle_; sl.handle_ = NULL; return *this;  
     }
 
-    void load(const boost::filesystem::path &sh, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
         boost::detail::winapi::DWORD_ flags = static_cast<boost::detail::winapi::DWORD_>(mode);
-        handle_ = boost::detail::winapi::LoadLibraryExW(sh.c_str(), 0, flags);
+        if (!(mode & load_mode::append_native_decorations)) {
+            handle_ = boost::detail::winapi::LoadLibraryExW(sl.c_str(), 0, flags);
+        } else {
+            flags &= ~static_cast<boost::detail::winapi::DWORD_>(load_mode::append_native_decorations);
+
+            BOOST_TRY {
+                handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, flags);
+            } BOOST_CATCH (...) {
+                ec = boost::system::error_code(
+                    boost::system::errc::not_enough_memory,
+                    boost::system::generic_category()
+                );
+            } BOOST_CATCH_END
+        }
+
         if (!handle_) {
             ec = last_error_code();
         }

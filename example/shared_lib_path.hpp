@@ -15,7 +15,9 @@ boost::filesystem::path shared_lib_path(const boost::filesystem::path& root, con
     fs::directory_iterator endit;
 
     for (fs::directory_iterator it(root); it != endit; ++it) {
-        if (fs::is_regular_file(*it) && it->path().filename().wstring().find(filename_part) != std::wstring::npos) {
+        if (fs::is_regular_file(*it)
+            && it->path().filename().wstring().find(filename_part) != std::wstring::npos
+            && (it->path().extension() == ".dll" || it->path().extension() == ".so" || it->path().extension() == ".dylib")) {
             return *it;
         }
     }

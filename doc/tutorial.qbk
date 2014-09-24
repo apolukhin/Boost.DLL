@@ -108,7 +108,7 @@ If we call that method for all our plugins we'll get the following output:
 [pre
 Loading plugin: "/test/libmy_plugin_aggregator.so"
 Matching plugin name: aggregator
-Loading plugin: "/test/libmy_plugin_sum.so.1.56"
+Loading plugin: "/test/libmy_plugin_sum.so"
 Constructing my_plugin_sum
 Destructing my_plugin_sum ;o)
 ]

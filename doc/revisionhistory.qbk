@@ -17,6 +17,7 @@ Improved docs and applied comments from "Boost query interest" mails:
     * Mach-O and COFF file format support
     * Add `path this_binary()` and function to find binary name by symbol
     * improve `load_mode`
+    * think of library load directories
 
 [h5 0.1]
 

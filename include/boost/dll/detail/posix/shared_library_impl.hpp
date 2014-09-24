@@ -25,6 +25,7 @@
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/utility/string_ref.hpp>
+#include "boost/detail/no_exceptions_support.hpp"
 
 #include <dlfcn.h>
 
@@ -86,7 +87,23 @@ public:
             mode |= load_mode::rtld_local;
         }
 
-        handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
+        if (!(mode & load_mode::append_native_decorations)) {
+            handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
+        } else {
+            BOOST_TRY {
+                handle_ = dlopen(
+                    // Apple requires '.so' extension
+                    ((sl.parent_path() / "lib").native() + sl.filename().native() + ".so").c_str(),
+                    static_cast<int>(mode) & (~static_cast<int>(load_mode::append_native_decorations))
+                );
+            } BOOST_CATCH (...) {
+                ec = boost::system::error_code(
+                    boost::system::errc::not_enough_memory,
+                    boost::system::generic_category()
+                );
+            } BOOST_CATCH_END
+        }
+
         if (!handle_) {
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,
