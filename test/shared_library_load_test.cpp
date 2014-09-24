@@ -124,11 +124,15 @@ int test_main(int argc, char* argv[])
 
 
       boost::filesystem::copy_file(shared_library_path, boost::filesystem::current_path() / shared_library_path.filename());
-      sl.load("./test_library", load_mode::append_native_decorations);
+      sl.load("./" / platform_independent_path.filename(), load_mode::append_native_decorations);
       BOOST_CHECK(sl.is_loaded());
 
       boost::system::error_code ec;
-      sl.load("./test_library", ec);
+      sl.load("./" / platform_independent_path.filename(), ec);
+      BOOST_CHECK(ec);
+      BOOST_CHECK(!sl.is_loaded());
+
+      sl.load(platform_independent_path.filename(), ec);
       BOOST_CHECK(ec);
       BOOST_CHECK(!sl.is_loaded());
 

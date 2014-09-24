@@ -72,18 +72,30 @@ public:
         unload();
 
         boost::detail::winapi::DWORD_ flags = static_cast<boost::detail::winapi::DWORD_>(mode);
-        if (!(mode & load_mode::append_native_decorations)) {
+
+        // From MSDN: If the string specifies a module name without a path and the
+        // file name extension is omitted, the function appends the default library
+        // extension .dll to the module name.
+        const bool do_append_deco = (mode & load_mode::append_native_decorations);
+        if (!do_append_deco && (sl.has_extension() || sl.has_parent_path())) {
             handle_ = boost::detail::winapi::LoadLibraryExW(sl.c_str(), 0, flags);
         } else {
-            flags &= ~static_cast<boost::detail::winapi::DWORD_>(load_mode::append_native_decorations);
-
             BOOST_TRY {
-                handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, flags);
+                // From MSDN: To prevent the function from appending .dll to the module name,
+                // include a trailing point character (.) in the module name string.
+                if (!do_append_deco) {
+                    handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".").c_str(), 0, flags);
+                } else {
+                    flags &= ~static_cast<boost::detail::winapi::DWORD_>(load_mode::append_native_decorations);
+                    handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, flags);
+                }
             } BOOST_CATCH (...) {
                 ec = boost::system::error_code(
                     boost::system::errc::not_enough_memory,
                     boost::system::generic_category()
                 );
+
+                return;
             } BOOST_CATCH_END
         }
 

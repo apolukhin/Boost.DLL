@@ -101,6 +101,8 @@ public:
                     boost::system::errc::not_enough_memory,
                     boost::system::generic_category()
                 );
+
+                return;
             } BOOST_CATCH_END
         }
 
