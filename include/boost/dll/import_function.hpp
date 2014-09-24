@@ -80,12 +80,6 @@ namespace detail {
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 */
 template <class T>
-boost::function<T> import_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::dll::detail::refc_function<T>(lib, &lib->get<T>(func_name));
-}
-
-//! \overload boost::dll::import_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name)
-template <class T>
 boost::function<T> import_function(const boost::filesystem::path& lib,boost::string_ref func_name,
     load_mode::type mode = load_mode::default_mode)
 {
@@ -94,6 +88,13 @@ boost::function<T> import_function(const boost::filesystem::path& lib,boost::str
         func_name
     );
 }
+
+//! \overload boost::dll::import_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
+template <class T>
+boost::function<T> import_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
+    return boost::dll::detail::refc_function<T>(lib, &lib->get<T>(func_name));
+}
+
 
 
 /*!
@@ -134,12 +135,6 @@ boost::function<T> import_function(const boost::filesystem::path& lib,boost::str
 *
 */
 template <class T>
-boost::function<T> import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::dll::detail::refc_function<T>(lib, lib->get<T*>(func_name));
-}
-
-//! \overload boost::dll::import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name)
-template <class T>
 boost::function<T> import_function_alias(const boost::filesystem::path& lib, boost::string_ref func_name,
     load_mode::type mode = load_mode::default_mode)
 {
@@ -148,6 +143,13 @@ boost::function<T> import_function_alias(const boost::filesystem::path& lib, boo
         func_name
     );
 }
+
+//! \overload boost::dll::import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
+template <class T>
+boost::function<T> import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
+    return boost::dll::detail::refc_function<T>(lib, lib->get<T*>(func_name));
+}
+
 
 }} // boost::dll
 

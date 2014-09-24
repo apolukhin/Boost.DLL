@@ -75,12 +75,6 @@ namespace detail {
 *
 */
 template <class T>
-boost::shared_ptr<T> import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<T>(&lib->get<T>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
-}
-
-//! \overload boost::dll::import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name)
-template <class T>
 boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::string_ref variable_name,
     load_mode::type mode = load_mode::default_mode)
 {
@@ -88,6 +82,12 @@ boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::
         boost::make_shared<shared_library>(lib),
         variable_name
     );
+}
+
+//! \overload boost::dll::import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name, load_mode::type mode)
+template <class T>
+boost::shared_ptr<T> import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
+    return boost::shared_ptr<T>(&lib->get<T>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
 }
 
 
@@ -130,12 +130,6 @@ boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::
 *
 */
 template <class T>
-boost::shared_ptr<T> import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<T>(lib->get<T*>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
-}
-
-//! \overload boost::dll::import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name)
-template <class T>
 boost::shared_ptr<T> import_variable_alias(const boost::filesystem::path& lib, boost::string_ref variable_name,
     load_mode::type mode = load_mode::default_mode)
 {
@@ -144,6 +138,13 @@ boost::shared_ptr<T> import_variable_alias(const boost::filesystem::path& lib, b
         variable_name
     );
 }
+
+//! \overload boost::dll::import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name, load_mode::type mode)
+template <class T>
+boost::shared_ptr<T> import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
+    return boost::shared_ptr<T>(lib->get<T*>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
+}
+
 
 }} // boost::dll
 
