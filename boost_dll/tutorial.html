@@ -338,7 +338,7 @@ Plugin Name:  aggregator
       </p>
 <pre class="programlisting">Loading plugin: "/test/libmy_plugin_aggregator.so"
 Matching plugin name: aggregator
-Loading plugin: "/test/libmy_plugin_sum.so.1.56"
+Loading plugin: "/test/libmy_plugin_sum.so"
 Constructing my_plugin_sum
 Destructing my_plugin_sum ;o)
 </pre>
@@ -467,6 +467,7 @@ Destructing my_plugin_sum ;o)
         <span class="special">=</span> <span class="identifier">self</span><span class="special">.</span><span class="identifier">get_alias</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;()&gt;(</span><span class="string">"create_plugin"</span><span class="special">);</span>
 
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Computed Value: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">creator</span><span class="special">()-&gt;</span><span class="identifier">calculate</span><span class="special">(</span><span class="number">2</span><span class="special">,</span> <span class="number">2</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
 <span class="special">}</span>
 </pre>
 <p>
