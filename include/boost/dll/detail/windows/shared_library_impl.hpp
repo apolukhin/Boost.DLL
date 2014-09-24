@@ -76,8 +76,12 @@ public:
         // From MSDN: If the string specifies a module name without a path and the
         // file name extension is omitted, the function appends the default library
         // extension .dll to the module name.
-        const bool do_append_deco = (mode & load_mode::append_native_decorations);
-        if (!do_append_deco && (sl.has_extension() || sl.has_parent_path())) {
+        //
+        // From experiments: Default library extension appended to the modukle name even if
+        // we have some path. So we do not check for path, only for extension. We can not be sure that 
+        // such behavior remain across all platforms, so we add L".dll" by hand.
+        const bool do_append_deco = !!(mode & load_mode::append_native_decorations);
+        if (!do_append_deco && sl.has_extension()) {
             handle_ = boost::detail::winapi::LoadLibraryExW(sl.c_str(), 0, flags);
         } else {
             BOOST_TRY {
