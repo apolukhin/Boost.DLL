@@ -14,7 +14,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/function.hpp>
-
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif
@@ -72,6 +71,7 @@ namespace detail {
 *
 * \param lib Path or shared pointer to library to load function from.
 * \param func_name Null-terminated name of the function to import. Can handle std::string, char*, const char*.
+* \param mode An mode that will be used on library load.
 *
 * \return boost::function<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library.
@@ -86,7 +86,9 @@ boost::function<T> import_function(const boost::shared_ptr<shared_library>& lib,
 
 //! \overload boost::dll::import_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name)
 template <class T>
-boost::function<T> import_function(const boost::filesystem::path& lib, boost::string_ref func_name) {
+boost::function<T> import_function(const boost::filesystem::path& lib,boost::string_ref func_name,
+    load_mode::type mode = load_mode::default_mode)
+{
     return import_function<T>(
         boost::make_shared<shared_library>(lib),
         func_name
@@ -122,6 +124,8 @@ boost::function<T> import_function(const boost::filesystem::path& lib, boost::st
 *
 * \param func_name Null-terminated name of the function to import. Can handle std::string, char*, const char*.
 *
+* \param mode An mode that will be used on library load.
+*
 * \return boost::function<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library.
 *
@@ -136,7 +140,9 @@ boost::function<T> import_function_alias(const boost::shared_ptr<shared_library>
 
 //! \overload boost::dll::import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name)
 template <class T>
-boost::function<T> import_function_alias(const boost::filesystem::path& lib, boost::string_ref func_name) {
+boost::function<T> import_function_alias(const boost::filesystem::path& lib, boost::string_ref func_name,
+    load_mode::type mode = load_mode::default_mode)
+{
     return import_function_alias<T>(
         boost::make_shared<shared_library>(lib),
         func_name

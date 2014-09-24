@@ -65,6 +65,8 @@ namespace detail {
 *
 * \param variable_name Null-terminated name of the variable to import. Can handle std::string, char*, const char*.
 *
+* \param mode An mode that will be used on library load.
+*
 * \return boost::shared_ptr<T> that holds an imported function from the loaded library and refcounts usage
 * of the loaded shared library.
 *
@@ -79,7 +81,9 @@ boost::shared_ptr<T> import_variable(const boost::shared_ptr<shared_library>& li
 
 //! \overload boost::dll::import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name)
 template <class T>
-boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::string_ref variable_name) {
+boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::string_ref variable_name,
+    load_mode::type mode = load_mode::default_mode)
+{
     return import_variable<T>(
         boost::make_shared<shared_library>(lib),
         variable_name
@@ -116,6 +120,8 @@ boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::
 *
 * \param variable_name Null-terminated name of the variable to import. Can handle std::string, char*, const char*.
 *
+* \param mode An mode that will be used on library load.
+*
 * \return boost::shared_ptr<T> that holds an imported variable from the loaded library and refcounts usage
 * of the loaded shared library.
 *
@@ -130,7 +136,9 @@ boost::shared_ptr<T> import_variable_alias(const boost::shared_ptr<shared_librar
 
 //! \overload boost::dll::import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name)
 template <class T>
-boost::shared_ptr<T> import_variable_alias(const boost::filesystem::path& lib, boost::string_ref variable_name) {
+boost::shared_ptr<T> import_variable_alias(const boost::filesystem::path& lib, boost::string_ref variable_name,
+    load_mode::type mode = load_mode::default_mode)
+{
     return import_variable_alias<T>(
         boost::make_shared<shared_library>(lib),
         variable_name

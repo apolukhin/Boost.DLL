@@ -71,5 +71,6 @@ project
         [ run ../example/tutorial6/tutorial6.cpp : $(TEST_DIR) ]
         [ run ../example/tutorial7/tutorial7.cpp : $(TEST_DIR) ]
         [ compile-fail section_name_too_big.cpp ]
+        [ compile-fail not_a_function.cpp ]
     ;
 }
