@@ -38,15 +38,7 @@
 namespace boost { namespace dll {
 
 class shared_library_impl {
-
     BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library_impl)
-
-    static inline boost::system::error_code last_error_code() BOOST_NOEXCEPT {
-        return boost::system::error_code(
-            boost::detail::winapi::GetLastError(),
-            boost::system::system_category()
-        );
-    }
 
 public:
     typedef boost::detail::winapi::HMODULE_ native_handle_t;
@@ -105,17 +97,17 @@ public:
         }
 
         if (!handle_) {
-            ec = last_error_code();
+            ec = boost::dll::detail::last_error_code();
         }
     }
 
     void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
         unload();
 
-        boost::detail::winapi::WCHAR_ path_hldr[default_path_size];
+        boost::detail::winapi::WCHAR_ path_hldr[boost::dll::detail::default_path_size];
         boost::detail::winapi::LPCWSTR_ path = path_hldr;
 
-        full_module_path_impl(NULL, path, ec);
+        boost::dll::detail::full_module_path_impl(NULL, path, ec);
         
         if (ec) {
             // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough
@@ -125,7 +117,7 @@ public:
         // here "handle" will be handle of current process!
         handle_ = boost::detail::winapi::LoadLibraryExW(path, 0, 0);
         if (!handle_) {
-            ec = last_error_code();
+            ec = boost::dll::detail::last_error_code();
         }
 
         if (path != path_hldr) {
@@ -181,7 +173,7 @@ public:
             boost::detail::winapi::GetProcAddress(handle_, sb.data())
         );
         if (symbol == NULL) {
-            ec = last_error_code();
+            ec = boost::dll::detail::last_error_code();
         }
 
         return symbol;

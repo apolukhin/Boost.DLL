@@ -18,6 +18,13 @@ namespace boost { namespace dll { namespace detail {
 
     BOOST_STATIC_CONSTANT(boost::detail::winapi::DWORD_, default_path_size = 260);
 
+    static inline boost::system::error_code last_error_code() BOOST_NOEXCEPT {
+        return boost::system::error_code(
+            boost::detail::winapi::GetLastError(),
+            boost::system::system_category()
+        );
+    }
+
     static inline void full_module_path_impl(
             boost::detail::winapi::HMODULE_ h,
             boost::detail::winapi::LPCWSTR_& path,
