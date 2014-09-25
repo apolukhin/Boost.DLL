@@ -30,14 +30,14 @@ namespace detail {
         boost::filesystem::path ret;
 
         boost::detail::winapi::MEMORY_BASIC_INFORMATION_ mbi;
-        if (!boost::detail::winapi::VirtualQuery(&symbol, &mbi, sizeof(mbi))) {
+        if (!boost::detail::winapi::VirtualQuery(symbol, &mbi, sizeof(mbi))) {
             return ret;
         }
 
         boost::detail::winapi::WCHAR_ path_hldr[boost::dll::detail::default_path_size];
         boost::detail::winapi::LPCWSTR_ path = path_hldr;
         boost::system::error_code ec;
-        boost::dll::detail::full_module_path_impl(mbi.AllocationBase, path, ec);
+        boost::dll::detail::full_module_path_impl(reinterpret_cast<boost::detail::winapi::HMODULE_>(mbi.AllocationBase), path, ec);
 
         if (ec) {
             // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough

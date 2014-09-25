@@ -84,16 +84,18 @@ int test_main(int argc, char* argv[]) {
         shared_library sl;
         sl.load_self();
         BOOST_CHECK(
-            symbol_location(sl.get<int(void)>("exef")) == argv[0]
+            (boost::filesystem::equivalent(symbol_location(sl.get<int(void)>("exef")), argv[0]))
         );
     }
 
+    std::cout << "\ninternal_function: " << symbol_location(internal_function);
+    std::cout << "\nargv[0]          : " << boost::filesystem::absolute(argv[0]);
     BOOST_CHECK(
-        symbol_location(internal_function) == argv[0]
+        (boost::filesystem::equivalent(symbol_location(internal_function), argv[0]))
     );
 
     BOOST_CHECK(
-        symbol_location(internal_variable) == argv[0]
+        (boost::filesystem::equivalent(symbol_location(internal_variable), argv[0]))
     );
     return 0;
 }
