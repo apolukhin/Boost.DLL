@@ -150,20 +150,13 @@ public:
     }
 
     boost::filesystem::path full_module_path(boost::system::error_code &ec) const BOOST_NOEXCEPT {
-        // get the full path of the loaded library
-        char full_module_path[PATH_MAX] = { '\0' };
-
-        // RTLD_DI_ORIGIN
-
-        // Obtain the origin of the dynamic object that is  associated  with  
-        // the handle. The p argument is a char pointer (char *p). 
-        //
-        // The dirname(3C) of  the  associated  object's realpath(3C), 
-        // which can be no larger than {PATH_MAX}, is copied to the pointer p.
-
-        // dlinfo() function returns -1 if the request is invalid
-        if (dlinfo(handle_, RTLD_DI_ORIGIN, full_module_path) < 0) 
-        {
+        // RTLD_DI_LINKMAP (RTLD_DI_ORIGIN returns only folder and is not suitable for this case)
+        // Obtain the Link_map for the handle  that  is  specified.
+        // The  p  argument  points to a Link_map pointer (Link_map
+        // **p). The actual storage for the Link_map  structure  is
+        // maintained by ld.so.1.
+        const struct link_map * link_map;
+        if (dlinfo(handle_, RTLD_DI_LINKMAP, &link_map) < 0) {
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,
                 boost::system::generic_category()
@@ -172,7 +165,7 @@ public:
             return boost::filesystem::path();
         }
 
-        return boost::filesystem::path(full_module_path);
+        return boost::filesystem::path(link_map->l_name);
     }
 
     static boost::filesystem::path suffix() {

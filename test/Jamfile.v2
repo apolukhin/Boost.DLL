@@ -55,6 +55,7 @@ project
                 : <target-os>linux:<linkflags>"-rdynamic" <target-os>windows:<define>TEST_FORCE_USE_OF_WINDOWS_H
                 : get_symbol_windows_h_forced
         ]
+        [ run symbol_runtime_info_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
         [ run shared_library_errors.cpp : $(TEST_DIR) : : <test-info>always_show_run_output  ]
         [ run structures_tests.cpp ]
         [ run library_info_test.cpp : $(TEST_DIR) : : <library>static_plugin <test-info>always_show_run_output  ]
