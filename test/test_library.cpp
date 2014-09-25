@@ -34,6 +34,7 @@ namespace foo {
 }
 
 
+
 // Make sure that aliases have no problems with memory allocations and different types of input parameters
 namespace namespace1 { namespace namespace2 { namespace namespace3 {
     typedef
@@ -55,6 +56,7 @@ namespace namespace1 { namespace namespace2 { namespace namespace3 {
 
     std::string info("I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
 }}}
+
 
 
 BOOST_DLL_ALIAS(foo::bar, foo_bar)
@@ -81,9 +83,12 @@ int increment(int n)
    return ++n;
 }
 
+#include <boost/dll/runtime_symbol_info.hpp>
 
+boost::filesystem::path this_module_location_from_itself() {
+    return boost::dll::this_line_location();
+}
 
-
-
+BOOST_DLL_ALIAS(this_module_location_from_itself, module_location_from_itself)
 
 

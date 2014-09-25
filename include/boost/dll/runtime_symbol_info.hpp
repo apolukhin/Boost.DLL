@@ -74,6 +74,27 @@ namespace detail {
         );
     }
 
+    /// @cond
+    // We have anonymous namespace here to make sure that `this_line_location()` method is instantiated in
+    // current translation module and is not shadowed by instantiations from other modules.
+    namespace {
+    /// @endcond
+
+    /*!
+    * On success returns full path and name of the binary object that holds the current line of code
+    * (the line in wich the `this_line_location()` method was called).
+    *
+    * \throws std::bad_alloc in case of insufficient memory.
+    */
+    static inline boost::filesystem::path this_line_location() {
+        return boost::dll::symbol_location(this_line_location);
+    }
+
+    /// @cond
+    } // anonymous namespace
+    /// @endcond
+
+
 }} // namespace boost::dll
 
 #endif // BOOST_DLL_RUNTIME_SYMBOL_INFO_HPP

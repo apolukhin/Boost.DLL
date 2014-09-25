@@ -97,6 +97,14 @@ int test_main(int argc, char* argv[]) {
     BOOST_CHECK(
         (boost::filesystem::equivalent(symbol_location(internal_variable), argv[0]))
     );
+
+
+    BOOST_CHECK(
+        (boost::filesystem::equivalent(this_line_location(), argv[0]))
+    );
+    BOOST_CHECK(
+        lib.get_alias<boost::filesystem::path()>("module_location_from_itself")() == lib.path()
+    );
     return 0;
 }
 

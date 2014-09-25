@@ -25,9 +25,9 @@ Applied comments from "Boost query interest" mails and Boost Incubator, implemen
 * Aliases macro for explicit specification of sections.
 * Aliases now use "boostdll" section.
 * Added `symbol_location()` methods.
+* Added `this_line_location()` method.
 * *TODO:*
     * Test Mach-O file format support
-    * Add `path this_line_location()`
 
 [h5 0.1]
 
