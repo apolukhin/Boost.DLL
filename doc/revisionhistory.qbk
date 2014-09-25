@@ -6,18 +6,28 @@
 
 [section Revision History]
 
-[h5 0.2]
 
-Improved docs and applied comments from "Boost query interest" mails:
+[h5 0.3 (In plans)]
+* *TODO:*
+    * rename `shared_library::path()` to `shared_library::location()`
+    * rename `shared_library::search_symbol()` to `shared_library::exists()`/`shared_library::count()`
+    * improve `load_mode` by adding rare Windows and POSIX specific load modes
+    * think of library load directories
+    * Optional: COFF, A.OUT file formats support
+
+[h5 0.2 (Current active developing version)]
+
+Applied comments from "Boost query interest" mails and Boost Incubator, implemented new features:
 
 * Project was renamed to Boost.DLL.
+* Improved docs.
 * Added library_info class.
+* Aliases macro for explicit specification of sections.
 * Aliases now use "boostdll" section.
+* Added `symbol_location()` methods.
 * *TODO:*
-    * Mach-O and COFF file format support
-    * Add `path this_binary()` and function to find binary name by symbol
-    * improve `load_mode`
-    * think of library load directories
+    * Test Mach-O file format support
+    * Add `path this_line_location()`
 
 [h5 0.1]
 

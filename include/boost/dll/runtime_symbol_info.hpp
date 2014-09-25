@@ -12,7 +12,8 @@
 #include <boost/config.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 #if BOOST_OS_WINDOWS
-#   include <windows.h>
+#   include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
+#   include <boost/dll/detail/full_module_path_impl.hpp>
 #else
 #   include <dlfcn.h> // Not suitable for Windows
 #endif
@@ -23,32 +24,57 @@
 
 namespace boost { namespace dll {
 
+namespace detail {
 #if BOOST_OS_WINDOWS
-    // TODO: stopped here
-    boost::filesystem::path symbol_location(const void* symbol) {    
-        const size_t size = 1024;
-        boost::detail::winapi::LPTWSTR_ buf = 0;
-     
+    inline boost::filesystem::path symbol_location_impl(const void* symbol) { 
+        boost::filesystem::path ret;
+   
         boost::detail::winapi::MEMORY_BASIC_INFORMATION_ mbi;
-        const boost::detail::winapi::SIZE_T_ res = boost::detail::winapi::VirtualQuery(&symbol, &mbi, sizeof(mbi));
-        boost::detail::winapi::HMODULE_ mod = mbi.AllocationBase;
+        if (!boost::detail::winapi::VirtualQuery(&symbol, &mbi, sizeof(mbi))) {
+            return ret;
+        }
+
+        boost::detail::winapi::WCHAR_ path_hldr[boost::dll::detail::default_path_size];
+        boost::detail::winapi::LPCWSTR_ path = path_hldr;
+        boost::system::error_code ec;
+        boost::dll::detail::full_module_path_impl(mbi.AllocationBase, path, ec);
+
+        if (ec) {
+            // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough
+            return ret;
+        }
+
+        ret = path;
+        if (path != path_hldr) {
+            delete[] path;
+        }
+
+        return ret;
     }
 #else
-    boost::filesystem::path symbol_location(const void* symbol) {
+    inline boost::filesystem::path symbol_location_impl(const void* symbol) {
         Dl_info info;
         const int res = dladdr(symbol, &info);
         return res ? boost::filesystem::path(info.dli_fname) : boost::filesystem::path();
     }
 #endif
+} // namespace detail
 
+    /*!
+    * On success returns full path and name of the binary object that holds symbol.
+    * \tparam T Type of the symbol, must not be explicitly specified.
+    * \param symbol Symbol which location is to be determinated.
+    * \return Path to the binary object that holds symbol or empty path in case error.
+    * \throws std::bad_alloc in case of insufficient memory.
+    */
     template <class T>
-    boost::filesystem::path symbol_location(const T& symbol) {
-        return boost::dll::symbol_location(
+    inline boost::filesystem::path symbol_location(const T& symbol) {
+        return boost::dll::detail::symbol_location_impl(
             boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol))
         );
     }
 
-}} // boost::dll
+}} // namespace boost::dll
 
 #endif // BOOST_DLL_RUNTIME_SYMBOL_INFO_HPP
 

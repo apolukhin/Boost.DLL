@@ -27,6 +27,7 @@ namespace winapi
     typedef ::FARPROC FARPROC_;
     typedef ::NEARPROC NEARPROC_;
     typedef ::PROC PROC_;
+    typedef ::MEMORY_BASIC_INFORMATION MEMORY_BASIC_INFORMATION_;
 
     using ::LoadLibraryW;
     using ::LoadLibraryExW;
@@ -41,6 +42,7 @@ namespace winapi
 # endif
     using ::FreeLibrary;
     using ::GetProcAddress;
+    using ::VirtualQuery;
 
     const DWORD_ DONT_RESOLVE_DLL_REFERENCES_       = DONT_RESOLVE_DLL_REFERENCES;
     const DWORD_ LOAD_IGNORE_CODE_AUTHZ_LEVEL_      = LOAD_IGNORE_CODE_AUTHZ_LEVEL;
@@ -67,14 +69,38 @@ namespace winapi
 
 #else
 extern "C" {
+    struct MEMORY_BASIC_INFORMATION64_ {
+        ULONGLONG_  BaseAddress;
+        ULONGLONG_  AllocationBase;
+        DWORD_      AllocationProtect;
+        DWORD_      __alignment1;
+        ULONGLONG_  RegionSize;
+        DWORD_      State;
+        DWORD_      Protect;
+        DWORD_      Type;
+        DWORD_      __alignment2;
+    };
+
+    struct MEMORY_BASIC_INFORMATION32_ {
+        DWORD_ BaseAddress;
+        DWORD_ AllocationBase;
+        DWORD_ AllocationProtect;
+        DWORD_ RegionSize;
+        DWORD_ State;
+        DWORD_ Protect;
+        DWORD_ Type;
+    };
+
 # ifdef _WIN64
     typedef INT_PTR_ (WINAPI *FARPROC_)();
     typedef INT_PTR_ (WINAPI *NEARPROC_)();
     typedef INT_PTR_ (WINAPI *PROC_)();
+    typedef MEMORY_BASIC_INFORMATION64_ MEMORY_BASIC_INFORMATION_;
 # else
     typedef int (WINAPI *FARPROC_)();
     typedef int (WINAPI *NEARPROC_)();
     typedef int (WINAPI *PROC_)();
+    typedef MEMORY_BASIC_INFORMATION32_ MEMORY_BASIC_INFORMATION_;
 # endif // _WIN64
 
     __declspec(dllimport) HMODULE_ WINAPI
@@ -130,6 +156,12 @@ extern "C" {
         GetProcAddress(
             HMODULE_ hModule,
             LPCSTR_ lpProcName
+    );
+    __declspec(dllimport) FARPROC_ WINAPI
+        VirtualQuery(
+          LPCVOID_ lpAddress,
+          MEMORY_BASIC_INFORMATION_* lpBuffer,
+          ULONG_PTR_ dwLength
     );
 
     const DWORD_ DONT_RESOLVE_DLL_REFERENCES_       = 0x00000001;
