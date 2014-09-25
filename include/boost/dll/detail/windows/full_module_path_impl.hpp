@@ -25,8 +25,8 @@ namespace boost { namespace dll { namespace detail {
     {
         const boost::detail::winapi::DWORD_ ERROR_INSUFFICIENT_BUFFER_ = 0x7A;
 
-        // A handle to the loaded module whose path is being requested. 
-        // If this parameter is NULL, GetModuleFileName retrieves the path of the 
+        // A handle to the loaded module whose path is being requested.
+        // If this parameter is NULL, GetModuleFileName retrieves the path of the
         // executable file of the current process.
         boost::detail::winapi::GetModuleFileNameW(h, path, default_path_size);
         ec = last_error_code();

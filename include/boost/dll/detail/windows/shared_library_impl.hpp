@@ -20,7 +20,7 @@
 #include <boost/config.hpp>
 #include <boost/dll/shared_library_load_mode.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
-#include <boost/dll/detail/full_module_path_impl.hpp>
+#include <boost/dll/detail/windows/full_module_path_impl.hpp>
 
 #include <boost/move/move.hpp>
 #include <boost/swap.hpp>

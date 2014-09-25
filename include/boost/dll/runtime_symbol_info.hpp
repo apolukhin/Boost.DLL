@@ -13,7 +13,7 @@
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 #if BOOST_OS_WINDOWS
 #   include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
-#   include <boost/dll/detail/full_module_path_impl.hpp>
+#   include <boost/dll/detail/windows/full_module_path_impl.hpp>
 #else
 #   include <dlfcn.h> // Not suitable for Windows
 #endif
@@ -26,9 +26,9 @@ namespace boost { namespace dll {
 
 namespace detail {
 #if BOOST_OS_WINDOWS
-    inline boost::filesystem::path symbol_location_impl(const void* symbol) { 
+    inline boost::filesystem::path symbol_location_impl(const void* symbol) {
         boost::filesystem::path ret;
-   
+
         boost::detail::winapi::MEMORY_BASIC_INFORMATION_ mbi;
         if (!boost::detail::winapi::VirtualQuery(&symbol, &mbi, sizeof(mbi))) {
             return ret;
