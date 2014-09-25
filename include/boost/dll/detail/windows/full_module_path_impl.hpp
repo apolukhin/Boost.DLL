@@ -9,6 +9,7 @@
 #include <boost/config.hpp>
 #include <boost/dll/detail/system_error.hpp>
 #include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
+#include <boost/detail/winapi/GetLastError.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
