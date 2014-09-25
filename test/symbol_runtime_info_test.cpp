@@ -25,6 +25,9 @@ extern "C" int BOOST_SYMBOL_EXPORT exef() {
     return 15;
 }
 
+void internal_function() {}
+int internal_variable = 1;
+
 // Unit Tests
 int test_main(int argc, char* argv[]) {
     using namespace boost::dll;
@@ -39,55 +42,59 @@ int test_main(int argc, char* argv[]) {
     std::cout << "symbol_location: " << symbol_location(&lib.get<int>("integer_g")) << std::endl;
     std::cout << "lib.path():      " << lib.path() << std::endl;
     BOOST_CHECK(
-        symbol_location(&lib.get<int>("integer_g")) == lib.path()
+        symbol_location(lib.get<int>("integer_g")) == lib.path()
     );
 
-/*    sl.get<int>("integer_g") = 10;
-    BOOST_CHECK(sl.get<int>("integer_g") == 10);
+    BOOST_CHECK(
+        symbol_location(lib.get<say_hello_func>("say_hello")) == lib.path()
+    );
 
-    BOOST_CHECK(sl.get<say_hello_func>("say_hello"));
-    sl.get<say_hello_func>("say_hello")();
+    BOOST_CHECK(
+        symbol_location(lib.get<lib_version_func>("lib_version")) == lib.path()
+    );
 
-    float ver = sl.get<lib_version_func>("lib_version")();
-    BOOST_CHECK(ver == 1.0);
-
-    int n = sl.get<increment>("increment")(1);
-    BOOST_CHECK(n == 2);
-
-    BOOST_CHECK(sl.get<const int>("const_integer_g") == 777);
-
-    boost::function<int(int)> inc = sl.get<int(int)>("increment");
-    BOOST_CHECK(inc(1) == 2);
-    BOOST_CHECK(inc(2) == 3);
-    BOOST_CHECK(inc(3) == 4);
+    BOOST_CHECK(
+        symbol_location(lib.get<const int>("const_integer_g")) == lib.path()
+    );
 
     // Cheking that symbols are still available, after another load+unload of the library
     { shared_library sl2(shared_library_path); }
 
-    BOOST_CHECK(inc(1) == 2);
-    BOOST_CHECK(sl.get<int>("integer_g") == 10);
-
+    BOOST_CHECK(
+        symbol_location(lib.get<int>("integer_g")) == lib.path()
+    );
 
     // Checking aliases
-    boost::function<std::size_t(const std::vector<int>&)> sz 
-        = sl.get_alias<std::size_t(const std::vector<int>&)>("foo_bar");
+    BOOST_CHECK(
+        symbol_location(lib.get<std::size_t(*)(const std::vector<int>&)>("foo_bar")) == lib.path()
+    );
+    BOOST_CHECK(
+        symbol_location(lib.get_alias<std::size_t(const std::vector<int>&)>("foo_bar")) == lib.path()
+    );
 
-    std::vector<int> v(10);
-    BOOST_CHECK(sz(v) == 10);
-    BOOST_CHECK(sl.get_alias<std::size_t>("foo_variable") == 42);
 
-
-    sz = sl.get<std::size_t(*)(const std::vector<int>&)>("foo_bar");
-    BOOST_CHECK(sz(v) == 10);
-    BOOST_CHECK(*sl.get<std::size_t*>("foo_variable") == 42);
+    BOOST_CHECK(
+        symbol_location(lib.get<std::size_t*>("foo_variable")) == lib.path()
+    );
+    BOOST_CHECK(
+        symbol_location(lib.get_alias<std::size_t>("foo_variable")) == lib.path()
+    );
     
     { // self
         shared_library sl;
         sl.load_self();
-        int val = sl.get<int(void)>("exef")();
-        BOOST_CHECK(val == 15);   
-    }*/
+        BOOST_CHECK(
+            symbol_location(sl.get<int(void)>("exef")) == argv[0]
+        );
+    }
 
+    BOOST_CHECK(
+        symbol_location(internal_function) == argv[0]
+    );
+
+    BOOST_CHECK(
+        symbol_location(internal_variable) == argv[0]
+    );
     return 0;
 }
 

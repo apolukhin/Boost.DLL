@@ -10,6 +10,7 @@
 #define BOOST_DLL_RUNTIME_SYMBOL_INFO_HPP
 
 #include <boost/config.hpp>
+#include <boost/dll/detail/aggressive_ptr_cast.hpp>
 #if BOOST_OS_WINDOWS
 #   include <windows.h>
 #else
@@ -39,6 +40,13 @@ namespace boost { namespace dll {
         return res ? boost::filesystem::path(info.dli_fname) : boost::filesystem::path();
     }
 #endif
+
+    template <class T>
+    boost::filesystem::path symbol_location(const T& symbol) {
+        return boost::dll::symbol_location(
+            boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol))
+        );
+    }
 
 }} // boost::dll
 

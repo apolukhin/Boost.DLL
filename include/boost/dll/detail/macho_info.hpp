@@ -272,7 +272,7 @@ public:
         }
 
         // section indexes start from 1
-        symbol_names_gather f = { ret, f_, 1 + (ret.begin() - it) };
+        symbol_names_gather f = { ret, f_, static_cast<std::size_t>(1 + (ret.begin() - it)) };
         ret.clear();
         command_finder(load_command_types::LC_SYMTAB, f);
         return ret;
