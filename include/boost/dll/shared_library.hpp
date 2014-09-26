@@ -1,18 +1,8 @@
-// shared_library.hpp --------------------------------------------------------//
-// -----------------------------------------------------------------------------
-
-// Copyright 2011-2013 Renato Tegon Forti
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-
+//
 // Distributed under the Boost Software License, Version 1.0.
-// See http://www.boost.org/LICENSE_1_0.txt
-
-// -----------------------------------------------------------------------------
-
-// Revision History
-// 05-04-2013 dd-mm-yyyy - Initial Release
-
-// -----------------------------------------------------------------------------
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_DLL_SHARED_LIBRARY_HPP
 #define BOOST_DLL_SHARED_LIBRARY_HPP
@@ -80,7 +70,7 @@ public:
     * \param lib_path Library file name. Can handle std::string, char*, std::wstring,
     *           wchar_t* or boost::filesystem::path.
     *
-    * \throw boost::system::system_error.
+    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     */
     explicit shared_library(const boost::filesystem::path& lib_path) {
         load(lib_path);
@@ -94,9 +84,9 @@ public:
     *
     * \param ec Variable that will be set to the result of the operation.
     *
-    * \throw Nothing.
+    * \throw std::bad_alloc in case of insufficient memory.
     */
-    shared_library(const boost::filesystem::path& lib_path, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    shared_library(const boost::filesystem::path& lib_path, boost::system::error_code &ec) {
         load(lib_path, ec);
     }
 
@@ -109,7 +99,7 @@ public:
     *
     * \param mode An mode that will be used on library load.
     *
-    * \throw boost::system::system_error.
+    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     *
     */
     shared_library(const boost::filesystem::path& lib_path, load_mode::type mode) {
@@ -127,10 +117,10 @@ public:
     *
     * \param mode An mode that will be used on library load.
     *
-    * \throw Nothing.
+    * \throw std::bad_alloc in case of insufficient memory.
     *
     */
-    shared_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    shared_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code &ec) {
         load(lib_path, mode, ec);
     }
     
@@ -176,7 +166,7 @@ public:
     * \param lib_path Library file name. Can handle std::string, char, std::wstring,
     *           wchar_t or filesystem path.
     *
-    * \throw boost::system::system_error.
+    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     *
     */
     void load(const boost::filesystem::path& lib_path) {
@@ -185,31 +175,6 @@ public:
 
         if (ec) {
             boost::dll::detail::report_error(ec, "load() failed");
-        }
-    }
-
-    /*!
-    * \b DEPRECATED Open myself (this executable) to have access to symbols. 
-    *
-    * This can be used when DLLs/DSOs is directly linked into the 
-    * executable.
-    *
-    * Calls unload() if `this->is_loaded()` is true.
-    *
-    * You must export the symbol even if you are on exe. 
-    * Flag '-rdynamic' must be used when linking the plugin into the executable
-    * on Linux OS.
-    *
-    * See Tutorial "Linking plugin into the executable" for a usage example.
-    *
-    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
-    */
-    void load_self() {
-        boost::system::error_code ec;
-        base_t::load_self(ec);
-
-        if (ec) {
-            boost::dll::detail::report_error(ec, "load_self() failed");
         }
     }
 
@@ -224,37 +189,11 @@ public:
     *
     * \param ec Variable that will be set to the result of the operation.
     *
-    * \throw Nothing.
-    */
-    void load(const boost::filesystem::path& lib_path, boost::system::error_code &ec) BOOST_NOEXCEPT {
-        ec.clear();
-        base_t::load(lib_path, load_mode::default_mode, ec);
-    }
-
-    /*!
-    * \b DEPRECATED Open myself (this executable) to have access to symbols.
-    *
-    * This can be used when DLLs/DSOs is directly linked into the 
-    * executable.
-    *
-    * Calls unload() if `this->is_loaded()` is true.
-    *
-    * You must export the symbol even if you are on exe. 
-    * Flag '-rdynamic' must be used when linking the plugin into the executable
-    * on Linux OS.
-    *
-    * Flag '-rdynamic' must be used when linking the plugin into the executable
-    * on Linux OS.
-    * 
-    * See Tutorial "Linking plugin into the executable" for usage example.
-    *
-    * \param ec Variable that will be set to the result of the operation.
-    *
     * \throw std::bad_alloc in case of insufficient memory.
     */
-    void load_self(boost::system::error_code &ec) {
+    void load(const boost::filesystem::path& lib_path, boost::system::error_code &ec) {
         ec.clear();
-        base_t::load_self(ec);
+        base_t::load(lib_path, load_mode::default_mode, ec);
     }
 
     /*!
@@ -268,7 +207,7 @@ public:
     *
     * \param mode An mode that will be used on library load.
     *
-    * \throw boost::system::system_error.
+    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     *
     */
     void load(const boost::filesystem::path& lib_path, load_mode::type mode) {
@@ -293,10 +232,10 @@ public:
     *
     * \param mode An mode that will be used on library load.
     *
-    * \throw Nothing.
+    * \throw std::bad_alloc in case of insufficient memory.
     *
     */
-    void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code &ec) {
         ec.clear();
         base_t::load(lib_path, mode, ec);
     }
@@ -305,6 +244,7 @@ public:
     * Unloads a shared library. If library was loaded multiple times
     * by different instances of shared_library, the actual DLL/DSO won't be unloaded until
     * there is at least one instance of shared_library holding a reference to it.
+    * \throw Nothing.
     */
     void unload() BOOST_NOEXCEPT {
         base_t::unload();

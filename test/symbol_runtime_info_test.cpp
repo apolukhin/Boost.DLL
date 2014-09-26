@@ -81,8 +81,7 @@ int test_main(int argc, char* argv[]) {
     );
     
     { // self
-        shared_library sl;
-        sl.load_self();
+        shared_library sl(program_location());
         BOOST_CHECK(
             (boost::filesystem::equivalent(symbol_location(sl.get<int(void)>("exef")), argv[0]))
         );

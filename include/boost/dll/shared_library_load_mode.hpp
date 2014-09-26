@@ -1,18 +1,8 @@
-// shared_library_mode.hpp ----------------------------------------------------//
-// -----------------------------------------------------------------------------
-
-// Copyright 2011-2013 Renato Tegon Forti.
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-
+//
 // Distributed under the Boost Software License, Version 1.0.
-// See http://www.boost.org/LICENSE_1_0.txt
-
-// -----------------------------------------------------------------------------
-
-// Revision History
-// 17-10-2013 dd-mm-yyyy - Initial Release
-
-// -----------------------------------------------------------------------------
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_DLL_SHARED_LIBRARY_MODE_HPP
 #define BOOST_DLL_SHARED_LIBRARY_MODE_HPP

@@ -1,8 +1,8 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
 //
-// Use, modification, and distribution is subject to the Boost Software
-// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
 #define BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
@@ -10,12 +10,12 @@
 #include <boost/config.hpp>
 #include <boost/dll/shared_library_load_mode.hpp>
 #include <boost/dll/detail/posix/path_from_handle.hpp>
+#include <boost/dll/detail/posix/program_location_impl.hpp>
 
-#include <boost/move/move.hpp>
+#include <boost/move/utility.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/utility/string_ref.hpp>
-#include "boost/detail/no_exceptions_support.hpp"
 
 #include <dlfcn.h>
 #include <link.h>
@@ -51,7 +51,7 @@ public:
         handle_ = sl.handle_; sl.handle_ = NULL; return *this;  
     }
 
-    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) {
         unload();
 
         // Do not allow opening NULL paths. User must use load_self() instead
@@ -73,42 +73,22 @@ public:
             mode |= load_mode::rtld_local;
         }
 
-        if (!(mode & load_mode::append_native_decorations)) {
+        boost::system::error_code prog_loc_err;
+        if (boost::dll::detail::program_location_impl(prog_loc_err) == sl && !prog_loc_err) {
+            // As is known the function dlopen() loads the dynamic library file 
+            // named by the null-terminated string filename and returns an opaque 
+            // "handle" for the dynamic library. If filename is NULL, then the 
+            // returned handle is for the main program.
+            handle_ = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
+        } else if (!(mode & load_mode::append_native_decorations)) {
             handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
         } else {
-            BOOST_TRY {
-                handle_ = dlopen(
-                    // Apple requires '.so' extension
-                    ((sl.parent_path() / "lib").native() + sl.filename().native() + ".so").c_str(),
-                    static_cast<int>(mode) & (~static_cast<int>(load_mode::append_native_decorations))
-                );
-            } BOOST_CATCH (...) {
-                ec = boost::system::error_code(
-                    boost::system::errc::not_enough_memory,
-                    boost::system::generic_category()
-                );
-
-                return;
-            } BOOST_CATCH_END
-        }
-
-        if (!handle_) {
-            ec = boost::system::error_code(
-                boost::system::errc::bad_file_descriptor,
-                boost::system::generic_category()
+            handle_ = dlopen(
+                // Apple requires '.so' extension
+                ((sl.parent_path() / "lib").native() + sl.filename().native() + ".so").c_str(),
+                static_cast<int>(mode) & (~static_cast<int>(load_mode::append_native_decorations))
             );
         }
-    }
-
-    void load_self(boost::system::error_code &ec) {
-        unload();
-
-        // As is known the function dlopen() loads the dynamic library file 
-        // named by the null-terminated string filename and returns an opaque 
-        // "handle" for the dynamic library. If filename is NULL, then the 
-        // returned handle is for the main program.
-
-        handle_ = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
 
         if (!handle_) {
             ec = boost::system::error_code(

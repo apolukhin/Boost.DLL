@@ -1,28 +1,16 @@
-// shared_library_impl.hpp ---------------------------------------------------//
-// -----------------------------------------------------------------------------
-
-// Copyright 2011-2012 Renato Tegon Forti
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-
+//
 // Distributed under the Boost Software License, Version 1.0.
-// See http://www.boost.org/LICENSE_1_0.txt
-
-// -----------------------------------------------------------------------------
-
-// Revision History
-// 05-04-2012 dd-mm-yyyy - Initial Release
-
-// -----------------------------------------------------------------------------
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
 #define BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
 
 #include <boost/config.hpp>
-#include <boost/dll/shared_library_load_mode.hpp>
-#include <boost/dll/detail/aggressive_ptr_cast.hpp>
-#include <boost/dll/detail/windows/path_from_handle.hpp>
+#include <boost/dll.hpp>
 
-#include <boost/move/move.hpp>
+#include <boost/move/utility.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/utility/string_ref.hpp>
@@ -75,42 +63,13 @@ public:
         const bool do_append_deco = !!(mode & load_mode::append_native_decorations);
         if (!do_append_deco && sl.has_extension()) {
             handle_ = boost::detail::winapi::LoadLibraryExW(sl.c_str(), 0, flags);
+        } else if (!do_append_deco) {
+            handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".").c_str(), 0, flags);
         } else {
-            BOOST_TRY {
-                // From MSDN: To prevent the function from appending .dll to the module name,
-                // include a trailing point character (.) in the module name string.
-                if (!do_append_deco) {
-                    handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".").c_str(), 0, flags);
-                } else {
-                    flags &= ~static_cast<boost::detail::winapi::DWORD_>(load_mode::append_native_decorations);
-                    handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, flags);
-                }
-            } BOOST_CATCH (...) {
-                ec = boost::system::error_code(
-                    boost::system::errc::not_enough_memory,
-                    boost::system::generic_category()
-                );
-
-                return;
-            } BOOST_CATCH_END
+            flags &= ~static_cast<boost::detail::winapi::DWORD_>(load_mode::append_native_decorations);
+            handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, flags);
         }
 
-        if (!handle_) {
-            ec = boost::dll::detail::last_error_code();
-        }
-    }
-
-    void load_self(boost::system::error_code &ec) {
-        unload();
-
-        boost::filesystem::path p = boost::dll::detail::path_from_handle(NULL, ec);
-        if (ec) {
-            // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough
-            return;
-        }
-        
-        // here "handle" will be handle of current process!
-        handle_ = boost::detail::winapi::LoadLibraryExW(p.c_str(), 0, 0);
         if (!handle_) {
             ec = boost::dll::detail::last_error_code();
         }

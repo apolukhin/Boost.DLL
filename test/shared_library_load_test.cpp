@@ -5,7 +5,7 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/dll/shared_library.hpp>
+#include <boost/dll.hpp>
 #include <boost/test/minimal.hpp>
 
 #include "../example/shared_lib_path.hpp"
@@ -159,14 +159,12 @@ int test_main(int argc, char* argv[])
    }
    
    {  // self_load
-        shared_library sl;
-        sl.load_self();
+        shared_library sl(program_location());
         BOOST_CHECK(sl.is_loaded());
 
 
         boost::system::error_code ec;
-        shared_library sl2;
-        sl2.load_self(ec);
+        shared_library sl2(program_location());
         BOOST_CHECK(sl2.is_loaded());
         BOOST_CHECK(!ec);
 
@@ -198,10 +196,10 @@ int test_main(int argc, char* argv[])
         BOOST_CHECK(!ec);
         BOOST_CHECK(lib_path_equal(sl.path(), shared_library_path));
 
-        sl.load_self();
+        sl.load(program_location());
         BOOST_CHECK(sl.is_loaded());
 
-        sl.load_self(ec);
+        sl.load(program_location());
         BOOST_CHECK(sl.is_loaded());
         BOOST_CHECK(!ec);
    }
@@ -209,7 +207,7 @@ int test_main(int argc, char* argv[])
    {  // self_load
         shared_library sl;
         boost::system::error_code ec;
-        sl.load_self(ec);
+        sl.load(program_location());
         BOOST_CHECK(sl.is_loaded());
         BOOST_CHECK(!ec);
    }

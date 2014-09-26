@@ -47,6 +47,18 @@ Other methods are assumed to be hot paths and optimized as much as possible.
 
 [endsect]
 
+[section Self loading]
+
+There is a good big reason to make self loading via `shared_library(program_location())` instead of
+having some `shared_library::load_self()` member method. That reason is the requirement to have an ability to call
+`shared_library(this_line_location())` from any place, even from the main binary. We need that to link plugins
+into the binary and to create a transparent reference counting mechanism.
+
+Making multiple interfaces that do exactly the same things looks unreasonable to me, that's why
+`shared_library(program_location())` and `shared_library(this_line_location())` are used without
+`shared_library::load_self()`.
+
+[endsect]
 
 [endsect]
 

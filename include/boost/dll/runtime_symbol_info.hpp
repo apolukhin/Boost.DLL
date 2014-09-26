@@ -3,20 +3,19 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-//
-// For more information, see http://www.boost.org
 
 #ifndef BOOST_DLL_RUNTIME_SYMBOL_INFO_HPP
 #define BOOST_DLL_RUNTIME_SYMBOL_INFO_HPP
 
 #include <boost/config.hpp>
+#include <boost/predef/os.h>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 #if BOOST_OS_WINDOWS
 #   include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
 #   include <boost/dll/detail/windows/path_from_handle.hpp>
 #else
-#   include <dlfcn.h> // Not suitable for Windows
-#   include <boost/dll/detail/posix/path_from_handle.hpp>
+#   include <dlfcn.h>
+#   include <boost/dll/detail/posix/program_location_impl.hpp>
 #endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
@@ -39,9 +38,8 @@ namespace detail {
         return boost::dll::detail::path_from_handle(reinterpret_cast<boost::detail::winapi::HMODULE_>(mbi.AllocationBase), ignore);
     }
 
-    inline boost::filesystem::path program_location_impl() {
-        boost::system::error_code ignore;
-        return boost::dll::detail::path_from_handle(NULL, ignore);
+    inline boost::filesystem::path program_location_impl(boost::system::error_code& ec) {
+        return boost::dll::detail::path_from_handle(NULL, ec);
     }    
 #else
     inline boost::filesystem::path symbol_location_impl(const void* symbol) {
@@ -49,20 +47,6 @@ namespace detail {
         const int res = dladdr(symbol, &info);
         return res ? boost::filesystem::path(info.dli_fname) : boost::filesystem::path();
     }
-
-    inline boost::filesystem::path program_location_impl() {
-        // As is known the function dlopen() loads the dynamic library file 
-        // named by the null-terminated string filename and returns an opaque 
-        // "handle" for the dynamic library. If filename is NULL, then the 
-        // returned handle is for the main program.
-        void* handle = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
-        if (!handle) {
-            return boost::filesystem::path();
-        }
-        
-        boost::system::error_code ignore;
-        return boost::dll::detail::path_from_handle(handle, ignore);
-    }  
 #endif
 } // namespace detail
 
@@ -102,11 +86,16 @@ namespace detail {
 
     /*!
     * On success returns full path and name of the currently running program (the one which contains the `main()` function).
+    * 
+    * Return value can be used as a parameter for shared_library. See Tutorial "Linking plugin into the executable"
+    * for usage example. Flag '-rdynamic' must be used when linking the plugin into the executable
+    * on Linux OS.
     *
     * \throws std::bad_alloc in case of insufficient memory.
     */
     static inline boost::filesystem::path program_location() {
-        return boost::dll::detail::program_location_impl();
+        boost::system::error_code ignore;
+        return boost::dll::detail::program_location_impl(ignore);
     }
 
 }} // namespace boost::dll

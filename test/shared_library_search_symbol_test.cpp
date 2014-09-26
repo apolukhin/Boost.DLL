@@ -7,7 +7,7 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/dll/shared_library.hpp>
+#include <boost/dll.hpp>
 #include <boost/test/minimal.hpp>
 
 #include "../example/shared_lib_path.hpp"
@@ -33,8 +33,7 @@ int test_main(int argc, char* argv[])
    }
    
    {
-      shared_library sl;
-      sl.load_self();
+      shared_library sl(program_location());
       BOOST_CHECK(sl.search_symbol("exef"));
       BOOST_CHECK(!sl.search_symbol("i_do_not_exist"));
    }
