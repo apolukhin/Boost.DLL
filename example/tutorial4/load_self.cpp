@@ -19,8 +19,7 @@ namespace dll = boost::dll;
 int main() {
     std::cout << "Application started" << std::endl;
     
-    dll::shared_library self;
-    self.load_self();
+    dll::shared_library self(dll::program_location());
 
     std::cout << "Call function" << std::endl;
     boost::function<boost::shared_ptr<my_plugin_api>()> creator 

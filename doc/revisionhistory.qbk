@@ -9,6 +9,7 @@
 
 [h5 0.3 (In plans)]
 * *TODO:*
+    * remove `shared_library::load_self()`
     * rename `shared_library::path()` to `shared_library::location()`
     * rename `shared_library::search_symbol()` to `shared_library::exists()`/`shared_library::count()`
     * improve `load_mode` by adding rare Windows and POSIX specific load modes

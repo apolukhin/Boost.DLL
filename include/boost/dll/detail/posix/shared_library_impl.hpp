@@ -1,25 +1,15 @@
-// shared_library_impl.hpp ---------------------------------------------------//
-// -----------------------------------------------------------------------------
-
-// Copyright 2011-2012 Renato Tegon Forti
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-
-// Distributed under the Boost Software License, Version 1.0.
-// See http://www.boost.org/LICENSE_1_0.txt
-
-// -----------------------------------------------------------------------------
-
-// Revision History
-// 05-04-2012 dd-mm-yyyy - Initial Release
-// 16-09-2013 dd-mm-yyyy - Refatored
 //
-// -----------------------------------------------------------------------------
+// Use, modification, and distribution is subject to the Boost Software
+// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
 #define BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
 
 #include <boost/config.hpp>
 #include <boost/dll/shared_library_load_mode.hpp>
+#include <boost/dll/detail/posix/path_from_handle.hpp>
 
 #include <boost/move/move.hpp>
 #include <boost/swap.hpp>
@@ -28,11 +18,7 @@
 #include "boost/detail/no_exceptions_support.hpp"
 
 #include <dlfcn.h>
-
-// for dlinfo
-#include <dlfcn.h>
 #include <link.h>
-#include <limits.h>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -114,7 +100,7 @@ public:
         }
     }
 
-    void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load_self(boost::system::error_code &ec) {
         unload();
 
         // As is known the function dlopen() loads the dynamic library file 
@@ -149,23 +135,8 @@ public:
         boost::swap(handle_, rhs.handle_);
     }
 
-    boost::filesystem::path full_module_path(boost::system::error_code &ec) const BOOST_NOEXCEPT {
-        // RTLD_DI_LINKMAP (RTLD_DI_ORIGIN returns only folder and is not suitable for this case)
-        // Obtain the Link_map for the handle  that  is  specified.
-        // The  p  argument  points to a Link_map pointer (Link_map
-        // **p). The actual storage for the Link_map  structure  is
-        // maintained by ld.so.1.
-        const struct link_map * link_map;
-        if (dlinfo(handle_, RTLD_DI_LINKMAP, &link_map) < 0) {
-            ec = boost::system::error_code(
-                boost::system::errc::bad_file_descriptor,
-                boost::system::generic_category()
-            );
-
-            return boost::filesystem::path();
-        }
-
-        return boost::filesystem::path(link_map->l_name);
+    boost::filesystem::path full_module_path(boost::system::error_code &ec) const {
+        return boost::dll::detail::path_from_handle(handle_, ec);
     }
 
     static boost::filesystem::path suffix() {

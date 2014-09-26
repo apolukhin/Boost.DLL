@@ -20,7 +20,7 @@
 #include <boost/config.hpp>
 #include <boost/dll/shared_library_load_mode.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
-#include <boost/dll/detail/windows/full_module_path_impl.hpp>
+#include <boost/dll/detail/windows/path_from_handle.hpp>
 
 #include <boost/move/move.hpp>
 #include <boost/swap.hpp>
@@ -100,27 +100,19 @@ public:
         }
     }
 
-    void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load_self(boost::system::error_code &ec) {
         unload();
 
-        boost::detail::winapi::WCHAR_ path_hldr[boost::dll::detail::default_path_size];
-        boost::detail::winapi::LPCWSTR_ path = path_hldr;
-
-        boost::dll::detail::full_module_path_impl(NULL, path, ec);
-        
+        boost::filesystem::path p = boost::dll::detail::path_from_handle(NULL, ec);
         if (ec) {
             // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough
             return;
         }
         
         // here "handle" will be handle of current process!
-        handle_ = boost::detail::winapi::LoadLibraryExW(path, 0, 0);
+        handle_ = boost::detail::winapi::LoadLibraryExW(p.c_str(), 0, 0);
         if (!handle_) {
             ec = boost::dll::detail::last_error_code();
-        }
-
-        if (path != path_hldr) {
-            delete[] path;
         }
     }
 
@@ -140,23 +132,7 @@ public:
     }
 
     boost::filesystem::path full_module_path(boost::system::error_code &ec) const {
-        boost::detail::winapi::WCHAR_ path_hldr[boost::dll::detail::default_path_size];
-        boost::detail::winapi::LPCWSTR_ path = path_hldr;
-
-        boost::dll::detail::full_module_path_impl(handle_, path, ec);
-
-        if (ec) {
-            // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough
-            return boost::filesystem::path();
-        }
-
-        boost::filesystem::path full_module_path(path);
-
-        if (path != path_hldr) {
-            delete[] path;
-        }
-
-        return full_module_path;
+        return boost::dll::detail::path_from_handle(handle_, ec);
     }
 
     static boost::filesystem::path suffix() {

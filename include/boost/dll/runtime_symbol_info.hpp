@@ -13,9 +13,10 @@
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 #if BOOST_OS_WINDOWS
 #   include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
-#   include <boost/dll/detail/windows/full_module_path_impl.hpp>
+#   include <boost/dll/detail/windows/path_from_handle.hpp>
 #else
 #   include <dlfcn.h> // Not suitable for Windows
+#   include <boost/dll/detail/posix/path_from_handle.hpp>
 #endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
@@ -34,29 +35,34 @@ namespace detail {
             return ret;
         }
 
-        boost::detail::winapi::WCHAR_ path_hldr[boost::dll::detail::default_path_size];
-        boost::detail::winapi::LPCWSTR_ path = path_hldr;
-        boost::system::error_code ec;
-        boost::dll::detail::full_module_path_impl(reinterpret_cast<boost::detail::winapi::HMODULE_>(mbi.AllocationBase), path, ec);
-
-        if (ec) {
-            // Error other than ERROR_INSUFFICIENT_BUFFER_ occured, or failed to allocate buffer big enough
-            return ret;
-        }
-
-        ret = path;
-        if (path != path_hldr) {
-            delete[] path;
-        }
-
-        return ret;
+        boost::system::error_code ignore;
+        return boost::dll::detail::path_from_handle(reinterpret_cast<boost::detail::winapi::HMODULE_>(mbi.AllocationBase), ignore);
     }
+
+    inline boost::filesystem::path program_location_impl() {
+        boost::system::error_code ignore;
+        return boost::dll::detail::path_from_handle(NULL, ignore);
+    }    
 #else
     inline boost::filesystem::path symbol_location_impl(const void* symbol) {
         Dl_info info;
         const int res = dladdr(symbol, &info);
         return res ? boost::filesystem::path(info.dli_fname) : boost::filesystem::path();
     }
+
+    inline boost::filesystem::path program_location_impl() {
+        // As is known the function dlopen() loads the dynamic library file 
+        // named by the null-terminated string filename and returns an opaque 
+        // "handle" for the dynamic library. If filename is NULL, then the 
+        // returned handle is for the main program.
+        void* handle = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
+        if (!handle) {
+            return boost::filesystem::path();
+        }
+        
+        boost::system::error_code ignore;
+        return boost::dll::detail::path_from_handle(handle, ignore);
+    }  
 #endif
 } // namespace detail
 
@@ -94,6 +100,14 @@ namespace detail {
     } // anonymous namespace
     /// @endcond
 
+    /*!
+    * On success returns full path and name of the currently running program (the one which contains the `main()` function).
+    *
+    * \throws std::bad_alloc in case of insufficient memory.
+    */
+    static inline boost::filesystem::path program_location() {
+        return boost::dll::detail::program_location_impl();
+    }
 
 }} // namespace boost::dll
 

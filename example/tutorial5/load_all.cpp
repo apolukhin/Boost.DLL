@@ -76,8 +76,7 @@ void plugins_collector::load_all() {
         insert_plugin(boost::move(plugin));
     }
     
-    dll::shared_library plugin;
-    plugin.load_self();
+    dll::shared_library plugin(dll::program_location());
     std::cout << "Loaded self\n";
     insert_plugin(boost::move(plugin));
 }

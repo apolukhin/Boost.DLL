@@ -189,7 +189,7 @@ public:
     }
 
     /*!
-    * Open myself (this executable) to have access to symbols. 
+    * \b DEPRECATED Open myself (this executable) to have access to symbols. 
     *
     * This can be used when DLLs/DSOs is directly linked into the 
     * executable.
@@ -202,7 +202,7 @@ public:
     *
     * See Tutorial "Linking plugin into the executable" for a usage example.
     *
-    * \throw boost::system::system_error.
+    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     */
     void load_self() {
         boost::system::error_code ec;
@@ -232,7 +232,7 @@ public:
     }
 
     /*!
-    * Open myself (this executable) to have access to symbols.
+    * \b DEPRECATED Open myself (this executable) to have access to symbols.
     *
     * This can be used when DLLs/DSOs is directly linked into the 
     * executable.
@@ -250,9 +250,9 @@ public:
     *
     * \param ec Variable that will be set to the result of the operation.
     *
-    * \throw Nothing.
+    * \throw std::bad_alloc in case of insufficient memory.
     */
-    void load_self(boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load_self(boost::system::error_code &ec) {
         ec.clear();
         base_t::load_self(ec);
     }
