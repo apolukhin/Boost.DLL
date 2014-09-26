@@ -8,13 +8,15 @@
 #define BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
 
 #include <boost/config.hpp>
-#include <boost/dll.hpp>
+#include <boost/dll/shared_library_load_mode.hpp>
+#include <boost/dll/detail/aggressive_ptr_cast.hpp>
+#include <boost/dll/detail/system_error.hpp>
+#include <boost/dll/detail/windows/path_from_handle.hpp>
 
 #include <boost/move/utility.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/utility/string_ref.hpp>
-#include "boost/detail/no_exceptions_support.hpp"
 
 #include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
 
