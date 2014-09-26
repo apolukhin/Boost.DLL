@@ -370,7 +370,7 @@ public:
     }
 
    /*!
-    * Returns full path of shared module.
+    * Returns full path and name of this shared object.
     *
     * The ability to extract the full file system path of a loaded shared
     * library can be useful in case that use provide only library name on load, 
@@ -379,14 +379,14 @@ public:
     * \b Example:
     * \code
     * shared_library lib("test_lib.dll");
-    * filesystem::path full_path = lib.full_module_path(); // C:\Windows\System32\test_lib.dll
+    * filesystem::path full_path = lib.location(); // C:\Windows\System32\test_lib.dll
     * \endcode
     *
     * \return Full path to the shared library.
     *
     * \throw boost::system::system_error, std::bad_alloc.
     */
-    boost::filesystem::path path() const {
+    boost::filesystem::path location() const {
         boost::system::error_code ec;
         if (!is_loaded()) {
             ec = boost::system::error_code(
@@ -411,7 +411,7 @@ public:
     }
 
    /*!
-    * Returns full path of shared module.
+    * Returns full path and name of shared module.
     *
     * The ability to extract the full file system path of a loaded shared
     * library can be useful in case that use provide only library name on load, 
@@ -420,7 +420,7 @@ public:
     * \b Example:
     * \code
     * shared_library lib("test_lib.dll");
-    * filesystem::path full_path = lib.full_module_path(); // C:\Windows\System32\test_lib.dll
+    * filesystem::path full_path = lib.location(); // C:\Windows\System32\test_lib.dll
     * \endcode
     *
     * \param ec Variable that will be set to the result of the operation.
@@ -429,7 +429,7 @@ public:
     *
     * \throw std::bad_alloc.
     */
-    boost::filesystem::path path(boost::system::error_code &ec) const {
+    boost::filesystem::path location(boost::system::error_code &ec) const {
         if (!is_loaded()) {
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,

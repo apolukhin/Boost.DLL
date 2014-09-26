@@ -54,7 +54,7 @@ int test_main(int argc, char* argv[]) {
 
     try {
         shared_library lib;
-        lib.path();
+        lib.location();
         BOOST_CHECK(false);
     } catch (const boost::system::system_error& e) {
         std::cout << e.what() << '\n';

@@ -7,16 +7,20 @@
 [section Revision History]
 
 
-[h5 0.3 (In plans)]
+[h5 0.3 (Current active development version)]
+
+* Removed `shared_library::load_self()`
+* Renamed `shared_library::path()` to `shared_library::location()`
 * *TODO:*
-    * remove `shared_library::load_self()`
-    * rename `shared_library::path()` to `shared_library::location()`
+    * improve load_mode::append_native_decorations (make it work with executables, take care of files starting on lib)
     * rename `shared_library::search_symbol()` to `shared_library::exists()`/`shared_library::count()`
     * improve `load_mode` by adding rare Windows and POSIX specific load modes
     * think of library load directories
     * Optional: COFF, A.OUT file formats support
 
-[h5 0.2 (Current active developing version)]
+    * Test Mach-O file format support
+
+[h5 0.2]
 
 Applied comments from "Boost query interest" mails and Boost Incubator, implemented new features:
 
@@ -27,8 +31,6 @@ Applied comments from "Boost query interest" mails and Boost Incubator, implemen
 * Aliases now use "boostdll" section.
 * Added `symbol_location()` methods.
 * Added `this_line_location()` method.
-* *TODO:*
-    * Test Mach-O file format support
 
 [h5 0.1]
 

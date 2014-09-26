@@ -40,44 +40,44 @@ int test_main(int argc, char* argv[]) {
     std::cout << std::endl;
     std::cout << "shared_library_: " << shared_library_path << std::endl;
     std::cout << "symbol_location: " << symbol_location(&lib.get<int>("integer_g")) << std::endl;
-    std::cout << "lib.path():      " << lib.path() << std::endl;
+    std::cout << "lib.location():      " << lib.location() << std::endl;
     BOOST_CHECK(
-        symbol_location(lib.get<int>("integer_g")) == lib.path()
+        symbol_location(lib.get<int>("integer_g")) == lib.location()
     );
 
     BOOST_CHECK(
-        symbol_location(lib.get<say_hello_func>("say_hello")) == lib.path()
+        symbol_location(lib.get<say_hello_func>("say_hello")) == lib.location()
     );
 
     BOOST_CHECK(
-        symbol_location(lib.get<lib_version_func>("lib_version")) == lib.path()
+        symbol_location(lib.get<lib_version_func>("lib_version")) == lib.location()
     );
 
     BOOST_CHECK(
-        symbol_location(lib.get<const int>("const_integer_g")) == lib.path()
+        symbol_location(lib.get<const int>("const_integer_g")) == lib.location()
     );
 
     // Cheking that symbols are still available, after another load+unload of the library
     { shared_library sl2(shared_library_path); }
 
     BOOST_CHECK(
-        symbol_location(lib.get<int>("integer_g")) == lib.path()
+        symbol_location(lib.get<int>("integer_g")) == lib.location()
     );
 
     // Checking aliases
     BOOST_CHECK(
-        symbol_location(lib.get<std::size_t(*)(const std::vector<int>&)>("foo_bar")) == lib.path()
+        symbol_location(lib.get<std::size_t(*)(const std::vector<int>&)>("foo_bar")) == lib.location()
     );
     BOOST_CHECK(
-        symbol_location(lib.get_alias<std::size_t(const std::vector<int>&)>("foo_bar")) == lib.path()
+        symbol_location(lib.get_alias<std::size_t(const std::vector<int>&)>("foo_bar")) == lib.location()
     );
 
 
     BOOST_CHECK(
-        symbol_location(lib.get<std::size_t*>("foo_variable")) == lib.path()
+        symbol_location(lib.get<std::size_t*>("foo_variable")) == lib.location()
     );
     BOOST_CHECK(
-        symbol_location(lib.get_alias<std::size_t>("foo_variable")) == lib.path()
+        symbol_location(lib.get_alias<std::size_t>("foo_variable")) == lib.location()
     );
     
     { // self
@@ -102,7 +102,7 @@ int test_main(int argc, char* argv[]) {
         (boost::filesystem::equivalent(this_line_location(), argv[0]))
     );
     BOOST_CHECK(
-        lib.get_alias<boost::filesystem::path()>("module_location_from_itself")() == lib.path()
+        lib.get_alias<boost::filesystem::path()>("module_location_from_itself")() == lib.location()
     );
     return 0;
 }
