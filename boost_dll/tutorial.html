@@ -459,8 +459,7 @@ Destructing my_plugin_sum ;o)
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Application started"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
-    <span class="identifier">dll</span><span class="special">::</span><span class="identifier">shared_library</span> <span class="identifier">self</span><span class="special">;</span>
-    <span class="identifier">self</span><span class="special">.</span><span class="identifier">load_self</span><span class="special">();</span>
+    <span class="identifier">dll</span><span class="special">::</span><span class="identifier">shared_library</span> <span class="identifier">self</span><span class="special">(</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">program_location</span><span class="special">());</span>
 
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Call function"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;()&gt;</span> <span class="identifier">creator</span>

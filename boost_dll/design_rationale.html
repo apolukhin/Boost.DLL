@@ -33,6 +33,7 @@
       plugin API</a></span></dt>
 <dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.performance_and_memory_allocations">Performance
       and memory allocations</a></span></dt>
+<dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.self_loading">Self loading</a></span></dt>
 </dl></div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -94,6 +95,21 @@
       </p>
 <p>
         Other methods are assumed to be hot paths and optimized as much as possible.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_dll.design_rationale.self_loading"></a><a class="link" href="design_rationale.html#boost_dll.design_rationale.self_loading" title="Self loading">Self loading</a>
+</h3></div></div></div>
+<p>
+        There is a good big reason to make self loading via <code class="computeroutput"><span class="identifier">shared_library</span><span class="special">(</span><span class="identifier">program_location</span><span class="special">())</span></code> instead of having some <code class="computeroutput"><span class="identifier">shared_library</span><span class="special">::</span><span class="identifier">load_self</span><span class="special">()</span></code> member method. That reason is the requirement
+        to have an ability to call <code class="computeroutput"><span class="identifier">shared_library</span><span class="special">(</span><span class="identifier">this_line_location</span><span class="special">())</span></code> from any place, even from the main binary.
+        We need that to link plugins into the binary and to create a transparent
+        reference counting mechanism.
+      </p>
+<p>
+        Making multiple interfaces that do exactly the same things looks unreasonable
+        to me, that's why <code class="computeroutput"><span class="identifier">shared_library</span><span class="special">(</span><span class="identifier">program_location</span><span class="special">())</span></code> and <code class="computeroutput"><span class="identifier">shared_library</span><span class="special">(</span><span class="identifier">this_line_location</span><span class="special">())</span></code> are used without <code class="computeroutput"><span class="identifier">shared_library</span><span class="special">::</span><span class="identifier">load_self</span><span class="special">()</span></code>.
       </p>
 </div>
 </div>

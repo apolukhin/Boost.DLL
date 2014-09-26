@@ -36,6 +36,7 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="reference.html#header.boost.dll.alias_hpp">Header &lt;boost/dll/alias.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.dll.library_info_hpp">Header &lt;boost/dll/library_info.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.dll.runtime_symbol_info_hpp">Header &lt;boost/dll/runtime_symbol_info.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.dll.shared_library_hpp">Header &lt;boost/dll/shared_library.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.dll.shared_library_load_mode_hpp">Header &lt;boost/dll/shared_library_load_mode.hpp&gt;</a></span></dt>
 </dl></div>
@@ -61,6 +62,17 @@
 </div>
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.dll.runtime_symbol_info_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_56_0/boost/dll/runtime_symbol_info.hpp" target="_top">boost/dll/runtime_symbol_info.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+  <span class="keyword">namespace</span> <span class="identifier">dll</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <a class="link" href="../boost/dll/symbol_location.html" title="Function template symbol_location"><span class="identifier">symbol_location</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <a class="link" href="../boost/dll/this_line_location.html" title="Function this_line_location"><span class="identifier">this_line_location</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <a class="link" href="../boost/dll/program_location.html" title="Function program_location"><span class="identifier">program_location</span></a><span class="special">(</span><span class="special">)</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span></pre>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h4 class="title">
 <a name="header.boost.dll.shared_library_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_56_0/boost/dll/shared_library.hpp" target="_top">boost/dll/shared_library.hpp</a>&gt;</h4></div></div></div>
 <p>Contains the <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">boost::dll::shared_library</a> class, main class for all the DLL/DSO operations. </p>
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
@@ -74,7 +86,7 @@
     <span class="keyword">bool</span> <a name="boost.dll.operator!="></a><span class="keyword">operator</span><span class="special">!=</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lhs<span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span>
 
     <span class="comment">// Compare the actual DLL/DSO objects without any guarantee to be stable between runs. Throws nothing. </span>
-    <span class="keyword">bool</span> <a name="boost.dll.operator_idp6386896"></a><span class="keyword">operator</span><span class="special">&lt;</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lhs<span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span>
+    <span class="keyword">bool</span> <a name="boost.dll.operator_idp6724560"></a><span class="keyword">operator</span><span class="special">&lt;</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lhs<span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span>
 
     <span class="comment">// Swaps two shared libraries. Does not invalidate symbols and functions loaded from libraries. Throws nothing. </span>
     <span class="keyword">void</span> <a name="boost.dll.swap"></a><span class="identifier">swap</span><span class="special">(</span><a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lhs<span class="special">,</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span>
@@ -90,8 +102,8 @@
       <span class="keyword">enum</span> <a class="link" href="../boost/dll/load_mode/type.html" title="Type type">type</a><span class="special">;</span>
 
       <span class="comment">// Free operators for load_mode::type flag manipulation. </span>
-      <span class="identifier">type</span> <a name="boost.dll.load_mode.operator_idp6432336"></a><span class="keyword">operator</span><span class="special">|</span><span class="special">(</span><span class="identifier">type</span> left<span class="special">,</span> <span class="identifier">type</span> right<span class="special">)</span><span class="special">;</span>
-      <span class="identifier">type</span> <span class="special">&amp;</span> <a name="boost.dll.load_mode.operator_=_idp6434592"></a><span class="keyword">operator</span><span class="special">|=</span><span class="special">(</span><span class="identifier">type</span> <span class="special">&amp;</span> left<span class="special">,</span> <span class="identifier">type</span> right<span class="special">)</span><span class="special">;</span>
+      <span class="identifier">type</span> <a name="boost.dll.load_mode.operator_idp6770000"></a><span class="keyword">operator</span><span class="special">|</span><span class="special">(</span><span class="identifier">type</span> left<span class="special">,</span> <span class="identifier">type</span> right<span class="special">)</span><span class="special">;</span>
+      <span class="identifier">type</span> <span class="special">&amp;</span> <a name="boost.dll.load_mode.operator_=_idp6772256"></a><span class="keyword">operator</span><span class="special">|=</span><span class="special">(</span><span class="identifier">type</span> <span class="special">&amp;</span> left<span class="special">,</span> <span class="identifier">type</span> right<span class="special">)</span><span class="special">;</span>
     <span class="special">}</span>
   <span class="special">}</span>
 <span class="special">}</span></pre>
