@@ -27,6 +27,7 @@ project
       <link>shared:<define>BOOST_ALL_DLL
       <library>/boost/system//boost_system
       <library>/boost/filesystem//boost_filesystem
+      <library>/boost/thread//boost_thread
       <threading>multi
     ;
 {
@@ -39,8 +40,10 @@ project
     lib on_unload_lib : ../example/tutorial6/on_unload_lib.cpp ;
     lib library1 : ../example/tutorial7/library1.cpp ;
     lib library2 : ../example/tutorial7/library2.cpp ;
+    lib refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp ;
     install install-bin
-        : test_library my_plugin_sum my_plugin_aggregator on_unload_lib getting_started_library library1 library2
+        : test_library my_plugin_sum my_plugin_aggregator
+            on_unload_lib getting_started_library library1 library2 refcounting_plugin
         : <location>$(TEST_DIR)
     ;
   
@@ -71,6 +74,7 @@ project
         ]
         [ run ../example/tutorial6/tutorial6.cpp : $(TEST_DIR) ]
         [ run ../example/tutorial7/tutorial7.cpp : $(TEST_DIR) ]
+        #[ run ../example/tutorial8/tutorial8.cpp : $(TEST_DIR) ]
         [ compile-fail section_name_too_big.cpp ]
         [ compile-fail not_a_function.cpp ]
     ;
