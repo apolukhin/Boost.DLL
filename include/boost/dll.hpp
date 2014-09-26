@@ -19,7 +19,6 @@
 #include <boost/dll/import_function.hpp>
 #include <boost/dll/import_variable.hpp>
 #include <boost/dll/library_info.hpp>
-#include <boost/dll/runtime_symbol_info.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
