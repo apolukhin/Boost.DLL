@@ -307,6 +307,52 @@ __to_top
 
 [endsect]
 
+
+[section Advanced library reference counting]
+
+As noted in documentation to the [funcref boost::dll::import_function] and [funcref boost::dll::import_variable].
+
+[import ../example/tutorial8/refcounting_api.hpp]
+[plugcpp_my_plugin_refcounting_api]
+[plugcpp_library_holding_deleter_api]
+
+[import ../example/tutorial8/refcounting_plugin.hpp]
+[plugcpp_my_plugin_refcounting_hpp]
+
+[import ../example/tutorial8/refcounting_plugin.cpp]
+[plugcpp_my_plugin_refcounting]
+
+
+[import ../example/tutorial8/tutorial8.cpp]
+[callplugcpp_tutorial8]
+
+If we run the example we'll get the following output:
+
+[pre
+Plugin name: refcounting, location: "boost/bin.v2/libs/dll/test/librefcounting_plugin.so"
+]
+
+[import ../example/tutorial8/tutorial8_static.cpp]
+[callplugcpp_tutorial8_static]
+
+If we run the example we'll get the following output:
+
+[pre
+Plugin name: refcounting, location: "tutorial8_static"
+]
+
+[*Full sources:]
+
+* [example_ref tutorial8/refcounting_api.hpp]
+* [example_ref tutorial8/refcounting_plugin.hpp]
+* [example_ref tutorial8/refcounting_plugin.cpp]
+* [example_ref tutorial8/tutorial8.cpp]
+* [example_ref tutorial8/tutorial8_static.cpp]
+
+__to_top
+
+[endsect]
+
 [endsect]
 
 

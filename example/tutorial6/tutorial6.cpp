@@ -1,21 +1,13 @@
-// Copyright 2011-2012 Renato Tegon Forti.
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// For more information, see http://www.boost.org
-
-// -------------------------------------------------------------------------------------
-// This example shows how to use load_self to load symbols direct on executable
-// -------------------------------------------------------------------------------------
-
-
 #include "../shared_lib_path.hpp"
 
 //[callplugcpp_tutorial6
-#include <boost/dll.hpp>
-#include <boost/function.hpp>
+#include <boost/dll/import_function.hpp>
 #include <iostream>
 
 typedef boost::function<void()> callback_t;

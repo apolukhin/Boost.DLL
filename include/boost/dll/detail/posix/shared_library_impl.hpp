@@ -15,6 +15,7 @@
 #include <boost/move/utility.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 #include <boost/utility/string_ref.hpp>
 
 #include <dlfcn.h>
@@ -73,14 +74,7 @@ public:
             mode |= load_mode::rtld_local;
         }
 
-        boost::system::error_code prog_loc_err;
-        if (boost::dll::detail::program_location_impl(prog_loc_err) == sl && !prog_loc_err) {
-            // As is known the function dlopen() loads the dynamic library file 
-            // named by the null-terminated string filename and returns an opaque 
-            // "handle" for the dynamic library. If filename is NULL, then the 
-            // returned handle is for the main program.
-            handle_ = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
-        } else if (!(mode & load_mode::append_native_decorations)) {
+        if (!(mode & load_mode::append_native_decorations)) {
             handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
         } else {
             handle_ = dlopen(
@@ -90,11 +84,33 @@ public:
             );
         }
 
-        if (!handle_) {
-            ec = boost::system::error_code(
-                boost::system::errc::bad_file_descriptor,
-                boost::system::generic_category()
-            );
+        if (handle_) {
+            return;
+        }
+
+        ec = boost::system::error_code(
+            boost::system::errc::bad_file_descriptor,
+            boost::system::generic_category()
+        );
+
+        // Maybe user whanted to load the executable itself? Checking...
+        // We assume that usualy user whants to load a dynamic library not the executable itself, that's why
+        // we try this anly after traditional load fails.
+        boost::system::error_code prog_loc_err;
+        boost::filesystem::path loc = boost::dll::detail::program_location_impl(prog_loc_err);
+        if (!prog_loc_err && boost::filesystem::equivalent(sl, loc, prog_loc_err) && !prog_loc_err) {
+            // As is known the function dlopen() loads the dynamic library file 
+            // named by the null-terminated string filename and returns an opaque 
+            // "handle" for the dynamic library. If filename is NULL, then the 
+            // returned handle is for the main program.
+            handle_ = dlopen(NULL, RTLD_LAZY | RTLD_LOCAL);
+            ec.clear();
+            if (!handle_) {
+                ec = boost::system::error_code(
+                    boost::system::errc::bad_file_descriptor,
+                    boost::system::generic_category()
+                );
+            }
         }
     }
 

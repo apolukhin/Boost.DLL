@@ -4,22 +4,19 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp"
-
-//[callplugcpp_tutorial8
+//[callplugcpp_tutorial8_static
 #include <boost/dll/import_function.hpp>
+#include <boost/dll/runtime_symbol_info.hpp> // for program_location()
 #include <iostream>
-#include "refcounting_api.hpp"
+#include "refcounting_plugin.hpp"
 
-int main(int argc, char* argv[]) { 
-    // argv[1] contains path to our plugin library 
-    BOOST_ASSERT(argc >= 2);
+int main() {
     typedef my_refcounting_api*(func_t)();
 
     boost::shared_ptr<my_refcounting_api> plugin_instance;
     {
         boost::function<func_t> f = boost::dll::import_function_alias<func_t>(
-            shared_lib_path(argv[1], L"refcounting_plugin"), "create_refc_plugin"
+            boost::dll::program_location(), "create_refc_plugin"
         );
 
         plugin_instance = adopt( f() );

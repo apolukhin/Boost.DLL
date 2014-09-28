@@ -1,17 +1,14 @@
-// Copyright 2011-2012 Renato Tegon Forti.
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// For more information, see http://www.boost.org
-
-// -------------------------------------------------------------------------------------
-// This example shows how to use load_self to load symbols direct on executable
-// -------------------------------------------------------------------------------------
-
 //[plugcpp_my_plugin_load_self
+#include <boost/dll/shared_library.hpp> // for shared_library
+#include <boost/dll/runtime_symbol_info.hpp> // for program_location()
 #include "static_plugin.hpp"
+#include <boost/function.hpp>
 #include <iostream>
 
 namespace dll = boost::dll;

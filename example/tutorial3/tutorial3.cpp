@@ -1,24 +1,15 @@
-// Copyright 2011-2012 Renato Tegon Forti.
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// For more information, see http://www.boost.org
-
-// -------------------------------------------------------------------------------------
-// This example shows how to import_variable_alias function to load a plugin of a DSO.
-// -------------------------------------------------------------------------------------
-
 #include "../shared_lib_path.hpp"
 
 //[callplugcpp_tutorial3
-
-#include <boost/dll.hpp>
+#include <boost/dll/import_function.hpp> // for import_function_alias
 #include <boost/make_shared.hpp>
-
 #include <iostream>
-
 #include "../tutorial_common/plugin_api.hpp"
 
 namespace dll = boost::dll;
