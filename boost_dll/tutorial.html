@@ -326,7 +326,7 @@ Plugin Name:  aggregator
 
     <span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="identifier">plugins</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Loading plugin: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugins</span><span class="special">[</span><span class="identifier">i</span><span class="special">]</span> <span class="special">&lt;&lt;</span> <span class="char">'\n'</span><span class="special">;</span>
-        <span class="identifier">lib</span><span class="special">-&gt;</span><span class="identifier">load</span><span class="special">(</span><span class="identifier">plugins</span><span class="special">[</span><span class="identifier">i</span><span class="special">]);</span>
+        <span class="identifier">lib</span><span class="special">-&gt;</span><span class="identifier">load</span><span class="special">(</span><span class="identifier">plugins</span><span class="special">[</span><span class="identifier">i</span><span class="special">],</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">append_decorations</span><span class="special">);</span>
         <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">lib</span><span class="special">-&gt;</span><span class="identifier">search_symbol</span><span class="special">(</span><span class="string">"create_plugin"</span><span class="special">))</span> <span class="special">{</span>
             <span class="comment">// no such symbol</span>
             <span class="keyword">continue</span><span class="special">;</span>
@@ -367,9 +367,6 @@ Destructing my_plugin_sum ;o)
           </li>
 <li class="listitem">
             <a href="https://github.com/apolukhin/Boost.DLL/blob/master/example/tutorial1/my_plugin_sum.cpp" target="_top">example/tutorial1/my_plugin_sum.cpp</a>
-          </li>
-<li class="listitem">
-            <a href="https://github.com/apolukhin/Boost.DLL/blob/master/example/shared_lib_path.hpp" target="_top">example/shared_lib_path.hpp</a>
           </li>
 </ul></div>
 <p>
@@ -623,8 +620,8 @@ Destructing my_plugin_sum ;o)
         Now if we recompile your example with "-fvisibility=hidden" we'll
         get the following output:
       </p>
-<pre class="programlisting">Loaded (0x2406b60):"/home/apolukhin/boost_maintain/modular-boost/bin.v2/libs/dll/test/libmy_plugin_aggregator.so"
-Loaded (0x2407410):"/home/apolukhin/boost_maintain/modular-boost/bin.v2/libs/dll/test/libgetting_started_library.so"
+<pre class="programlisting">Loaded (0x2406b60):"/libs/dll/test/libmy_plugin_aggregator.so"
+Loaded (0x2407410):"/libs/dll/test/libgetting_started_library.so"
 Constructing my_plugin_sum
 ...
 
@@ -987,10 +984,11 @@ Function 'howdy' prints:
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="identifier">path</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> <span class="identifier">func_name</span><span class="special">)</span>
 <span class="special">{</span>
     <span class="keyword">typedef</span> <span class="identifier">my_refcounting_api</span><span class="special">*(</span><span class="identifier">func_t</span><span class="special">)();</span>
-    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">func_t</span><span class="special">&gt;</span> <span class="identifier">f</span>
-        <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_function_alias</span><span class="special">&lt;</span><span class="identifier">func_t</span><span class="special">&gt;(</span>
-            <span class="identifier">path</span><span class="special">,</span> <span class="identifier">func_name</span>
-        <span class="special">);</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">func_t</span><span class="special">&gt;</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_function_alias</span><span class="special">&lt;</span><span class="identifier">func_t</span><span class="special">&gt;(</span>
+        <span class="identifier">path</span><span class="special">,</span>
+        <span class="identifier">func_name</span><span class="special">,</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">append_decorations</span> <span class="comment">// will be ignored for executable</span>
+    <span class="special">);</span>
 
     <span class="comment">// `f` goes out of scope here and will be destroyed.</span>
     <span class="comment">// Returned variable holds a reference to </span>
@@ -1034,13 +1032,12 @@ Function 'howdy' prints:
 <td>
                 <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="string">"../shared_lib_path.hpp"</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="string">"refcounting_api.hpp"</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">argc</span><span class="special">,</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">argv</span><span class="special">[])</span> <span class="special">{</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_refcounting_api</span><span class="special">&gt;</span> <span class="identifier">plugin</span> <span class="special">=</span> <span class="identifier">get_plugin</span><span class="special">(</span>
-        <span class="identifier">shared_lib_path</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">],</span> <span class="identifier">L</span><span class="string">"refcounting_plugin"</span><span class="special">),</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span><span class="special">(</span><span class="identifier">argv</span><span class="special">[</span><span class="number">1</span><span class="special">])</span> <span class="special">/</span> <span class="string">"refcounting_plugin"</span><span class="special">,</span>
         <span class="string">"create_refc_plugin"</span>
     <span class="special">);</span>
 
