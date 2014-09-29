@@ -63,11 +63,11 @@ namespace my_namespace {
     std::string cpp_function_name(const std::string& param) {
         return param + " Hello from lib!";
     }
-/*
+
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     int cpp11_function(std::string&& param) {
         return static_cast<int>(param.size());
     }
-#endif*/
+#endif
 }
 

@@ -119,7 +119,6 @@ Destructing my_plugin_sum ;o)
 * [example_ref tutorial3/tutorial3.cpp]
 * [example_ref tutorial2/my_plugin_aggregator.cpp]
 * [example_ref tutorial1/my_plugin_sum.cpp]
-* [example_ref shared_lib_path.hpp]
 
 __to_top
 
