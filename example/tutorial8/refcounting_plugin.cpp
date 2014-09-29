@@ -11,32 +11,32 @@
 namespace my_namespace {
 
 class my_plugin_refcounting : public my_refcounting_api {
-public:
-    float version() const {
-        return 1.0;
+public:    
+    // Must be instantiated in plugin
+    boost::filesystem::path location() const {
+        return boost::dll::this_line_location(); // location of this plugin
     }
 
     std::string name() const {
         return "refcounting";
     }
 
+    // ...
+    //<-
+    // This block is invisible for Quickbook documentation
+    float version() const {
+        return 1.0;
+    }
+
     float calculate(float x, float y) {
         return 0;
     }
-
-    // Factory method. Returns *simple pointer*
-    static my_plugin_refcounting* create() {
-        return new my_plugin_refcounting();
-    }
-    
-    // Must be instantiated in plugin
-    boost::filesystem::path location() const {
-        return boost::dll::this_line_location(); // location of this plugin
-    }
+    //->
 };
 
 } // namespace my_namespace
 
+// Factory method. Returns *simple pointer*!
 my_refcounting_api* create() {
     return new my_namespace::my_plugin_refcounting();
 }

@@ -30,7 +30,7 @@ namespace boost { namespace dll {
 
 /*!
 * \brief This class can be used to load a
-*        Dynamic link libraries (DLL's) or Shared Library, also know
+*        Dynamic link libraries (DLL's) or Shared Libraries, also know
 *        as dynamic shared objects (DSO's) and get their exported
 *        symbols (functions and variables).
 *

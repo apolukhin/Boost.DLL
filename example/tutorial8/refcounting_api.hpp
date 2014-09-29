@@ -10,7 +10,8 @@
 
 class my_refcounting_api : public my_plugin_api {
 public:
-    // Must be instantiated in plugin
+    // Returns path to shared object that holds a plugin.
+    // Must be instantiated in plugin.
     virtual boost::filesystem::path location() const = 0;
 };
 //]
@@ -19,7 +20,6 @@ public:
 //[plugcpp_library_holding_deleter_api
 #include <boost/dll/shared_library.hpp>
 #include <boost/make_shared.hpp>
-
 namespace detail {
     struct library_holding_deleter {
         boost::shared_ptr<boost::dll::shared_library> lib_;
@@ -33,15 +33,34 @@ namespace detail {
         }
     };
 }
-
-inline boost::shared_ptr<my_refcounting_api> adopt(my_refcounting_api* ptr) {
+//]
+//[plugcpp_library_holding_deleter_api_bind
+#include <boost/shared_ptr.hpp>
+inline boost::shared_ptr<my_refcounting_api> bind(my_refcounting_api* ptr) {
     return boost::shared_ptr<my_refcounting_api>(
         ptr,
         detail::library_holding_deleter(ptr)
     );
 }
-
 //]
 
+//[plugcpp_get_plugin_refcounting
+#include <boost/dll/import_function.hpp>
+inline boost::shared_ptr<my_refcounting_api> get_plugin(
+    boost::filesystem::path path, boost::string_ref func_name) 
+{
+    typedef my_refcounting_api*(func_t)();
+    boost::function<func_t> f 
+        = boost::dll::import_function_alias<func_t>(
+            path, func_name
+        );
+
+    // `f` goes out of scope here and will be destroyed.
+    // Returned variable holds a reference to 
+    // shared_library and it is safe to use it.
+    return bind( f() );
+}
+
+//]
 
 

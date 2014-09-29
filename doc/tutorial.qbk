@@ -234,7 +234,7 @@ __to_top
 Boost.DLL provides no out of the box mechanism for catching library unloads. However such task could be easily implemnted.
 
 [import ../example/tutorial6/on_unload_lib.cpp]
-
+// This block is invisible for Quickbook documentation
 All you need to do, is write a simple class that stores callbacks and calles them at destruction:
 [plugcpp_on_unload]
 
@@ -310,36 +310,65 @@ __to_top
 
 [section Advanced library reference counting]
 
-As noted in documentation to the [funcref boost::dll::import_function] and [funcref boost::dll::import_variable].
+As noted in documentation to the [funcref boost::dll::import_function] and [funcref boost::dll::import_variable]
+variables and functions returned from those functions holds a reference to the shared library. However nested objects and
+objects that are returned by `import_*` functions do not hold a reference to the shared library. There's no way to solve
+this issue on the Boost.DLL library level, but you can take care of this problem by your own. Here's an example how this
+could be done.
+
+In this example we'll be importing function that constructs an instance of plugin and binding that
+instance to shared_library.
+
+First of all we need to define a new plugin api:
 
 [import ../example/tutorial8/refcounting_api.hpp]
 [plugcpp_my_plugin_refcounting_api]
-[plugcpp_library_holding_deleter_api]
 
-[import ../example/tutorial8/refcounting_plugin.hpp]
-[plugcpp_my_plugin_refcounting_hpp]
+This API does not differ much from the previous one. Only one abstract method was added. 
+
+Now let's define the plugin:
+[/
+    [import ../example/tutorial8/refcounting_plugin.hpp]
+    [plugcpp_my_plugin_refcounting_hpp]
+/]
 
 [import ../example/tutorial8/refcounting_plugin.cpp]
 [plugcpp_my_plugin_refcounting]
 
+This plugin does not differ much from our previous examples except the additional method that calls
+[funcref boost::dll::this_line_location] and `create()` function that returns a simple pointer instead of
+boost::shared_ptr.
+
+Now lets make a function that binds a newly created instance of `my_refcounting_api` to a shared library:
+[plugcpp_library_holding_deleter_api_bind]
+
+In `bind` method we put a `ptr` pointer into a shared_library and specify a custom deleter:
+[plugcpp_library_holding_deleter_api]
+
+Our custom deleter differs from the default one, because it holds a shared pointer to shared_library. Take
+a look at the `ptr->location()` line in constructor. This call results in call to
+[funcref boost::dll::this_line_location] and returns the plugin location.
+
+Thta's it, now we can get instance of a plugin:
+[plugcpp_get_plugin_refcounting]
+
+Here's how it `main()` function look like:
 
 [import ../example/tutorial8/tutorial8.cpp]
-[callplugcpp_tutorial8]
-
-If we run the example we'll get the following output:
-
-[pre
-Plugin name: refcounting, location: "boost/bin.v2/libs/dll/test/librefcounting_plugin.so"
-]
-
 [import ../example/tutorial8/tutorial8_static.cpp]
-[callplugcpp_tutorial8_static]
 
-If we run the example we'll get the following output:
-
-[pre
-Plugin name: refcounting, location: "tutorial8_static"
+[table
+[[][Runtime plugin load][Plugin was linked in]]
+[[Code][[callplugcpp_tutorial8]][[callplugcpp_tutorial8_static]]]
+[[Output]
+    [[pre Plugin name: refcounting,
+location: "/libs/dll/librefcounting_plugin.so"]]
+    [[pre Plugin name: refcounting,
+location: "/tutorial8_static"]]
 ]
+]
+
+
 
 [*Full sources:]
 
