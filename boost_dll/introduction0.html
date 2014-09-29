@@ -92,33 +92,6 @@
 <td>
               <p>
 </p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// exporting POD 'C' variable in global namespace</span>
-<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">int</span> <span class="identifier">BOOST_SYMBOL_EXPORT</span> <span class="identifier">c_variable_name</span><span class="special">;</span>
-</pre>
-<p>
-              </p>
-            </td>
-<td>
-              <p>
-</p>
-<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">c_var</span> <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_variable</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span>
-    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_variable_name"</span>
-<span class="special">);</span>
-</pre>
-<p>
-              </p>
-            </td>
-<td>
-              <p>
-                <code class="computeroutput"><a class="link" href="../boost/dll/import_variable.html" title="Function import_variable">import_variable
-                </a></code>
-              </p>
-            </td>
-</tr>
-<tr>
-<td>
-              <p>
-</p>
 <pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// exporting 'C++' function</span>
 <span class="keyword">namespace</span> <span class="identifier">my_namespace</span> <span class="special">{</span>
 
@@ -149,6 +122,33 @@
 <td>
               <p>
                 <code class="computeroutput"><a class="link" href="../BOOST_DLL_ALIAS.html" title="Macro BOOST_DLL_ALIAS">BOOST_DLL_ALIAS</a></code> <code class="computeroutput"><a class="link" href="../boost/dll/import_function_alias.html" title="Function import_function_alias">import_function_alias</a></code>
+              </p>
+            </td>
+</tr>
+<tr>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="comment">// exporting POD 'C' variable in global namespace</span>
+<span class="keyword">extern</span> <span class="string">"C"</span> <span class="keyword">int</span> <span class="identifier">BOOST_SYMBOL_EXPORT</span> <span class="identifier">c_variable_name</span><span class="special">;</span>
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+</p>
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">c_var</span> <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_variable</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;(</span>
+    <span class="identifier">path_to_shared_library</span><span class="special">,</span> <span class="string">"c_variable_name"</span>
+<span class="special">);</span>
+</pre>
+<p>
+              </p>
+            </td>
+<td>
+              <p>
+                <code class="computeroutput"><a class="link" href="../boost/dll/import_variable.html" title="Function import_variable">import_variable
+                </a></code>
               </p>
             </td>
 </tr>
@@ -224,6 +224,12 @@
 <p>
       In case of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">shared_library</span></code>
       it is safe to use imported symbols only until <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">shared_library</span></code> instance is not destroyed.
+    </p>
+<p>
+      Query libraries using <code class="computeroutput"><a class="link" href="../boost/dll/library_info.html" title="Class library_info">boost::dll::library_info</a></code>
+      and get symbol infos using <code class="computeroutput"><a class="link" href="../boost/dll/symbol_location.html" title="Function template symbol_location">boost::dll::symbol_location</a></code>,
+      <code class="computeroutput"><a class="link" href="../boost/dll/this_line_location.html" title="Function this_line_location">boost::dll::this_line_location</a></code>
+      and <code class="computeroutput"><a class="link" href="../boost/dll/program_location.html" title="Function program_location">boost::dll::program_location</a></code>.
     </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

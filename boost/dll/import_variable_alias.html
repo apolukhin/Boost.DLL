@@ -42,7 +42,7 @@
   <span class="identifier">import_variable_alias</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span> lib<span class="special">,</span> 
                         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> variable_name<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp7902160"></a><h2>Description</h2>
+<a name="idp36939488"></a><h2>Description</h2>
 <p>Imports variable by it alias name and returns boost::shared_ptr&lt;T&gt; that holds an imported variable from the loaded library and refcounts usage of the loaded shared library. Library won't get unload until all copies of returned value are not destroyed.</p>
 <p>This call will succeed if call to <a class="link" href="shared_library.html" title="Class shared_library">boost::dll::shared_library</a><code class="computeroutput">::search_symbol(boost::string_ref )</code> function with the same symbol name returned <code class="computeroutput">true</code>.</p>
 <p>For <span class="bold"><strong>non</strong></span> <span class="bold"><strong>alias</strong></span> names use <a class="link" href="import_variable.html" title="Function import_variable">boost::dll::import_variable</a> method.</p>

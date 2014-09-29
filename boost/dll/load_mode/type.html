@@ -37,9 +37,9 @@
             <a class="link" href="type.html#boost.dll.load_mode.type.load_library_as_datafile_exclusive">load_library_as_datafile_exclusive</a>, 
             <a class="link" href="type.html#boost.dll.load_mode.type.load_library_as_image_resource">load_library_as_image_resource</a>, <a class="link" href="type.html#boost.dll.load_mode.type.load_with_altered_search_path">load_with_altered_search_path</a>, 
             <a class="link" href="type.html#boost.dll.load_mode.type.rtld_lazy">rtld_lazy</a>, <a class="link" href="type.html#boost.dll.load_mode.type.rtld_now">rtld_now</a>, <a class="link" href="type.html#boost.dll.load_mode.type.rtld_global">rtld_global</a>, <a class="link" href="type.html#boost.dll.load_mode.type.rtld_local">rtld_local</a>, rtld_deepbind, 
-            <a class="link" href="type.html#boost.dll.load_mode.type.append_native_decorations">append_native_decorations</a> <span class="special">}</span><span class="special">;</span></pre></div>
+            <a class="link" href="type.html#boost.dll.load_mode.type.append_decorations">append_decorations</a> <span class="special">}</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp7386320"></a><h2>Description</h2>
+<a name="idp36423520"></a><h2>Description</h2>
 <p>Library load modes.</p>
 <p>Each of system family provides own modes. Flags not supported by a particular platform will be silently ignored.</p>
 <p>For a detailed description of platform specific options see: <a href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms684179(v=vs.85).aspx" target="_top">Windows specific options</a>, <a href="http://pubs.opengroup.org/onlinepubs/000095399/functions/dlopen.html" target="_top">POSIX specific options</a>. </p>
@@ -112,14 +112,14 @@
 <p>The object's symbols shall not be made available for the relocation processing of any other object.</p>
 <p>This is a default Windows behavior that can not be changed. </p>
 </dd>
-<dt><span class="term"><code class="computeroutput">append_native_decorations</code><a name="boost.dll.load_mode.type.append_native_decorations"></a></span></dt>
+<dt><span class="term"><code class="computeroutput">append_decorations</code><a name="boost.dll.load_mode.type.append_decorations"></a></span></dt>
 <dd>
 <p><span class="bold"><strong>Platforms:</strong></span> Windows, POSIX</p>
 <p><span class="bold"><strong>Default:</strong></span> disabled</p>
 <p>Append a platform specific extension and prefix to <a class="link" href="../shared_library.html" title="Class shared_library">shared_library</a> filename.</p>
 <p><span class="bold"><strong>Example:</strong></span> </p>
 <pre class="programlisting"><span class="comment">// Opens `./my_plugins/plugin1.dll` on Windows, `./my_plugins/libplugin1.so` on Linux and Apple</span>
-<a class="link" href="../shared_library.html" title="Class shared_library">boost::dll::shared_library</a> <span class="identifier">lib</span><span class="special">(</span><span class="string">"./my_plugins/plugin1"</span><span class="special">,</span> <span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">append_native_decorations</span><span class="special">)</span><span class="special">;</span>
+<a class="link" href="../shared_library.html" title="Class shared_library">boost::dll::shared_library</a> <span class="identifier">lib</span><span class="special">(</span><span class="string">"./my_plugins/plugin1"</span><span class="special">,</span> <span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">append_decorations</span><span class="special">)</span><span class="special">;</span>
 </pre>
 <p> </p>
 </dd>
