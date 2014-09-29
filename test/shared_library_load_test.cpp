@@ -113,13 +113,13 @@ int test_main(int argc, char* argv[])
                 = platform_independent_path.parent_path() / platform_independent_path.filename().wstring().substr(3);
         }
 
-        shared_library sl(platform_independent_path, load_mode::append_native_decorations);
+        shared_library sl(platform_independent_path, load_mode::append_decorations);
         BOOST_CHECK(sl.is_loaded());
         BOOST_CHECK(lib_path_equal(sl.location(), shared_library_path));
 
 
         boost::filesystem::copy_file(shared_library_path, boost::filesystem::current_path() / shared_library_path.filename());
-        sl.load("./" / platform_independent_path.filename(), load_mode::append_native_decorations);
+        sl.load("./" / platform_independent_path.filename(), load_mode::append_decorations);
         BOOST_CHECK(sl.is_loaded());
 
         boost::system::error_code ec;

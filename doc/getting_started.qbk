@@ -17,14 +17,28 @@ using namespace boost;
 ```
 
 [table:starting
-[[ In DLL/DSL sources: ]                    [ In code that uses DLL/DSL: ]              [ Function description: ]]
-[[ [getting_started_exports_c_function] ]   [ [getting_started_imports_c_function] ]    [ [funcref boost::dll::import_function import_function ] ]]
-[[ [getting_started_exports_c_variable] ]   [ [getting_started_imports_c_variable] ]    [ [funcref boost::dll::import_variable import_variable ] ]]
-[[ [getting_started_exports_cpp_function] ] [ [getting_started_imports_cpp_function] ]  [ [macroref
-BOOST_DLL_ALIAS] [funcref boost::dll::import_function_alias import_function_alias] ]]
-[[ [getting_started_exports_cpp_variable] ] [ [getting_started_imports_cpp_variable] ]  [ [macroref
-BOOST_DLL_ALIAS] [funcref boost::dll::import_variable_alias import_variable_alias] ]]
-]
+[[ In DLL/DSL sources: ] [ In code that uses DLL/DSL: ] [ Function description: ]]
+[
+    [ [getting_started_exports_c_function] ]
+    [ [getting_started_imports_c_function] ]
+    [ [funcref boost::dll::import_function import_function ] ]
+][/[
+    [ [getting_started_exports_cpp11_function] ]
+    [ [getting_started_imports_cpp11_function] ]
+    [ [macroref BOOST_DLL_ALIAS] [funcref boost::dll::import_function_alias import_function_alias] ]
+]/][
+    [ [getting_started_exports_cpp_function] ]
+    [ [getting_started_imports_cpp_function] ]
+    [ [macroref BOOST_DLL_ALIAS] [funcref boost::dll::import_function_alias import_function_alias] ]
+][
+    [ [getting_started_exports_c_variable] ]
+    [ [getting_started_imports_c_variable] ]
+    [ [funcref boost::dll::import_variable import_variable ] ]
+][
+    [ [getting_started_exports_cpp_variable] ]
+    [ [getting_started_imports_cpp_variable] ]
+    [ [macroref BOOST_DLL_ALIAS] [funcref boost::dll::import_variable_alias import_variable_alias] ]
+]]
 
 In all the cases above it is safe to use imported variable or function because the
 `boost::function` or `boost::shared_ptr` internaly hold a reference to shread library.
@@ -46,5 +60,8 @@ boost::function<int()> f = lib.get<int()>("function_returning_int");
 ```
 In case of `boost::dll::shared_library` it is safe to use imported symbols only until `boost::dll::shared_library`
 instance is not destroyed.
+
+Query libraries using [classref boost::dll::library_info] and get symbol infos using [funcref boost::dll::symbol_location],
+[funcref boost::dll::this_line_location] and [funcref boost::dll::program_location].
 
 [endsect]

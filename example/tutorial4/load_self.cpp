@@ -5,9 +5,9 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 //[plugcpp_my_plugin_load_self
-#include <boost/dll/shared_library.hpp> // for shared_library
-#include <boost/dll/runtime_symbol_info.hpp> // for program_location()
-#include "static_plugin.hpp"
+#include <boost/dll/shared_library.hpp>         // for shared_library
+#include <boost/dll/runtime_symbol_info.hpp>    // for program_location()
+#include "static_plugin.hpp"                    // without this headers some compilers may optimize out the `create_plugin` symbol
 #include <boost/function.hpp>
 #include <iostream>
 
@@ -23,7 +23,6 @@ int main() {
         = self.get_alias<boost::shared_ptr<my_plugin_api>()>("create_plugin");
 
     std::cout << "Computed Value: " << creator()->calculate(2, 2) << std::endl;
-
     //<-
     {
         // This block is invisible for Quickbook documentation

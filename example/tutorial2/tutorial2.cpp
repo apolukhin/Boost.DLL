@@ -4,21 +4,27 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp"
-
 //[callplugcpp_tutorial2
 #include <boost/dll/import_function.hpp> // for import_function_alias
 #include <iostream>
 #include "../tutorial_common/plugin_api.hpp"
 
+namespace dll = boost::dll;
+
 int main(int argc, char* argv[]) { 
+    /*<-*/ BOOST_ASSERT(argc >= 2);    /*->*/
     // argv[1] contains path to our plugin library 
-    BOOST_ASSERT(argc >= 2);
-    boost::filesystem::path shared_library_path = shared_lib_path(argv[1], L"my_plugin_aggregator");
+    boost::filesystem::path shared_library_path(argv[1]);
+    shared_library_path /= "my_plugin_aggregator";
 
     typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
-    boost::function<pluginapi_create_t> creator
-        = boost::dll::import_function_alias<pluginapi_create_t>(shared_library_path, "create_plugin");
+    boost::function<pluginapi_create_t> creator;
+
+    creator = boost::dll::import_function_alias<pluginapi_create_t>(    // type of imported symbol must be explicitly specified
+        shared_library_path,                                            // path to library
+        "create_plugin",                                                // symbol to import
+        dll::load_mode::append_decorations                              // do append extensions and prefixes
+    );
 
     boost::shared_ptr<my_plugin_api> plugin = creator();
 

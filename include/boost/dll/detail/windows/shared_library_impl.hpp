@@ -62,13 +62,13 @@ public:
         // From experiments: Default library extension appended to the modukle name even if
         // we have some path. So we do not check for path, only for extension. We can not be sure that 
         // such behavior remain across all platforms, so we add L".dll" by hand.
-        const bool do_append_deco = !!(mode & load_mode::append_native_decorations);
+        const bool do_append_deco = !!(mode & load_mode::append_decorations);
         if (!do_append_deco && sl.has_extension()) {
             handle_ = boost::detail::winapi::LoadLibraryExW(sl.c_str(), 0, flags);
         } else if (!do_append_deco) {
             handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".").c_str(), 0, flags);
         } else {
-            flags &= ~static_cast<boost::detail::winapi::DWORD_>(load_mode::append_native_decorations);
+            flags &= ~static_cast<boost::detail::winapi::DWORD_>(load_mode::append_decorations);
             handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, flags);
         }
 

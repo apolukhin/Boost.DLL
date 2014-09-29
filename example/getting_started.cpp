@@ -50,6 +50,19 @@ int test_main(int argc, char* argv[]) {
     // calling the function
     std::string cpp_func_res = cpp_func(std::string("In importer.")); 
     BOOST_CHECK(cpp_func_res == "In importer. Hello from lib!");
+/*
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_AUTO_DECLARATIONS)
+    //[getting_started_imports_cpp11_function
+    auto cpp11_func = dll::import_function_alias<int(std::string&&)>(
+        path_to_shared_library, "cpp11_function_alias_name"
+    );
+    //]
+
+    // calling the function
+    int cpp11_func_res = cpp11_func(std::string("In importer.")); 
+    BOOST_CHECK(cpp11_func_res == sizeof("In importer.") - 1);
+#endif
+*/
 
     //[getting_started_imports_cpp_variable    
     shared_ptr<std::string> cpp_var

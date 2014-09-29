@@ -74,13 +74,13 @@ public:
             mode |= load_mode::rtld_local;
         }
 
-        if (!(mode & load_mode::append_native_decorations)) {
+        if (!(mode & load_mode::append_decorations)) {
             handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
         } else {
             handle_ = dlopen(
                 // Apple requires '.so' extension
                 ((sl.parent_path() / "lib").native() + sl.filename().native() + ".so").c_str(),
-                static_cast<int>(mode) & (~static_cast<int>(load_mode::append_native_decorations))
+                static_cast<int>(mode) & (~static_cast<int>(load_mode::append_decorations))
             );
         }
 

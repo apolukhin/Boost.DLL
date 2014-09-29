@@ -77,7 +77,7 @@ boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::
     load_mode::type mode = load_mode::default_mode)
 {
     return import_variable<T>(
-        boost::make_shared<shared_library>(lib),
+        boost::make_shared<shared_library>(lib, mode),
         variable_name
     );
 }
@@ -132,7 +132,7 @@ boost::shared_ptr<T> import_variable_alias(const boost::filesystem::path& lib, b
     load_mode::type mode = load_mode::default_mode)
 {
     return import_variable_alias<T>(
-        boost::make_shared<shared_library>(lib),
+        boost::make_shared<shared_library>(lib, mode),
         variable_name
     );
 }

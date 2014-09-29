@@ -40,5 +40,6 @@ my_plugin_sum plugin;
 
 } // namespace my_namespace
 
+// Exporting `my_namespace::plugin` variable with alias name `plugin`
 BOOST_DLL_ALIAS(my_namespace::plugin, plugin)
 //]

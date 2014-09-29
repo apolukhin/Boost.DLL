@@ -82,7 +82,7 @@ boost::function<T> import_function(const boost::filesystem::path& lib,boost::str
     load_mode::type mode = load_mode::default_mode)
 {
     return import_function<T>(
-        boost::make_shared<shared_library>(lib),
+        boost::make_shared<shared_library>(lib, mode),
         func_name
     );
 }
@@ -137,7 +137,7 @@ boost::function<T> import_function_alias(const boost::filesystem::path& lib, boo
     load_mode::type mode = load_mode::default_mode)
 {
     return import_function_alias<T>(
-        boost::make_shared<shared_library>(lib),
+        boost::make_shared<shared_library>(lib, mode),
         func_name
     );
 }

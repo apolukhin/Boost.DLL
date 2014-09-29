@@ -28,8 +28,20 @@ BOOST_DLL_ALIAS(
 )
 
 } // namespace my_namespace
-
 //]
+
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+//[getting_started_exports_cpp11_function
+// exporting 'C++11' function
+namespace my_namespace {
+    int cpp11_function(std::string&& param);
+} // namespace my_namespace
+
+BOOST_DLL_ALIAS(
+    my_namespace::cpp11_function, cpp11_function_alias_name
+)
+//]
+#endif
 
 //[getting_started_exports_cpp_variable
 // exporting 'C++' variable
@@ -40,7 +52,6 @@ namespace my_namespace {
 BOOST_DLL_ALIAS(
     my_namespace::cpp_variable_name, cpp_variable_alias_name
 )
-
 //]
 
 
@@ -52,5 +63,11 @@ namespace my_namespace {
     std::string cpp_function_name(const std::string& param) {
         return param + " Hello from lib!";
     }
+/*
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+    int cpp11_function(std::string&& param) {
+        return static_cast<int>(param.size());
+    }
+#endif*/
 }
 

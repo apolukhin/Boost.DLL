@@ -12,7 +12,7 @@
 * Removed `shared_library::load_self()`
 * Renamed `shared_library::path()` to `shared_library::location()`
 * *TODO:*
-    * improve load_mode::append_native_decorations (make it work with executables, take care of files starting on lib)
+    * improve load_mode::append_decorations (make it work with executables, take care of files starting on lib)
     * rename `shared_library::search_symbol()` to `shared_library::exists()`/`shared_library::count()`
     * improve `load_mode` by adding rare Windows and POSIX specific load modes
     * think of library load directories

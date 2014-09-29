@@ -183,10 +183,10 @@ enum type {
     * \b Example:
     * \code
     * // Opens `./my_plugins/plugin1.dll` on Windows, `./my_plugins/libplugin1.so` on Linux and Apple
-    * boost::dll::shared_library lib("./my_plugins/plugin1", load_mode::append_native_decorations);
+    * boost::dll::shared_library lib("./my_plugins/plugin1", load_mode::append_decorations);
     * \endcode
     */
-    append_native_decorations
+    append_decorations
 #elif BOOST_OS_WINDOWS
     default_mode                          = 0,
     dont_resolve_dll_references           = boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
@@ -200,7 +200,7 @@ enum type {
     rtld_global                           = 0,
     rtld_local                            = 0,
     rtld_deepbind                         = 0,
-    append_native_decorations             = 0x00800000
+    append_decorations                    = 0x00800000
 #else
     default_mode                          = 0,
     dont_resolve_dll_references           = 0,
@@ -214,7 +214,7 @@ enum type {
     rtld_global                           = RTLD_GLOBAL,
     rtld_local                            = RTLD_LOCAL,
     rtld_deepbind                         = RTLD_DEEPBIND,
-    append_native_decorations             = 0x00800000
+    append_decorations                    = 0x00800000
 #endif
 };
 

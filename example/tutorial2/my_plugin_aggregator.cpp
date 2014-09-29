@@ -41,12 +41,11 @@ public:
 
 
 BOOST_DLL_ALIAS(
-    my_namespace::my_plugin_aggregator::create,
-    create_plugin
+    my_namespace::my_plugin_aggregator::create, // <-- this function is exported with...
+    create_plugin                               // <-- ...this alias name
 )
 
 } // namespace my_namespace
-
 //]
 
 

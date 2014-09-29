@@ -18,6 +18,7 @@ Library provides a portable across platforms way to:
 * import any native functions and variables
 * make alias names for C++ mangled functions and symbols
 * query libraries for sections and exported symbols
-* self loading and querying
+* self loading and self querying
+* getting program and module location by exported symbol
 
 [endsect]
