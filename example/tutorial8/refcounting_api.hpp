@@ -50,10 +50,11 @@ inline boost::shared_ptr<my_refcounting_api> get_plugin(
     boost::filesystem::path path, boost::string_ref func_name) 
 {
     typedef my_refcounting_api*(func_t)();
-    boost::function<func_t> f 
-        = boost::dll::import_function_alias<func_t>(
-            path, func_name
-        );
+    boost::function<func_t> f = boost::dll::import_function_alias<func_t>(
+        path, 
+        func_name, 
+        boost::dll::load_mode::append_decorations // will be ignored for executable
+    );
 
     // `f` goes out of scope here and will be destroyed.
     // Returned variable holds a reference to 

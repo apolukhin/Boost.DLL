@@ -5,7 +5,6 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 //[callplugcpp_tutorial8
-#include "../shared_lib_path.hpp"
 #include <iostream>
 #include "refcounting_api.hpp"
 
@@ -16,7 +15,7 @@ int main(int argc, char* argv[]) {
     BOOST_ASSERT(argc >= 2);
     //->
     boost::shared_ptr<my_refcounting_api> plugin = get_plugin(
-        shared_lib_path(argv[1], L"refcounting_plugin"), 
+        boost::filesystem::path(argv[1]) / "refcounting_plugin",
         "create_refc_plugin"
     );
 

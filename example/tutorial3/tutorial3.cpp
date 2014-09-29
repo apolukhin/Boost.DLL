@@ -4,8 +4,6 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp"
-
 //[callplugcpp_tutorial3
 #include <boost/dll/import_function.hpp> // for import_function_alias
 #include <boost/make_shared.hpp>
@@ -20,7 +18,7 @@ std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugi
 
     for (std::size_t i = 0; i < plugins.size(); ++i) {
         std::cout << "Loading plugin: " << plugins[i] << '\n';
-        lib->load(plugins[i]);
+        lib->load(plugins[i], dll::load_mode::append_decorations);
         if (!lib->search_symbol("create_plugin")) {
             // no such symbol
             continue;
@@ -41,11 +39,12 @@ std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugi
 //]
 
 int main(int argc, char* argv[]) { 
-    // argv[1] contains path to our plugin library 
-    BOOST_ASSERT(argc >= 2);
+    /*<-*/ BOOST_ASSERT(argc >= 2);    /*->*/
+    // argv[1] contains path to our plugin library
     std::vector<boost::filesystem::path> plugins;
-    plugins.push_back(shared_lib_path(argv[1], L"my_plugin_aggregator"));
-    plugins.push_back(shared_lib_path(argv[1], L"my_plugin_sum"));
+    boost::filesystem::path base_dir = argv[1];
+    plugins.push_back(base_dir / "my_plugin_aggregator");
+    plugins.push_back(base_dir / "my_plugin_sum");
 
     const std::size_t res = search_for_symbols(plugins);
     BOOST_ASSERT(res == 1);
