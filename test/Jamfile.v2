@@ -15,7 +15,7 @@ path-constant TEST_DIR : $(BOOST_ROOT)/bin.v2/libs/dll/test ;
 
 # Static library that is not linked with any of the boost libs
 lib static_plugin : ../example/tutorial4/static_plugin.cpp : <link>static : : <target-os>linux:<cxxflags>"-rdynamic" ;
-lib static_refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <link>static : : <target-os>linux:<cxxflags>"-rdynamic" ;
+lib static_refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <link>static : : <variant>release <target-os>linux:<cxxflags>"-rdynamic" ;
 
 project
    : source-location .
@@ -25,7 +25,6 @@ project
       <target-os>linux:<linkflags>"-ldl" <target-os>linux:<cxxflags>"-fvisibility=hidden"
 
    # others
-      <link>shared:<define>BOOST_ALL_DLL
       <library>/boost/system//boost_system
       <library>/boost/filesystem//boost_filesystem
       <threading>multi
@@ -47,7 +46,7 @@ project
         : <location>$(TEST_DIR)
     ;
   
-    test-suite application
+    test-suite boostdll
         : 
         [ run shared_library_load_test.cpp : $(TEST_DIR) ]
         [ run shared_library_search_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
@@ -75,11 +74,7 @@ project
         [ run ../example/tutorial6/tutorial6.cpp : $(TEST_DIR) ]
         [ run ../example/tutorial7/tutorial7.cpp : $(TEST_DIR) ]
         [ run ../example/tutorial8/tutorial8.cpp : $(TEST_DIR) ]
-        [ run ../example/tutorial8/tutorial8_static.cpp
-                : $(TEST_DIR)
-                :
-                : <variant>release <library>static_refcounting_plugin <target-os>linux:<linkflags>"-rdynamic" <test-info>always_show_run_output
-        ]
+        [ run ../example/tutorial8/tutorial8_static.cpp ../example/tutorial8/refcounting_plugin.cpp : $(TEST_DIR) : : <variant>release <test-info>always_show_run_output ]
         [ compile-fail section_name_too_big.cpp ]
         [ compile-fail not_a_function.cpp ]
     ;

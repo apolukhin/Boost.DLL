@@ -52,10 +52,6 @@ boost::filesystem::path shared_lib_path(const boost::filesystem::path& root, con
 #  include <boost/version.hpp>
 #endif
 
-#ifndef BOOST_LIB_NAME
-#  error "Macro BOOST_LIB_NAME not set (internal error)"
-#endif
-
 //
 // error check:
 //
