@@ -148,7 +148,8 @@ Here's how the implementation of the plugin looks like:
 [import ../example/tutorial4/static_plugin.cpp]
 [plugcpp_my_plugin_staic_impl]
 
-And here is how it can be used from the executable:
+Now if we make a static library from source file and link that static library with the following code,
+we'll be able to import symbols from plugin:
 
 [import ../example/tutorial4/load_self.cpp]
 [plugcpp_my_plugin_load_self]
@@ -165,6 +166,9 @@ Constructing my_plugin_static
 Computed Value: 0
 Destructing my_plugin_static
 ]
+
+[note If we want o make a traditional plugin that is located in a separate shared library, all we need to do is 
+remove the `#include "static_plugin.hpp"` line and replace `dll::program_location()` with plugin location and name.]
 
 [*Full sources:]
 
