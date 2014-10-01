@@ -293,7 +293,7 @@ void generic_header_check(const T& v1, const dd::load_command_& v2) {
 
 
 // Unit Tests
-int test_main(int argc, char* argv[]) {
+int test_main(int /*argc*/, char* /*argv*/[]) {
 
 #if BOOST_OS_WINDOWS
     generic_header_check(::IMAGE_DOS_HEADER(), dd::IMAGE_DOS_HEADER_());

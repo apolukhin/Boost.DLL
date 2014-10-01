@@ -28,7 +28,7 @@ public:
         return 1.0;
     }
 
-    float calculate(float x, float y) {
+    float calculate(float /*x*/, float /*y*/) {
         return 0;
     }
     //->

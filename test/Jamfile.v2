@@ -1,5 +1,5 @@
 #
-#          Copyright Renato Tegon Forti 2011 - 2013.
+# Copyright Renato Tegon Forti, Antony Polukhin 2011 - 2014.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
@@ -23,8 +23,10 @@ project
 
    # linux
       <target-os>linux:<linkflags>"-ldl" <target-os>linux:<cxxflags>"-fvisibility=hidden"
+      <toolset>gcc:<cxxflags>"-Wall -Wextra -pedantic -Wno-long-long"
 
    # others
+      <define>BOOST_SYSTEM_NO_DEPRECATED
       <library>/boost/system//boost_system
       <library>/boost/filesystem//boost_filesystem
       <threading>multi
