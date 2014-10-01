@@ -70,6 +70,18 @@ public:
         } else {
             flags &= ~static_cast<boost::detail::winapi::DWORD_>(load_mode::append_decorations);
             handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, flags);
+            
+            if (handle_) {
+                return;
+            }
+            
+            ec = boost::dll::detail::last_error_code();
+            
+            // Possibly we were attempting to load an executable, then decorations must not be applied
+            handle_ = boost::detail::winapi::LoadLibraryExW(sl.c_str(), 0, flags);
+            if (handle_) {
+                ec.clear();
+            }
         }
 
         if (!handle_) {
