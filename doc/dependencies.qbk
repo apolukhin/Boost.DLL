@@ -15,7 +15,7 @@ and they must be available in order to compile programs that use Boost.Plugin:
 
 Refcountable part of Boost.Plugin also depends on:
 
-* Boost.Function for creation of a callbak system.
+* Boost.Function for creation of a callback system.
 * Boost.SharedPtr for reference counting.
 
 [endsect]
