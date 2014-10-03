@@ -27,18 +27,20 @@
 <a name="boost_dll.design_rationale"></a><a class="link" href="design_rationale.html" title="Design Rationale">Design Rationale</a>
 </h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.abi_portablity_across_compilers">ABI
-      portablity across compilers</a></span></dt>
+<dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.abi_portability_across_compilers">ABI
+      portability across compilers</a></span></dt>
 <dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.user_s_plugin_api">User's
       plugin API</a></span></dt>
 <dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.performance_and_memory_allocations">Performance
       and memory allocations</a></span></dt>
 <dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.self_loading">Self loading</a></span></dt>
+<dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.aliases_vs_mangling">Aliases
+      vs Mangling</a></span></dt>
 </dl></div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_dll.design_rationale.abi_portablity_across_compilers"></a><a class="link" href="design_rationale.html#boost_dll.design_rationale.abi_portablity_across_compilers" title="ABI portablity across compilers">ABI
-      portablity across compilers</a>
+<a name="boost_dll.design_rationale.abi_portability_across_compilers"></a><a class="link" href="design_rationale.html#boost_dll.design_rationale.abi_portability_across_compilers" title="ABI portability across compilers">ABI
+      portability across compilers</a>
 </h3></div></div></div>
 <p>
         During discussion of the library a lot of questions were about ABI stability
@@ -74,8 +76,8 @@
 </h3></div></div></div>
 <p>
         Some methods of the library use <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span></code>
-        or return <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span></code>. This may look non optial at first, but
-        there is a reason to do so.
+        or return <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span></code>. This may look non optimal at first,
+        but there is a reason to do so.
       </p>
 <p>
         <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span></code> allows to transparently use Unicode
@@ -110,6 +112,50 @@
 <p>
         Making multiple interfaces that do exactly the same things looks unreasonable
         to me, that's why <code class="computeroutput"><span class="identifier">shared_library</span><span class="special">(</span><span class="identifier">program_location</span><span class="special">())</span></code> and <code class="computeroutput"><span class="identifier">shared_library</span><span class="special">(</span><span class="identifier">this_line_location</span><span class="special">())</span></code> are used without <code class="computeroutput"><span class="identifier">shared_library</span><span class="special">::</span><span class="identifier">load_self</span><span class="special">()</span></code>.
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_dll.design_rationale.aliases_vs_mangling"></a><a class="link" href="design_rationale.html#boost_dll.design_rationale.aliases_vs_mangling" title="Aliases vs Mangling">Aliases
+      vs Mangling</a>
+</h3></div></div></div>
+<p>
+        Mangling depends on source code, for example <code class="computeroutput"><span class="string">"boost::foo"</span></code>
+        could be <code class="computeroutput"><span class="identifier">foo</span></code> function or
+        <code class="computeroutput"><span class="identifier">foo</span></code> variable. Depending on
+        that knowledge it must be mangled in different ways. More problems arise
+        if <code class="computeroutput"><span class="identifier">foo</span></code> is an overloaded function
+        that accepts parameters: <code class="computeroutput"><span class="string">"boost::foo(variant&lt;int,
+        short&gt;)"</span></code>. In that case full name of parameter must
+        be specified, which could be <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">variant</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span>
+        <span class="keyword">short</span><span class="special">&gt;</span></code>
+        or <code class="computeroutput"><span class="identifier">variant</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">short</span><span class="special">,</span> <span class="identifier">void_</span><span class="special">,</span> <span class="identifier">void_</span><span class="special">&gt;</span></code> ...
+      </p>
+<p>
+        There was an idea to allow user to forward declare function and generate
+        mangled name from it:
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">void</span> <span class="identifier">foo</span><span class="special">(</span><span class="identifier">variant</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">short</span><span class="special">&gt;);</span> <span class="special">}</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">mangled_name</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">magic_mangle</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">foo</span><span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+        But that idea has epic failed because of linker problems and no reliable
+        way to get mangled symbol name from compiler internals at compile time.
+      </p>
+<p>
+        That's why aliases were considered a lesser evil:
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="identifier">BOOST_DLL_ALIAS</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">foo</span><span class="special">,</span> <span class="identifier">foo_variant</span><span class="special">)</span> <span class="comment">// in plugin</span>
+<span class="string">"foo_variant"</span> <span class="comment">// in plugin importer</span>
+</pre>
+<p>
       </p>
 </div>
 </div>

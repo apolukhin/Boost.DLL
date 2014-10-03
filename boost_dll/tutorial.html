@@ -383,7 +383,7 @@ Destructing my_plugin_sum ;o)
       </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
-            reducing common size of distibution
+            reducing common size of distribution
           </li>
 <li class="listitem">
             simplification of installation of distribution
@@ -462,7 +462,8 @@ Destructing my_plugin_sum ;o)
 <p>
       </p>
 <p>
-        And here is how it can be used from the executable:
+        Now if we make a static library from source file and link that static library
+        with the following code, we'll be able to import symbols from plugin:
       </p>
 <p>
 </p>
@@ -508,6 +509,19 @@ Constructing my_plugin_static
 Computed Value: 0
 Destructing my_plugin_static
 </pre>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          If we want o make a traditional plugin that is located in a separate shared
+          library, all we need to do is remove the <code class="computeroutput"><span class="preprocessor">#include</span>
+          <span class="string">"static_plugin.hpp"</span></code> line
+          and replace <code class="computeroutput"><span class="identifier">dll</span><span class="special">::</span><span class="identifier">program_location</span><span class="special">()</span></code>
+          with plugin location and name.
+        </p></td></tr>
+</table></div>
 <p>
         <span class="bold"><strong>Full sources:</strong></span>
       </p>
@@ -601,7 +615,7 @@ Destructing my_plugin_sum ;o)
         That's because function <code class="computeroutput"><span class="identifier">create_plugin</span></code>
         from <code class="computeroutput"><span class="identifier">libmy_plugin_aggregator</span><span class="special">.</span><span class="identifier">so</span></code> was
         shadowed by the <code class="computeroutput"><span class="identifier">create_plugin</span></code>
-        function from onther plugin. Dynamik linker thought that <code class="computeroutput"><span class="identifier">create_plugin</span></code>
+        function from other plugin. Dynamic linker thought that <code class="computeroutput"><span class="identifier">create_plugin</span></code>
         was already loaded and there is no need to load it again.
       </p>
 <div class="warning"><table border="0" summary="Warning">
@@ -659,11 +673,11 @@ Destructing my_plugin_sum ;o)
 </h3></div></div></div>
 <p>
         Boost.DLL provides no out of the box mechanism for catching library unloads.
-        However such task could be easily implemnted.
+        However such task could be easily implemented.
       </p>
 <p>
         // This block is invisible for Quickbook documentation All you need to do,
-        is write a simple class that stores callbacks and calles them at destruction:
+        is write a simple class that stores callbacks and calls them at destruction:
       </p>
 <p>
 </p>
@@ -734,11 +748,11 @@ After library unload.
 </h3></div></div></div>
 <p>
         Situation when we do not know names of functions in plugin could occur. In
-        that case querieing library could be useful.
+        that case querying library could be useful.
       </p>
 <p>
-        Imagine the sitauation: we have a project called 'Anna' that is capable of
-        loading and using plugins that contain functions with sugnature <code class="computeroutput"><span class="keyword">void</span><span class="special">(</span><span class="keyword">const</span>
+        Imagine the situation: we have a project called 'Anna' that is capable of
+        loading and using plugins that contain functions with signature <code class="computeroutput"><span class="keyword">void</span><span class="special">(</span><span class="keyword">const</span>
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>.
         We do not know function names, but wish to find out them somehow.
       </p>
@@ -975,7 +989,7 @@ Function 'howdy' prints:
         and returns the plugin location.
       </p>
 <p>
-        Thta's it, now we can get instance of a plugin:
+        That's it, now we can get instance of a plugin:
       </p>
 <p>
 </p>

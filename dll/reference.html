@@ -54,6 +54,7 @@
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="header.boost.dll.library_info_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_56_0/boost/dll/library_info.hpp" target="_top">boost/dll/library_info.hpp</a>&gt;</h4></div></div></div>
+<p>Contains only the <a class="link" href="../boost/dll/library_info.html" title="Class library_info">boost::dll::library_info</a> class that is capable of extracting different information from binaries. </p>
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">namespace</span> <span class="identifier">dll</span> <span class="special">{</span>
     <span class="keyword">class</span> <a class="link" href="../boost/dll/library_info.html" title="Class library_info">library_info</a><span class="special">;</span>
@@ -63,6 +64,7 @@
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="header.boost.dll.runtime_symbol_info_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_56_0/boost/dll/runtime_symbol_info.hpp" target="_top">boost/dll/runtime_symbol_info.hpp</a>&gt;</h4></div></div></div>
+<p>Provides methods for getting acceptable by <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">boost::dll::shared_library</a> location of symbol, source line or program. </p>
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">namespace</span> <span class="identifier">dll</span> <span class="special">{</span>
     <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> T<span class="special">&gt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <a class="link" href="../boost/dll/symbol_location.html" title="Function template symbol_location"><span class="identifier">symbol_location</span></a><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span> <span class="special">&amp;</span><span class="special">)</span><span class="special">;</span>
@@ -86,7 +88,7 @@
     <span class="keyword">bool</span> <a name="boost.dll.operator!="></a><span class="keyword">operator</span><span class="special">!=</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lhs<span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span>
 
     <span class="comment">// Compare the actual DLL/DSO objects without any guarantee to be stable between runs. Throws nothing. </span>
-    <span class="keyword">bool</span> <a name="boost.dll.operator_idp6811776"></a><span class="keyword">operator</span><span class="special">&lt;</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lhs<span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span>
+    <span class="keyword">bool</span> <a name="boost.dll.operator_idp6846224"></a><span class="keyword">operator</span><span class="special">&lt;</span><span class="special">(</span><span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lhs<span class="special">,</span> <span class="keyword">const</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span>
 
     <span class="comment">// Swaps two shared libraries. Does not invalidate symbols and functions loaded from libraries. Throws nothing. </span>
     <span class="keyword">void</span> <a name="boost.dll.swap"></a><span class="identifier">swap</span><span class="special">(</span><a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> lhs<span class="special">,</span> <a class="link" href="../boost/dll/shared_library.html" title="Class shared_library">shared_library</a> <span class="special">&amp;</span> rhs<span class="special">)</span><span class="special">;</span>
@@ -96,14 +98,15 @@
 <div class="section">
 <div class="titlepage"><div><div><h4 class="title">
 <a name="header.boost.dll.shared_library_load_mode_hpp"></a>Header &lt;<a href="http://www.boost.org/doc/libs/1_56_0/boost/dll/shared_library_load_mode.hpp" target="_top">boost/dll/shared_library_load_mode.hpp</a>&gt;</h4></div></div></div>
+<p>Contains only the boost::dll::load_mode::type enum and operators related to it. </p>
 <pre class="synopsis"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
   <span class="keyword">namespace</span> <span class="identifier">dll</span> <span class="special">{</span>
     <span class="keyword">namespace</span> <span class="identifier">load_mode</span> <span class="special">{</span>
       <span class="keyword">enum</span> <a class="link" href="../boost/dll/load_mode/type.html" title="Type type">type</a><span class="special">;</span>
 
       <span class="comment">// Free operators for load_mode::type flag manipulation. </span>
-      <span class="identifier">type</span> <a name="boost.dll.load_mode.operator_idp6861632"></a><span class="keyword">operator</span><span class="special">|</span><span class="special">(</span><span class="identifier">type</span> left<span class="special">,</span> <span class="identifier">type</span> right<span class="special">)</span><span class="special">;</span>
-      <span class="identifier">type</span> <span class="special">&amp;</span> <a name="boost.dll.load_mode.operator_=_idp6864176"></a><span class="keyword">operator</span><span class="special">|=</span><span class="special">(</span><span class="identifier">type</span> <span class="special">&amp;</span> left<span class="special">,</span> <span class="identifier">type</span> right<span class="special">)</span><span class="special">;</span>
+      <span class="identifier">type</span> <a name="boost.dll.load_mode.operator_idp6892016"></a><span class="keyword">operator</span><span class="special">|</span><span class="special">(</span><span class="identifier">type</span> left<span class="special">,</span> <span class="identifier">type</span> right<span class="special">)</span><span class="special">;</span>
+      <span class="identifier">type</span> <span class="special">&amp;</span> <a name="boost.dll.load_mode.operator_=_idp6894272"></a><span class="keyword">operator</span><span class="special">|=</span><span class="special">(</span><span class="identifier">type</span> <span class="special">&amp;</span> left<span class="special">,</span> <span class="identifier">type</span> right<span class="special">)</span><span class="special">;</span>
     <span class="special">}</span>
   <span class="special">}</span>
 <span class="special">}</span></pre>
