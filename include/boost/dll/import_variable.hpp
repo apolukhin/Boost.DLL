@@ -61,7 +61,8 @@ namespace detail {
 *
 * \param lib Shared pointer to library to load variable from.
 *
-* \param variable_name Null-terminated name of the variable to import. Can handle std::string, char*, const char*.
+* \param variable_name Null-terminated C or C++ mangled name of the variable to import. 
+* Can handle std::string, char*, const char*.
 *
 * \param mode An mode that will be used on library load.
 *

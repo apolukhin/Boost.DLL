@@ -34,7 +34,8 @@ Applied comments from "Boost query interest" mails and Boost Incubator, implemen
 
 [h5 0.1]
 
-Boost.Plugin 0.1 (Initial Solo Prototype)
+Boost.Plugin 0.1 (Initial Solo Prototype taken from
+[@https://github.com/retf/Boost.Application Boost.Application] with many improvements)
 
 [endsect]
 

@@ -22,6 +22,8 @@
 # pragma once
 #endif
 
+/// \file boost/dll/runtime_symbol_info.hpp
+/// \brief Provides methods for getting acceptable by boost::dll::shared_library location of symbol, source line or program.
 namespace boost { namespace dll {
 
 namespace detail {

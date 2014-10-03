@@ -68,7 +68,7 @@ namespace detail {
 * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
 *
 * \param lib Path or shared pointer to library to load function from.
-* \param func_name Null-terminated name of the function to import. Can handle std::string, char*, const char*.
+* \param func_name Null-terminated C or C++ mangled name of the function to import. Can handle std::string, char*, const char*.
 * \param mode An mode that will be used on library load.
 *
 * \return boost::function<T> that holds an imported function from the loaded library and refcounts usage

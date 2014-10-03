@@ -60,5 +60,33 @@ Making multiple interfaces that do exactly the same things looks unreasonable to
 
 [endsect]
 
+[section Aliases vs Mangling]
+
+Mangling depends on source code, for example `"boost::foo"` could be `foo` function or `foo` variable.
+Depending on that knowledge it must be mangled in different ways. More problems arise if `foo` is an
+overloaded function that accepts parameters: `"boost::foo(variant<int, short>)"`. In that case full
+name of parameter must be specified, which could be `boost::variant<int, short>` or `variant<int, short, void_, void_>`
+...
+
+There was an idea to allow user to forward declare function and generate mangled name from it:
+
+```
+namespace boost { void foo(variant<int, short>); }
+
+std::string mangled_name = boost::dll::magic_mangle(boost::foo);
+```
+
+But that idea has epic failed because of linker problems and no reliable way to get mangled symbol name
+from compiler internals at compile time.
+
+That's why aliases were considered a lesser evil:
+
+```
+BOOST_DLL_ALIAS(boost::foo, foo_variant) // in plugin
+"foo_variant" // in plugin importer
+```
+
+[endsect]
+
 [endsect]
 

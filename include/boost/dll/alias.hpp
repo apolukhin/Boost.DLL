@@ -75,7 +75,12 @@ namespace boost { namespace dll {
 /*!
 * \brief Makes an alias name for exported function or variable.
 *
-* This macro is usefull in cases of long mangled names.
+* This macro is usefull in cases of long mangled C++ names. For example some `void boost::foo(std::sting)`
+* function name will change to something like `N5boostN3foosE` after mangling.
+* Importing function by `N5boostN3foosE` name does not looks user friendly, especially assuming the fact
+* that different compilers have different mangling schemes. AliasName is the name that won't be mangled
+* and can be used as a portable import name.
+*
 *
 * Can be used in any namespace, including global. FunctionOrVar must be fully qualified,
 * so that address of it could be taken. Multiple different alises for a single variable/function
@@ -85,6 +90,9 @@ namespace boost { namespace dll {
 * in global namespace must not have names same as AliasNames.
 *
 * Same AliasName in different translation units must point to the same FunctionOrVar.
+*
+* Puts all the aliases into the \b "boostdll" read only section of the binary. Equal to
+* \forcedmacrolink{BOOST_DLL_ALIAS_SECTIONED}(FunctionOrVar, AliasName, boostdll).
 *
 * \param FunctionOrVar Function or variable for wich an alias must be made.
 * \param AliasName Name of the alias. Must be a valid C identifier.
@@ -100,7 +108,7 @@ namespace boost { namespace dll {
 * BOOST_DLL_ALIAS(foo::bar, foo_bar_another_alias_name)
 * \endcode
 *
-* Puts all the aliases into the "boostdll" read only section of the binary.
+* \b See: \forcedmacrolink{BOOST_DLL_ALIAS_SECTIONED} for making alias in a specific section.
 */
 #define BOOST_DLL_ALIAS(FunctionOrVar, AliasName)                       \
     BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, boostdll)       \
@@ -110,7 +118,7 @@ namespace boost { namespace dll {
 // Note: we can not use `aggressive_ptr_cast` here, because in that case GCC applies
 // different permissions to the section and it causes Segmentation fault.
 /*!
-* \brief Same as BOOST_DLL_ALIAS but puts alias name into the user specified section.
+* \brief Same as \forcedmacrolink{BOOST_DLL_ALIAS} but puts alias name into the user specified section.
 *
 * \param FunctionOrVar Function or variable for wich an alias must be made.
 * \param AliasName Name of the alias. Must be a valid C identifier.

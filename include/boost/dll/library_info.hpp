@@ -23,6 +23,10 @@
 # pragma once
 #endif
 
+/// \file boost/dll/library_info.hpp
+/// \brief Contains only the boost::dll::library_info class that is capable of
+/// extracting different information from binaries.
+
 namespace boost { namespace dll {
 
 /*!

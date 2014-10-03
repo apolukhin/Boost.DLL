@@ -30,7 +30,8 @@ local doxygen_params =
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>MACRO_EXPANSION=YES
     <doxygen:param>"ALIASES= \\
-        \"forcedlink{1}=\\xmlonly<link linkend='boost.dll.\\1'>boost::dll::\\1</link>\\endxmlonly\" "
+        \"forcedlink{1}=\\xmlonly<link linkend='boost.dll.\\1'>boost::dll::\\1</link>\\endxmlonly\" \\
+        \"forcedmacrolink{1}=\\xmlonly<link linkend='\\1'>\\1</link>\\endxmlonly\" "
     <doxygen:param>"PREDEFINED= \\
         \"BOOST_RV_REF(T)=T&&\" \\
         \"BOOST_RV_REF(shared_library)=shared_library&&\" \\
