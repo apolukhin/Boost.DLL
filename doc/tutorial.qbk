@@ -4,7 +4,7 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
 
-[/ // TODO: repalce https://raw.githubusercontent.com/apolukhin/Boost.DLL/master/example with @boost:libs/dll/example /]
+[/ // TODO: replace https://raw.githubusercontent.com/apolukhin/Boost.DLL/master/example with @boost:libs/dll/example /]
 
 [template example_ref[path] '''<ulink url="https://github.com/apolukhin/Boost.DLL/blob/master/example/'''[path]'''">example/'''[path]'''</ulink>''']
 
@@ -129,7 +129,7 @@ __to_top
 
 Linking plugin into the executable has the advantages of 
 
-* reducing common size of distibution 
+* reducing common size of distribution 
 * simplification of installation of distribution
 * faster plugin load
 
@@ -203,7 +203,7 @@ Destructing my_plugin_sum ;o)
 Why `my_plugin_static` was constructed while we were loading `my_plugin_aggregator`?
 
 That's because function `create_plugin` from `libmy_plugin_aggregator.so` was shadowed by
-the `create_plugin` function from onther plugin. Dynamik linker thought that `create_plugin`
+the `create_plugin` function from other plugin. Dynamic linker thought that `create_plugin`
 was already loaded and there is no need to load it again.
 
 [warning Use "-fvisibility=hidden" flag (at least for plugins) while compiling for POSIX platforms.
@@ -237,11 +237,11 @@ __to_top
 [endsect]
 
 [section Executing callbacks on library unload]
-Boost.DLL provides no out of the box mechanism for catching library unloads. However such task could be easily implemnted.
+Boost.DLL provides no out of the box mechanism for catching library unloads. However such task could be easily implemented.
 
 [import ../example/tutorial6/on_unload_lib.cpp]
 // This block is invisible for Quickbook documentation
-All you need to do, is write a simple class that stores callbacks and calles them at destruction:
+All you need to do, is write a simple class that stores callbacks and calls them at destruction:
 [plugcpp_on_unload]
 
 In the example above `my_namespace::on_unload` is a singleton structure that holds a vector of callbacks and
@@ -268,11 +268,11 @@ __to_top
 
 [section Querying libraries for symbols]
 
-Situation when we do not know names of functions in plugin could occur. In that case querieing library could
+Situation when we do not know names of functions in plugin could occur. In that case querying library could
 be useful.
 
-Imagine the sitauation: we have a project called 'Anna' that is capable of loading and using plugins that contain
-functions with sugnature `void(const std::string&)`. We do not know function names, but wish to find out them somehow.
+Imagine the situation: we have a project called 'Anna' that is capable of loading and using plugins that contain
+functions with signature `void(const std::string&)`. We do not know function names, but wish to find out them somehow.
 
 Solution would be pretty simple. Let's agree with plugin developers, that they can name functions as they like,
 but all the plugin functions aliases must be located in section named 'Anna':
@@ -355,7 +355,7 @@ Our custom deleter differs from the default one, because it holds a shared point
 a look at the `ptr->location()` line in constructor. This call results in call to
 [funcref boost::dll::this_line_location] and returns the plugin location.
 
-Thta's it, now we can get instance of a plugin:
+That's it, now we can get instance of a plugin:
 [plugcpp_get_plugin_refcounting]
 
 Here's how it `main()` function look like:

@@ -7,21 +7,21 @@
 [section F.A.Q.]
 
 * [*Question:]  Is Boost.Plugin thread-safe?
-  * [*Answer:]  It is safe in the manner as all the C++ Standart Library containers are: it is safe to use
+  * [*Answer:]  It is safe in the manner as all the C++ Standard Library containers are: it is safe to use
 different instances of shared_library from different threads even if all the instances loaded the same library.
 
 [pre
 ]
 
 * [*Question:]  Why on Linux symbols from one plugin are seen in another? Can't get symbol with same name from right plugin!
-  * [*Answer:]  You've run into the symbol shadowing plroblem. Compile your plugins with "-fvisibility=hidden"
+  * [*Answer:]  You've run into the symbol shadowing problem. Compile your plugins with "-fvisibility=hidden"
 flag and take a look to the Tutorial section.
 
 [pre
 ]
 
-* [*Question:]  How Unicode (Windows) is hadled?
-  * [*Answer:]  Boost.Plugin supports Unicode, so that you could provide a unicode paths to it.
+* [*Question:]  How Unicode (Windows) is handled?
+  * [*Answer:]  Boost.Plugin supports Unicode, so that you could provide Unicode paths to it.
 
 [pre
 ]
@@ -36,14 +36,14 @@ to `library_info` class.
 ]
 
 * [*Question:]  What if I specify wrong type in `shared_library::get<T>` or `import_function<T>`?
-  * [*Answer:]  Usualy you'll end up with `Segmentation Fault`. However it is safe to make types
+  * [*Answer:]  Usually you'll end up with `Segmentation Fault`. However it is safe to make types
 more strict, for example making `const int` from an `int` will not harm.
 
 [pre
 ]
 
-* [*Question:]  Does your library gurantee ABI stability of methods?
-  * [*Answer:]  Library only gurarntees that alias names created using the `BOOST_DLL_ALIAS` macros
+* [*Question:]  Does your library guarantee ABI stability of methods?
+  * [*Answer:]  Library only guarantees that alias names created using the `BOOST_DLL_ALIAS` macros
 will not change with the change of compiler or platform. You must take care of functions ABI and API
 stability by your own.
 
@@ -57,7 +57,7 @@ stability by your own.
 ]
 
 * [*Question:]  I have found a bug, how do I notify?]
-  * [*Answer:]  Create an [@https://github.com/apolukhin/Boost.Plugin/issues issue at github] with a detailed description.
+  * [*Answer:]  Create an [@https://github.com/apolukhin/Boost.Plugin/issues issue at GitHub] with a detailed description.
 [endsect]
 
 [endsect]

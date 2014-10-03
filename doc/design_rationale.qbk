@@ -6,7 +6,7 @@
 
 [section Design Rationale]
 
-[section ABI portablity across compilers]
+[section ABI portability across compilers]
 
 During discussion of the library a lot of questions were about ABI stability and should the library
 take care about it. It was decided that making ABI stable could be a useful feature, but it will
@@ -31,7 +31,7 @@ To be more usable Boost.DLL does not force API. It's up to user to design suitab
 [section Performance and memory allocations]
 
 Some methods of the library use `boost::filesystem::path` or return `std::vector<std::string>`. This
-may look non optial at first, but there is a reason to do so.
+may look non optimal at first, but there is a reason to do so.
 
 `boost::filesystem::path` allows to transparently use Unicode strings with non-Unicode ones. Using it
 provides a more user-friendly interface for the library while the performance overhead is not noticeable

@@ -41,13 +41,13 @@ using namespace boost;
 ]]
 
 In all the cases above it is safe to use imported variable or function because the
-`boost::function` or `boost::shared_ptr` internaly hold a reference to shread library.
+`boost::function` or `boost::shared_ptr` internally hold a reference to shared library.
 
 [macroref BOOST_SYMBOL_EXPORT] is just a macro from Boost.Config that expands into the `__declspec(dllexport)` or `__attribute__((visibility("default")))`. You are free to use your own macro for exports.
 
-[note On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recomended for use on Linux/POSIX.]
+[note On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recommended for use on Linux/POSIX.]
 
-If you need a low level api [classref boost::dll::shared_library] will suit you. If you want to load a library,
+If you need a low level API [classref boost::dll::shared_library] will suit you. If you want to load a library,
 just construct that class with a path to the library as a parameter:
 ```
 boost::dll::shared_library lib("/test/boost/application/libtest_library.so");
