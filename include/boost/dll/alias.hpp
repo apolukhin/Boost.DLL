@@ -9,6 +9,8 @@
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/utility/addressof.hpp>
+#include <boost/predef/compiler.h>
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
@@ -24,7 +26,7 @@
 
 namespace boost { namespace dll {
 
-#if BOOST_OS_WINDOWS
+#if BOOST_COMP_MSVC
 
 #define BOOST_DLL_SELECTANY __declspec(selectany)
 
@@ -117,6 +119,8 @@ namespace boost { namespace dll {
 
 // Note: we can not use `aggressive_ptr_cast` here, because in that case GCC applies
 // different permissions to the section and it causes Segmentation fault.
+// Note: we can not use `boost::addressof()` here, because in that case GCC 
+// may optimize away the FunctionOrVar instance and we'll get a pointer to unexisting symbol.
 /*!
 * \brief Same as \forcedmacrolink{BOOST_DLL_ALIAS} but puts alias name into the user specified section.
 *
