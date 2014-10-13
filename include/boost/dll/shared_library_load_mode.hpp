@@ -224,14 +224,14 @@ enum type {
 
 /// Free operators for load_mode::type flag manipulation.
 inline type operator|(type left, type right) BOOST_NOEXCEPT {
-    return (static_cast<type>(
-        static_cast<unsigned int>(left) | static_cast<unsigned int>(right))
+    return static_cast<type>(
+        static_cast<unsigned int>(left) | static_cast<unsigned int>(right)
     );
 }
 
 inline type& operator|=(type& left, type right) BOOST_NOEXCEPT {
     left = left | right;
-    return (left);
+    return left;
 }
 
 }}} // boost::dll::load_mode

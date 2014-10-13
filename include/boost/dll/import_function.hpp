@@ -145,7 +145,7 @@ boost::function<T> import_function_alias(const boost::filesystem::path& lib, boo
 //! \overload boost::dll::import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
 template <class T>
 boost::function<T> import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::dll::detail::refc_function<T>(lib, lib->get<T*>(func_name));
+    return boost::dll::detail::refc_function<T>(lib, lib->get_alias<T>(func_name));
 }
 
 

@@ -11,6 +11,7 @@
 #include <boost/dll/shared_library.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
+#include <boost/utility/addressof.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -141,7 +142,10 @@ boost::shared_ptr<T> import_variable_alias(const boost::filesystem::path& lib, b
 //! \overload boost::dll::import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name, load_mode::type mode)
 template <class T>
 boost::shared_ptr<T> import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<T>(lib->get<T*>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
+    return boost::shared_ptr<T>(
+        boost::addressof(lib->get_alias<T>(variable_name)), 
+        boost::dll::detail::ptr_holding_empty_deleter(lib)
+    );
 }
 
 

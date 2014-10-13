@@ -42,7 +42,7 @@ namespace boost { namespace dll { namespace detail {
         ec = last_error_code();
 
         // In case of ERROR_INSUFFICIENT_BUFFER_ trying to get buffer big enough to store the whole path
-        for (unsigned i = 2; i < 1025 && ec.value() == ERROR_INSUFFICIENT_BUFFER_; i *= 2) {
+        for (unsigned i = 2u; i < 1025u && static_cast<boost::detail::winapi::DWORD_>(ec.value()) == ERROR_INSUFFICIENT_BUFFER_; i *= 2u) {
             path = new boost::detail::winapi::WCHAR_[DEFAULT_PATH_SIZE_ * i];
 
             boost::detail::winapi::GetModuleFileNameW(handle, path, DEFAULT_PATH_SIZE_ * i);

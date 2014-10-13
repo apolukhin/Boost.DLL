@@ -282,13 +282,10 @@ public:
     * This call will always succeed and throw nothing if call to `search_symbol(boost::string_ref )`
     * member function with the same symbol name returned `true`.
     *
-    * If using this call for an alias name do not forget to add a pointer to a resulting type.
-    *
     * \b Example:
     * \code
     * shared_library lib("test_lib.so");
     * int& i0 = lib.get<int>("integer_name");
-    * int& i1 = *lib.get<int*>("integer_alias_name");
     * \endcode
     *
     * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
@@ -324,7 +321,13 @@ public:
     */
     template <typename T>
     inline T& get_alias(boost::string_ref alias_name) const {
+#if BOOST_COMP_MSVC
         return *get<T*>(alias_name);
+#else
+        return *boost::dll::detail::aggressive_ptr_cast<T*>(
+            get<const void*()>(alias_name)()
+        );
+#endif
     }
 
 private:
