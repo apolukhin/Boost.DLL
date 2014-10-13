@@ -162,11 +162,6 @@ int test_main(int argc, char* argv[]) {
     BOOST_CHECK(sz(v) == 10);
     BOOST_CHECK(sl.get_alias<std::size_t>("foo_variable") == 42);
 
-
-    sz = sl.get<std::size_t(*)(const std::vector<int>&)>("foo_bar");
-    BOOST_CHECK(sz(v) == 10);
-    BOOST_CHECK(*sl.get<std::size_t*>("foo_variable") == 42);
-    
     { // self
         shared_library sl(program_location());
         int val = sl.get<int(void)>("exef")();

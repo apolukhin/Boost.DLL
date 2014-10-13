@@ -156,7 +156,7 @@ namespace boost { namespace dll {
 #define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
     extern "C" {                                                                                \
         BOOST_SYMBOL_EXPORT BOOST_DLL_SECTION(SectionName, read)                                \
-        inline const void * AliasName() BOOST_NOEXCEPT {                                        \
+        BOOST_DLL_SELECTANY const void * AliasName() BOOST_NOEXCEPT {                           \
             return boost::dll::detail::aggressive_ptr_cast<const void *>(                       \
                 boost::addressof(FunctionOrVar)                                                 \
             );                                                                                  \
