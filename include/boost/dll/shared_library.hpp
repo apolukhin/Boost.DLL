@@ -325,7 +325,7 @@ public:
         return *get<T*>(alias_name);
 #else
         return *boost::dll::detail::aggressive_ptr_cast<T*>(
-            get<void*()>(alias_name)()
+            get<const void*()>(alias_name)()
         );
 #endif
     }
