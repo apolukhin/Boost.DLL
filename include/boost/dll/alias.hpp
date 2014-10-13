@@ -9,8 +9,6 @@
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/utility/addressof.hpp>
-#include <boost/predef/compiler.h>
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
@@ -26,7 +24,7 @@
 
 namespace boost { namespace dll {
 
-#if BOOST_COMP_MSVC
+#if BOOST_OS_WINDOWS
 
 #define BOOST_DLL_SELECTANY __declspec(selectany)
 
@@ -48,7 +46,7 @@ namespace boost { namespace dll {
 /*!
 * \brief Macro that pust symbol to a specific section.
 * \param SectionName Name of the section. Must be a valid C identifier without quotes not longer than 8 bytes.
-* \param Permissions Can be "read", "execute" or "write" (without quotes!).
+* \param Permissions Can be "read" or "write" (without quotes!).
 */
 #define BOOST_DLL_SECTION(SectionName, Permissions) __attribute__ ((section (#SectionName)))
 
@@ -136,9 +134,6 @@ namespace boost { namespace dll {
 * \endcode
 *
 */
-
-#if BOOST_COMP_MSVC
-
 #define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
     extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                       \
     BOOST_DLL_SECTION(SectionName, read) BOOST_DLL_SELECTANY                                    \
@@ -150,25 +145,6 @@ namespace boost { namespace dll {
         "Some platforms require section names to be at most 8 bytest"                           \
     );                                                                                          \
     /**/
-    
-#else
-
-#define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
-    extern "C" {                                                                                \
-        BOOST_SYMBOL_EXPORT BOOST_DLL_SECTION(SectionName, read)                                \
-        inline const void * AliasName() BOOST_NOEXCEPT {                                        \
-            return boost::dll::detail::aggressive_ptr_cast<const void *>(                       \
-                boost::addressof(FunctionOrVar)                                                 \
-            );                                                                                  \
-        }                                                                                       \
-    }                                                                                           \
-    BOOST_STATIC_ASSERT_MSG(                                                                    \
-        sizeof(#SectionName) < 10,                                                              \
-        "Some platforms require section names to be at most 8 bytest"                           \
-    );                                                                                          \
-    /**/
-
-#endif
 
 }} // boost::dll
 
