@@ -11,6 +11,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/utility/addressof.hpp>
 #include <boost/predef/compiler.h>
+#include <boost/predef/os.h>
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
@@ -36,17 +37,23 @@ namespace boost { namespace dll {
 
 #else
 
+
+#if BOOST_OS_WINDOWS
+// There are some problems with mixing `__dllexport__` and `weak` using MinGW
+// See https://sourceware.org/bugzilla/show_bug.cgi?id=17480
+#define BOOST_DLL_SELECTANY
+#else
 /*!
 * \brief Macro that allows linker to select any occurence of this symbol instead of
 * failing with 'multiple definitions' error at linktime.
 */
 #define BOOST_DLL_SELECTANY __attribute__((weak))
-
+#endif
 // TODO: improve section permissions using following info:
 // http://stackoverflow.com/questions/6252812/what-does-the-aw-flag-in-the-section-attribute-mean
 
 /*!
-* \brief Macro that pust symbol to a specific section.
+* \brief Macro that puts symbol to a specific section.
 * \param SectionName Name of the section. Must be a valid C identifier without quotes not longer than 8 bytes.
 * \param Permissions Can be "read" or "write" (without quotes!).
 */

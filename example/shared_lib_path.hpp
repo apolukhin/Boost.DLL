@@ -23,10 +23,11 @@ boost::filesystem::path shared_lib_path(const boost::filesystem::path& root, con
     throw std::runtime_error("Failed to find library");
 }
 
+#include <boost/predef/os.h>
 // This ugly copypaste from auto_link.hpp is required to get the name of a library with bjam decorations.
 // I'd love to specify library layout from Jamfile but nobody on Boost-build mailing list answert how to do it and
 // bjam docs does not cover that...
-#if defined(_MSC_VER) || defined(__MWERKS__)
+#if defined(_MSC_VER) || defined(__MWERKS__) || BOOST_OS_WINDOWS
 
 #ifdef __cplusplus
 #  ifndef BOOST_CONFIG_HPP
@@ -46,7 +47,8 @@ boost::filesystem::path shared_lib_path(const boost::filesystem::path& root, con
 #if defined(BOOST_MSVC) \
     || defined(__BORLANDC__) \
     || (defined(__MWERKS__) && defined(_WIN32) && (__MWERKS__ >= 0x3000)) \
-    || (defined(__ICL) && defined(_MSC_EXTENSIONS) && (_MSC_VER >= 1200))
+    || (defined(__ICL) && defined(_MSC_EXTENSIONS) && (_MSC_VER >= 1200)) \
+    || (BOOST_OS_WINDOWS && __GNUC__)
 
 #ifndef BOOST_VERSION_HPP
 #  include <boost/version.hpp>
@@ -131,6 +133,50 @@ boost::filesystem::path shared_lib_path(const boost::filesystem::path& root, con
      // Metrowerks CodeWarrior 9.x
 #    define BOOST_LIB_TOOLSET "cw9"
 
+#  elif defined(__GNUC__)
+
+#if         (__GNUC__ == 3)
+#               define BOOST_LIB_TOOLSET_PRE "mgw3"
+#elif       (__GNUC__ == 4)
+#               define BOOST_LIB_TOOLSET_PRE "mgw4"
+#elif       (__GNUC__ == 5)
+#               define BOOST_LIB_TOOLSET_PRE "mgw5"
+#elif       (__GNUC__ == 6)
+#               define BOOST_LIB_TOOLSET_PRE "mgw6"
+#elif       (__GNUC__ == 7)
+#               define BOOST_LIB_TOOLSET_PRE "mgw7"
+#elif       (__GNUC__ == 8)
+#               define BOOST_LIB_TOOLSET_PRE "mgw8"
+#endif
+
+#if         __GNUC_MINOR__ == 0
+#               define BOOST_LIB_TOOLSET_m "0"
+#elif       __GNUC_MINOR__ == 1
+#               define BOOST_LIB_TOOLSET_m "1"
+#elif       __GNUC_MINOR__ == 2
+#               define BOOST_LIB_TOOLSET_m "2"
+#elif       __GNUC_MINOR__ == 3
+#               define BOOST_LIB_TOOLSET_m "3"
+#elif       __GNUC_MINOR__ == 4
+#               define BOOST_LIB_TOOLSET_m "4"
+#elif       __GNUC_MINOR__ == 5
+#               define BOOST_LIB_TOOLSET_m "5"
+#elif       __GNUC_MINOR__ == 6
+#               define BOOST_LIB_TOOLSET_m "6"
+#elif       __GNUC_MINOR__ == 7
+#               define BOOST_LIB_TOOLSET_m "7"
+#elif       __GNUC_MINOR__ == 8
+#               define BOOST_LIB_TOOLSET_m "8"
+#elif       __GNUC_MINOR__ == 9
+#               define BOOST_LIB_TOOLSET_m "9"
+#elif       __GNUC_MINOR__ == 10
+#               define BOOST_LIB_TOOLSET_m "10"
+#elif       __GNUC_MINOR__ == 11
+#               define BOOST_LIB_TOOLSET_m "11"
+#endif
+
+#    define BOOST_LIB_TOOLSET BOOST_LIB_TOOLSET_PRE BOOST_LIB_TOOLSET_m
+
 #  endif
 #endif // BOOST_LIB_TOOLSET
 
@@ -143,9 +189,9 @@ boost::filesystem::path shared_lib_path(const boost::filesystem::path& root, con
 #  define BOOST_LIB_THREAD_OPT
 #endif
 
-#if defined(_MSC_VER) || defined(__MWERKS__)
+#if defined(_MSC_VER) || defined(__MWERKS__) || BOOST_OS_WINDOWS
 
-#  ifdef _DLL
+#  if defined(_DLL) || defined(__GNUC__)
 
 #     if (defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION)) && (defined(_STLP_OWN_IOSTREAMS) || defined(__STL_OWN_IOSTREAMS))
 
@@ -193,6 +239,8 @@ boost::filesystem::path shared_lib_path(const boost::filesystem::path& root, con
 #            define BOOST_LIB_RT_OPT "-gyd"
 #        elif defined(_DEBUG)
 #            define BOOST_LIB_RT_OPT "-gd"
+#        elif defined(__GNUC__)
+#            define BOOST_LIB_RT_OPT "-d"
 #        else
 #            define BOOST_LIB_RT_OPT
 #        endif
@@ -271,7 +319,7 @@ boost::filesystem::path shared_lib_path(const boost::filesystem::path& root, con
 #error "Pre-built versions of the Boost libraries are not provided in STLport-debug form"
 #endif
 
-#  ifdef _RTLDLL
+#  if defined(_RTLDLL)
 
 #     if defined(BOOST_BORLAND_DEBUG)\
                && defined(BOOST_DEBUG_PYTHON) && defined(BOOST_LINKING_PYTHON)

@@ -70,6 +70,11 @@ public:
         } else {
             flags &= ~static_cast<boost::detail::winapi::DWORD_>(load_mode::append_decorations);
             handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, flags);
+            if (!handle_) {
+                // MinGW loves 'lib' prefix and puts it even on Windows platform
+                handle_ = boost::detail::winapi::LoadLibraryExW(
+                ((sl.parent_path() / L"lib").native() + sl.filename().native() + L".dll").c_str(), 0, flags);
+            }
             
             if (handle_) {
                 return;
