@@ -4,6 +4,9 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+// MinGW related workaround
+#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
+
 //[plugcpp_my_plugin_load_self
 #include <boost/dll/shared_library.hpp>         // for shared_library
 #include <boost/dll/runtime_symbol_info.hpp>    // for program_location()

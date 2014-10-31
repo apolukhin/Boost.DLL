@@ -41,7 +41,7 @@ project
     lib on_unload_lib : ../example/tutorial6/on_unload_lib.cpp ;
     lib library1 : ../example/tutorial7/library1.cpp ;
     lib library2 : ../example/tutorial7/library2.cpp ;
-    lib refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp ;
+    lib refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <define>BOOST_DLL_FORCE_ALIAS_INSTANTIATION ;
     install install-bin
         : test_library my_plugin_sum my_plugin_aggregator
             on_unload_lib getting_started_library library1 library2 refcounting_plugin

@@ -7,6 +7,9 @@
 #include <iostream>
 #include <boost/make_shared.hpp>
 
+// MinGW related workaround
+#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
+
 //[plugcpp_my_plugin_sum
 #include <boost/dll/alias.hpp> // for BOOST_DLL_ALIAS
 #include "../tutorial_common/plugin_api.hpp"

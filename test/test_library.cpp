@@ -7,6 +7,9 @@
 
 // For more information, see http://www.boost.org
 
+// MinGW related workaround
+#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
+
 #include <boost/config.hpp>
 #include <boost/dll/alias.hpp>
 #include <iostream>

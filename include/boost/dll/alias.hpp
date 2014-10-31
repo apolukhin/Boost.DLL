@@ -124,6 +124,13 @@ namespace boost { namespace dll {
     /**/
 
 
+#if !BOOST_COMP_MSVC && BOOST_OS_WINDOWS && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION)
+
+#define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
+    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                       \
+    /**/
+    
+#else    
 // Note: we can not use `aggressive_ptr_cast` here, because in that case GCC applies
 // different permissions to the section and it causes Segmentation fault.
 // Note: we can not use `boost::addressof()` here, because in that case GCC 
@@ -157,7 +164,10 @@ namespace boost { namespace dll {
     );                                                                                          \
     /**/
 
+#endif
+    
 }} // boost::dll
+
 
 #endif // BOOST_DLL_ALIAS_HPP
 

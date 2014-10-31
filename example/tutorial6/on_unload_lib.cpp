@@ -4,6 +4,9 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+// MinGW related workaround
+#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
+
 //[plugcpp_on_unload
 #include <boost/dll/alias.hpp> // for BOOST_DLL_ALIAS
 #include <boost/function.hpp>
