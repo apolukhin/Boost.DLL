@@ -5,6 +5,9 @@
 
 // For more information, see http://www.boost.org
 
+// MinGW related workaround
+#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
+
 #include <boost/dll/library_info.hpp>
 #include <boost/test/minimal.hpp>
 #include "../example/tutorial4/static_plugin.hpp"

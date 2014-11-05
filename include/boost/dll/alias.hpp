@@ -124,7 +124,7 @@ namespace boost { namespace dll {
     /**/
 
 
-#if !BOOST_COMP_MSVC && BOOST_OS_WINDOWS && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION)
+#if BOOST_COMP_GNUC && BOOST_OS_WINDOWS && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION)
 
 #define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
     extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                       \

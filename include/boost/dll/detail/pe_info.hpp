@@ -182,7 +182,8 @@ public:
         f.seekg(dos.e_lfanew);
         f.read((char*)&h, sizeof(h));
 
-        return h.Signature == 0x00004550; // 'PE00'
+        return h.Signature == 0x00004550 // 'PE00'
+                && h.OptionalHeader.Magic == (sizeof(boost::uint32_t) == sizeof(AddressOffsetT) ? 0x10B : 0x20B);
     }
 
 
@@ -256,7 +257,15 @@ public:
             // There is no terminating null character if the string is exactly eight characters long
             f_.read((char*)&image_section_header, sizeof(image_section_header));
             std::memcpy(name_helper, image_section_header.Name, section_t::IMAGE_SIZEOF_SHORT_NAME_);
-            ret.push_back(name_helper);
+            
+            if (name_helper[0] != '/') {
+                ret.push_back(name_helper);
+            } else {
+                // For longer names, image_section_header.Name contains a slash (/) followed by ASCII representation of a decimal number.
+                // this number is an offset into the string table.
+                // TODO: fixme
+                ret.push_back(name_helper);
+            }
         }
 
         return ret;
