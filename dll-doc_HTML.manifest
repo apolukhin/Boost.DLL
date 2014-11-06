@@ -2,6 +2,7 @@ index.html
 boost_dll/introduction0.html
 boost_dll/tutorial.html
 dll/reference.html
+BOOST_DLL_FORCE_ALIAS_INSTANTIATION.html
 BOOST_DLL_SELECTANY.html
 BOOST_DLL_SECTION.html
 BOOST_DLL_ALIAS.html
@@ -16,6 +17,7 @@ boost/dll/import_function.html
 boost/dll/import_function_alias.html
 boost/dll/import_variable.html
 boost/dll/import_variable_alias.html
+boost_dll/limitations.html
 boost_dll/f_a_q_.html
 boost_dll/design_rationale.html
 boost_dll/dependencies.html
