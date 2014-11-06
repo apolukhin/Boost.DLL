@@ -27,6 +27,12 @@
 
 namespace boost { namespace dll {
 
+#ifdef BOOST_DLL_DOXYGEN
+/// Define this macro to explicitly specify translation unit in which alias must be instantiated.
+/// See section 'Limitations' for more info. You may find usage examples in source codes of almost each tutorial.
+#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
+#endif
+
 #if BOOST_COMP_MSVC
 
 #define BOOST_DLL_SELECTANY __declspec(selectany)

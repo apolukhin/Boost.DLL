@@ -42,7 +42,7 @@ boost::function<int(int)> c_func
 
 ### Platforms tested
 
-Library was tested on Windows and Linux (MacOS is upcoming) with GCC, Clang and MSVC compilers.
+Library was tested on Windows (MinGW and MSVC compilers) and Linux(GCC and CLANG compilers).  MacOS is upcoming.
 
 ### Caution
 This is not an official Boost C++ library. It wasn't reviewed and can't be downloaded from www.boost.org. This beta is available to boost community to know real interest and get comments for refinement. The intention is to submit library to formal review, if community think that it is interesting!

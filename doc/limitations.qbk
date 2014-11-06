@@ -1,0 +1,25 @@
+[/
+    Copyright 2014 Renato Tegon Forti, Antony Polukhin
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Limitations]
+
+Some platforms and compileres do not provide all the required functionality to have a fully functional Boost.DLL.
+Such compilers are mentioned in this section along with possible workarounds for those limitations.
+
+[section MinGW]
+`MinGW` and `ld` on Windows platform fail to mix `__dllexport__` and `weak` attributes. This leads us to situation,
+where we must explicitly specify translation unit in which [macroref BOOST_DLL_ALIAS] is instantiated, making all other
+[macroref BOOST_DLL_ALIAS] declaration with that alias name an `extern` variable.
+
+Unit that must hold an instance of [macroref BOOST_DLL_ALIAS] must define [macroref BOOST_DLL_FORCE_ALIAS_INSTANTIATION]
+before including any of the Boost.DLL library headers.
+
+See source code of tutorials for usage example.
+[endsect]
+
+[endsect]
+
+
