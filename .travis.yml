@@ -12,27 +12,77 @@ env:
     - CXX_STANDARD=c++98
     - CXX_STANDARD=c++0x
 
+# Use, modification, and distribution are
+# subject to the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+# Copyright Antony Polukhin 2014. 
+
+os:
+    - linux
+
+env:
+    - CXX_STANDARD=c++98
+    - CXX_STANDARD=c++0x
+
 before_install:
-    - echo OS is ${TRAVIS_OS_NAME}
-    - wget https://github.com/ned14/boost-release/archive/master.tar.gz
-    - tar xf master.tar.gz
-    - mv boost-release-master $HOME/boost-local
-    - BOOST="$HOME/boost-local"
-    - mv ../Boost.DLL/ $BOOST/libs/dll
+    # Set this to the name of your Boost library
+    # Autodetect library name by using the following code: - PROJECT_TO_TEST=`git rev-parse --show-toplevel`
+    - PROJECT_TO_TEST=Boost.DLL
+    # Autodetect branch by using the following code: - BRANCH_TO_TEST=`git rev-parse --abbrev-ref HEAD`
+    - BRANCH_TO_TEST=develop
+
+    # From this point and below code is same for all the Boost libs
+    # Cloning Boost libraries (fast nondeep cloning)
+    - PROJECT_DIR=`pwd`
+    - BOOST=$HOME/boost-local
+    - git init $BOOST
     - cd $BOOST
+    - git remote add --no-tags -t $BRANCH_TO_TEST origin https://github.com/boostorg/boost.git
+    - git fetch --depth=1
+    - git checkout $BRANCH_TO_TEST
+    - git submodule update --init --merge
+    - git remote set-branches --add origin $BRANCH_TO_TEST
+    - git pull --recurse-submodules
+    - git submodule update --init
+    - git checkout $BRANCH_TO_TEST
+    - git submodule foreach "git reset --quiet --hard; git clean -fxd"
+    - git reset --hard; git clean -fxd
+    - git status
+    - rm -rf $BOOST/libs/$PROJECT_TO_TEST
+    - mv $PROJECT_DIR/../$PROJECT_TO_TEST/ $BOOST/libs/$PROJECT_TO_TEST
+    - PROJECT_DIR=$BOOST/libs/$PROJECT_TO_TEST
     - ./bootstrap.sh
+    - ./b2 headers
 
 script:
-    - echo OS is ${TRAVIS_OS_NAME}
     - if [ "$CCFLAGS" != "" ]; then FLAGS="cxxflags=\"$CCFLAGS\" linkflags=\"$LINKFLAGS\""; else FLAGS=""; fi
-    - cd $BOOST/libs/dll/test/
+    - cd $BOOST/libs/$PROJECT_TO_TEST/test/
+    # `--coverage` flags required to generate coverage info for Coveralls
     - ../../../b2 cxxflags="--coverage -std=$CXX_STANDARD" linkflags="--coverage"
 
 after_success:
-    - find ../../../bin.v2/ -name "*.gcda" -exec cp "{}" ./ \;
-    - find ../../../bin.v2/ -name "*.gcno" -exec cp "{}" ./ \;
+    # Copying Coveralls data to a separate folder
+    - mkdir -p $PROJECT_DIR/coverals
+    - find ../../../bin.v2/ -name "*.gcda" -exec cp "{}" $PROJECT_DIR/coverals/ \;
+    - find ../../../bin.v2/ -name "*.gcno" -exec cp "{}" $PROJECT_DIR/coverals/ \;
+
+    # Preparing Coveralls data by
+    # ... installing the tools
     - sudo apt-get install -qq python-yaml lcov
-    - lcov --directory ./ --base-directory ./ --capture --output-file coverage.info
-    - lcov --remove coverage.info '/usr*' '*/filesystem*' '*/container*' '*/core/*' '*/exception/*' '*/intrusive/*' '*/smart_ptr/*' '*/move/*' '*/fusion/*' '*/io/*' '*/function/*' '*/iterator/*' '*/preprocessor/*' '*/system/*' '*/boost/test/*' '*/boost/detail/*' '*/utility/*' '*/dll/example/*' '*/dll/test/*' '*/pe_info.hpp' '*/macho_info.hpp' -o coverage.info
+    # ... changind data format to a readable one
+    - lcov --directory $PROJECT_DIR/coverals --base-directory ./ --capture --output-file $PROJECT_DIR/coverals/coverage.info
+
+    # ... erasing /test/ /example/ folder data
+    - cd $BOOST
+    - lcov --remove $PROJECT_DIR/coverals/coverage.info "/usr*" "*/$PROJECT_TO_TEST/test/*" "*/$PROJECT_TO_TEST/tests/*" "*/$PROJECT_TO_TEST/examples/*" "*/$PROJECT_TO_TEST/example/*" -o $PROJECT_DIR/coverals/coverage.info
+
+    # ... erasing data that is not related to this project directly
+    - OTHER_LIBS=`grep "submodule .*" .gitmodules | sed 's/\[submodule\ "\(.*\)"\]/"\*\/boost\/\1\.hpp" "\*\/boost\/\1\/\*"/g'| sed "/\"\*\/boost\/$PROJECT_TO_TEST\/\*\"/d" | sed ':a;N;$!ba;s/\n/ /g'`
+    - echo $OTHER_LIBS
+    - eval "lcov --remove $PROJECT_DIR/coverals/coverage.info $OTHER_LIBS -o $PROJECT_DIR/coverals/coverage.info"
+
+    # Sending data to Coveralls
+    - cd $PROJECT_DIR
     - gem install coveralls-lcov
-    - cd .. && coveralls-lcov test/coverage.info
+    - coveralls-lcov coverals/coverage.info
