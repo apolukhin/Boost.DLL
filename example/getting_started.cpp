@@ -53,7 +53,7 @@ int test_main(int argc, char* argv[]) {
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_AUTO_DECLARATIONS)
     //[getting_started_imports_cpp11_function
     auto cpp11_func = dll::import_alias<int(std::string&&)>(
-            path_to_shared_library, "cpp11_function_name"
+            path_to_shared_library, "cpp11_function"
         );
     //]
 
