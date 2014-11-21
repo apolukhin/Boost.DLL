@@ -37,8 +37,12 @@ namespace boost { namespace dll {
 
 #define BOOST_DLL_SELECTANY __declspec(selectany)
 
-#define BOOST_DLL_SECTION(SectionName, Permissions)                                 \
-    __pragma(section(#SectionName, Permissions)) __declspec(allocate(#SectionName)) \
+#define BOOST_DLL_SECTION(SectionName, Permissions)                                             \
+    BOOST_STATIC_ASSERT_MSG(                                                                    \
+        sizeof(#SectionName) < 10,                                                              \
+        "Some platforms require section names to be at most 8 bytest"                           \
+    );                                                                                          \
+    __pragma(section(#SectionName, Permissions)) __declspec(allocate(#SectionName))             \
     /**/
 
 #else
@@ -63,7 +67,13 @@ namespace boost { namespace dll {
 * \param SectionName Name of the section. Must be a valid C identifier without quotes not longer than 8 bytes.
 * \param Permissions Can be "read" or "write" (without quotes!).
 */
-#define BOOST_DLL_SECTION(SectionName, Permissions) __attribute__ ((section (#SectionName)))
+#define BOOST_DLL_SECTION(SectionName, Permissions)                                             \
+    BOOST_STATIC_ASSERT_MSG(                                                                    \
+        sizeof(#SectionName) < 10,                                                              \
+        "Some platforms require section names to be at most 8 bytest"                           \
+    );                                                                                          \
+    __attribute__ ((section (#SectionName)))                                                    \
+    /**/
 
 #endif
 
@@ -133,9 +143,16 @@ namespace boost { namespace dll {
 #if BOOST_COMP_GNUC && BOOST_OS_WINDOWS && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION)
 
 #define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
-    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                       \
+    namespace _autoaliases {                                                                    \
+        extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                   \
+    } /* namespace _autoaliases */                                                              \
     /**/
-    
+
+#define BOOST_DLL_AUTO_ALIAS(FunctionOrVar)                                                     \
+    namespace _autoaliases {                                                                    \
+        extern "C" BOOST_SYMBOL_EXPORT const void *FunctionOrVar;                               \
+    } /* namespace _autoaliases */                                                              \
+    /**/
 #else    
 // Note: we can not use `aggressive_ptr_cast` here, because in that case GCC applies
 // different permissions to the section and it causes Segmentation fault.
@@ -159,19 +176,64 @@ namespace boost { namespace dll {
 *
 */
 #define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
-    extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                       \
-    BOOST_DLL_SECTION(SectionName, read) BOOST_DLL_SELECTANY                                    \
-    const void * AliasName = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(          \
-        &FunctionOrVar                                                                          \
-    ));                                                                                         \
-    BOOST_STATIC_ASSERT_MSG(                                                                    \
-        sizeof(#SectionName) < 10,                                                              \
-        "Some platforms require section names to be at most 8 bytest"                           \
-    );                                                                                          \
+    namespace _autoaliases {                                                                    \
+        extern "C" BOOST_SYMBOL_EXPORT const void *AliasName;                                   \
+        BOOST_DLL_SECTION(SectionName, read) BOOST_DLL_SELECTANY                                \
+        const void * AliasName = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(      \
+            &FunctionOrVar                                                                      \
+        ));                                                                                     \
+    } /* namespace _autoaliases */                                                              \
     /**/
+
+/*!
+* \brief Exports variable or function with unmangled alias name.
+*
+* This macro is usefull in cases of long mangled C++ names. For example some `void boost::foo(std::sting)`
+* function name will change to something like `N5boostN3foosE` after mangling.
+* Importing function by `N5boostN3foosE` name does not looks user friendly, especially assuming the fact
+* that different compilers have different mangling schemes.*
+*
+* Msut be used in scope where FunctionOrVar declared. FunctionOrVar must be a valid C name, which means that
+* it must not contain `::`.
+*
+* Functions or variables
+* in global namespace must not have names same as FunctionOrVar.
+*
+* Puts all the aliases into the \b "boostdll" read only section of the binary. Almost same as
+* \forcedmacrolink{BOOST_DLL_ALIAS}(FunctionOrVar, FunctionOrVar).
+*
+* \param FunctionOrVar Function or variable for wich an unmangled alias must be made.
+*
+* \b Example:
+* \code
+* namespace foo {
+*   void bar(std::string&);
+*   BOOST_DLL_AUTO_ALIAS(bar)
+* }
+*
+* \endcode
+*
+* \b See: \forcedmacrolink{BOOST_DLL_ALIAS} for making an alias with different names.
+*/
+
+#define BOOST_DLL_AUTO_ALIAS(FunctionOrVar)                                                     \
+    namespace _autoaliases {                                                                    \
+        BOOST_SYMBOL_EXPORT BOOST_DLL_SELECTANY const void * dummy_ ## FunctionOrVar            \
+            = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(                         \
+                &FunctionOrVar                                                                  \
+            ));                                                                                 \
+        extern "C" BOOST_SYMBOL_EXPORT const void *FunctionOrVar;                               \
+        BOOST_DLL_SECTION(boostdll, read) BOOST_DLL_SELECTANY                                   \
+        const void * FunctionOrVar = dummy_ ## FunctionOrVar;                                   \
+    } /* namespace _autoaliases */                                                              \
+    /**/
+
 
 #endif
     
+
+
+
 }} // boost::dll
 
 

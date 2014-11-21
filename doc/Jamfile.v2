@@ -61,6 +61,7 @@ doxygen autodoc_shared_library_core
 doxygen autodoc_shared_library_refcountable
     :
         [ glob
+            ../include/boost/dll/import.hpp
             ../include/boost/dll/import_function.hpp
             ../include/boost/dll/import_variable.hpp
         ]

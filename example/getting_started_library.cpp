@@ -23,13 +23,8 @@ extern "C" int BOOST_SYMBOL_EXPORT c_variable_name;
 //[getting_started_exports_cpp_function
 // exporting 'C++' function
 namespace my_namespace {
-
-std::string cpp_function_name(const std::string& param);
-
-BOOST_DLL_ALIAS(
-    my_namespace::cpp_function_name, cpp_function_alias_name
-)
-
+    std::string cpp_function_name(const std::string& param);
+    BOOST_DLL_AUTO_ALIAS(cpp_function_name)
 } // namespace my_namespace
 //]
 
@@ -38,11 +33,9 @@ BOOST_DLL_ALIAS(
 // exporting 'C++11' function
 namespace my_namespace {
     int cpp11_function(std::string&& param);
+    BOOST_DLL_AUTO_ALIAS(cpp11_function)
 } // namespace my_namespace
 
-BOOST_DLL_ALIAS(
-    my_namespace::cpp11_function, cpp11_function_alias_name
-)
 //]
 #endif
 
@@ -50,11 +43,9 @@ BOOST_DLL_ALIAS(
 // exporting 'C++' variable
 namespace my_namespace {
     std::string cpp_variable_name = "some value";
+    BOOST_DLL_AUTO_ALIAS(cpp_variable_name)
 }
 
-BOOST_DLL_ALIAS(
-    my_namespace::cpp_variable_name, cpp_variable_alias_name
-)
 //]
 
 

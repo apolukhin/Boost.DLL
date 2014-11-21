@@ -14,6 +14,7 @@
 #include <boost/config.hpp>
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/alias.hpp>
+#include <boost/dll/import.hpp>
 #include <boost/dll/import_function.hpp>
 #include <boost/dll/import_variable.hpp>
 #include <boost/dll/library_info.hpp>
