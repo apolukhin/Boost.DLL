@@ -17,7 +17,7 @@
 #endif
 
 /// \file boost/dll/import_variable.hpp
-/// \brief Contains all the boost::dll::import_variable* reference counting
+/// \brief Contains all the import_variable* reference counting
 /// functions that hold a shared pointer to the instance of
 /// boost::dll::shared_library.
 
@@ -34,6 +34,15 @@ namespace detail {
         inline void operator()(const void*) const BOOST_NOEXCEPT { /*do nothing*/ }
     };
 } // namespace detail
+
+namespace explicit_api {
+
+
+//! \overload boost::dll::import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name, load_mode::type mode)
+template <class T>
+boost::shared_ptr<T> import_variable(const boost::shared_ptr<boost::dll::shared_library>& lib, boost::string_ref variable_name) {
+    return boost::shared_ptr<T>(&lib->get<T>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
+}
 
 /*!
 * Returns boost::shared_ptr<T> that holds an imported variable from the loaded library and refcounts usage
@@ -77,19 +86,19 @@ template <class T>
 boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::string_ref variable_name,
     load_mode::type mode = load_mode::default_mode)
 {
-    return import_variable<T>(
-        boost::make_shared<shared_library>(lib, mode),
+    return boost::dll::explicit_api::import_variable<T>(
+        boost::make_shared<boost::dll::shared_library>(lib, mode),
         variable_name
     );
 }
 
-//! \overload boost::dll::import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name, load_mode::type mode)
+
+
+//! \overload boost::dll::import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name, load_mode::type mode)
 template <class T>
-boost::shared_ptr<T> import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<T>(&lib->get<T>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
+boost::shared_ptr<T> import_variable_alias(const boost::shared_ptr<boost::dll::shared_library>& lib, boost::string_ref variable_name) {
+    return boost::shared_ptr<T>(lib->get<T*>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
 }
-
-
 
 /*!
 * Imports variable by it alias name and returns boost::shared_ptr<T> that holds an imported
@@ -132,20 +141,15 @@ template <class T>
 boost::shared_ptr<T> import_variable_alias(const boost::filesystem::path& lib, boost::string_ref variable_name,
     load_mode::type mode = load_mode::default_mode)
 {
-    return import_variable_alias<T>(
-        boost::make_shared<shared_library>(lib, mode),
+    return boost::dll::explicit_api::import_variable_alias<T>(
+        boost::make_shared<boost::dll::shared_library>(lib, mode),
         variable_name
     );
 }
 
-//! \overload boost::dll::import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name, load_mode::type mode)
-template <class T>
-boost::shared_ptr<T> import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<T>(lib->get<T*>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
-}
 
 
-}} // boost::dll
+}}} // boost::dll::explicit_api
 
 #endif // BOOST_DLL_IMPORT_VARIABLE_HPP
 

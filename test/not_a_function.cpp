@@ -10,5 +10,5 @@
 
 int main() {
     // Must be a compile time error
-    boost::dll::import_function<int>("library name", "symbol name")
+    boost::dll::explicit_api::import_function<int>("library name", "symbol name")
 }

@@ -12,15 +12,16 @@ Library for comfortable work with DLL and DSO.
 #include <boost/dll.hpp>
 
 ...
-auto cpp11_func = dll::import_function_alias<std::string(int)>(
-    path_to_shared_library, "cpp11_function_alias_name"
-);
+auto cpp11_func = dll::import_alias<std::string(int)>(
+        path_to_shared_library, "cpp11_function_alias_name"
+    );
+std::string s = cpp11_func(0);
 
-boost::function<int(int)> c_func
-    = boost::dll::import_function<int(int)>(
+
+boost::function<int(int)> c_func = boost::dll::import<int(int)>(
         path_to_shared_library, "c_func_name"
     );
-
+int i = c_func(1);
 ```
 
 ### Installation

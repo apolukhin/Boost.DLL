@@ -36,18 +36,18 @@ namespace boost { namespace dll {
 *
 * \b Examples:
 * \code
-* boost::function<int(int)> f = import_symbol<int(int)>(
+* boost::function<int(int)> f = import<int(int)>(
 *           boost::make_shared<shared_library>("test_lib.so"),
 *           "integer_func_name"
 *       );
 * \endcode
 *
 * \code
-* boost::function<int(int)> f = import_symbol<int(int)>("test_lib.so", "integer_func_name");
+* boost::function<int(int)> f = import<int(int)>("test_lib.so", "integer_func_name");
 * \endcode
 *
 * \code
-* boost::shared_ptr<int> i = import_symbol<int>("test_lib.so", "integer_name");
+* boost::shared_ptr<int> i = import<int>("test_lib.so", "integer_name");
 * \endcode
 *
 * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
@@ -63,33 +63,33 @@ namespace boost { namespace dll {
 */
 template <class T>
 typename boost::disable_if<boost::is_object<T>, boost::function<T> >::type 
-import_symbol(const boost::filesystem::path& lib, boost::string_ref func_name,
+import(const boost::filesystem::path& lib, boost::string_ref func_name,
     load_mode::type mode = load_mode::default_mode)
 {
-    return boost::dll::import_function<T>(lib, func_name, mode);
+    return boost::dll::explicit_api::import_function<T>(lib, func_name, mode);
 }
 
-//! \overload boost::dll::import_symbol(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
+//! \overload boost::dll::import(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
 template <class T>
 typename boost::disable_if<boost::is_object<T>, boost::function<T> >::type
-import_symbol(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::dll::import_function<T>(lib, func_name);
+import(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
+    return boost::dll::explicit_api::import_function<T>(lib, func_name);
 }
 
-//! \overload boost::dll::import_symbol(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
+//! \overload boost::dll::import(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
 template <class T>
 typename boost::enable_if<boost::is_object<T>, boost::shared_ptr<T> >::type 
-import_symbol(const boost::filesystem::path& lib, boost::string_ref variable_name,
+import(const boost::filesystem::path& lib, boost::string_ref variable_name,
     load_mode::type mode = load_mode::default_mode)
 {
-    return boost::dll::import_variable<T>(lib, variable_name, mode);
+    return boost::dll::explicit_api::import_variable<T>(lib, variable_name, mode);
 }
 
-//! \overload boost::dll::import_symbol(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
+//! \overload boost::dll::import(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
 template <class T>
 typename boost::enable_if<boost::is_object<T>, boost::shared_ptr<T> >::type
-import_symbol(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::dll::import_variable<T>(lib, variable_name);
+import(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
+    return boost::dll::explicit_api::import_variable<T>(lib, variable_name);
 }
 
 
@@ -103,7 +103,7 @@ import_symbol(const boost::shared_ptr<shared_library>& lib, boost::string_ref va
 * This call will succeed if call to \forcedlink{shared_library}`::search_symbol(boost::string_ref )`
 * function with the same symbol name returned `true`.
 *
-* For importing symbols by \b non \b alias names use \forcedlink{import_symbol} method.
+* For importing symbols by \b non \b alias names use \forcedlink{import} method.
 *
 * \b Examples:
 * \code
@@ -140,14 +140,14 @@ typename boost::disable_if<boost::is_object<T>, boost::function<T> >::type
 import_alias(const boost::filesystem::path& lib, boost::string_ref func_name,
     load_mode::type mode = load_mode::default_mode)
 {
-    return boost::dll::import_function_alias<T>(lib, func_name, mode);
+    return boost::dll::explicit_api::import_function_alias<T>(lib, func_name, mode);
 }
 
 //! \overload boost::dll::import_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
 template <class T>
 typename boost::disable_if<boost::is_object<T>, boost::function<T> >::type
 import_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::dll::import_function_alias<T>(lib, func_name);
+    return boost::dll::explicit_api::import_function_alias<T>(lib, func_name);
 }
 
 //! \overload boost::dll::import_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
@@ -156,14 +156,14 @@ typename boost::enable_if<boost::is_object<T>, boost::shared_ptr<T> >::type
 import_alias(const boost::filesystem::path& lib, boost::string_ref variable_name,
     load_mode::type mode = load_mode::default_mode)
 {
-    return boost::dll::import_variable_alias<T>(lib, variable_name, mode);
+    return boost::dll::explicit_api::import_variable_alias<T>(lib, variable_name, mode);
 }
 
 //! \overload boost::dll::import_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
 template <class T>
 typename boost::enable_if<boost::is_object<T>, boost::shared_ptr<T> >::type
 import_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name) {
-    return boost::dll::import_variable_alias<T>(lib, variable_name);
+    return boost::dll::explicit_api::import_variable_alias<T>(lib, variable_name);
 }
 
 

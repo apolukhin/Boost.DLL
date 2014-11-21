@@ -7,7 +7,7 @@
 #include "../shared_lib_path.hpp" // contains BJAM_LIBRARY_DECORATIONS macro to workaround --layout=X
 
 //[callplugcpp_tutorial1
-#include <boost/dll/import_variable.hpp> // for import_variable_alias
+#include <boost/dll/import.hpp> // for import_alias
 #include <iostream>
 #include "../tutorial_common/plugin_api.hpp"
 
@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     boost::shared_ptr<my_plugin_api> plugin;            // variable to hold a pointer to plugin variable
     std::cout << "Loading the plugin" << std::endl;
      
-    plugin = dll::import_variable_alias<my_plugin_api>( // type of imported symbol is located between `<` and `>`
+    plugin = dll::import_alias<my_plugin_api>( // type of imported symbol is located between `<` and `>`
         lib_path / "my_plugin_sum"/*<-*/ BJAM_LIBRARY_DECORATIONS /*->*/,                     // path to the library and library name
         "plugin",                                       // name of the symbol to import
         dll::load_mode::append_decorations              // makes `libmy_plugin_sum.so` or `my_plugin_sum.dll` from `my_plugin_sum`

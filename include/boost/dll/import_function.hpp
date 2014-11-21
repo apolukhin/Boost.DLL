@@ -42,6 +42,13 @@ namespace detail {
     };
 } // namespace detail
 
+namespace explicit_api {
+
+//! \overload boost::dll::import_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
+template <class T>
+boost::function<T> import_function(const boost::shared_ptr<boost::dll::shared_library>& lib, boost::string_ref func_name) {
+    return boost::dll::detail::refc_function<T>(lib, &lib->get<T>(func_name));
+}
 
 /*!
 * Returns boost::function<T> that holds an imported function from the loaded library and refcounts usage
@@ -81,19 +88,19 @@ template <class T>
 boost::function<T> import_function(const boost::filesystem::path& lib,boost::string_ref func_name,
     load_mode::type mode = load_mode::default_mode)
 {
-    return import_function<T>(
-        boost::make_shared<shared_library>(lib, mode),
+    return boost::dll::explicit_api::import_function<T>(
+        boost::make_shared<boost::dll::shared_library>(lib, mode),
         func_name
     );
 }
 
-//! \overload boost::dll::import_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
+
+
+//! \overload boost::dll::import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
 template <class T>
-boost::function<T> import_function(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::dll::detail::refc_function<T>(lib, &lib->get<T>(func_name));
+boost::function<T> import_function_alias(const boost::shared_ptr<boost::dll::shared_library>& lib, boost::string_ref func_name) {
+    return boost::dll::detail::refc_function<T>(lib, lib->get<T*>(func_name));
 }
-
-
 
 /*!
 * Imports function by it alias name and returns boost::function<T> that holds the function
@@ -136,20 +143,14 @@ template <class T>
 boost::function<T> import_function_alias(const boost::filesystem::path& lib, boost::string_ref func_name,
     load_mode::type mode = load_mode::default_mode)
 {
-    return import_function_alias<T>(
-        boost::make_shared<shared_library>(lib, mode),
+    return boost::dll::explicit_api::import_function_alias<T>(
+        boost::make_shared<boost::dll::shared_library>(lib, mode),
         func_name
     );
 }
 
-//! \overload boost::dll::import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name, load_mode::type mode)
-template <class T>
-boost::function<T> import_function_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref func_name) {
-    return boost::dll::detail::refc_function<T>(lib, lib->get<T*>(func_name));
-}
 
-
-}} // boost::dll
+}}} // boost::dll::explicit_api
 
 #endif // BOOST_DLL_IMPORT_FUNCTION_HPP
 

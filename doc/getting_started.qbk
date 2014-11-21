@@ -26,7 +26,7 @@ using namespace boost;
 [
     [ [getting_started_exports_c_function] ]
     [ [getting_started_imports_c_function] ]
-    [ [funcref boost::dll::import_symbol import_symbol<T>(...) ] ]
+    [ [funcref boost::dll::import import<T>(...) ] ]
 ][
     [ [getting_started_exports_cpp_function] ]
     [ [getting_started_imports_cpp_function] ]
@@ -34,7 +34,7 @@ using namespace boost;
 ][
     [ [getting_started_exports_c_variable] ]
     [ [getting_started_imports_c_variable] ]
-    [ [funcref boost::dll::import_symbol import_symbol<T>(...) ] ]
+    [ [funcref boost::dll::import import<T>(...) ] ]
 ][
     [ [getting_started_exports_cpp_variable] ]
     [ [getting_started_imports_cpp_variable] ]

@@ -7,7 +7,7 @@
 #include "../shared_lib_path.hpp" // contains BJAM_LIBRARY_DECORATIONS macro to workaround --layout=X
 
 //[callplugcpp_tutorial2
-#include <boost/dll/import_function.hpp> // for import_function_alias
+#include <boost/dll/import.hpp> // for import_alias
 #include <iostream>
 #include "../tutorial_common/plugin_api.hpp"
 
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
     boost::function<pluginapi_create_t> creator;
 
-    creator = boost::dll::import_function_alias<pluginapi_create_t>(    // type of imported symbol must be explicitly specified
+    creator = boost::dll::import_alias<pluginapi_create_t>(    // type of imported symbol must be explicitly specified
         shared_library_path,                                            // path to library
         "create_plugin",                                                // symbol to import
         dll::load_mode::append_decorations                              // do append extensions and prefixes

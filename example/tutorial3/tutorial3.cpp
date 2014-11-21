@@ -7,7 +7,7 @@
 #include "../shared_lib_path.hpp" // contains BJAM_LIBRARY_DECORATIONS macro to workaround --layout=X
 
 //[callplugcpp_tutorial3
-#include <boost/dll/import_function.hpp> // for import_function_alias
+#include <boost/dll/import.hpp> // for import_alias
 #include <boost/make_shared.hpp>
 #include <iostream>
 #include "../tutorial_common/plugin_api.hpp"
@@ -29,7 +29,7 @@ std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugi
         // library has symbol, importing...
         typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
         boost::function<pluginapi_create_t> creator
-            = dll::import_function_alias<pluginapi_create_t>(lib, "create_plugin");
+            = dll::import_alias<pluginapi_create_t>(lib, "create_plugin");
 
         std::cout << "Matching plugin name: " << creator()->name() << std::endl;
         ++ plugins_found;

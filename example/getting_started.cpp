@@ -18,7 +18,7 @@ int test_main(int argc, char* argv[]) {
     filesystem::path path_to_shared_library = shared_lib_path(argv[1], L"getting_started_library");
     
     //[getting_started_imports_c_function
-    function<int(int)> c_func = dll::import_symbol<int(int)>(
+    function<int(int)> c_func = dll::import<int(int)>(
             path_to_shared_library, "c_func_name"
         );
     //]
@@ -28,7 +28,7 @@ int test_main(int argc, char* argv[]) {
 
 
     //[getting_started_imports_c_variable
-    shared_ptr<int> c_var = dll::import_symbol<int>(
+    shared_ptr<int> c_var = dll::import<int>(
             path_to_shared_library, "c_variable_name"
         );
     //]

@@ -7,7 +7,7 @@
 #include "../shared_lib_path.hpp"
 
 //[callplugcpp_tutorial6
-#include <boost/dll/import_function.hpp>
+#include <boost/dll/import.hpp>
 #include <iostream>
 
 typedef boost::function<void()> callback_t;
@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 
     // loading library and getting a function from it
     boost::function<void(const callback_t&)> on_unload
-        = boost::dll::import_function_alias<void(const callback_t&)>(
+        = boost::dll::import_alias<void(const callback_t&)>(
             shared_library_path, "on_unload"
         );
 

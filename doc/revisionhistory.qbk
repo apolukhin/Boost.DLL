@@ -11,6 +11,8 @@
 
 * Removed `shared_library::load_self()`
 * Renamed `shared_library::path()` to `shared_library::location()`
+* `import_function*` and `import_variable*` methods were moved to `explicit_api` namespace
+and *will be removed* in next release (or moved to the `detail` namespace, which is almost the same)
 * *TODO:*
     * improve load_mode::append_decorations (make it work with executables, take care of files starting on lib)
     * rename `shared_library::search_symbol()` to `shared_library::exists()`/`shared_library::count()`
