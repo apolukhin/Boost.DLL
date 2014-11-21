@@ -113,12 +113,12 @@
 <p>
       </p>
 <p>
-        Simple application that loads plugin using the <code class="computeroutput"><a class="link" href="../boost/dll/import_variable_alias.html" title="Function import_variable_alias">boost::dll::import_variable_alias</a></code>
+        Simple application that loads plugin using the <code class="computeroutput"><a class="link" href="../boost/dll/import_alias.html" title="Function import_alias">boost::dll::import_alias</a></code>
         and <code class="computeroutput"><a class="link" href="../boost/dll/load_mode/type.html" title="Type type">append_decorations</a></code>:
       </p>
 <p>
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">import_variable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// for import_variable_alias</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">import</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// for import_alias</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="string">"../tutorial_common/plugin_api.hpp"</span>
 
@@ -132,7 +132,7 @@
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;</span> <span class="identifier">plugin</span><span class="special">;</span>            <span class="comment">// variable to hold a pointer to plugin variable</span>
     <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Loading the plugin"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 
-    <span class="identifier">plugin</span> <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_variable_alias</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;(</span> <span class="comment">// type of imported symbol is located between `&lt;` and `&gt;`</span>
+    <span class="identifier">plugin</span> <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_alias</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;(</span> <span class="comment">// type of imported symbol is located between `&lt;` and `&gt;`</span>
         <span class="identifier">lib_path</span> <span class="special">/</span> <span class="string">"my_plugin_sum"</span><span class="special">,</span>                     <span class="comment">// path to the library and library name</span>
         <span class="string">"plugin"</span><span class="special">,</span>                                       <span class="comment">// name of the symbol to import</span>
         <span class="identifier">dll</span><span class="special">::</span><span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">append_decorations</span>              <span class="comment">// makes `libmy_plugin_sum.so` or `my_plugin_sum.dll` from `my_plugin_sum`</span>
@@ -231,7 +231,7 @@ Destructing my_plugin_sum ;o)
       </p>
 <p>
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">import_function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// for import_function_alias</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">import</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// for import_alias</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="string">"../tutorial_common/plugin_api.hpp"</span>
 
@@ -246,7 +246,7 @@ Destructing my_plugin_sum ;o)
     <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;</span> <span class="special">(</span><span class="identifier">pluginapi_create_t</span><span class="special">)();</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">pluginapi_create_t</span><span class="special">&gt;</span> <span class="identifier">creator</span><span class="special">;</span>
 
-    <span class="identifier">creator</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_function_alias</span><span class="special">&lt;</span><span class="identifier">pluginapi_create_t</span><span class="special">&gt;(</span>    <span class="comment">// type of imported symbol must be explicitly specified</span>
+    <span class="identifier">creator</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_alias</span><span class="special">&lt;</span><span class="identifier">pluginapi_create_t</span><span class="special">&gt;(</span>    <span class="comment">// type of imported symbol must be explicitly specified</span>
         <span class="identifier">shared_library_path</span><span class="special">,</span>                                            <span class="comment">// path to library</span>
         <span class="string">"create_plugin"</span><span class="special">,</span>                                                <span class="comment">// symbol to import</span>
         <span class="identifier">dll</span><span class="special">::</span><span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">append_decorations</span>                              <span class="comment">// do append extensions and prefixes</span>
@@ -263,7 +263,7 @@ Destructing my_plugin_sum ;o)
 <p>
       </p>
 <p>
-        In that application we have imported the factory method using <code class="computeroutput"><a class="link" href="../boost/dll/import_function_alias.html" title="Function import_function_alias">boost::dll::import_function_alias</a></code>.
+        In that application we have imported the factory method using <code class="computeroutput"><a class="link" href="../boost/dll/import_alias.html" title="Function import_alias">boost::dll::import_alias</a></code>.
       </p>
 <div class="caution"><table border="0" summary="Caution">
 <tr>
@@ -313,7 +313,7 @@ Plugin Name:  aggregator
       </p>
 <p>
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">import_function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// for import_function_alias</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">import</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// for import_alias</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">make_shared</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="string">"../tutorial_common/plugin_api.hpp"</span>
@@ -335,7 +335,7 @@ Plugin Name:  aggregator
         <span class="comment">// library has symbol, importing...</span>
         <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_plugin_api</span><span class="special">&gt;</span> <span class="special">(</span><span class="identifier">pluginapi_create_t</span><span class="special">)();</span>
         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">pluginapi_create_t</span><span class="special">&gt;</span> <span class="identifier">creator</span>
-            <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_function_alias</span><span class="special">&lt;</span><span class="identifier">pluginapi_create_t</span><span class="special">&gt;(</span><span class="identifier">lib</span><span class="special">,</span> <span class="string">"create_plugin"</span><span class="special">);</span>
+            <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_alias</span><span class="special">&lt;</span><span class="identifier">pluginapi_create_t</span><span class="special">&gt;(</span><span class="identifier">lib</span><span class="special">,</span> <span class="string">"create_plugin"</span><span class="special">);</span>
 
         <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Matching plugin name: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">creator</span><span class="special">()-&gt;</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
         <span class="special">++</span> <span class="identifier">plugins_found</span><span class="special">;</span>
@@ -869,11 +869,10 @@ Function 'howdy' prints:
       library reference counting</a>
 </h3></div></div></div>
 <p>
-        As noted in documentation to the <code class="computeroutput"><a class="link" href="../boost/dll/import_function.html" title="Function import_function">boost::dll::import_function</a></code>
-        and <code class="computeroutput"><a class="link" href="../boost/dll/import_variable.html" title="Function import_variable">boost::dll::import_variable</a></code>
-        variables and functions returned from those functions holds a reference to
+        As noted in documentation to the <code class="computeroutput"><a class="link" href="../boost/dll/import.html" title="Function import">boost::dll::import</a></code>
+        variables and functions returned from those functions hold a reference to
         the shared library. However nested objects and objects that are returned
-        by <code class="computeroutput"><span class="identifier">import_</span><span class="special">*</span></code>
+        by <code class="computeroutput"><span class="identifier">import</span><span class="special">*</span></code>
         functions do not hold a reference to the shared library. There's no way to
         solve this issue on the Boost.DLL library level, but you can take care of
         this problem by your own. Here's an example how this could be done.
@@ -993,12 +992,12 @@ Function 'howdy' prints:
       </p>
 <p>
 </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">import_function</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">import</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="keyword">inline</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">my_refcounting_api</span><span class="special">&gt;</span> <span class="identifier">get_plugin</span><span class="special">(</span>
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">filesystem</span><span class="special">::</span><span class="identifier">path</span> <span class="identifier">path</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> <span class="identifier">func_name</span><span class="special">)</span>
 <span class="special">{</span>
     <span class="keyword">typedef</span> <span class="identifier">my_refcounting_api</span><span class="special">*(</span><span class="identifier">func_t</span><span class="special">)();</span>
-    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">func_t</span><span class="special">&gt;</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_function_alias</span><span class="special">&lt;</span><span class="identifier">func_t</span><span class="special">&gt;(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">func_t</span><span class="special">&gt;</span> <span class="identifier">f</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">import_alias</span><span class="special">&lt;</span><span class="identifier">func_t</span><span class="special">&gt;(</span>
         <span class="identifier">path</span><span class="special">,</span>
         <span class="identifier">func_name</span><span class="special">,</span>
         <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">::</span><span class="identifier">load_mode</span><span class="special">::</span><span class="identifier">append_decorations</span> <span class="comment">// will be ignored for executable</span>
