@@ -7,12 +7,15 @@ BOOST_DLL_SELECTANY.html
 BOOST_DLL_SECTION.html
 BOOST_DLL_ALIAS.html
 BOOST_DLL_ALIAS_SECTIONED.html
+BOOST_DLL_AUTO_ALIAS.html
 boost/dll/library_info.html
 boost/dll/symbol_location.html
 boost/dll/this_line_location.html
 boost/dll/program_location.html
 boost/dll/shared_library.html
 boost/dll/load_mode/type.html
+boost/dll/import_symbol.html
+boost/dll/import_alias.html
 boost/dll/import_function.html
 boost/dll/import_function_alias.html
 boost/dll/import_variable.html

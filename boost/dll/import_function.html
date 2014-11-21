@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
 <link rel="home" href="../../index.html" title="Chapter&#160;1.&#160;Boost.DLL">
 <link rel="up" href="../../dll/reference.html#header.boost.dll.import_function_hpp" title="Header &lt;boost/dll/import_function.hpp&gt;">
-<link rel="prev" href="load_mode/type.html" title="Type type">
+<link rel="prev" href="import_alias.html" title="Function import_alias">
 <link rel="next" href="import_function_alias.html" title="Function import_function_alias">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="load_mode/type.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../dll/reference.html#header.boost.dll.import_function_hpp"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="import_function_alias.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="import_alias.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../dll/reference.html#header.boost.dll.import_function_hpp"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="import_function_alias.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 <div class="refentry">
 <a name="boost.dll.import_function"></a><div class="titlepage"></div>
@@ -42,7 +42,7 @@
   <span class="identifier">import_function</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span> <span class="identifier">shared_library</span> <span class="special">&gt;</span> <span class="special">&amp;</span> lib<span class="special">,</span> 
                   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">string_ref</span> func_name<span class="special">)</span><span class="special">;</span></pre></div>
 <div class="refsect1">
-<a name="idp64206928"></a><h2>Description</h2>
+<a name="idp8175840"></a><h2>Description</h2>
 <p>Returns boost::function&lt;T&gt; that holds an imported function from the loaded library and refcounts usage of the loaded shared library, so that it won't get unload until all copies of return value are not destroyed.</p>
 <p>This call will succeed if call to <a class="link" href="shared_library.html" title="Class shared_library">boost::dll::shared_library</a><code class="computeroutput">::search_symbol(boost::string_ref )</code> function with the same symbol name returned <code class="computeroutput">true</code>.</p>
 <p>For importing function by its <span class="bold"><strong>alias</strong></span> name use <a class="link" href="import_function_alias.html" title="Function import_function_alias">boost::dll::import_function_alias</a> method.</p>
@@ -104,7 +104,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="load_mode/type.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../dll/reference.html#header.boost.dll.import_function_hpp"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="import_function_alias.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
+<a accesskey="p" href="import_alias.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../dll/reference.html#header.boost.dll.import_function_hpp"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/home.png" alt="Home"></a><a accesskey="n" href="import_function_alias.html"><img src="http://www.boost.org/doc/libs/1_56_0/doc/src/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
