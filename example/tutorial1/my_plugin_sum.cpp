@@ -41,8 +41,10 @@ public:
 
 my_plugin_sum plugin;
 
+// Exporting `my_namespace::plugin` variable with alias name `plugin`
+// (Has the same effect as `BOOST_DLL_ALIAS(my_namespace::plugin, plugin)`)
+BOOST_DLL_AUTO_ALIAS(plugin)
+
 } // namespace my_namespace
 
-// Exporting `my_namespace::plugin` variable with alias name `plugin`
-BOOST_DLL_ALIAS(my_namespace::plugin, plugin)
 //]
