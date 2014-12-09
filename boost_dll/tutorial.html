@@ -105,10 +105,11 @@
 
 <span class="identifier">my_plugin_sum</span> <span class="identifier">plugin</span><span class="special">;</span>
 
-<span class="special">}</span> <span class="comment">// namespace my_namespace</span>
-
 <span class="comment">// Exporting `my_namespace::plugin` variable with alias name `plugin`</span>
-<span class="identifier">BOOST_DLL_ALIAS</span><span class="special">(</span><span class="identifier">my_namespace</span><span class="special">::</span><span class="identifier">plugin</span><span class="special">,</span> <span class="identifier">plugin</span><span class="special">)</span>
+<span class="comment">// (Has the same effect as `BOOST_DLL_ALIAS(my_namespace::plugin, plugin)`)</span>
+<span class="identifier">BOOST_DLL_AUTO_ALIAS</span><span class="special">(</span><span class="identifier">plugin</span><span class="special">)</span>
+
+<span class="special">}</span> <span class="comment">// namespace my_namespace</span>
 </pre>
 <p>
       </p>
