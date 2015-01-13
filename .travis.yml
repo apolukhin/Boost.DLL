@@ -1,22 +1,13 @@
-# Distributed under the Boost Software License, Version 1.0.
-# (See accompanying file LICENSE_1_0.txt
-# or copy at http://www.boost.org/LICENSE_1_0.txt)
-#
-# Copyright Antony Polukhin 2014. 
-
-os:
-    - osx
-    - linux
-
-env:
-    - CXX_STANDARD=c++98
-    - CXX_STANDARD=c++0x
-
 # Use, modification, and distribution are
 # subject to the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-# Copyright Antony Polukhin 2014. 
+# Copyright Antony Polukhin 2014-2015.
+
+#
+# See https://svn.boost.org/trac/boost/wiki/TravisCoverals for description of this file
+# and how it can be used with Boost libraries.
+#
 
 os:
     - linux
@@ -24,13 +15,34 @@ os:
 env:
     - CXX_STANDARD=c++98
     - CXX_STANDARD=c++0x
+env:
+  global:
+    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+    #   via the "travis encrypt" command using the project repo's public key
+    - secure: "WJQ9X51EmtIKOe7LTAKsGx/RTq60ENxSRdTvoJ2MWMHzD0+8mW32Qki60zXBaOrKuNAa0rBWj1dVIgKBxpQdWHJgSdZbBJzQ+ZLUVHB1fFMp/P8IITywceTdBw2WMqWML8pBpcXM/+mQXr+xjAVDDxcQ+7f7HKna4T7S3daN5x4="
+
+addons:
+  coverity_scan:
+    project:
+      name: "apolukhin/Boost.DLL"
+      description: "Build submitted via Travis CI"
+    notification_email: antoshkka@gmail.com
+    build_command_prepend: ""
+    build_command:   "../../../b2 cxxflags='--coverage -std=$CXX_STANDARD' linkflags='--coverage'"
+    branch_pattern: $TRAVIS_BRANCH
 
 before_install:
     # Set this to the name of your Boost library
-    # Autodetect library name by using the following code: - PROJECT_TO_TEST=`git rev-parse --show-toplevel`
-    - PROJECT_TO_TEST=Boost.DLL
-    # Autodetect branch by using the following code: - BRANCH_TO_TEST=`git rev-parse --abbrev-ref HEAD`
-    - BRANCH_TO_TEST=develop
+    # Autodetect library name by using the following code: - PROJECT_TO_TEST=$(basename $(pwd))
+    - PROJECT_TO_TEST=$(basename $(pwd))
+
+    # Autodetect Boost branch by using the following code: - BRANCH_TO_TEST=`git rev-parse --abbrev-ref HEAD`
+    # or by - BRANCH_TO_TEST=$TRAVIS_BRANCH or just directly specify it
+    - BRANCH_TO_TEST=$TRAVIS_BRANCH
+
+    # Files, which coverage results must be ignored (files from other projects). Example: - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/path.cpp'
+    - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/path.cpp */numeric/conversion/converter_policies.hpp'
+
 
     # From this point and below code is same for all the Boost libs
     # Cloning Boost libraries (fast nondeep cloning)
@@ -75,7 +87,7 @@ after_success:
 
     # ... erasing /test/ /example/ folder data
     - cd $BOOST
-    - lcov --remove $PROJECT_DIR/coverals/coverage.info "/usr*" "*/$PROJECT_TO_TEST/test/*" "*/$PROJECT_TO_TEST/tests/*" "*/$PROJECT_TO_TEST/examples/*" "*/$PROJECT_TO_TEST/example/*" -o $PROJECT_DIR/coverals/coverage.info
+    - lcov --remove $PROJECT_DIR/coverals/coverage.info "/usr*" "*/$PROJECT_TO_TEST/test/*" $IGNORE_COVERAGE "*/$PROJECT_TO_TEST/tests/*" "*/$PROJECT_TO_TEST/examples/*" "*/$PROJECT_TO_TEST/example/*" -o $PROJECT_DIR/coverals/coverage.info
 
     # ... erasing data that is not related to this project directly
     - OTHER_LIBS=`grep "submodule .*" .gitmodules | sed 's/\[submodule\ "\(.*\)"\]/"\*\/boost\/\1\.hpp" "\*\/boost\/\1\/\*"/g'| sed "/\"\*\/boost\/$PROJECT_TO_TEST\/\*\"/d" | sed ':a;N;$!ba;s/\n/ /g'`
