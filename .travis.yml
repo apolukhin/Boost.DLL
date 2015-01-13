@@ -15,8 +15,8 @@ os:
 env:
     global:
         # Set this to the name of your Boost library
-        # Autodetect library name by using the following code: - PROJECT_TO_TEST=$(basename $(pwd))
-        - PROJECT_TO_TEST=$(basename $(pwd))
+        # Autodetect library name by using the following code: - PROJECT_TO_TEST=`basename $TRAVIS_REPO_SLUG`
+        - PROJECT_TO_TEST=`basename $TRAVIS_REPO_SLUG`
 
         # Autodetect Boost branch by using the following code: - BRANCH_TO_TEST=`git rev-parse --abbrev-ref HEAD`
         # or by - BRANCH_TO_TEST=$TRAVIS_BRANCH or just directly specify it
@@ -37,7 +37,7 @@ env:
 addons:
   coverity_scan:
     project:
-      name: "apolukhin/Boost.DLL"
+      name: "$TRAVIS_REPO_SLUG"
       description: "Build submitted via Travis CI"
     notification_email: antoshkka@gmail.com
     build_command_prepend: ""
