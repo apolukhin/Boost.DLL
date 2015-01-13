@@ -13,13 +13,13 @@ os:
     - linux
 
 env:
-    - CXX_STANDARD=c++98
-    - CXX_STANDARD=c++0x
-env:
   global:
     # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
     #   via the "travis encrypt" command using the project repo's public key
     - secure: "WJQ9X51EmtIKOe7LTAKsGx/RTq60ENxSRdTvoJ2MWMHzD0+8mW32Qki60zXBaOrKuNAa0rBWj1dVIgKBxpQdWHJgSdZbBJzQ+ZLUVHB1fFMp/P8IITywceTdBw2WMqWML8pBpcXM/+mQXr+xjAVDDxcQ+7f7HKna4T7S3daN5x4="
+  matrix:
+    - CXX_STANDARD=c++98
+    - CXX_STANDARD=c++0x
 
 addons:
   coverity_scan:
