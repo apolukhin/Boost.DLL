@@ -41,7 +41,7 @@ addons:
       description: "Build submitted via Travis CI"
     notification_email: antoshkka@gmail.com
     build_command_prepend: ""
-    build_command:   "../../../b2 cxxflags='--coverage -std=$CXX_STANDARD' linkflags='--coverage'"
+    build_command:   "cd $BOOST/libs/$PROJECT_TO_TEST/test/; ../../../b2 cxxflags='--coverage -std=$CXX_STANDARD' linkflags='--coverage'"
     branch_pattern: $TRAVIS_BRANCH
 
 
@@ -71,9 +71,9 @@ before_install:
     - PROJECT_DIR=$BOOST/libs/$PROJECT_TO_TEST
     - ./bootstrap.sh
     - ./b2 headers
-    - cd $BOOST/libs/$PROJECT_TO_TEST/test/
 
 script:
+    - cd $BOOST/libs/$PROJECT_TO_TEST/test/
     # `--coverage` flags required to generate coverage info for Coveralls
     - ../../../b2 cxxflags="--coverage -std=$CXX_STANDARD" linkflags="--coverage"
 
