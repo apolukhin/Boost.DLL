@@ -13,13 +13,26 @@ os:
     - linux
 
 env:
-  global:
-    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-    #   via the "travis encrypt" command using the project repo's public key
-    - secure: "WJQ9X51EmtIKOe7LTAKsGx/RTq60ENxSRdTvoJ2MWMHzD0+8mW32Qki60zXBaOrKuNAa0rBWj1dVIgKBxpQdWHJgSdZbBJzQ+ZLUVHB1fFMp/P8IITywceTdBw2WMqWML8pBpcXM/+mQXr+xjAVDDxcQ+7f7HKna4T7S3daN5x4="
-  matrix:
-    - CXX_STANDARD=c++98
-    - CXX_STANDARD=c++0x
+    global:
+        # Set this to the name of your Boost library
+        # Autodetect library name by using the following code: - PROJECT_TO_TEST=$(basename $(pwd))
+        - PROJECT_TO_TEST=$(basename $(pwd))
+
+        # Autodetect Boost branch by using the following code: - BRANCH_TO_TEST=`git rev-parse --abbrev-ref HEAD`
+        # or by - BRANCH_TO_TEST=$TRAVIS_BRANCH or just directly specify it
+        - BRANCH_TO_TEST=$TRAVIS_BRANCH
+
+        # Files, which coverage results must be ignored (files from other projects).
+        # Example: - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/*'
+        - IGNORE_COVERAGE='*/detail/pe_info.hpp */detail/macho_info.hpp	*/boost/progress.hpp */filesystem/src/*'
+
+        # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+        #   via the "travis encrypt" command using the project repo's public key
+        - secure: "WJQ9X51EmtIKOe7LTAKsGx/RTq60ENxSRdTvoJ2MWMHzD0+8mW32Qki60zXBaOrKuNAa0rBWj1dVIgKBxpQdWHJgSdZbBJzQ+ZLUVHB1fFMp/P8IITywceTdBw2WMqWML8pBpcXM/+mQXr+xjAVDDxcQ+7f7HKna4T7S3daN5x4="
+
+    matrix:
+        - CXX_STANDARD=c++98
+        - CXX_STANDARD=c++0x
 
 addons:
   coverity_scan:
@@ -31,20 +44,12 @@ addons:
     build_command:   "../../../b2 cxxflags='--coverage -std=$CXX_STANDARD' linkflags='--coverage'"
     branch_pattern: $TRAVIS_BRANCH
 
+
+
+###############################################################################################################
+# From this point and below code is same for all the Boost libs
+###############################################################################################################
 before_install:
-    # Set this to the name of your Boost library
-    # Autodetect library name by using the following code: - PROJECT_TO_TEST=$(basename $(pwd))
-    - PROJECT_TO_TEST=$(basename $(pwd))
-
-    # Autodetect Boost branch by using the following code: - BRANCH_TO_TEST=`git rev-parse --abbrev-ref HEAD`
-    # or by - BRANCH_TO_TEST=$TRAVIS_BRANCH or just directly specify it
-    - BRANCH_TO_TEST=$TRAVIS_BRANCH
-
-    # Files, which coverage results must be ignored (files from other projects). Example: - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/path.cpp'
-    - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/path.cpp */numeric/conversion/converter_policies.hpp'
-
-
-    # From this point and below code is same for all the Boost libs
     # Cloning Boost libraries (fast nondeep cloning)
     - PROJECT_DIR=`pwd`
     - BOOST=$HOME/boost-local
@@ -66,10 +71,9 @@ before_install:
     - PROJECT_DIR=$BOOST/libs/$PROJECT_TO_TEST
     - ./bootstrap.sh
     - ./b2 headers
+    - cd $BOOST/libs/$PROJECT_TO_TEST/test/
 
 script:
-    - if [ "$CCFLAGS" != "" ]; then FLAGS="cxxflags=\"$CCFLAGS\" linkflags=\"$LINKFLAGS\""; else FLAGS=""; fi
-    - cd $BOOST/libs/$PROJECT_TO_TEST/test/
     # `--coverage` flags required to generate coverage info for Coveralls
     - ../../../b2 cxxflags="--coverage -std=$CXX_STANDARD" linkflags="--coverage"
 
