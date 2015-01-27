@@ -388,6 +388,22 @@ __to_top
 
 [endsect]
 
+[section Importing a C function from Windows dll]
+
+This a trivial example, but it has one tricky place. When you are importing a C function by *it's name* 
+you must use [funcref boost::dll::import], not [funcref boost::dll::import_alias]:
+
+[import ../example/tutorial9/tutorial9.cpp]
+[callplugcpp_tutorial9]
+
+[*Full sources:]
+
+* [example_ref tutorial9/tutorial9.cpp]
+
+__to_top
+
+[endsect]
+
 [endsect]
 
 

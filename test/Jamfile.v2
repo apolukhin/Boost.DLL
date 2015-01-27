@@ -81,6 +81,7 @@ project
                 :
                 : <link>static <variant>release <library>static_refcounting_plugin <target-os>linux:<linkflags>"-rdynamic" <test-info>always_show_run_output
         ]
+        [ run ../example/tutorial9/tutorial9.cpp ]
         [ compile-fail section_name_too_big.cpp ]
         [ compile-fail not_a_function.cpp ]
     ;
