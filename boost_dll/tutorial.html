@@ -42,6 +42,8 @@
       libraries for symbols</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.advanced_library_reference_counting">Advanced
       library reference counting</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#boost_dll.tutorial.importing_a_c_function_from_windows_dll">Importing
+      a C function from Windows dll</a></span></dt>
 </dl></div>
 <p>
       Tutorial is provided to give you an idea of how to create and use plugins.
@@ -1122,6 +1124,49 @@ location: "/tutorial8_static"</pre>
             <a href="https://github.com/apolukhin/Boost.DLL/blob/master/example/tutorial8/tutorial8_static.cpp" target="_top">example/tutorial8/tutorial8_static.cpp</a>
           </li>
 </ul></div>
+<p>
+        <a class="link" href="tutorial.html" title="Tutorial">Back to the Top</a>
+      </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_dll.tutorial.importing_a_c_function_from_windows_dll"></a><a class="link" href="tutorial.html#boost_dll.tutorial.importing_a_c_function_from_windows_dll" title="Importing a C function from Windows dll">Importing
+      a C function from Windows dll</a>
+</h3></div></div></div>
+<p>
+        This a trivial example, but it has one tricky place. When you are importing
+        a C function by <span class="bold"><strong>it's name</strong></span> you must use
+        <code class="computeroutput"><a class="link" href="../boost/dll/import.html" title="Function import">boost::dll::import</a></code>,
+        not <code class="computeroutput"><a class="link" href="../boost/dll/import_alias.html" title="Function import_alias">boost::dll::import_alias</a></code>:
+      </p>
+<p>
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">dll</span><span class="special">/</span><span class="identifier">import</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span> <span class="comment">// for import</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">dll</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">dll</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="special">(</span><span class="identifier">timeGetTime_fn</span><span class="special">)();</span>       <span class="comment">// function signature</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">function</span><span class="special">&lt;</span><span class="identifier">timeGetTime_fn</span><span class="special">&gt;</span> <span class="identifier">plugin</span>
+        <span class="special">=</span> <span class="identifier">dll</span><span class="special">::</span><span class="identifier">import</span><span class="special">&lt;</span><span class="identifier">timeGetTime_fn</span><span class="special">&gt;(</span>              <span class="comment">// we import using C name, not alias! Using `import&lt;&gt;`</span>
+            <span class="string">"winmm.dll"</span><span class="special">,</span>                            <span class="comment">// Windows dll</span>
+            <span class="string">"timeGetTime"</span>                           <span class="comment">// function name</span>
+        <span class="special">);</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"timeGetTime() returned "</span> <span class="special">&lt;&lt;</span> <span class="identifier">plugin</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        <span class="bold"><strong>Full sources:</strong></span>
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+            <a href="https://github.com/apolukhin/Boost.DLL/blob/master/example/tutorial9/tutorial9.cpp" target="_top">example/tutorial9/tutorial9.cpp</a>
+          </li></ul></div>
 <p>
         <a class="link" href="tutorial.html" title="Tutorial">Back to the Top</a>
       </p>

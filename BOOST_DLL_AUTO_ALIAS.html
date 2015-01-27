@@ -33,7 +33,7 @@
 
 </span>BOOST_DLL_AUTO_ALIAS(FunctionOrVar)</pre></div>
 <div class="refsect1">
-<a name="idp6562944"></a><h2>Description</h2>
+<a name="idp6620320"></a><h2>Description</h2>
 <p>This macro is usefull in cases of long mangled C++ names. For example some <code class="computeroutput">void boost::foo(std::sting)</code> function name will change to something like <code class="computeroutput">N5boostN3foosE</code> after mangling. Importing function by <code class="computeroutput">N5boostN3foosE</code> name does not looks user friendly, especially assuming the fact that different compilers have different mangling schemes.*</p>
 <p>Msut be used in scope where FunctionOrVar declared. FunctionOrVar must be a valid C name, which means that it must not contain <code class="computeroutput">::</code>.</p>
 <p>Functions or variables in global namespace must not have names same as FunctionOrVar.</p>
