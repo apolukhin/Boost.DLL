@@ -5,7 +5,7 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/predef/os.h>
-#if BOOST_WINDOWS
+#if BOOST_OS_WINDOWS
 
 //[callplugcpp_tutorial9
 #include <boost/dll/import.hpp> // for import
