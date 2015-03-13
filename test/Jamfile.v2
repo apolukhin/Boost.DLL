@@ -26,9 +26,8 @@ project
       <toolset>gcc:<cxxflags>"-Wall -Wextra -pedantic -Wno-long-long"
 
    # others
-      <define>BOOST_SYSTEM_NO_DEPRECATED
-      <library>/boost/system//boost_system
       <library>/boost/filesystem//boost_filesystem
+      <library>/boost/system//boost_system
       <threading>multi
     ;
 {

@@ -13,11 +13,11 @@
 language: cpp
 compiler:
     - gcc
-    - clang
+#    - clang
 
 os:
     - linux
-    - osx
+#    - osx
 
 osx_image: xcode61
 
