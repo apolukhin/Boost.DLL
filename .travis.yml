@@ -89,7 +89,7 @@ before_install:
 
 script:
     # `--coverage` flags required to generate coverage info for Coveralls
-    - ../../../b2 cxxflags="--coverage -std=$CXX_STANDARD" linkflags="--coverage"
+    - ../../../b2 address-model=64 architecture=x86 cxxflags="--coverage -std=$CXX_STANDARD" linkflags="--coverage"
 
 after_success:
     # Copying Coveralls data to a separate folder
