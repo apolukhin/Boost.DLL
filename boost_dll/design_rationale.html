@@ -36,6 +36,7 @@
 <dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.self_loading">Self loading</a></span></dt>
 <dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.aliases_vs_mangling">Aliases
       vs Mangling</a></span></dt>
+<dt><span class="section"><a href="design_rationale.html#boost_dll.design_rationale.no_copy">No copy</a></span></dt>
 </dl></div>
 <div class="section">
 <div class="titlepage"><div><div><h3 class="title">
@@ -157,6 +158,42 @@
 </pre>
 <p>
       </p>
+</div>
+<div class="section">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_dll.design_rationale.no_copy"></a><a class="link" href="design_rationale.html#boost_dll.design_rationale.no_copy" title="No copy">No copy</a>
+</h3></div></div></div>
+<p>
+        At first glance, it looks like it is very simple to implement a copy constructor
+        for shared_library:
+</p>
+<pre class="programlisting"><span class="identifier">shared_library</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">shared_library</span><span class="special">&amp;</span> <span class="identifier">lib</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">lib</span><span class="special">.</span><span class="identifier">is_loaded</span><span class="special">())</span> <span class="special">{</span>
+        <span class="identifier">load</span><span class="special">(</span><span class="identifier">lib</span><span class="special">.</span><span class="identifier">location</span><span class="special">());</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+        However a problem with load flags is raised: there is no way to get them.
+      </p>
+<p>
+        Of course, we can store those flags on each load and provide methods to get
+        them. In that case we receive the problem with flags validity:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+            user loads library with <code class="computeroutput"><span class="identifier">flag1</span></code>
+          </li>
+<li class="listitem">
+            user loads the same library with <code class="computeroutput"><span class="identifier">flag2</span></code>
+          </li>
+<li class="listitem">
+            now library is loaded with some mix of flags <code class="computeroutput"><span class="identifier">flag1</span></code>
+            + <code class="computeroutput"><span class="identifier">flag2</span></code>, loading library
+            with just <code class="computeroutput"><span class="identifier">flag1</span></code> or <code class="computeroutput"><span class="identifier">flag2</span></code> could result in error that is
+            really hard to debug
+          </li>
+</ul></div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

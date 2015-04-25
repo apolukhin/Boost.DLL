@@ -33,7 +33,7 @@
 
 </span>BOOST_DLL_ALIAS(FunctionOrVar, AliasName)</pre></div>
 <div class="refsect1">
-<a name="idp6558608"></a><h2>Description</h2>
+<a name="idp98169920"></a><h2>Description</h2>
 <p>This macro is usefull in cases of long mangled C++ names. For example some <code class="computeroutput">void boost::foo(std::sting)</code> function name will change to something like <code class="computeroutput">N5boostN3foosE</code> after mangling. Importing function by <code class="computeroutput">N5boostN3foosE</code> name does not looks user friendly, especially assuming the fact that different compilers have different mangling schemes. AliasName is the name that won't be mangled and can be used as a portable import name.</p>
 <p>Can be used in any namespace, including global. FunctionOrVar must be fully qualified, so that address of it could be taken. Multiple different alises for a single variable/function are allowed.</p>
 <p>Make sure that AliasNames are unique per library/executable. Functions or variables in global namespace must not have names same as AliasNames.</p>
