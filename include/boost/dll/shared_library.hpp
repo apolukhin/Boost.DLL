@@ -13,6 +13,7 @@
 
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
+#include <boost/utility/explicit_operator_bool.hpp>
 #include <boost/dll/detail/system_error.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
@@ -261,6 +262,28 @@ public:
     bool is_loaded() const BOOST_NOEXCEPT {
         return base_t::is_loaded();
     }
+
+    /*!
+    * Check if an library is not loaded.
+    *
+    * \return true if a library has not been loaded.
+    *
+    * \throw Nothing.
+    *
+    */
+    bool operator!() const BOOST_NOEXCEPT {
+        return !is_loaded();
+    }
+
+    /*!
+    * Check if an library is loaded.
+    *
+    * \return true if a library has been loaded.
+    *
+    * \throw Nothing.
+    *
+    */
+    BOOST_EXPLICIT_OPERATOR_BOOL()
 
     /*!
     * Seach for a given symbol on loaded library. Works for all symbols, including alias names.
