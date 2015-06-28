@@ -193,7 +193,7 @@ namespace boost { namespace dll {
 * Importing function by `N5boostN3foosE` name does not looks user friendly, especially assuming the fact
 * that different compilers have different mangling schemes.*
 *
-* Msut be used in scope where FunctionOrVar declared. FunctionOrVar must be a valid C name, which means that
+* Must be used in scope where FunctionOrVar declared. FunctionOrVar must be a valid C name, which means that
 * it must not contain `::`.
 *
 * Functions or variables

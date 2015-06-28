@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp" // contains BJAM_LIBRARY_DECORATIONS macro to workaround --layout=X
+#include "../shared_lib_path.hpp" // contains BOOST_B2_LIBRARY_DECORATIONS macro to workaround --layout=X
 
 //[callplugcpp_tutorial2
 #include <boost/dll/import.hpp> // for import_alias
@@ -17,7 +17,7 @@ int main(int argc, char* argv[]) {
     /*<-*/ BOOST_ASSERT(argc >= 2);    /*->*/
     // argv[1] contains path to our plugin library 
     boost::filesystem::path shared_library_path(argv[1]);
-    shared_library_path /= "my_plugin_aggregator"/*<-*/ BJAM_LIBRARY_DECORATIONS /*->*/;
+    shared_library_path /= "my_plugin_aggregator"/*<-*/ BOOST_B2_LIBRARY_DECORATIONS /*->*/;
 
     typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
     boost::function<pluginapi_create_t> creator;

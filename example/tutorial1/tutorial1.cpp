@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp" // contains BJAM_LIBRARY_DECORATIONS macro to workaround --layout=X
+#include "../shared_lib_path.hpp" // contains BOOST_B2_LIBRARY_DECORATIONS macro to workaround --layout=X
 
 //[callplugcpp_tutorial1
 #include <boost/dll/import.hpp> // for import_alias
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Loading the plugin" << std::endl;
      
     plugin = dll::import_alias<my_plugin_api>( // type of imported symbol is located between `<` and `>`
-        lib_path / "my_plugin_sum"/*<-*/ BJAM_LIBRARY_DECORATIONS /*->*/,                     // path to the library and library name
+        lib_path / "my_plugin_sum"/*<-*/ BOOST_B2_LIBRARY_DECORATIONS /*->*/,                     // path to the library and library name
         "plugin",                                       // name of the symbol to import
         dll::load_mode::append_decorations              // makes `libmy_plugin_sum.so` or `my_plugin_sum.dll` from `my_plugin_sum`
     );

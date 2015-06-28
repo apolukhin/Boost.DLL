@@ -1,5 +1,5 @@
 #
-# Copyright Renato Tegon Forti, Antony Polukhin 2011 - 2014.
+# Copyright Renato Tegon Forti, Antony Polukhin 2011 - 2015.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
@@ -48,39 +48,39 @@ project
     ;
   
     test-suite boostdll
-        : 
-        [ run shared_library_load_test.cpp : $(TEST_DIR) ]
-        [ run shared_library_search_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
-        [ run shared_library_get_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
+        :
+        [ run shared_library_load_test.cpp : $(TEST_DIR) : : <dependency>install-bin ]
+        [ run shared_library_search_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" <dependency>install-bin ]
+        [ run shared_library_get_symbol_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" <dependency>install-bin ]
         [ run shared_library_get_symbol_test.cpp
                 : $(TEST_DIR)
                 :
-                : <target-os>linux:<linkflags>"-rdynamic" <target-os>windows:<define>TEST_FORCE_USE_OF_WINDOWS_H
+                : <target-os>linux:<linkflags>"-rdynamic" <target-os>windows:<define>TEST_FORCE_USE_OF_WINDOWS_H <dependency>install-bin
                 : get_symbol_windows_h_forced
         ]
-        [ run symbol_runtime_info_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" ]
-        [ run shared_library_errors.cpp : $(TEST_DIR) : : <test-info>always_show_run_output  ]
+        [ run symbol_runtime_info_test.cpp : $(TEST_DIR) : : <target-os>linux:<linkflags>"-rdynamic" <dependency>install-bin ]
+        [ run shared_library_errors.cpp : $(TEST_DIR) : : <test-info>always_show_run_output <dependency>install-bin ]
         [ run structures_tests.cpp ]
-        [ run library_info_test.cpp : $(TEST_DIR) : : <library>static_plugin <test-info>always_show_run_output  ]
-        [ run ../example/getting_started.cpp : $(TEST_DIR) ]
-        [ run ../example/tutorial1/tutorial1.cpp : $(TEST_DIR) ]
-        [ run ../example/tutorial2/tutorial2.cpp : $(TEST_DIR) ]
-        [ run ../example/tutorial3/tutorial3.cpp : $(TEST_DIR) ]
+        [ run library_info_test.cpp : $(TEST_DIR) : : <library>static_plugin <test-info>always_show_run_output <dependency>install-bin ]
+        [ run ../example/getting_started.cpp : $(TEST_DIR) : : <dependency>install-bin ]
+        [ run ../example/tutorial1/tutorial1.cpp : $(TEST_DIR) : : <dependency>install-bin ]
+        [ run ../example/tutorial2/tutorial2.cpp : $(TEST_DIR) : : <dependency>install-bin ]
+        [ run ../example/tutorial3/tutorial3.cpp : $(TEST_DIR) : : <dependency>install-bin ]
         [ run ../example/tutorial4/load_self.cpp 
-                : : : <variant>release <library>static_plugin <target-os>linux:<linkflags>"-rdynamic" 
+                : : : <variant>release <library>static_plugin <target-os>linux:<linkflags>"-rdynamic"
         ]
         [ run ../example/tutorial5/load_all.cpp
-                : $(TEST_DIR) : : <library>static_plugin <target-os>linux:<linkflags>"-rdynamic"
+                : $(TEST_DIR) : : <library>static_plugin <target-os>linux:<linkflags>"-rdynamic" <dependency>install-bin
         ]
-        [ run ../example/tutorial6/tutorial6.cpp : $(TEST_DIR) ]
-        [ run ../example/tutorial7/tutorial7.cpp : $(TEST_DIR) ]
-        [ run ../example/tutorial8/tutorial8.cpp : $(TEST_DIR) ]
+        [ run ../example/tutorial6/tutorial6.cpp : $(TEST_DIR) : : <dependency>install-bin ]
+        [ run ../example/tutorial7/tutorial7.cpp : $(TEST_DIR) : : <dependency>install-bin ]
+        [ run ../example/tutorial8/tutorial8.cpp : $(TEST_DIR) : : <dependency>install-bin ]
         [ run ../example/tutorial8/tutorial8_static.cpp
                 : $(TEST_DIR)
                 :
                 : <link>static <variant>release <library>static_refcounting_plugin <target-os>linux:<linkflags>"-rdynamic" <test-info>always_show_run_output
         ]
-        [ run ../example/tutorial9/tutorial9.cpp ]
+        [ run ../example/tutorial9/tutorial9.cpp : : : <dependency>install-bin ]
         [ compile-fail section_name_too_big.cpp ]
         [ compile-fail not_a_function.cpp ]
     ;

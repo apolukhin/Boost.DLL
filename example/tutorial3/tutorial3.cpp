@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp" // contains BJAM_LIBRARY_DECORATIONS macro to workaround --layout=X
+#include "../shared_lib_path.hpp" // contains BOOST_B2_LIBRARY_DECORATIONS macro to workaround --layout=X
 
 //[callplugcpp_tutorial3
 #include <boost/dll/import.hpp> // for import_alias
@@ -45,8 +45,8 @@ int main(int argc, char* argv[]) {
     // argv[1] contains path to our plugin library
     std::vector<boost::filesystem::path> plugins;
     boost::filesystem::path base_dir = argv[1];
-    plugins.push_back(base_dir / "my_plugin_aggregator"/*<-*/ BJAM_LIBRARY_DECORATIONS /*->*/);
-    plugins.push_back(base_dir / "my_plugin_sum"/*<-*/ BJAM_LIBRARY_DECORATIONS /*->*/);
+    plugins.push_back(base_dir / "my_plugin_aggregator"/*<-*/ BOOST_B2_LIBRARY_DECORATIONS /*->*/);
+    plugins.push_back(base_dir / "my_plugin_sum"/*<-*/ BOOST_B2_LIBRARY_DECORATIONS /*->*/);
 
     const std::size_t res = search_for_symbols(plugins);
     BOOST_ASSERT(res == 1);
