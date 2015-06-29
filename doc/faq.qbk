@@ -6,7 +6,7 @@
 
 [section F.A.Q.]
 
-* [*Question:]  Is Boost.Plugin thread-safe?
+* [*Question:]  Is Boost.DLL thread-safe?
   * [*Answer:]  It is safe in the manner as all the C++ Standard Library containers are: it is safe to use
 different instances of shared_library from different threads even if all the instances loaded the same library.
 
