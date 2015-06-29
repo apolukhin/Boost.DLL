@@ -240,7 +240,6 @@ __to_top
 Boost.DLL provides no out of the box mechanism for catching library unloads. However such task could be easily implemented.
 
 [import ../example/tutorial6/on_unload_lib.cpp]
-// This block is invisible for Quickbook documentation
 All you need to do, is write a simple class that stores callbacks and calls them at destruction:
 [plugcpp_on_unload]
 

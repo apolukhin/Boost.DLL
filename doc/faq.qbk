@@ -21,14 +21,14 @@ flag and take a look to the Tutorial section.
 ]
 
 * [*Question:]  How Unicode (Windows) is handled?
-  * [*Answer:]  Boost.Plugin supports Unicode, so that you could provide Unicode paths to it.
+  * [*Answer:]  Boost.DLL supports Unicode, so that you could provide Unicode paths to it.
 
 [pre
 ]
 
 * [*Question:]  Can I open an executable file?
   * [*Answer:]  Yes, you can. Symbols need be exported using in the executable using `BOOST_SYMBOL_EXPORT`
-or `BOOST_DLL_ALIAS`. You can use 'shared_library::load_self()' method to load yourself. Refer to
+or `BOOST_DLL_ALIAS`. You can call `shared_library(program_location())` to load yourself. Refer to
 the Tutorial section for more info. You can also query executables, just provide a path to the executable
 to `library_info` class.
 
@@ -57,7 +57,7 @@ stability by your own.
 ]
 
 * [*Question:]  I have found a bug, how do I notify?]
-  * [*Answer:]  Create an [@https://github.com/apolukhin/Boost.Plugin/issues issue at GitHub] with a detailed description.
+  * [*Answer:]  Create an [@https://github.com/apolukhin/Boost.DLL/issues issue at GitHub] with a detailed description.
 [endsect]
 
 [endsect]
