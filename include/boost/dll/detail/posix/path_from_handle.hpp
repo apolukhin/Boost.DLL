@@ -10,10 +10,15 @@
 #include <boost/config.hpp>
 #include <boost/dll/detail/system_error.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/predef/os.h>
 
 // for dlinfo
 #include <dlfcn.h>
-#include <link.h>
+#if BOOST_OS_MACOS
+#   include <sys/link.h>
+#else
+#   include <link.h>
+#endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once

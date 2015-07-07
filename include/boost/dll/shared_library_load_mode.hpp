@@ -9,6 +9,7 @@
 
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
+#include <boost/predef/library/c.h>
 
 #if BOOST_OS_WINDOWS
 //#include <boost/detail/winapi/dll.hpp>
@@ -174,6 +175,16 @@ enum type {
     * This is a default Windows behavior that can not be changed.
     */
     rtld_local,
+
+    /*!
+    * \b Platforms: POSIX (requires glibc >= 2.3.4)
+    *
+    * \b Default: disabled
+    *
+    * The object will use its own symbols in preference to global symbols
+    * with the same name contained in libraries that have already been loaded.
+    * This flag is not specified in POSIX.1-2001.
+    */
     rtld_deepbind,
 
     /*!
@@ -216,7 +227,13 @@ enum type {
     rtld_now                              = RTLD_NOW,
     rtld_global                           = RTLD_GLOBAL,
     rtld_local                            = RTLD_LOCAL,
+
+#if BOOST_LIB_C_GNU < BOOST_VERSION_NUMBER(2,3,4)
+    rtld_deepbind                         = 0,
+#else
     rtld_deepbind                         = RTLD_DEEPBIND,
+#endif
+
     append_decorations                    = 0x00800000
 #endif
 };
