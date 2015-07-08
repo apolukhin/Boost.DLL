@@ -17,9 +17,12 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/utility/string_ref.hpp>
+#include <boost/predef/os.h>
 
 #include <dlfcn.h>
-#include <link.h>
+#if !BOOST_OS_MACOS
+#   include <link.h>
+#endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -137,7 +140,7 @@ public:
 
     static boost::filesystem::path suffix() {
         // https://sourceforge.net/p/predef/wiki/OperatingSystems/
-#if defined(__APPLE__)
+#if BOOST_OS_MACOS
         return ".dylib";
 #else
         return ".so";
