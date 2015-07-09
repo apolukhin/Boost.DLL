@@ -45,25 +45,27 @@ namespace boost { namespace dll {
     __pragma(section(#SectionName, Permissions)) __declspec(allocate(#SectionName))             \
     /**/
 
-#else
+#else // #if BOOST_COMP_MSVC
 
 
 #if BOOST_OS_WINDOWS
 // There are some problems with mixing `__dllexport__` and `weak` using MinGW
 // See https://sourceware.org/bugzilla/show_bug.cgi?id=17480
 #define BOOST_DLL_SELECTANY
-#else
+#else // #if BOOST_OS_WINDOWS
 /*!
 * \brief Macro that allows linker to select any occurence of this symbol instead of
 * failing with 'multiple definitions' error at linktime.
 */
 #define BOOST_DLL_SELECTANY __attribute__((weak))
-#endif
+#endif // #if BOOST_OS_WINDOWS
+
 // TODO: improve section permissions using following info:
 // http://stackoverflow.com/questions/6252812/what-does-the-aw-flag-in-the-section-attribute-mean
 
+#if !BOOST_OS_MACOS
 /*!
-* \brief Macro that puts symbol to a specific section.
+* \brief Macro that puts symbol to a specific section. On MacOS all the sections are put into "__TEXT" segment.
 * \param SectionName Name of the section. Must be a valid C identifier without quotes not longer than 8 bytes.
 * \param Permissions Can be "read" or "write" (without quotes!).
 */
@@ -74,8 +76,20 @@ namespace boost { namespace dll {
     );                                                                                          \
     __attribute__ ((section (#SectionName)))                                                    \
     /**/
+#else // #if !BOOST_OS_MACOS
 
-#endif
+#define BOOST_DLL_SECTION(SectionName, Permissions)                                             \
+    BOOST_STATIC_ASSERT_MSG(                                                                    \
+        sizeof(#SectionName) < 10,                                                              \
+        "Some platforms require section names to be at most 8 bytest"                           \
+    );                                                                                          \
+    __attribute__ ((section ( "__TEXT," #SectionName)))                                         \
+    /**/
+
+#endif // #if !BOOST_OS_MACOS
+
+#endif // #if BOOST_COMP_MSVC
+
 
 // Alias - is just a variable that pointers to original data
 //
