@@ -65,7 +65,7 @@ namespace boost { namespace dll {
 
 #if !BOOST_OS_MACOS
 /*!
-* \brief Macro that puts symbol to a specific section. On MacOS all the sections are put into "__TEXT" segment.
+* \brief Macro that puts symbol to a specific section. On MacOS all the sections are put into "__DATA" segment.
 * \param SectionName Name of the section. Must be a valid C identifier without quotes not longer than 8 bytes.
 * \param Permissions Can be "read" or "write" (without quotes!).
 */
@@ -83,7 +83,7 @@ namespace boost { namespace dll {
         sizeof(#SectionName) < 10,                                                              \
         "Some platforms require section names to be at most 8 bytest"                           \
     );                                                                                          \
-    __attribute__ ((section ( "__TEXT," #SectionName)))                                         \
+    __attribute__ ((section ( "__DATA," #SectionName)))                                         \
     /**/
 
 #endif // #if !BOOST_OS_MACOS

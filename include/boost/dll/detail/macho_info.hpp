@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -43,34 +44,34 @@ struct load_command_ {
 };
 
 struct load_command_types {
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SEGMENT          = 0x1);   /* segment of this file to be mapped */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SYMTAB           = 0x2);   /* link-edit stab symbol table info */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SYMSEG           = 0x3);   /* link-edit gdb symbol table info (obsolete) */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_THREAD           = 0x4);   /* thread */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_UNIXTHREAD       = 0x5);   /* unix thread (includes a stack) */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LOADFVMLIB       = 0x6);   /* load a specified fixed VM shared library */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_IDFVMLIB         = 0x7);   /* fixed VM shared library identification */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_IDENT            = 0x8);   /* object identification info (obsolete) */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_FVMFILE          = 0x9);   /* fixed VM file inclusion (internal use) */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_PREPAGE          = 0xa);   /* prepage command (internal use) */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_DYSYMTAB         = 0xb);   /* dynamic link-edit symbol table info */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LOAD_DYLIB       = 0xc);   /* load a dynamically linked shared library */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ID_DYLIB         = 0xd);   /* dynamically linked shared lib ident */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LOAD_DYLINKER    = 0xe);   /* load a dynamic linker */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ID_DYLINKER      = 0xf);   /* dynamic linker identification */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_PREBOUND_DYLIB   = 0x10);  /* modules prebound for a dynamically linked shared library */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ROUTINES         = 0x11);  /* image routines */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_FRAMEWORK    = 0x12);  /* sub framework */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_UMBRELLA     = 0x13);  /* sub umbrella */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_CLIENT       = 0x14);  /* sub client */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_LIBRARY      = 0x15);  /* sub library */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_TWOLEVEL_HINTS   = 0x16);  /* two-level namespace lookup hints */
-    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_PREBIND_CKSUM    = 0x17);  /* prebind checksum */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SEGMENT_          = 0x1);   /* segment of this file to be mapped */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SYMTAB_           = 0x2);   /* link-edit stab symbol table info */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SYMSEG_           = 0x3);   /* link-edit gdb symbol table info (obsolete) */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_THREAD_           = 0x4);   /* thread */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_UNIXTHREAD_       = 0x5);   /* unix thread (includes a stack) */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LOADFVMLIB_       = 0x6);   /* load a specified fixed VM shared library */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_IDFVMLIB_         = 0x7);   /* fixed VM shared library identification */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_IDENT_            = 0x8);   /* object identification info (obsolete) */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_FVMFILE_          = 0x9);   /* fixed VM file inclusion (internal use) */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_PREPAGE_          = 0xa);   /* prepage command (internal use) */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_DYSYMTAB_         = 0xb);   /* dynamic link-edit symbol table info */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LOAD_DYLIB_       = 0xc);   /* load a dynamically linked shared library */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ID_DYLIB_         = 0xd);   /* dynamically linked shared lib ident */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LOAD_DYLINKER_    = 0xe);   /* load a dynamic linker */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ID_DYLINKER_      = 0xf);   /* dynamic linker identification */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_PREBOUND_DYLIB_   = 0x10);  /* modules prebound for a dynamically linked shared library */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ROUTINES_         = 0x11);  /* image routines */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_FRAMEWORK_    = 0x12);  /* sub framework */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_UMBRELLA_     = 0x13);  /* sub umbrella */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_CLIENT_       = 0x14);  /* sub client */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_LIBRARY_      = 0x15);  /* sub library */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_TWOLEVEL_HINTS_   = 0x16);  /* two-level namespace lookup hints */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_PREBIND_CKSUM_    = 0x17);  /* prebind checksum */
 };
 
 template <class AddressOffsetT>
 struct segment_command_template {
-    boost::uint32_t     cmd;            /* LC_SEGMENT */
+    boost::uint32_t     cmd;            /* LC_SEGMENT_ */
     boost::uint32_t     cmdsize;        /* includes sizeof section structs */
     char                segname[16];    /* segment name */
     AddressOffsetT      vmaddr;         /* memory address of this segment */
@@ -104,7 +105,7 @@ typedef section_template<boost::uint32_t> section_32_;
 typedef section_template<boost::uint64_t> section_64_;
 
 struct symtab_command_ {
-    boost::uint32_t    cmd;        /* LC_SYMTAB */
+    boost::uint32_t    cmd;        /* LC_SYMTAB_ */
     boost::uint32_t    cmdsize;    /* sizeof(struct symtab_command) */
     boost::uint32_t    symoff;     /* symbol table offset */
     boost::uint32_t    nsyms;      /* number of symbol table entries */
@@ -233,7 +234,7 @@ public:
     std::vector<std::string> sections() {
         std::vector<std::string> ret;
         section_names_gather f = { ret, f_ };
-        command_finder(load_command_types::LC_SEGMENT, f);
+        command_finder(load_command_types::LC_SEGMENT_, f);
         return ret;
     }
 
@@ -251,7 +252,7 @@ public:
     std::vector<std::string> symbols() {
         std::vector<std::string> ret;
         symbol_names_gather f = { ret, f_, 0 };
-        command_finder(load_command_types::LC_SYMTAB, f);
+        command_finder(load_command_types::LC_SYMTAB_, f);
         return ret;
     }
 
@@ -268,7 +269,7 @@ public:
         // section indexes start from 1
         symbol_names_gather f = { ret, f_, static_cast<std::size_t>(1 + (ret.begin() - it)) };
         ret.clear();
-        command_finder(load_command_types::LC_SYMTAB, f);
+        command_finder(load_command_types::LC_SYMTAB_, f);
         return ret;
     }
 };
