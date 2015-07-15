@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -20,7 +21,8 @@
 #include <boost/predef/os.h>
 
 #include <dlfcn.h>
-#if !BOOST_OS_MACOS
+#include <cstring> // strncmp
+#if !BOOST_OS_MACOS && !BOOST_OS_IOS
 #   include <link.h>
 #endif
 
@@ -45,14 +47,16 @@ public:
         unload();
     }
     
-    shared_library_impl(BOOST_RV_REF(shared_library_impl) sl)
-    {  
-        handle_ = sl.handle_; sl.handle_ = NULL;  
+    shared_library_impl(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT
+        : handle_(sl.handle_)
+    {
+        sl.handle_ = NULL;
     }
 
-    shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl)
-    {  
-        handle_ = sl.handle_; sl.handle_ = NULL; return *this;  
+    shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT {
+        handle_ = sl.handle_;
+        sl.handle_ = NULL;
+        return *this;
     }
 
     void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) {
@@ -80,9 +84,15 @@ public:
         if (!(mode & load_mode::append_decorations)) {
             handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
         } else {
+            boost::filesystem::path actual_path = (
+                std::strncmp(sl.filename().string().c_str(), "lib", 3)
+                ? (sl.parent_path() / "lib").native() + sl.filename().native()
+                : sl
+            );
+            actual_path += suffix();
+
             handle_ = dlopen(
-                // Apple requires '.so' extension
-                ((sl.parent_path() / "lib").native() + sl.filename().native() + ".so").c_str(),
+                actual_path.c_str(),
                 static_cast<int>(mode) & (~static_cast<int>(load_mode::append_decorations))
             );
         }
@@ -98,7 +108,7 @@ public:
 
         // Maybe user whanted to load the executable itself? Checking...
         // We assume that usualy user whants to load a dynamic library not the executable itself, that's why
-        // we try this anly after traditional load fails.
+        // we try this only after traditional load fails.
         boost::system::error_code prog_loc_err;
         boost::filesystem::path loc = boost::dll::detail::program_location_impl(prog_loc_err);
         if (!prog_loc_err && boost::filesystem::equivalent(sl, loc, prog_loc_err) && !prog_loc_err) {
@@ -140,7 +150,7 @@ public:
 
     static boost::filesystem::path suffix() {
         // https://sourceforge.net/p/predef/wiki/OperatingSystems/
-#if BOOST_OS_MACOS
+#if BOOST_OS_MACOS || BOOST_OS_IOS
         return ".dylib";
 #else
         return ".so";

@@ -19,7 +19,7 @@
 // for dlinfo
 #include <dlfcn.h>
 
-#if BOOST_OS_MACOS
+#if BOOST_OS_MACOS || BOOST_OS_IOS
 #   include <mach-o/dyld.h>
 #   include <mach-o/nlist.h>
 #   include <cstddef> // for std::ptrdiff_t
@@ -60,7 +60,7 @@ namespace boost { namespace dll { namespace detail {
 
 }}} // namespace boost::dll::detail
 
-#else // #if BOOST_OS_MACOS
+#else // #if BOOST_OS_MACOS || BOOST_OS_IOS
 #   include <link.h>
 
 namespace boost { namespace dll { namespace detail {
@@ -86,7 +86,7 @@ namespace boost { namespace dll { namespace detail {
 
 }}} // namespace boost::dll::detail
 
-#endif // #if BOOST_OS_MACOS
+#endif // #if BOOST_OS_MACOS || BOOST_OS_IOS
 
 #endif // BOOST_DLL_DETAIL_POSIX_PATH_FROM_HANDLE_HPP
 

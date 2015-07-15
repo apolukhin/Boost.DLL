@@ -63,7 +63,7 @@ namespace boost { namespace dll {
 // TODO: improve section permissions using following info:
 // http://stackoverflow.com/questions/6252812/what-does-the-aw-flag-in-the-section-attribute-mean
 
-#if !BOOST_OS_MACOS
+#if !BOOST_OS_MACOS && !BOOST_OS_IOS
 /*!
 * \brief Macro that puts symbol to a specific section. On MacOS all the sections are put into "__DATA" segment.
 * \param SectionName Name of the section. Must be a valid C identifier without quotes not longer than 8 bytes.
@@ -76,7 +76,7 @@ namespace boost { namespace dll {
     );                                                                                          \
     __attribute__ ((section (#SectionName)))                                                    \
     /**/
-#else // #if !BOOST_OS_MACOS
+#else // #if !BOOST_OS_MACOS && !BOOST_OS_IOS
 
 #define BOOST_DLL_SECTION(SectionName, Permissions)                                             \
     BOOST_STATIC_ASSERT_MSG(                                                                    \
@@ -86,7 +86,7 @@ namespace boost { namespace dll {
     __attribute__ ((section ( "__DATA," #SectionName)))                                         \
     /**/
 
-#endif // #if !BOOST_OS_MACOS
+#endif // #if #if !BOOST_OS_MACOS && !BOOST_OS_IOS
 
 #endif // #if BOOST_COMP_MSVC
 
@@ -244,11 +244,9 @@ namespace boost { namespace dll {
 
 
 #endif
-    
 
 
-
-}} // boost::dll
+}} // namespace boost::dll
 
 
 #endif // BOOST_DLL_ALIAS_HPP

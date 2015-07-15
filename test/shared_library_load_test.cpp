@@ -1,4 +1,5 @@
 // Copyright 2011-2012 Renato Tegon Forti
+// Copyright 2015 Antony Polukhin
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -287,6 +288,16 @@ int test_main(int argc, char* argv[])
         BOOST_CHECK(!sl.is_loaded());
         BOOST_CHECK(!sl);
    }
+
+    shared_library starts_with_lib(
+        boost::filesystem::path(argv[1]) / "library1" BOOST_B2_LIBRARY_DECORATIONS,
+        load_mode::append_decorations
+    );
+
+    starts_with_lib.load(
+        boost::filesystem::path(argv[1]) / "library1" BOOST_B2_LIBRARY_DECORATIONS,
+        load_mode::append_decorations
+    );
 
    return 0;
 }

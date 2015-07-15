@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -9,15 +10,17 @@
 
 #include <boost/config.hpp>
 #include <boost/dll/detail/system_error.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/predef/os.h>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif
 
-#if BOOST_OS_MACOS
+#if BOOST_OS_MACOS || BOOST_OS_IOS
 
 #include <mach-o/dyld.h>
+
 namespace boost { namespace dll { namespace detail {
     inline boost::filesystem::path program_location_impl(boost::system::error_code &ec) {
         char path[1024];

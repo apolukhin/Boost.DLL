@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -31,7 +32,7 @@ namespace boost { namespace dll {
 
 /*!
 * \brief Class that is capable of extracting different information from a library or binary file.
-* Currently understands ELF and PE formats on all the platforms.
+* Currently understands ELF, MACH-O and PE formats on all the platforms.
 */
 class library_info: private boost::noncopyable {
 private:
@@ -46,7 +47,7 @@ private:
                     sizeof(boost::dll::detail::pe_info32),
                     sizeof(boost::dll::detail::pe_info64),
                     sizeof(boost::dll::detail::macho_info32),
-                    sizeof(boost::dll::detail::macho_info64)                    
+                    sizeof(boost::dll::detail::macho_info64)
                 >
             >::type
         >::type::value
@@ -69,8 +70,8 @@ private:
 #endif
     }
 
-    static void throw_if_in_posix() {
-#if !BOOST_OS_WINDOWS
+    static void throw_if_in_linux() {
+#if !BOOST_OS_WINDOWS && !BOOST_OS_MACOS && !BOOST_OS_IOS
         boost::throw_exception(std::runtime_error("Not native format: not an ELF binary"));
 #endif
     }
@@ -92,19 +93,19 @@ private:
 
             new (impl_.address()) boost::dll::detail::elf_info64(f_);
         } else if (boost::dll::detail::pe_info32::parsing_supported(f_)) {
-            if (throw_if_not_native) { throw_if_in_posix(); throw_if_in_macos(); }
+            if (throw_if_not_native) { throw_if_in_linux(); throw_if_in_macos(); }
 
             new (impl_.address()) boost::dll::detail::pe_info32(f_);
         } else if (boost::dll::detail::pe_info64::parsing_supported(f_)) {
-            if (throw_if_not_native) { throw_if_in_posix(); throw_if_in_macos(); throw_if_in_32bit(); }
+            if (throw_if_not_native) { throw_if_in_linux(); throw_if_in_macos(); throw_if_in_32bit(); }
 
             new (impl_.address()) boost::dll::detail::pe_info64(f_);
         } else if (boost::dll::detail::macho_info32::parsing_supported(f_)) {
-            if (throw_if_not_native) { throw_if_in_posix(); throw_if_in_windows(); }
+            if (throw_if_not_native) { throw_if_in_linux(); throw_if_in_windows(); }
 
             new (impl_.address()) boost::dll::detail::macho_info32(f_);
         } else if (boost::dll::detail::macho_info64::parsing_supported(f_)) {
-            if (throw_if_not_native) { throw_if_in_posix(); throw_if_in_windows(); throw_if_in_32bit(); }
+            if (throw_if_not_native) { throw_if_in_linux(); throw_if_in_windows(); throw_if_in_32bit(); }
 
             new (impl_.address()) boost::dll::detail::macho_info64(f_);
         } else {

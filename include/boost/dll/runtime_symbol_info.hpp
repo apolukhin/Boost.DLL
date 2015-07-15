@@ -58,6 +58,20 @@ namespace detail {
     * \param symbol Symbol which location is to be determinated.
     * \return Path to the binary object that holds symbol or empty path in case error.
     * \throws std::bad_alloc in case of insufficient memory.
+    *
+    * \b Examples:
+    * \code
+    * int var;
+    * void foo() {}
+    *
+    * int main() {
+    *    dll::symbol_location(var);                     // returns program location
+    *    dll::symbol_location(foo);                     // returns program location
+    *    dll::symbol_location(std::cerr);               // returns location of libstdc++: "/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
+    *    dll::symbol_location(std::placeholders::_1);   // returns location of libstdc++: "/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
+    *    dll::symbol_location(std::puts);               // returns location of libc: "/lib/x86_64-linux-gnu/libc.so.6"
+    * }
+    * \endcode
     */
     template <class T>
     inline boost::filesystem::path symbol_location(const T& symbol) {

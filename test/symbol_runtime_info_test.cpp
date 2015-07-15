@@ -104,6 +104,10 @@ int test_main(int argc, char* argv[]) {
     BOOST_CHECK(
         lib.get_alias<boost::filesystem::path()>("module_location_from_itself")() == lib.location()
     );
+
+    // Checking docs content
+    std::cout << "\nsymbol_location(std::cerr); // " << symbol_location(std::cerr);
+    std::cout << "\nsymbol_location(std::puts); // " << symbol_location(std::puts);
     return 0;
 }
 

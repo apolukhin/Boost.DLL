@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -11,6 +12,7 @@
 #include <boost/dll/detail/macho_info.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/test/minimal.hpp>
+#include <boost/predef/os.h>
 
 #if BOOST_OS_WINDOWS
     #include <windows.h>
