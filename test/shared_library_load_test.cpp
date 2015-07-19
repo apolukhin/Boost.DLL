@@ -13,7 +13,11 @@
 // Unit Tests
 
 inline bool lib_path_equal(const boost::filesystem::path& lhs, const boost::filesystem::path& rhs) {
-    return lhs == rhs;
+    const bool res = (lhs == rhs);
+    if (!res) {
+        std::cerr << "lhs != rhs: " << lhs << " != " << rhs << '\n';
+    }
+    return res;
 }
 
 int test_main(int argc, char* argv[])

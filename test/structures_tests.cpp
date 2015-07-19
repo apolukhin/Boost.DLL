@@ -258,7 +258,7 @@ void generic_header_check(const T& v1, const dd::section_template<AddrT>& v2) {
     CHECK_FIELD(reloff);  
     CHECK_FIELD(nreloc);  
     CHECK_FIELD(flags);   
-    CHECK_FIELD(reserved);
+    //CHECK_FIELD(reserved vs reserveed1&reserved2);
 }
 
 template <class T>
@@ -284,7 +284,7 @@ void generic_header_check(const T& v1, const dd::nlist_template<AddrT>& v2) {
     CHECK_FIELD(n_value);
 }
 
-template <class T, class AddrT>
+template <class T>
 void generic_header_check(const T& v1, const dd::load_command_& v2) {
     BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
     
