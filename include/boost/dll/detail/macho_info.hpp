@@ -67,6 +67,34 @@ struct load_command_types {
     BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SUB_LIBRARY_      = 0x15);  /* sub library */
     BOOST_STATIC_CONSTANT(boost::uint32_t, LC_TWOLEVEL_HINTS_   = 0x16);  /* two-level namespace lookup hints */
     BOOST_STATIC_CONSTANT(boost::uint32_t, LC_PREBIND_CKSUM_    = 0x17);  /* prebind checksum */
+/*
+ * After MacOS X 10.1 when a new load command is added that is required to be
+ * understood by the dynamic linker for the image to execute properly the
+ * LC_REQ_DYLD bit will be or'ed into the load command constant.  If the dynamic
+ * linker sees such a load command it it does not understand will issue a
+ * "unknown load command required for execution" error and refuse to use the
+ * image.  Other load commands without this bit that are not understood will
+ * simply be ignored.
+ */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_REQ_DYLD_         = 0x80000000);
+
+/*
+ * load a dynamically linked shared library that is allowed to be missing
+ * (all symbols are weak imported).
+ */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LOAD_WEAK_DYLIB_  = (0x18 | LC_REQ_DYLD_));
+
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SEGMENT_64_       = 0x19);                    /* 64-bit segment of this file to be mapped */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ROUTINES_64_      = 0x1a);                    /* 64-bit image routines */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_UUID_             = 0x1b);                    /* the uuid */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_RPATH_            = (0x1c | LC_REQ_DYLD_));   /* runpath additions */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_CODE_SIGNATURE_   = 0x1d);                    /* local of code signature */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_SEGMENT_SPLIT_INFO_= 0x1e);                   /* local of info to split segments */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_REEXPORT_DYLIB_   = (0x1f | LC_REQ_DYLD_));   /* load and re-export dylib */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_LAZY_LOAD_DYLIB_  = 0x20);                    /* delay load of dylib until first use */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_ENCRYPTION_INFO_  = 0x21);                    /* encrypted segment information */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_DYLD_INFO_        = 0x22);                    /* compressed dyld information */
+    BOOST_STATIC_CONSTANT(boost::uint32_t, LC_DYLD_INFO_ONLY_   = (0x22|LC_REQ_DYLD_));     /* compressed dyld information only */
 };
 
 template <class AddressOffsetT>
@@ -88,7 +116,7 @@ typedef segment_command_template<boost::uint32_t> segment_command_32_;
 typedef segment_command_template<boost::uint64_t> segment_command_64_;
 
 template <class AddressOffsetT>
-struct section_template { /* for 32-bit architectures */
+struct section_template {
     char                sectname[16];   /* name of this section */
     char                segname[16];    /* segment this section goes in */
     AddressOffsetT      addr;           /* memory address of this section */
@@ -136,6 +164,8 @@ class macho_info: public x_info_interface {
     typedef boost::dll::detail::symtab_command_                             symbol_header_t;
     typedef boost::dll::detail::nlist_template<AddressOffsetT>              nlist_t;
 
+    BOOST_STATIC_CONSTANT(boost::uint32_t, SEGMENT_CMD_NUMBER = (sizeof(AddressOffsetT) > 4 ? load_command_types::LC_SEGMENT_64_ : load_command_types::LC_SEGMENT_));
+
 public:
     static bool parsing_supported(boost::filesystem::ifstream& f) {
         static const uint32_t magic_bytes = (sizeof(AddressOffsetT) <= sizeof(uint32_t) ? 0xfeedface : 0xfeedfacf);
@@ -164,10 +194,7 @@ private:
                 continue;
             }
 
-            f_.seekg(static_cast<boost::filesystem::ifstream::pos_type>(
-                f_.tellg() - static_cast<boost::filesystem::ifstream::pos_type>(sizeof(command))
-            ));
-
+            f_.seekg(pos);
             callback_f();
             f_.seekg(pos + static_cast<boost::filesystem::ifstream::pos_type>(command.cmdsize));
         }
@@ -186,8 +213,8 @@ private:
             for (std::size_t j = 0; j < segment.nsects; ++j) {
                 f_.read((char*)&section, sizeof(section));
                 // `segname` goes right after the `sectname`.
-                // Forsing `sectname` to end on '\0'
-                section.segname[0] = '\0';  
+                // Forcing `sectname` to end on '\0'
+                section.segname[0] = '\0';
                 ret.push_back(section.sectname);
                 if (ret.back().empty()) {
                     ret.pop_back(); // Do not show empty names
@@ -223,9 +250,18 @@ private:
                     continue; // Not in the required section
                 }
 
-                f_.seekg(symbh.symoff + symbol.n_strx);
+                f_.seekg(symbh.stroff + symbol.n_strx);
                 getline(f_, symbol_name, '\0');
-                ret.push_back(symbol_name);
+                if (symbol_name.empty()) {
+                    continue;
+                }
+
+                if (symbol_name[0] == '_') {
+                    // Linker adds additional '_' symbol. Could not find official docs for that case.
+                    ret.push_back(symbol_name.c_str() + 1);
+                } else {
+                    ret.push_back(symbol_name);
+                }
             }
         }
     };
@@ -234,7 +270,7 @@ public:
     std::vector<std::string> sections() {
         std::vector<std::string> ret;
         section_names_gather f = { ret, f_ };
-        command_finder(load_command_types::LC_SEGMENT_, f);
+        command_finder(SEGMENT_CMD_NUMBER, f);
         return ret;
     }
 
@@ -267,7 +303,7 @@ public:
         }
 
         // section indexes start from 1
-        symbol_names_gather f = { ret, f_, static_cast<std::size_t>(1 + (ret.begin() - it)) };
+        symbol_names_gather f = { ret, f_, static_cast<std::size_t>(1 + (it - ret.begin())) };
         ret.clear();
         command_finder(load_command_types::LC_SYMTAB_, f);
         return ret;
