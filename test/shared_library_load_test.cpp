@@ -13,7 +13,9 @@
 // Unit Tests
 
 inline bool lib_path_equal(const boost::filesystem::path& lhs, const boost::filesystem::path& rhs) {
-    const bool res = (lhs == rhs);
+    // ./b2 may create symlinks. We assume that there are no two files with same names,
+    // si if `lhs.filename() == rhs.filename()` then paths are same.
+    const bool res = (lhs.filename() == rhs.filename() && lhs.is_absolute() && rhs.is_absolute());
     if (!res) {
         std::cerr << "lhs != rhs: " << lhs << " != " << rhs << '\n';
     }

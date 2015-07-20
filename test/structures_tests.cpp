@@ -15,9 +15,10 @@
 #include <boost/predef/os.h>
 
 #if BOOST_OS_WINDOWS
-    #include <windows.h>
+#   include <windows.h>
 #elif BOOST_OS_MACOS || BOOST_OS_IOS
-    #include <mach-o/loader.h>
+#   include <mach-o/loader.h>
+#   include <mach-o/nlist.h>
 #else
     #include <elf.h>
 #endif
@@ -237,7 +238,7 @@ void generic_header_check(const T& v1, const dd::segment_command_template<AddrT>
     CHECK_FIELD(segname);  
     CHECK_FIELD(vmaddr);       
     CHECK_FIELD(vmsize);       
-    CHECK_FIELD(fileoff);      
+    CHECK_FIELD(fileoff);
     CHECK_FIELD(filesize);     
     CHECK_FIELD(maxprot);      
     CHECK_FIELD(initprot);     
@@ -317,7 +318,7 @@ int test_main(int /*argc*/, char* /*argv*/[]) {
     generic_header_check(::section(), dd::section_32_());
     generic_header_check(::section_64(), dd::section_64_());
 
-    generic_header_check(::load_command(), dd::load_command_())
+    generic_header_check(::load_command(), dd::load_command_());
     generic_header_check(::symtab_command(), dd::symtab_command_());
 
     generic_header_check(::nlist(), dd::nlist_32_());
