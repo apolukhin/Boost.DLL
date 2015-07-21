@@ -321,8 +321,10 @@ int test_main(int /*argc*/, char* /*argv*/[]) {
     generic_header_check(::load_command(), dd::load_command_());
     generic_header_check(::symtab_command(), dd::symtab_command_());
 
-    generic_header_check(::nlist(), dd::nlist_32_());
-    generic_header_check(::nlist_64(), dd::nlist_64_());
+    struct ::nlist nl32_var;
+    generic_header_check(nl32_var, dd::nlist_32_());
+    struct ::nlist_64 nl64_var;
+    generic_header_check(nl64_var, dd::nlist_64_());
 
 #else
     elf_header_checks(::Elf32_Ehdr(), dd::Elf32_Ehdr_());
