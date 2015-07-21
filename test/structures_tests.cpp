@@ -278,7 +278,7 @@ template <class T, class AddrT>
 void generic_header_check(const T& v1, const dd::nlist_template<AddrT>& v2) {
     BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
     
-    CHECK_FIELD(n_strx);
+    //CHECK_FIELD(n_strx);
     CHECK_FIELD(n_type);
     CHECK_FIELD(n_sect);
     CHECK_FIELD(n_desc);
