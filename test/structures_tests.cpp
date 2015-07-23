@@ -226,7 +226,7 @@ void generic_header_check(const T& v1, const dd::mach_header_template<AddrT>& v2
     CHECK_FIELD(filetype);
     CHECK_FIELD(ncmds);
     CHECK_FIELD(sizeofcmds);
-    CHECK_FIELD(flags);
+    //CHECK_FIELD(flags);
 }
 
 template <class T, class AddrT>
