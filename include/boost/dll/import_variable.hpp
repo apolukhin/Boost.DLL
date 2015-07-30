@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -21,27 +22,12 @@
 /// functions that hold a shared pointer to the instance of
 /// boost::dll::shared_library.
 
-namespace boost { namespace dll {
-
-namespace detail {
-    struct ptr_holding_empty_deleter {
-        boost::shared_ptr<shared_library> lib_;
-
-        explicit ptr_holding_empty_deleter(const boost::shared_ptr<shared_library>& lib)
-            : lib_(lib)
-        {}
-
-        inline void operator()(const void*) const BOOST_NOEXCEPT { /*do nothing*/ }
-    };
-} // namespace detail
-
-namespace explicit_api {
-
+namespace boost { namespace dll { namespace explicit_api {
 
 //! \overload boost::dll::import_variable(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name, load_mode::type mode)
 template <class T>
 boost::shared_ptr<T> import_variable(const boost::shared_ptr<boost::dll::shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<T>(&lib->get<T>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
+    return boost::shared_ptr<T>(lib, &lib->get<T>(variable_name));
 }
 
 /*!
@@ -97,7 +83,7 @@ boost::shared_ptr<T> import_variable(const boost::filesystem::path& lib, boost::
 //! \overload boost::dll::import_variable_alias(const boost::shared_ptr<shared_library>& lib, boost::string_ref variable_name, load_mode::type mode)
 template <class T>
 boost::shared_ptr<T> import_variable_alias(const boost::shared_ptr<boost::dll::shared_library>& lib, boost::string_ref variable_name) {
-    return boost::shared_ptr<T>(lib->get<T*>(variable_name), boost::dll::detail::ptr_holding_empty_deleter(lib));
+    return boost::shared_ptr<T>(lib, lib->get<T*>(variable_name));
 }
 
 /*!
