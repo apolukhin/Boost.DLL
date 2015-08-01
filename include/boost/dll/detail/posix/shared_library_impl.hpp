@@ -60,9 +60,10 @@ public:
     }
 
     void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) {
+        typedef int native_mode_t;
         unload();
 
-        // Do not allow opening NULL paths. User must use load_self() instead
+        // Do not allow opening NULL paths. User must use program_location() instead
         if (sl.empty()) {
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,
@@ -73,17 +74,20 @@ public:
         }
 
         // Fixing modes
-        if (!(mode & RTLD_LAZY || mode & RTLD_NOW)) {
+        if (!(mode & load_mode::rtld_now)) {
             mode |= load_mode::rtld_lazy;
         }
 
-        if (!(mode & RTLD_LOCAL || mode & RTLD_GLOBAL)) {
+        if (!(mode & load_mode::rtld_global)) {
             mode |= load_mode::rtld_local;
         }
 
-        if (!(mode & load_mode::append_decorations)) {
-            handle_ = dlopen(sl.c_str(), static_cast<int>(mode));
-        } else {
+        // Trying to open with appended decorations
+        if (!!(mode & load_mode::append_decorations)) {
+            mode = static_cast<load_mode::type>(
+                static_cast<native_mode_t>(mode) & (~static_cast<native_mode_t>(load_mode::append_decorations))
+            );
+
             boost::filesystem::path actual_path = (
                 std::strncmp(sl.filename().string().c_str(), "lib", 3)
                 ? (sl.parent_path() / "lib").native() + sl.filename().native()
@@ -91,12 +95,14 @@ public:
             );
             actual_path += suffix();
 
-            handle_ = dlopen(
-                actual_path.c_str(),
-                static_cast<int>(mode) & (~static_cast<int>(load_mode::append_decorations))
-            );
+            handle_ = dlopen(actual_path.c_str(), static_cast<native_mode_t>(mode));
+            if (handle_) {
+                return;
+            }
         }
 
+        // Opening by exactly specified path
+        handle_ = dlopen(sl.c_str(), static_cast<native_mode_t>(mode));
         if (handle_) {
             return;
         }
@@ -116,8 +122,8 @@ public:
             // named by the null-terminated string filename and returns an opaque 
             // "handle" for the dynamic library. If filename is NULL, then the 
             // returned handle is for the main program.
-            handle_ = dlopen(NULL, static_cast<int>(mode) & (~static_cast<int>(load_mode::append_decorations)));
             ec.clear();
+            handle_ = dlopen(NULL, static_cast<native_mode_t>(mode));
             if (!handle_) {
                 ec = boost::system::error_code(
                     boost::system::errc::bad_file_descriptor,

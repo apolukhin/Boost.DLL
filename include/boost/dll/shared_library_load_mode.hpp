@@ -192,11 +192,13 @@ enum type {
     *
     * \b Default: disabled
     *
-    * Append a platform specific extension and prefix to shared_library filename.
+    * Append a platform specific extension and prefix to shared library filename before trying to load it.
+    * If load attempt fails, try to load with exactly specified name.
     *
     * \b Example:
     * \code
-    * // Opens `./my_plugins/plugin1.dll` on Windows, `./my_plugins/libplugin1.so` on Linux and Apple
+    * // Opens `./my_plugins/plugin1.dll` on Windows, `./my_plugins/libplugin1.so` on Linux, `./my_plugins/libplugin1.dylib` on MacOS.
+    * // If that fails, loads `./my_plugins/plugin1`
     * boost::dll::shared_library lib("./my_plugins/plugin1", load_mode::append_decorations);
     * \endcode
     */

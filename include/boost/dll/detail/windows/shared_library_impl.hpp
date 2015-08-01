@@ -40,54 +40,58 @@ public:
         unload();
     }
     
-    shared_library_impl(BOOST_RV_REF(shared_library_impl) sl)
-    {  
-        handle_ = sl.handle_;   sl.handle_ = NULL;  
+    shared_library_impl(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT
+        : handle_(sl.handle_)
+    {
+        sl.handle_ = NULL;
     }
 
-    shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl)
-    {  
-        handle_ = sl.handle_; sl.handle_ = NULL; return *this;  
+    shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT {
+        handle_ = sl.handle_;
+        sl.handle_ = NULL;
+        return *this;
     }
 
-    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) BOOST_NOEXCEPT {
+    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) {
+        typedef boost::detail::winapi::DWORD_ native_mode_t;
         unload();
 
-        boost::detail::winapi::DWORD_ flags = static_cast<boost::detail::winapi::DWORD_>(mode);
+        // Trying to open with appended decorations
+        if (!!(mode & load_mode::append_decorations)) {
+            mode = static_cast<load_mode::type>(
+                static_cast<native_mode_t>(mode) & (~static_cast<native_mode_t>(load_mode::append_decorations)
+            );
 
-        // From MSDN: If the string specifies a module name without a path and the
-        // file name extension is omitted, the function appends the default library
-        // extension .dll to the module name.
-        //
-        // From experiments: Default library extension appended to the modukle name even if
-        // we have some path. So we do not check for path, only for extension. We can not be sure that 
-        // such behavior remain across all platforms, so we add L".dll" by hand.
-        const bool do_append_deco = !!(mode & load_mode::append_decorations);
-        if (!do_append_deco && sl.has_extension()) {
-            handle_ = boost::detail::winapi::LoadLibraryExW(sl.c_str(), 0, flags);
-        } else if (!do_append_deco) {
-            handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".").c_str(), 0, flags);
-        } else {
-            flags &= ~static_cast<boost::detail::winapi::DWORD_>(load_mode::append_decorations);
-            handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, flags);
+            handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, static_cast<native_mode_t>(mode));
             if (!handle_) {
                 // MinGW loves 'lib' prefix and puts it even on Windows platform
                 handle_ = boost::detail::winapi::LoadLibraryExW(
-                ((sl.parent_path() / L"lib").native() + sl.filename().native() + L".dll").c_str(), 0, flags);
+                    ((sl.parent_path() / L"lib").native() + sl.filename().native() + L".dll").c_str(),
+                    0,
+                    static_cast<native_mode_t>(mode)
+                );
             }
             
             if (handle_) {
                 return;
             }
-            
-            ec = boost::dll::detail::last_error_code();
-            
-            // Possibly we were attempting to load an executable, then decorations must not be applied
-            handle_ = boost::detail::winapi::LoadLibraryExW(sl.c_str(), 0, flags);
-            if (handle_) {
-                ec.clear();
-            }
         }
+
+        // From MSDN: If the string specifies a module name without a path and the
+        // file name extension is omitted, the function appends the default library
+        // extension .dll to the module name.
+        //
+        // From experiments: Default library extension appended to the module name even if
+        // we have some path. So we do not check for path, only for extension. We can not be sure that 
+        // such behavior remain across all platforms, so we add L".dll" by hand.
+        if (sl.has_extension()) {
+            handle_ = boost::detail::winapi::LoadLibraryExW(sl.c_str(), 0, static_cast<native_mode_t>(mode));
+        } else {
+            handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".").c_str(), 0, static_cast<native_mode_t>(mode));
+        }
+
+        // LoadLibraryExW method is capable of self loading from program_location() path. No special actions
+        // must be taken to allow self loading.
 
         if (!handle_) {
             ec = boost::dll::detail::last_error_code();
