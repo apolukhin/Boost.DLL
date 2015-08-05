@@ -1,13 +1,13 @@
 [/
-    Copyright 2014 Renato Tegon Forti, Antony Polukhin
+    Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+    Copyright 2015 Antony Polukhin.
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
 
 [section:introduction Getting started]
 
-To start with the library you only need to include `<boost/dll.hpp>` header. After that you are free to import and export functions and variables:
-
+Boost.DLL is a header only library. To start with the library you only need to include `<boost/dll.hpp>` header. After that you are free to import and export functions and variables. Importing code requires linking with `boost_filesystem` and `boost_system` libraries.
 
 [import ../example/getting_started.cpp]
 [import ../example/getting_started_library.cpp]
@@ -17,28 +17,39 @@ using namespace boost;
 ```
 
 [table:starting
-[[ In DLL/DSL sources: ] [ In code that uses DLL/DSL: ] [ Function description: ]]
+[[ Import (code that uses DLL/DSL): ] [ Export (DLL/DSL sources): ] [ Functions description: ]]
 [
-    [ [getting_started_exports_cpp11_function] ]
-    [ [getting_started_imports_cpp11_function] ]
-    [ [macroref BOOST_DLL_AUTO_ALIAS] [funcref boost::dll::import_alias import_alias<T>(...)] ]
-]
-[
-    [ [getting_started_exports_c_function] ]
-    [ [getting_started_imports_c_function] ]
-    [ [funcref boost::dll::import import<T>(...) ] ]
-][
-    [ [getting_started_exports_cpp_function] ]
     [ [getting_started_imports_cpp_function] ]
-    [ [macroref BOOST_DLL_AUTO_ALIAS] [funcref boost::dll::import_alias import_alias<T>(...)] ]
+    [ [getting_started_exports_cpp_function] ]
+    [
+        [funcref boost::dll::import_alias import_alias<T>(...)]
+
+        [macroref BOOST_DLL_AUTO_ALIAS]
+    ]
 ][
-    [ [getting_started_exports_c_variable] ]
-    [ [getting_started_imports_c_variable] ]
+    [ [getting_started_imports_cpp_variable] ]
+    [ [getting_started_exports_cpp_variable] ]
+    [
+        [funcref boost::dll::import_alias import_alias<T>(...)]
+
+        [macroref BOOST_DLL_AUTO_ALIAS]
+    ]
+][
+    [ [getting_started_imports_c_function] ]
+    [ [getting_started_exports_c_function] ]
     [ [funcref boost::dll::import import<T>(...) ] ]
 ][
-    [ [getting_started_exports_cpp_variable] ]
-    [ [getting_started_imports_cpp_variable] ]
-    [ [macroref BOOST_DLL_AUTO_ALIAS] [funcref boost::dll::import_alias import_alias<T>(...)] ]
+    [ [getting_started_imports_c_variable] ]
+    [ [getting_started_exports_c_variable] ]
+    [ [funcref boost::dll::import import<T>(...) ] ]
+][
+    [ [getting_started_imports_cpp11_function] ]
+    [ [getting_started_exports_cpp11_function] ]
+    [
+        [macroref BOOST_DLL_AUTO_ALIAS]
+
+        [funcref boost::dll::import_alias import_alias<T>(...)]
+    ]
 ]]
 
 In all the cases above it is safe to use imported variable or function because the
@@ -46,7 +57,7 @@ In all the cases above it is safe to use imported variable or function because t
 
 [macroref BOOST_SYMBOL_EXPORT] is just a macro from Boost.Config that expands into the `__declspec(dllexport)` or `__attribute__((visibility("default")))`. You are free to use your own macro for exports.
 
-[note On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recommended for use on Linux/POSIX.]
+[note On Linux/POSIX/MacOS link with library "dl". "-fvisibility=hidden" flag is also recommended.]
 
 If you need a low level API [classref boost::dll::shared_library] will suit you. If you want to load a library,
 just construct that class with a path to the library as a parameter:

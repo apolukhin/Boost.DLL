@@ -1,5 +1,6 @@
 [/
-    Copyright 2014 Renato Tegon Forti, Antony Polukhin
+    Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+    Copyright 2015 Antony Polukhin.
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
@@ -14,13 +15,7 @@
 * `import_function*` and `import_variable*` methods were moved to `explicit_api` namespace
 and *will be removed* in next release (or moved to the `detail` namespace, which is almost the same)
 * *TODO:*
-    * improve load_mode::append_decorations (make it work with executables, take care of files starting on lib)
     * rename `shared_library::search_symbol()` to `shared_library::exists()`/`shared_library::count()`
-    * improve `load_mode` by adding rare Windows and POSIX specific load modes
-    * think of library load directories
-    * Optional: COFF, A.OUT file formats support
-
-    * Test Mach-O file format support
 
 [h5 0.2]
 

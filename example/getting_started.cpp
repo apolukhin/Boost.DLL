@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -18,6 +19,7 @@ int test_main(int argc, char* argv[]) {
     filesystem::path path_to_shared_library = shared_lib_path(argv[1], L"getting_started_library");
     
     //[getting_started_imports_c_function
+    // Importing pure C function
     function<int(int)> c_func = dll::import<int(int)>(
             path_to_shared_library, "c_func_name"
         );
@@ -28,6 +30,7 @@ int test_main(int argc, char* argv[]) {
 
 
     //[getting_started_imports_c_variable
+    // Importing pure C variable
     shared_ptr<int> c_var = dll::import<int>(
             path_to_shared_library, "c_variable_name"
         );
@@ -39,9 +42,9 @@ int test_main(int argc, char* argv[]) {
 
 
     //[getting_started_imports_cpp_function
-    typedef std::string(func_type)(const std::string&);
-
-    function<func_type> cpp_func = dll::import_alias<func_type>(
+    // Importing C++ function
+    typedef std::string str;
+    function<str(const str&)> cpp_func = dll::import_alias<str(const str&)>(
             path_to_shared_library, "cpp_function_name"
         );
     //]
@@ -50,9 +53,10 @@ int test_main(int argc, char* argv[]) {
     std::string cpp_func_res = cpp_func(std::string("In importer.")); 
     BOOST_CHECK(cpp_func_res == "In importer. Hello from lib!");
 
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_AUTO_DECLARATIONS)
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
     //[getting_started_imports_cpp11_function
-    auto cpp11_func = dll::import_alias<int(std::string&&)>(
+    // You may use `auto cpp11_func` here for shortness
+    function<int(std::string&&)> cpp11_func = dll::import_alias<int(std::string&&)>(
             path_to_shared_library, "cpp11_function"
         );
     //]
@@ -63,7 +67,8 @@ int test_main(int argc, char* argv[]) {
 #endif
 
 
-    //[getting_started_imports_cpp_variable    
+    //[getting_started_imports_cpp_variable
+    // Importing C++ variable
     shared_ptr<std::string> cpp_var = dll::import_alias<std::string>(
             path_to_shared_library, "cpp_variable_name"
         );

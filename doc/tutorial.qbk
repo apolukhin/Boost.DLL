@@ -167,7 +167,7 @@ Computed Value: 0
 Destructing my_plugin_static
 ]
 
-[note If we want o make a traditional plugin that is located in a separate shared library, all we need to do is 
+[note If we want to make a traditional plugin that is located in a separate shared library, all we need to do is 
 remove the `#include "static_plugin.hpp"` line and replace `dll::program_location()` with plugin location and name.]
 
 [*Full sources:]
@@ -246,6 +246,7 @@ All you need to do, is write a simple class that stores callbacks and calls them
 In the example above `my_namespace::on_unload` is a singleton structure that holds a vector of callbacks and
 calls all the callbacks at destruction.
 
+[import ../example/tutorial6/tutorial6.cpp]
 Now we can load this library and provide a callback:
 [callplugcpp_tutorial6]
 
@@ -260,6 +261,7 @@ After library unload.
 [*Full sources:]
 
 * [example_ref tutorial6/on_unload_lib.cpp]
+* [example_ref tutorial6/tutorial6.cpp]
 
 __to_top
 
