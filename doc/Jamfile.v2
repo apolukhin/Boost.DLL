@@ -38,6 +38,7 @@ local doxygen_params =
         \"BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library)= \\
             shared_library(const shared_library&) = delete; \\
             shared_library& operator=(const shared_library&) = delete; \" \\
+        \"BOOST_DLL_IMPORT_RESULT_TYPE=auto\" \\
         \"BOOST_DLL_DOXYGEN\" "
     ;
 
@@ -62,8 +63,6 @@ doxygen autodoc_shared_library_refcountable
     :
         [ glob
             ../include/boost/dll/import.hpp
-#            ../include/boost/dll/import_function.hpp
-#            ../include/boost/dll/import_variable.hpp
         ]
     :
         $(doxygen_params)

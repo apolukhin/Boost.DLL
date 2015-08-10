@@ -47,7 +47,7 @@ inline boost::shared_ptr<my_refcounting_api> bind(my_refcounting_api* ptr) {
 //[plugcpp_get_plugin_refcounting
 #include <boost/dll/import.hpp>
 inline boost::shared_ptr<my_refcounting_api> get_plugin(
-    boost::filesystem::path path, boost::string_ref func_name) 
+    boost::filesystem::path path, const char* func_name) 
 {
     typedef my_refcounting_api*(func_t)();
     boost::function<func_t> f = boost::dll::import_alias<func_t>(

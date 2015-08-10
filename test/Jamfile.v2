@@ -84,6 +84,5 @@ project
         ]
         [ run ../example/tutorial9/tutorial9.cpp : : : <dependency>install-bin ]
         [ compile-fail section_name_too_big.cpp ]
-        [ compile-fail not_a_function.cpp ]
     ;
 }
