@@ -8,17 +8,16 @@
 [section Revision History]
 
 
-[h5 0.3 (Current active development version)]
+[h5 1.0 (First Boost release)]
 
 * Removed `shared_library::load_self()`
 * Renamed `shared_library::path()` to `shared_library::location()`
-* `import_function*` and `import_variable*` functions were refactored into `import*`
+* `import_function*` and `import_variable*` functions were refactored into `import*` functions
 * Dropped dependency to 'boost::string_ref'
 * Multiple MacOS fixes, library now works on MacOS
 * Performance and memory optimizations for `import*` functions
 * Refactored `shared_library::load()` implementation, unified `load_mode::append_decorations` behavior across platforms
-* *TODO:*
-    * rename `shared_library::search_symbol()` to `shared_library::exists()`/`shared_library::count()`
+* Renamed `shared_library::search_symbol()` to `shared_library::has_symbol()`
 
 [h5 0.2]
 

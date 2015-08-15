@@ -21,7 +21,7 @@ std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugi
     for (std::size_t i = 0; i < plugins.size(); ++i) {
         std::cout << "Loading plugin: " << plugins[i] << '\n';
         lib->load(plugins[i], dll::load_mode::append_decorations);
-        if (!lib->search_symbol("create_plugin")) {
+        if (!lib->has_symbol("create_plugin")) {
             // no such symbol
             continue;
         }

@@ -296,19 +296,19 @@ public:
     * \throw Nothing.
     *
     */
-    bool search_symbol(const char* symbol_name) const BOOST_NOEXCEPT {
+    bool has_symbol(const char* symbol_name) const BOOST_NOEXCEPT {
         boost::system::error_code ec;
         return is_loaded() && !!base_t::symbol_addr(symbol_name, ec) && !ec;
     }
 
-    //! \overload bool search_symbol(const char* symbol_name) const
-    bool search_symbol(const std::string& symbol_name) const BOOST_NOEXCEPT {
-        return search_symbol(symbol_name.c_str());
+    //! \overload bool has_symbol(const char* symbol_name) const
+    bool has_symbol(const std::string& symbol_name) const BOOST_NOEXCEPT {
+        return has_symbol(symbol_name.c_str());
     }
 
     /*!
     * Returns reference to the symbol (function or variable) with the given name from the loaded library.
-    * This call will always succeed and throw nothing if call to `search_symbol(const char* )`
+    * This call will always succeed and throw nothing if call to `has_symbol(const char* )`
     * member function with the same symbol name returned `true`.
     *
     * If using this call for an alias name do not forget to add a pointer to a resulting type.

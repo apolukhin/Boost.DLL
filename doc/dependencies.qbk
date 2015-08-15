@@ -1,5 +1,6 @@
 [/
     Copyright 2014 Renato Tegon Forti, Antony Polukhin
+    Copyright 2015 Antony Polukhin
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
@@ -11,7 +12,6 @@ and they must be available in order to compile programs that use Boost.DLL:
 
 * Boost.System for the boost::system::error_code and boost::system::system_error classes.
 * Boost.Filesystem for directory manipulation.
-* Boost.StringRef simplifies usage of some of the methods.
 
 Refcountable part of Boost.DLL also depends on:
 
