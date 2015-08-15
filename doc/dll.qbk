@@ -8,7 +8,7 @@
 [library Boost.DLL
     [quickbook 1.5]
     [authors [Forti, Renato][Polukhin, Antony]]
-    [copyright 2014 Renato Tegon Forti, Antony Polukhin]
+    [copyright 2014 Renato Tegon Forti, Antony Polukhin, 2015 Antony Polukhin]
     [id dll]
     [dirname dll]
     [license
