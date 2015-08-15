@@ -17,7 +17,6 @@
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
-#include <boost/utility/string_ref.hpp>
 #include <boost/predef/os.h>
 
 #include <dlfcn.h>
@@ -163,9 +162,9 @@ public:
 #endif
     }
 
-    void* symbol_addr(boost::string_ref sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
+    void* symbol_addr(const char* sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
         // dlsym - obtain the address of a symbol from a dlopen object
-        void* const symbol = dlsym(handle_, sb.data());
+        void* const symbol = dlsym(handle_, sb);
         if (symbol == NULL) {
             ec = boost::system::error_code(
                 boost::system::errc::invalid_seek,

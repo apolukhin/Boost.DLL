@@ -71,7 +71,7 @@ namespace detail {
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to \forcedlink{shared_library}`::search_symbol(boost::string_ref )`
+* This call will succeed if call to \forcedlink{shared_library}`::search_symbol(const char* )`
 * function with the same symbol name returned `true`.
 *
 * For importing symbols by \b alias names use \forcedlink{import_alias} method.
@@ -147,7 +147,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import(const boost::filesystem::path& lib, const st
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
-* This call will succeed if call to \forcedlink{shared_library}`::search_symbol(boost::string_ref )`
+* This call will succeed if call to \forcedlink{shared_library}`::search_symbol(const char* )`
 * function with the same symbol name returned `true`.
 *
 * For importing symbols by \b non \b alias names use \forcedlink{import} method.

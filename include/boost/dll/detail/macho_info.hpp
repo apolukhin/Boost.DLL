@@ -292,7 +292,7 @@ public:
         return ret;
     }
 
-    std::vector<std::string> symbols(boost::string_ref section_name) {
+    std::vector<std::string> symbols(const char* section_name) {
         // Not very optimal solution
         std::vector<std::string> ret = sections();
         std::vector<std::string>::iterator it = std::find(ret.begin(), ret.end(), section_name);

@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -293,7 +294,7 @@ public:
         return ret;
     }
 
-    std::vector<std::string> symbols(boost::string_ref section_name) {
+    std::vector<std::string> symbols(const char* section_name) {
         std::vector<std::string> ret;
 
         const header_t h = header();
@@ -309,7 +310,7 @@ public:
                 // There is no terminating null character if the string is exactly eight characters long
                 f_.read((char*)&image_section_header, sizeof(image_section_header));
                 std::memcpy(name_helper, image_section_header.Name, section_t::IMAGE_SIZEOF_SHORT_NAME_);
-                if (!std::strcmp(section_name.data(), name_helper)) {
+                if (!std::strcmp(section_name, name_helper)) {
                     section_begin_addr = image_section_header.PointerToRawData;
                     section_end_addr = section_begin_addr + image_section_header.SizeOfRawData;
                 }

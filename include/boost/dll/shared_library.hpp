@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -295,14 +296,19 @@ public:
     * \throw Nothing.
     *
     */
-    bool search_symbol(boost::string_ref symbol_name) const BOOST_NOEXCEPT {
+    bool search_symbol(const char* symbol_name) const BOOST_NOEXCEPT {
         boost::system::error_code ec;
         return is_loaded() && !!base_t::symbol_addr(symbol_name, ec) && !ec;
     }
 
+    //! \overload bool search_symbol(const char* symbol_name) const
+    bool search_symbol(const std::string& symbol_name) const BOOST_NOEXCEPT {
+        return search_symbol(symbol_name.c_str());
+    }
+
     /*!
     * Returns reference to the symbol (function or variable) with the given name from the loaded library.
-    * This call will always succeed and throw nothing if call to `search_symbol(boost::string_ref )`
+    * This call will always succeed and throw nothing if call to `search_symbol(const char* )`
     * member function with the same symbol name returned `true`.
     *
     * If using this call for an alias name do not forget to add a pointer to a resulting type.
@@ -324,10 +330,16 @@ public:
     *
     */
     template <typename T>
-    inline T& get(boost::string_ref symbol_name) const {
+    inline T& get(const char* symbol_name) const {
         return *boost::dll::detail::aggressive_ptr_cast<T*>(
             get_impl(symbol_name)
         );
+    }
+
+    //! \overload T& get(const char* symbol_name) const
+    template <typename T>
+    inline T& get(const std::string& symbol_name) const {
+        return get<T>(symbol_name.c_str());
     }
 
     /*!
@@ -346,8 +358,14 @@ public:
     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
     */
     template <typename T>
-    inline T& get_alias(boost::string_ref alias_name) const {
+    inline T& get_alias(const char* alias_name) const {
         return *get<T*>(alias_name);
+    }
+
+    //! \overload T& get_alias(const char* alias_name) const
+    template <typename T>
+    inline T& get_alias(const std::string& alias_name) const {
+        return *get<T*>(alias_name.c_str());
     }
 
 private:
@@ -355,7 +373,7 @@ private:
     /// @cond
     // get_impl is required to reduce binary size: it does not depend on a template
     // parameter and will be instantiated only once.
-    void* get_impl(boost::string_ref sb) const {
+    void* get_impl(const char* sb) const {
         boost::system::error_code ec;
 
         if (!is_loaded()) {

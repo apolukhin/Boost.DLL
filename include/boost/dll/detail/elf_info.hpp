@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -13,6 +14,7 @@
 # pragma once
 #endif
 
+#include <cstring>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/dll/detail/x_info_interface.hpp>
 
@@ -216,7 +218,7 @@ public:
         return ret;
     }
 
-    std::vector<std::string> symbols(boost::string_ref section_name) {
+    std::vector<std::string> symbols(const char* section_name) {
         std::vector<std::string> ret;
         
         std::size_t index = 0;
@@ -232,7 +234,7 @@ public:
                 f_.seekg(elf.e_shoff + index * sizeof(section_t));
                 f_.read((char*)&section, sizeof(section));
             
-                if (boost::string_ref(&names[0] + section.sh_name) == section_name) {
+                if (!std::strcmp(&names[0] + section.sh_name, section_name)) {
                     ptrs_in_section_count = static_cast<std::size_t>(section.sh_size / sizeof(void*));
                     break;
                 }

@@ -152,8 +152,14 @@ public:
     * \param section_name Name of the section from which symbol names must be returned.
     * \return List of symbols from the specified section.
     */
-    std::vector<std::string> symbols(boost::string_ref section_name) {
+    std::vector<std::string> symbols(const char* section_name) {
         return impl().symbols(section_name);
+    }
+
+
+    //! \overload std::vector<std::string> symbols(const char* section_name)
+    std::vector<std::string> symbols(const std::string& section_name) {
+        return impl().symbols(section_name.c_str());
     }
 
     /*!

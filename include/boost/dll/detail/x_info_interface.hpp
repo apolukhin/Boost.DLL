@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -12,7 +13,6 @@
 # pragma once
 #endif
 
-#include <boost/utility/string_ref.hpp>
 #include <string>
 #include <vector>
 
@@ -22,7 +22,7 @@ class x_info_interface {
 public:
     virtual std::vector<std::string> sections() = 0;
     virtual std::vector<std::string> symbols() = 0;
-    virtual std::vector<std::string> symbols(boost::string_ref section_name) = 0;
+    virtual std::vector<std::string> symbols(const char* section_name) = 0;
 
     virtual ~x_info_interface() BOOST_NOEXCEPT {}
 };

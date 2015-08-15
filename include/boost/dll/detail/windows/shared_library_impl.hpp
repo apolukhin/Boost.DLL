@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -16,7 +17,6 @@
 #include <boost/move/utility.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/utility/string_ref.hpp>
 
 #include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
 
@@ -121,13 +121,13 @@ public:
         return L".dll";
     }
 
-    void* symbol_addr(boost::string_ref sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
+    void* symbol_addr(const char* sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
         // Judging by the documentation and
         // at GetProcAddress there is no version for UNICODE.
         // There can be it and is correct, as in executed
         // units names of functions are stored in narrow characters.
         void* const symbol = boost::dll::detail::aggressive_ptr_cast<void*>(
-            boost::detail::winapi::GetProcAddress(handle_, sb.data())
+            boost::detail::winapi::GetProcAddress(handle_, sb)
         );
         if (symbol == NULL) {
             ec = boost::dll::detail::last_error_code();
