@@ -43,10 +43,10 @@ namespace boost { namespace dll {
 */
 class shared_library
 /// @cond
-    : protected shared_library_impl 
+    : private boost::dll::detail::shared_library_impl
 /// @endcond
 {
-    typedef shared_library_impl base_t;
+    typedef boost::dll::detail::shared_library_impl base_t;
     
     // The 'shared library' is not enabled to be copied but can be movable.
     // This makes class 'shared library' movable.
@@ -67,44 +67,18 @@ public:
     shared_library() BOOST_NOEXCEPT {}
 
     /*!
-    * Creates a shared_library object and loads a library by specified path.
-    *
-    * \param lib_path Library file name. Can handle std::string, char*, std::wstring,
-    *           wchar_t* or boost::filesystem::path.
-    *
-    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
-    */
-    explicit shared_library(const boost::filesystem::path& lib_path) {
-        load(lib_path);
-    }
-
-    /*!
-    * Creates a shared_library object and loads a library by specified path.
-    *
-    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
-    *           wchar_t or filesystem path.
-    *
-    * \param ec Variable that will be set to the result of the operation.
-    *
-    * \throw std::bad_alloc in case of insufficient memory.
-    */
-    shared_library(const boost::filesystem::path& lib_path, boost::system::error_code &ec) {
-        load(lib_path, ec);
-    }
-
-    /*!
     * Creates a shared_library object and loads a library by specified path
     * with a specified mode.
     *
-    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
-    *           wchar_t or filesystem path.
+    * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
+    *           const wchar_t* or boost::filesystem::path.
     *
-    * \param mode An mode that will be used on library load.
+    * \param mode A mode that will be used on library load.
     *
     * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     *
     */
-    shared_library(const boost::filesystem::path& lib_path, load_mode::type mode) {
+    shared_library(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
         load(lib_path, mode);
     }
 
@@ -112,20 +86,24 @@ public:
     * Creates a shared_library object and loads a library by specified path
     * with a specified mode.
     *
-    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
-    *           wchar_t or filesystem path.
+    * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
+    *           const wchar_t* or boost::filesystem::path.
+    *
+    * \param mode A mode that will be used on library load.
     *
     * \param ec Variable that will be set to the result of the operation.
     *
-    * \param mode An mode that will be used on library load.
-    *
     * \throw std::bad_alloc in case of insufficient memory.
-    *
     */
-    shared_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code &ec) {
+    shared_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
         load(lib_path, mode, ec);
     }
-    
+
+    //! \overload shared_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
+    shared_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
+        load(lib_path, mode, ec);
+    }
+
    /*!
     * Move a shared_library object.
     *
@@ -160,59 +138,20 @@ public:
     ~shared_library() BOOST_NOEXCEPT {}
 
     /*!
-    * Loads a library by specified path.
-    *
-    * Note that if some library is already loaded, load will
-    * unload it and then load the new provided library.
-    *
-    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
-    *           wchar_t or filesystem path.
-    *
-    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
-    *
-    */
-    void load(const boost::filesystem::path& lib_path) {
-        boost::system::error_code ec;
-        base_t::load(lib_path, load_mode::default_mode, ec);
-
-        if (ec) {
-            boost::dll::detail::report_error(ec, "load() failed");
-        }
-    }
-
-    /*!
-    * Loads a library by specified path.
-    *
-    * Note that if some library is already loaded, load will
-    * unload it and then load the new provided library.
-    *
-    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
-    *           wchar_t or filesystem path.
-    *
-    * \param ec Variable that will be set to the result of the operation.
-    *
-    * \throw std::bad_alloc in case of insufficient memory.
-    */
-    void load(const boost::filesystem::path& lib_path, boost::system::error_code &ec) {
-        ec.clear();
-        base_t::load(lib_path, load_mode::default_mode, ec);
-    }
-
-    /*!
     * Loads a library by specified path with a specified mode.
     *
-    * Note that if some library is already loaded, load will
-    * unload it and then load the new provided library.
+    * Note that if some library is already loaded in this shared_library instance, load will
+    * call unload() and then load the new provided library.
     *
-    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
-    *           wchar_t or filesystem path.
+    * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
+    *           const wchar_t* or boost::filesystem::path.
     *
-    * \param mode An mode that will be used on library load.
+    * \param mode A mode that will be used on library load.
     *
     * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     *
     */
-    void load(const boost::filesystem::path& lib_path, load_mode::type mode) {
+    void load(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
         boost::system::error_code ec;
         base_t::load(lib_path, mode, ec);
 
@@ -224,20 +163,23 @@ public:
     /*!
     * Loads a library by specified path with a specified mode.
     *
-    * Note that if some library is already loaded, load will
-    * unload it and then load the new provided library.
+    * Note that if some library is already loaded in this shared_library instance, load will
+    * call unload() and then load the new provided library.
     *
-    * \param lib_path Library file name. Can handle std::string, char, std::wstring,
-    *           wchar_t or filesystem path.
+    * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
+    *           const wchar_t* or boost::filesystem::path.
     *
     * \param ec Variable that will be set to the result of the operation.
     *
-    * \param mode An mode that will be used on library load.
-    *
     * \throw std::bad_alloc in case of insufficient memory.
-    *
     */
-    void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code &ec) {
+    void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
+        ec.clear();
+        base_t::load(lib_path, mode, ec);
+    }
+
+    //! \overload void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
+    void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
         ec.clear();
         base_t::load(lib_path, mode, ec);
     }
@@ -246,6 +188,7 @@ public:
     * Unloads a shared library. If library was loaded multiple times
     * by different instances of shared_library, the actual DLL/DSO won't be unloaded until
     * there is at least one instance of shared_library holding a reference to it.
+    *
     * \throw Nothing.
     */
     void unload() BOOST_NOEXCEPT {
@@ -385,7 +328,7 @@ private:
             // report_error() calls dlsym, do not use it here!
             boost::throw_exception(
                 boost::system::system_error(
-                    ec, "get() failed (no library was loaded)"
+                    ec, "get() failed: no library was loaded"
                 )
             );
         }
@@ -437,7 +380,7 @@ public:
 
             boost::throw_exception(
                 boost::system::system_error(
-                    ec, "full_module_path() failed (no library was loaded)"
+                    ec, "location() failed (no library was loaded)"
                 )
             );
         }
@@ -445,7 +388,7 @@ public:
         boost::filesystem::path full_path = base_t::full_module_path(ec);
 
         if (ec) {
-            boost::dll::detail::report_error(ec, "full_module_path() failed");
+            boost::dll::detail::report_error(ec, "location() failed");
         }
 
         return full_path;
@@ -470,7 +413,7 @@ public:
     *
     * \throw std::bad_alloc.
     */
-    boost::filesystem::path location(boost::system::error_code &ec) const {
+    boost::filesystem::path location(boost::system::error_code& ec) const {
         if (!is_loaded()) {
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,
