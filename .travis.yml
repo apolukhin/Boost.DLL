@@ -8,7 +8,7 @@
 # See https://svn.boost.org/trac/boost/wiki/TravisCoverals for description of this file
 # and how it can be used with Boost libraries.
 #
-# File revision #2
+# File revision #3
 
 language: cpp
 compiler:
@@ -89,7 +89,7 @@ before_install:
 
 script:
     # `--coverage` flags required to generate coverage info for Coveralls
-    - ../../../b2 address-model=64 architecture=x86 cxxflags="--coverage -std=$CXX_STANDARD" linkflags="--coverage"
+    - ../../../b2 testing.launcher=valgrind address-model=64 architecture=x86 cxxflags="--coverage -std=$CXX_STANDARD" linkflags="--coverage"
 
 after_success:
     # Copying Coveralls data to a separate folder
