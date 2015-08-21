@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -24,10 +25,6 @@ public:
     // ...
     //<-
     // This block is invisible for Quickbook documentation
-    float version() const {
-        return 1.0;
-    }
-
     float calculate(float /*x*/, float /*y*/) {
         return 0;
     }

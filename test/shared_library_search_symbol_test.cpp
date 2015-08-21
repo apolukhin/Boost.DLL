@@ -1,5 +1,6 @@
 // Copyright 2011-2012 Renato Tegon Forti
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -29,7 +30,9 @@ int test_main(int argc, char* argv[])
       BOOST_CHECK(sl.has_symbol("say_hello"));
       BOOST_CHECK(sl.has_symbol("lib_version"));
       BOOST_CHECK(sl.has_symbol("integer_g"));
+      BOOST_CHECK(sl.has_symbol(std::string("integer_g")));
       BOOST_CHECK(!sl.has_symbol("i_do_not_exist"));
+      BOOST_CHECK(!sl.has_symbol(std::string("i_do_not_exist")));
    }
    
    {

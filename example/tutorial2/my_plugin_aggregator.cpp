@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -12,7 +13,7 @@
 
 //[plugcpp_my_plugin_aggregator
 #include <boost/dll/alias.hpp> // for BOOST_DLL_ALIAS   
-#include "../tutorial_common/plugin_api.hpp"
+#include "../tutorial_common/my_plugin_api.hpp"
 
 namespace my_namespace {
 
@@ -21,10 +22,6 @@ class my_plugin_aggregator : public my_plugin_api {
     my_plugin_aggregator() : aggr_(0) {}
 
 public:
-    float version() const {
-        return 1.0;
-    }
-
     std::string name() const {
         return "aggregator";
     }

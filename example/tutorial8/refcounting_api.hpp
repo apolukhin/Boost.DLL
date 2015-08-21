@@ -1,14 +1,15 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 //[plugcpp_my_plugin_refcounting_api
-#include "../tutorial_common/plugin_api.hpp"
+#include "../tutorial_common/my_plugin_api.hpp"
 #include <boost/filesystem/path.hpp>
 
-class my_refcounting_api : public my_plugin_api {
+class my_refcounting_api: public my_plugin_api {
 public:
     // Returns path to shared object that holds a plugin.
     // Must be instantiated in plugin.

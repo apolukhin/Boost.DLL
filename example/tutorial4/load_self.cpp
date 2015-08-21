@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -17,8 +18,6 @@
 namespace dll = boost::dll;
 
 int main() {
-    std::cout << "Application started" << std::endl;
-    
     dll::shared_library self(dll::program_location());
 
     std::cout << "Call function" << std::endl;
@@ -29,11 +28,6 @@ int main() {
     //<-
     {
         // This block is invisible for Quickbook documentation
-        float v = creator()->version();
-        if (!(v < 1.001 && v > 0.999)) {
-            throw std::runtime_error("Failed check: v < 1.001 && v > 0.999");
-        }
-
         float res = creator()->calculate(10, 10);
         if (!(res > -0.0001 && res < 0.00001)) {
             throw std::runtime_error("Failed check: res > -0.0001 && res < 0.00001");

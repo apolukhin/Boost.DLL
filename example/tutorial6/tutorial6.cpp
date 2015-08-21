@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -17,8 +18,8 @@ void print_unloaded() {
 }
 
 int main(int argc, char* argv[]) {
+    /*<-*/ BOOST_ASSERT(argc >= 2);    /*->*/
     // argv[1] contains path to our plugin library
-    BOOST_ASSERT(argc >= 2);
     boost::filesystem::path shared_library_path = shared_lib_path(argv[1], L"on_unload_lib");
 
     // loading library and getting a function from it

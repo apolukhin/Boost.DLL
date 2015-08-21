@@ -59,7 +59,7 @@ public:
         // Trying to open with appended decorations
         if (!!(mode & load_mode::append_decorations)) {
             mode = static_cast<load_mode::type>(
-                static_cast<native_mode_t>(mode) & (~static_cast<native_mode_t>(load_mode::append_decorations)
+                static_cast<native_mode_t>(mode) & (~static_cast<native_mode_t>(load_mode::append_decorations))
             );
 
             handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, static_cast<native_mode_t>(mode));
@@ -82,8 +82,8 @@ public:
         // extension .dll to the module name.
         //
         // From experiments: Default library extension appended to the module name even if
-        // we have some path. So we do not check for path, only for extension. We can not be sure that 
-        // such behavior remain across all platforms, so we add L".dll" by hand.
+        // we have some path. So we do not check for path, only for extension. We can not be sure that
+        // such behavior remain across all platforms, so we add L"." by hand.
         if (sl.has_extension()) {
             handle_ = boost::detail::winapi::LoadLibraryExW(sl.c_str(), 0, static_cast<native_mode_t>(mode));
         } else {

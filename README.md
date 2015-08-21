@@ -4,10 +4,10 @@ Boost.DLL is a part of the [Boost C++ Libraries](http://github.com/boostorg). It
 
 ### Test results
 
-Branches        | Build         | Tests coverage
-----------------|-------------- | -------------
-Develop:        | [![Build Status](https://travis-ci.org/apolukhin/Boost.DLL.svg?branch=develop)](https://travis-ci.org/apolukhin/Boost.DLL)  | [![Coverage Status](https://coveralls.io/repos/apolukhin/Boost.DLL/badge.png?branch=develop)](https://coveralls.io/r/apolukhin/Boost.DLL?branch=develop)
-Master:         | [![Build Status](https://travis-ci.org/apolukhin/Boost.DLL.svg?branch=master)](https://travis-ci.org/apolukhin/Boost.DLL)  | [![Coverage Status](https://coveralls.io/repos/apolukhin/Boost.DLL/badge.png?branch=master)](https://coveralls.io/r/apolukhin/Boost.DLL?branch=master)
+Branches        | Build         | Tests coverage | More info
+----------------|-------------- | -------------- |-----------
+Develop:        | [![Build Status](https://travis-ci.org/apolukhin/Boost.DLL.svg?branch=develop)](https://travis-ci.org/apolukhin/Boost.DLL)  | [![Coverage Status](https://coveralls.io/repos/apolukhin/Boost.DLL/badge.png?branch=develop)](https://coveralls.io/r/apolukhin/Boost.DLL?branch=develop) | [details...](http://www.boost.org/development/tests/develop/developer/dll.html)
+Master:         | [![Build Status](https://travis-ci.org/apolukhin/Boost.DLL.svg?branch=master)](https://travis-ci.org/apolukhin/Boost.DLL)  | [![Coverage Status](https://coveralls.io/repos/apolukhin/Boost.DLL/badge.png?branch=master)](https://coveralls.io/r/apolukhin/Boost.DLL?branch=master) | [details...](http://www.boost.org/development/tests/master/developer/dll.html)
 
 Static analisis (Coverity): [![Coverity Scan Build Status](https://scan.coverity.com/projects/3911/badge.svg)](https://scan.coverity.com/projects/3911/view_defects)
 

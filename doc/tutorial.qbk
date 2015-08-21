@@ -5,7 +5,7 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
 
-[template example_ref[path] '''<ulink url="@boost:libs/dll/example/'''[path]'''">example/'''[path]'''</ulink>''']
+[template example_ref[path] '''<ulink url="https://raw.githubusercontent.com/boostorg/dll/develop/example/'''[path]'''">example/'''[path]'''</ulink>''']
 
 [def __to_top [link boost_dll.tutorial Back to the Top]]
 
@@ -36,11 +36,9 @@ and [enumref boost::dll::load_mode::type append_decorations]:
 That application will output:
 
 [pre
-Application started
 Loading the plugin
 Constructing my_plugin_sum
-Plugin Version: 1
-Plugin Method:  3
+plugin->calculate(1.5, 1.5) call:  3
 Destructing my_plugin_sum ;o)
 ]
 
@@ -80,9 +78,8 @@ dereference the `plugin` variable will lead to *undefined behavior*. ]
 Output of the application will be the following:
 
 [pre
-Plugin Version: 1
-Plugin Method:  3
-Plugin Method second call:  6
+plugin->calculate(1.5, 1.5) call:  3
+plugin->calculate(1.5, 1.5) second call:  6
 Plugin Name:  aggregator
 ]
 

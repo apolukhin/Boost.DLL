@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -17,14 +18,6 @@ public:
     my_plugin_static() {
         std::cout << "Constructing my_plugin_static" << std::endl;
     }
-   
-    ~my_plugin_static() {
-        std::cout << "Destructing my_plugin_static" << std::endl;
-    }
-
-    float version() const {
-        return 1.0;
-    }
 
     std::string name() const {
         return "static";
@@ -32,6 +25,10 @@ public:
 
     float calculate(float x, float y) {
         return x - y;
+    }
+
+    ~my_plugin_static() {
+        std::cout << "Destructing my_plugin_static" << std::endl;
     }
 };
 

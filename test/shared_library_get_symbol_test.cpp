@@ -1,5 +1,6 @@
 // Copyright 2011-2012 Renato Tegon Forti.
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -130,6 +131,7 @@ int test_main(int argc, char* argv[]) {
 
     sl.get<int>("integer_g") = 10;
     BOOST_CHECK(sl.get<int>("integer_g") == 10);
+    BOOST_CHECK(sl.get<int>(std::string("integer_g")) == 10);
 
     BOOST_CHECK(sl.get<say_hello_func>("say_hello"));
     sl.get<say_hello_func>("say_hello")();
