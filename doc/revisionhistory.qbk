@@ -17,7 +17,7 @@
 * Multiple MacOS fixes, library now works on MacOS
 * Performance and memory optimizations for `import*` functions
 * Refactored `shared_library::load()` implementation, unified `load_mode::append_decorations` behavior across platforms
-* Renamed `shared_library::search_symbol()` to `shared_library::has_symbol()`
+* Renamed `shared_library::search_symbol()` to `shared_library::has()`
 
 [h5 0.2]
 

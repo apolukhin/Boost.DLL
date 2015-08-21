@@ -27,18 +27,18 @@ int test_main(int argc, char* argv[])
 
    {
       shared_library sl(shared_library_path);
-      BOOST_CHECK(sl.has_symbol("say_hello"));
-      BOOST_CHECK(sl.has_symbol("lib_version"));
-      BOOST_CHECK(sl.has_symbol("integer_g"));
-      BOOST_CHECK(sl.has_symbol(std::string("integer_g")));
-      BOOST_CHECK(!sl.has_symbol("i_do_not_exist"));
-      BOOST_CHECK(!sl.has_symbol(std::string("i_do_not_exist")));
+      BOOST_CHECK(sl.has("say_hello"));
+      BOOST_CHECK(sl.has("lib_version"));
+      BOOST_CHECK(sl.has("integer_g"));
+      BOOST_CHECK(sl.has(std::string("integer_g")));
+      BOOST_CHECK(!sl.has("i_do_not_exist"));
+      BOOST_CHECK(!sl.has(std::string("i_do_not_exist")));
    }
    
    {
       shared_library sl(program_location());
-      BOOST_CHECK(sl.has_symbol("exef"));
-      BOOST_CHECK(!sl.has_symbol("i_do_not_exist"));
+      BOOST_CHECK(sl.has("exef"));
+      BOOST_CHECK(!sl.has("i_do_not_exist"));
    }
 
 
