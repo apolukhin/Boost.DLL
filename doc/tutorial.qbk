@@ -156,7 +156,6 @@ Otherwise loading symbols from self *will fail*.]
 Running the program will output the following:
 
 [pre
-Application started
 Call function
 Constructing my_plugin_static
 Computed Value: 0
