@@ -51,7 +51,10 @@ int test_main(int argc, char* argv[])
         shared_library sl(shared_library_path, ec);
         BOOST_CHECK(sl.is_loaded());
         BOOST_CHECK(sl);
+        BOOST_CHECK(!ec);
         BOOST_CHECK(lib_path_equal(sl.location(), shared_library_path));
+        BOOST_CHECK(lib_path_equal(sl.location(ec), shared_library_path));
+        BOOST_CHECK(!ec);
    }
 
    {
@@ -68,6 +71,7 @@ int test_main(int argc, char* argv[])
         sl.load(shared_library_path, ec);
         BOOST_CHECK(sl.is_loaded());
         BOOST_CHECK(sl);
+        BOOST_CHECK(!ec);
         BOOST_CHECK(lib_path_equal(sl.location(), shared_library_path));
    }
 
@@ -83,7 +87,10 @@ int test_main(int argc, char* argv[])
         shared_library sl(shared_library_path, load_mode::load_with_altered_search_path, ec);
         BOOST_CHECK(sl.is_loaded());
         BOOST_CHECK(sl);
+        BOOST_CHECK(!ec);
         BOOST_CHECK(lib_path_equal(sl.location(), shared_library_path));
+        BOOST_CHECK(lib_path_equal(sl.location(ec), shared_library_path));
+        BOOST_CHECK(!ec);
    }
 
    {
