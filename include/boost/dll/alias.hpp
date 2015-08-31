@@ -232,7 +232,7 @@ namespace boost { namespace dll {
 
 #define BOOST_DLL_AUTO_ALIAS(FunctionOrVar)                                                     \
     namespace _autoaliases {                                                                    \
-        BOOST_SYMBOL_EXPORT BOOST_DLL_SELECTANY const void * dummy_ ## FunctionOrVar            \
+        BOOST_DLL_SELECTANY const void * dummy_ ## FunctionOrVar                                \
             = reinterpret_cast<const void*>(reinterpret_cast<intptr_t>(                         \
                 &FunctionOrVar                                                                  \
             ));                                                                                 \

@@ -100,6 +100,10 @@ class elf_info: public x_info_interface {
     BOOST_STATIC_CONSTANT(boost::uint32_t, SHT_SYMTAB_ = 2);
     BOOST_STATIC_CONSTANT(boost::uint32_t, SHT_STRTAB_ = 3);
 
+    BOOST_STATIC_CONSTANT(unsigned char, STB_LOCAL_ = 0);   /* Local symbol */
+    BOOST_STATIC_CONSTANT(unsigned char, STB_GLOBAL_ = 1);  /* Global symbol */
+    BOOST_STATIC_CONSTANT(unsigned char, STB_WEAK_ = 2);    /* Weak symbol */
+
     /* Symbol visibility specification encoded in the st_other field.  */
     BOOST_STATIC_CONSTANT(unsigned char, STV_DEFAULT_ = 0);      /* Default symbol visibility rules */
     BOOST_STATIC_CONSTANT(unsigned char, STV_INTERNAL_ = 1);     /* Processor specific hidden class */
@@ -176,7 +180,7 @@ private:
             f_.read((char*)&section, sizeof(section));
 
             if (section.sh_type == SHT_SYMTAB_) {
-                symbols.resize(static_cast<std::size_t>(section.sh_size / section.sh_entsize));
+                symbols.resize(static_cast<std::size_t>(section.sh_size / sizeof(symbol_t)));
 
                 const boost::filesystem::ifstream::pos_type pos = f_.tellg();
                 f_.seekg(section.sh_offset);
@@ -194,7 +198,9 @@ private:
     }
 
     static bool is_visible(const symbol_t& sym) BOOST_NOEXCEPT {
-        return (sym.st_other & 0x03) == STV_DEFAULT_;
+        // `(sym.st_info >> 4) != STB_LOCAL_ && !!sym.st_size` check also workarounds the
+        // GCC's issue https://sourceware.org/bugzilla/show_bug.cgi?id=13621
+        return (sym.st_other & 0x03) == STV_DEFAULT_ && (sym.st_info >> 4) != STB_LOCAL_ && !!sym.st_size;
     }
 
 public:
@@ -235,7 +241,10 @@ public:
                 f_.read((char*)&section, sizeof(section));
             
                 if (!std::strcmp(&names[0] + section.sh_name, section_name)) {
-                    ptrs_in_section_count = static_cast<std::size_t>(section.sh_size / sizeof(void*));
+                    if (!section.sh_entsize) {
+                        section.sh_entsize = 1;
+                    }
+                    ptrs_in_section_count = static_cast<std::size_t>(section.sh_size / section.sh_entsize);
                     break;
                 }
             }                        

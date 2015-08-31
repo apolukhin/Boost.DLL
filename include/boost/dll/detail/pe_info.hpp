@@ -337,7 +337,7 @@ public:
             // getting function addr
             f_.seekg(fixed_functions_addr + ordinal * sizeof(ptr));
             f_.read((char*)&ptr, sizeof(ptr));
-            ptr = get_file_offset(ptr, h);
+            ptr = static_cast<boost::dll::detail::DWORD_>( get_file_offset(ptr, h) );
 
             if (ptr >= section_end_addr || ptr < section_begin_addr) {
                 continue;
