@@ -39,7 +39,7 @@ local doxygen_params =
         \"BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library)= \\
             shared_library(const shared_library&) = delete; \\
             shared_library& operator=(const shared_library&) = delete; \" \\
-        \"BOOST_DLL_IMPORT_RESULT_TYPE=auto\" \\
+        \"BOOST_DLL_IMPORT_RESULT_TYPE=result_type\" \\
         \"BOOST_DLL_DOXYGEN\" "
     ;
 

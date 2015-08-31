@@ -184,7 +184,7 @@ private:
 
                 const boost::filesystem::ifstream::pos_type pos = f_.tellg();
                 f_.seekg(section.sh_offset);
-                f_.read((char*)&symbols[0], section.sh_size);
+                f_.read((char*)&symbols[0], section.sh_size - (section.sh_size % sizeof(symbol_t)) );
                 f_.seekg(pos);
             } else if (section.sh_type == SHT_STRTAB_) {
                 text.resize(static_cast<std::size_t>(section.sh_size));
