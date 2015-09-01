@@ -45,14 +45,14 @@ template <class AddressOffsetT>
 struct Elf_Shdr_template {
   boost::uint32_t   sh_name;        /* Section name (string tbl index) */
   boost::uint32_t   sh_type;        /* Section type */
-  AddressOffsetT   sh_flags;        /* Section flags */
+  AddressOffsetT    sh_flags;       /* Section flags */
   AddressOffsetT    sh_addr;        /* Section virtual addr at execution */
   AddressOffsetT    sh_offset;      /* Section file offset */
-  AddressOffsetT   sh_size;         /* Section size in bytes */
+  AddressOffsetT    sh_size;        /* Section size in bytes */
   boost::uint32_t   sh_link;        /* Link to another section */
   boost::uint32_t   sh_info;        /* Additional section information */
-  AddressOffsetT   sh_addralign;    /* Section alignment */
-  AddressOffsetT   sh_entsize;      /* Entry size if section holds table */
+  AddressOffsetT    sh_addralign;   /* Section alignment */
+  AddressOffsetT    sh_entsize;     /* Entry size if section holds table */
 };
 
 typedef Elf_Shdr_template<boost::uint32_t> Elf32_Shdr_;
@@ -128,7 +128,6 @@ public:
         return true;
     }
 
-
     explicit elf_info(boost::filesystem::ifstream& f) BOOST_NOEXCEPT
         : f_(f)
     {}
@@ -150,11 +149,16 @@ public:
     }
 
 private:
+    template <class T>
+    inline void read_raw(T& value, std::size_t size = sizeof(T)) const {
+        f_.read(reinterpret_cast<char*>(&value), size);
+    }
+
     inline header_t header() {
         header_t elf;
 
         f_.seekg(0);
-        f_.read((char*)&elf, sizeof(elf));
+        read_raw(elf);
 
         return elf;
     }
@@ -164,11 +168,11 @@ private:
 
         section_t section_names_section;
         f_.seekg(elf.e_shoff + elf.e_shstrndx * sizeof(section_t));
-        f_.read((char*)&section_names_section, sizeof(section_names_section));
+        read_raw(section_names_section);
 
         sections.resize(static_cast<std::size_t>(section_names_section.sh_size));
         f_.seekg(section_names_section.sh_offset);
-        f_.read(&sections[0], section_names_section.sh_size);
+        read_raw(sections[0], section_names_section.sh_size);
     }
 
     void symbols_text(std::vector<symbol_t>& symbols, std::vector<char>& text) {
@@ -177,21 +181,21 @@ private:
 
         for (std::size_t i = 0; i < elf.e_shnum; ++i) {
             section_t section;
-            f_.read((char*)&section, sizeof(section));
+            read_raw(section);
 
             if (section.sh_type == SHT_SYMTAB_) {
                 symbols.resize(static_cast<std::size_t>(section.sh_size / sizeof(symbol_t)));
 
                 const boost::filesystem::ifstream::pos_type pos = f_.tellg();
                 f_.seekg(section.sh_offset);
-                f_.read((char*)&symbols[0], section.sh_size - (section.sh_size % sizeof(symbol_t)) );
+                read_raw(symbols[0], section.sh_size - (section.sh_size % sizeof(symbol_t)) );
                 f_.seekg(pos);
             } else if (section.sh_type == SHT_STRTAB_) {
                 text.resize(static_cast<std::size_t>(section.sh_size));
 
                 const boost::filesystem::ifstream::pos_type pos = f_.tellg();
                 f_.seekg(section.sh_offset);
-                f_.read(&text[0], section.sh_size);
+                read_raw(text[0], section.sh_size);
                 f_.seekg(pos);
             }
         }
@@ -238,7 +242,7 @@ public:
             for (; index < elf.e_shnum; ++index) {
                 section_t section;
                 f_.seekg(elf.e_shoff + index * sizeof(section_t));
-                f_.read((char*)&section, sizeof(section));
+                read_raw(section);
             
                 if (!std::strcmp(&names[0] + section.sh_name, section_name)) {
                     if (!section.sh_entsize) {

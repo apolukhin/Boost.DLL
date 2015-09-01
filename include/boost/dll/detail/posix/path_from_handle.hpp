@@ -61,18 +61,23 @@ namespace boost { namespace dll { namespace detail {
 }}} // namespace boost::dll::detail
 
 #else // #if BOOST_OS_MACOS || BOOST_OS_IOS
-#   include <link.h>
+#   include <link.h>    // struct link_map
 
 namespace boost { namespace dll { namespace detail {
 
-    inline boost::filesystem::path path_from_handle(void* handle, boost::system::error_code &ec) {
+    inline boost::filesystem::path path_from_handle(const void* handle, boost::system::error_code &ec) {
         // RTLD_DI_LINKMAP (RTLD_DI_ORIGIN returns only folder and is not suitable for this case)
         // Obtain the Link_map for the handle  that  is  specified.
         // The  p  argument  points to a Link_map pointer (Link_map
         // **p). The actual storage for the Link_map  structure  is
         // maintained by ld.so.1.
-        const struct link_map * link_map;
-        if (dlinfo(handle, RTLD_DI_LINKMAP, &link_map) < 0) {
+        //
+        // Unfortunately we can not use `dlinfo(handle, RTLD_DI_LINKMAP, &link_map) < 0`
+        // because it is not supported on MacOS X 10.3, NetBSD 3.0, OpenBSD 3.8, AIX 5.1,
+        // HP-UX 11, IRIX 6.5, OSF/1 5.1, Cygwin, mingw, Interix 3.5, BeOS.
+        // Fortunately investigating the sources of open source projects brought the understanding, that
+        // `handle` is just a `struct link_map*` that contains full library name.
+        if (!handle) {
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,
                 boost::system::generic_category()
@@ -81,7 +86,9 @@ namespace boost { namespace dll { namespace detail {
             return boost::filesystem::path();
         }
 
-        return boost::filesystem::path(link_map->l_name);
+        return boost::filesystem::path(
+            static_cast<const struct link_map*>(handle)->l_name
+        );
     }
 
 }}} // namespace boost::dll::detail

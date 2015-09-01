@@ -76,45 +76,6 @@ enum type {
     *
     * \b Default: disabled
     *
-    * If this value is used, the system maps the file into the calling
-    * process's virtual address space as if it were a data file.
-    */
-    load_library_as_datafile,
-
-    /*!
-    * \b Platforms: Windows
-    *
-    * \b Default: disabled
-    *
-    * Similar to LOAD_LIBRARY_AS_DATAFILE, except that the DLL file is opened
-    * with exclusive write access for the calling process. Other processes
-    * cannot open the DLL file for write access while it is in use.
-    * However, the DLL can still be opened by other processes.
-    */
-    load_library_as_datafile_exclusive,
-
-    /*!
-    * \b Platforms: Windows
-    *
-    * \b Default: disabled
-    *
-    * If this value is used, the system maps the file into the process's virtual
-    * address space as an image file. However, the loader does not load the
-    * static imports or perform the other usual initialization steps.
-    *
-    * Use this flag when you want to load a DLL only to extract messages
-    * or resources from it.
-    *
-    * If forced integrity checking is desired for the loaded file then
-    * LOAD_LIBRARY_AS_IMAGE is recommended instead.
-    */
-    load_library_as_image_resource,
-
-    /*!
-    * \b Platforms: Windows
-    *
-    * \b Default: disabled
-    *
     * If this value is used and lpFileName specifies an absolute path,
     * the system uses the alternate file search strategy.
     *
@@ -207,9 +168,6 @@ enum type {
     default_mode                          = 0,
     dont_resolve_dll_references           = boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
     load_ignore_code_authz_level          = boost::detail::winapi::LOAD_IGNORE_CODE_AUTHZ_LEVEL_,
-    load_library_as_datafile              = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_,
-    load_library_as_datafile_exclusive    = boost::detail::winapi::LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE_,
-    load_library_as_image_resource        = boost::detail::winapi::LOAD_LIBRARY_AS_IMAGE_RESOURCE_,
     load_with_altered_search_path         = boost::detail::winapi::LOAD_WITH_ALTERED_SEARCH_PATH_,
     rtld_lazy                             = 0,
     rtld_now                              = 0,
@@ -221,9 +179,6 @@ enum type {
     default_mode                          = 0,
     dont_resolve_dll_references           = 0,
     load_ignore_code_authz_level          = 0,
-    load_library_as_datafile              = 0,
-    load_library_as_datafile_exclusive    = 0,
-    load_library_as_image_resource        = 0,
     load_with_altered_search_path         = 0,
     rtld_lazy                             = RTLD_LAZY,
     rtld_now                              = RTLD_NOW,

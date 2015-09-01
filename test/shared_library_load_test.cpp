@@ -170,11 +170,9 @@ int test_main(int argc, char* argv[])
    }
 
    {
-        shared_library sl(shared_library_path, load_mode::rtld_now | load_mode::rtld_global | load_mode::load_library_as_datafile);
+        shared_library sl(shared_library_path, load_mode::rtld_now | load_mode::rtld_global | load_mode::load_with_altered_search_path);
         BOOST_CHECK(sl.is_loaded());
         BOOST_CHECK(sl);
-        // The GetModuleFileName function does not retrieve the path for modules that were loaded using the LOAD_LIBRARY_AS_DATAFILE flag.
-        // BOOST_CHECK(lib_path_equal(sl.location(), shared_library_path));
    }
 
    {

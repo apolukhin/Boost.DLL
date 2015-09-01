@@ -172,7 +172,7 @@ public:
 
         uint32_t magic;
         f.seekg(0);
-        f.read((char*)&magic, sizeof(magic));
+        f.read(reinterpret_cast<char*>(&magic), sizeof(magic));
         return (magic_bytes == magic);
     }
 
@@ -181,6 +181,11 @@ public:
     {}
 
 private:
+    template <class T>
+    inline void read_raw(T& value, std::size_t size = sizeof(T)) const {
+        f_.read(reinterpret_cast<char*>(&value), size);
+    }
+
     template <class F>
     void command_finder(uint32_t cmd_num, F callback_f) {
         const header_t h = header();
@@ -188,30 +193,29 @@ private:
         f_.seekg(sizeof(header_t));
         for (std::size_t i = 0; i < h.ncmds; ++i) {
             const boost::filesystem::ifstream::pos_type pos = f_.tellg();
-            f_.read((char*)&command, sizeof(command));
+            read_raw(command);
             if (command.cmd != cmd_num) {
                 f_.seekg(pos + static_cast<boost::filesystem::ifstream::pos_type>(command.cmdsize));
                 continue;
             }
 
             f_.seekg(pos);
-            callback_f();
+            callback_f(*this);
             f_.seekg(pos + static_cast<boost::filesystem::ifstream::pos_type>(command.cmdsize));
         }
     }
 
     struct section_names_gather {
         std::vector<std::string>&       ret;
-        boost::filesystem::ifstream&    f_;
 
-        void operator()() const {
+        void operator()(const macho_info& f) const {
             segment_t segment;
-            f_.read((char*)&segment, sizeof(segment));
+            f.read_raw(segment);
 
             section_t section;
             ret.reserve(ret.size() + segment.nsects);
             for (std::size_t j = 0; j < segment.nsects; ++j) {
-                f_.read((char*)&section, sizeof(section));
+                f.read_raw(section);
                 // `segname` goes right after the `sectname`.
                 // Forcing `sectname` to end on '\0'
                 section.segname[0] = '\0';
@@ -225,19 +229,18 @@ private:
 
     struct symbol_names_gather {
         std::vector<std::string>&       ret;
-        boost::filesystem::ifstream&    f_;
         std::size_t                     section_index;
 
-        void operator()() const {
+        void operator()(const macho_info& f) const {
             symbol_header_t symbh;
-            f_.read((char*)&symbh, sizeof(symbh));
+            f.read_raw(symbh);
             ret.reserve(ret.size() + symbh.nsyms);
 
             nlist_t symbol;
             std::string symbol_name;
             for (std::size_t j = 0; j < symbh.nsyms; ++j) {
-                f_.seekg(symbh.symoff + j * sizeof(nlist_t));
-                f_.read((char*)&symbol, sizeof(symbol));
+                f.f_.seekg(symbh.symoff + j * sizeof(nlist_t));
+                f.read_raw(symbol);
                 if (!symbol.n_strx) {
                     continue; // Symbol has no name
                 }
@@ -250,8 +253,8 @@ private:
                     continue; // Not in the required section
                 }
 
-                f_.seekg(symbh.stroff + symbol.n_strx);
-                getline(f_, symbol_name, '\0');
+                f.f_.seekg(symbh.stroff + symbol.n_strx);
+                getline(f.f_, symbol_name, '\0');
                 if (symbol_name.empty()) {
                     continue;
                 }
@@ -269,7 +272,7 @@ private:
 public:
     std::vector<std::string> sections() {
         std::vector<std::string> ret;
-        section_names_gather f = { ret, f_ };
+        section_names_gather f = { ret };
         command_finder(SEGMENT_CMD_NUMBER, f);
         return ret;
     }
@@ -279,7 +282,7 @@ private:
         header_t h;
 
         f_.seekg(0);
-        f_.read((char*)&h, sizeof(h));
+        read_raw(h);
 
         return h;
     }
@@ -287,7 +290,7 @@ private:
 public:
     std::vector<std::string> symbols() {
         std::vector<std::string> ret;
-        symbol_names_gather f = { ret, f_, 0 };
+        symbol_names_gather f = { ret, 0 };
         command_finder(load_command_types::LC_SYMTAB_, f);
         return ret;
     }
@@ -303,7 +306,7 @@ public:
         }
 
         // section indexes start from 1
-        symbol_names_gather f = { ret, f_, static_cast<std::size_t>(1 + (it - ret.begin())) };
+        symbol_names_gather f = { ret, static_cast<std::size_t>(1 + (it - ret.begin())) };
         ret.clear();
         command_finder(load_command_types::LC_SYMTAB_, f);
         return ret;

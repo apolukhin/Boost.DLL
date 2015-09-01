@@ -122,10 +122,21 @@ public:
     }
 
     void* symbol_addr(const char* sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
-        // Judging by the documentation and
-        // at GetProcAddress there is no version for UNICODE.
-        // There can be it and is correct, as in executed
-        // units names of functions are stored in narrow characters.
+        if (is_resource()) {
+            // `GetProcAddress` could not be called for libraries loaded with
+            // `LOAD_LIBRARY_AS_DATAFILE`, `LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE`
+            // or `LOAD_LIBRARY_AS_IMAGE_RESOURCE`.
+            ec = boost::system::error_code(
+                boost::system::errc::operation_not_supported,
+                boost::system::generic_category()
+            );
+
+            return;
+        }
+
+        // Judging by the documentation of GetProcAddress
+        // there is no version for UNICODE, because
+        // names of functions are stored in narrow characters.
         void* const symbol = boost::dll::detail::aggressive_ptr_cast<void*>(
             boost::detail::winapi::GetProcAddress(handle_, sb)
         );
@@ -141,6 +152,12 @@ public:
     }
 
 private:
+    bool is_resource() const BOOST_NOEXCEPT {
+        return !!(
+            reinterpret_cast<boost::detail::winapi::ULONG_PTR_>(handle_) & reinterpret_cast<boost::detail::winapi::ULONG_PTR_>(3)
+        );
+    }
+
     native_handle_t handle_;
 };
 
