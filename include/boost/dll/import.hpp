@@ -132,9 +132,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import(const boost::shared_ptr<shared_library>& lib
 }
 
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import(const boost::filesystem::path& lib, const char* name,
-    load_mode::type mode = load_mode::default_mode)
-{
+BOOST_DLL_IMPORT_RESULT_TYPE import(const boost::filesystem::path& lib, const char* name, load_mode::type mode) {
     return boost::dll::import<T>(
         boost::make_shared<boost::dll::shared_library>(lib, mode),
         name
@@ -211,9 +209,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const boost::shared_ptr<shared_library
 }
 
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const boost::filesystem::path& lib, const char* name,
-    load_mode::type mode = load_mode::default_mode)
-{
+BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const boost::filesystem::path& lib, const char* name, load_mode::type mode) {
     return boost::dll::import_alias<T>(
         boost::make_shared<boost::dll::shared_library>(lib, mode),
         name

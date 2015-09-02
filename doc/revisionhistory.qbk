@@ -18,6 +18,7 @@
 * Performance and memory optimizations for `import*` functions
 * Refactored `shared_library::load()` implementation, unified `load_mode::append_decorations` behavior across platforms
 * Renamed `shared_library::search_symbol()` to `shared_library::has()`
+* Dropped support for useles Windows specific `load_library_as_*` flags
 
 [h5 0.2]
 

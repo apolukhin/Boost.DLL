@@ -8,7 +8,7 @@
 # See https://svn.boost.org/trac/boost/wiki/TravisCoverals for description of this file
 # and how it can be used with Boost libraries.
 #
-# File revision #3
+# File revision #4
 
 language: cpp
 compiler:
@@ -17,9 +17,6 @@ compiler:
 
 os:
     - linux
-#    - osx
-
-osx_image: xcode61
 
 env:
     global:
@@ -31,35 +28,13 @@ env:
         # Example: - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/*'
         - IGNORE_COVERAGE='*/detail/pe_info.hpp */detail/macho_info.hpp	*/boost/progress.hpp */filesystem/src/*'
 
-        # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-        # via the "travis encrypt" command using the project repo's public key.
-        #
-        # You can get it from "Configure TravisCI" on your Coverity project page
-        - secure: "WJQ9X51EmtIKOe7LTAKsGx/RTq60ENxSRdTvoJ2MWMHzD0+8mW32Qki60zXBaOrKuNAa0rBWj1dVIgKBxpQdWHJgSdZbBJzQ+ZLUVHB1fFMp/P8IITywceTdBw2WMqWML8pBpcXM/+mQXr+xjAVDDxcQ+7f7HKna4T7S3daN5x4="
-
     matrix:
         - CXX_STANDARD=c++98
         - CXX_STANDARD=c++0x
 
-addons:
-  coverity_scan:
-    # Mail to send notification to
-    notification_email: antoshkka@gmail.com
-
-    # This specifies the branch pattern for Coverity tests. If git branch and pattern mismatch, 
-    # then coverity won't run. Set to `branch_pattern: $TRAVIS_BRANCH` if you want to do analisis on each build.
-    #branch_pattern: disable_coverity_scan
-    branch_pattern: $TRAVIS_BRANCH
-
 ###############################################################################################################
 # From this point and below code is same for all the Boost libs
 ###############################################################################################################
-    build_command_prepend: "echo $COV_BUILD_OPTIONS $COVERITY_SCAN_BUILD_COMMAND"
-    build_command:   "../../../b2 cxxflags=--coverage\ -std=$CXX_STANDARD linkflags=--coverage "
-    project:
-      name: "$TRAVIS_REPO_SLUG"
-      description: "Build submitted via Travis CI"
-
 
 before_install:
     # Set this to the name of the library
