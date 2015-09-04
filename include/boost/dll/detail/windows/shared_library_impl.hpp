@@ -154,7 +154,7 @@ public:
 private:
     bool is_resource() const BOOST_NOEXCEPT {
         return !!(
-            reinterpret_cast<boost::detail::winapi::ULONG_PTR_>(handle_) & reinterpret_cast<boost::detail::winapi::ULONG_PTR_>(3)
+            static_cast<boost::detail::winapi::ULONG_PTR_>(handle_) & static_cast<boost::detail::winapi::ULONG_PTR_>(3)
         );
     }
 
