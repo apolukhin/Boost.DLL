@@ -5,8 +5,6 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp"
-
 //[callplugcpp_tutorial6
 #include <boost/dll/import.hpp>
 #include <iostream>
@@ -19,8 +17,8 @@ void print_unloaded() {
 
 int main(int argc, char* argv[]) {
     /*<-*/ BOOST_ASSERT(argc >= 2);    /*->*/
-    // argv[1] contains path to our plugin library
-    boost::filesystem::path shared_library_path = shared_lib_path(argv[1], L"on_unload_lib");
+    // argv[1] contains full path to our plugin library
+    boost::filesystem::path shared_library_path = argv[1];
 
     // loading library and getting a function from it
     boost::function<void(const callback_t&)> on_unload

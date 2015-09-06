@@ -16,7 +16,8 @@ int test_main(int argc, char* argv[]) {
     using namespace boost;
 
     BOOST_CHECK(argc >= 2);
-    filesystem::path path_to_shared_library = shared_lib_path(argv[1], L"getting_started_library");
+    filesystem::path path_to_shared_library = argv[1];
+    BOOST_CHECK(path_to_shared_library.string().find("getting_started_library") != std::string::npos);
     
     //[getting_started_imports_c_function
     // Importing pure C function

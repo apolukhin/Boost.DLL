@@ -5,20 +5,16 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp" // contains BOOST_B2_LIBRARY_DECORATIONS macro to workaround --layout=X
+#include "../shared_lib_path.hpp" // contains dll_test::argv_to_path workaround
 
 //[callplugcpp_tutorial8
 #include <iostream>
 #include "refcounting_api.hpp"
 
-int main(int argc, char* argv[]) { 
-    //<-
-    // This block is invisible for Quickbook documentation
-    // argv[1] contains path to our plugin library 
-    BOOST_ASSERT(argc >= 2);
-    //->
+int main(int argc, char* argv[]) {
+    /*<-*/ dll_test::argv_to_path workaround(argc, argv); /*->*/
     boost::shared_ptr<my_refcounting_api> plugin = get_plugin(
-        boost::filesystem::path(argv[1]) / "refcounting_plugin"/*<-*/ BOOST_B2_LIBRARY_DECORATIONS /*->*/,
+        boost::filesystem::path(argv[1]) / "refcounting_plugin"/*<-*/ << workaround /*->*/,
         "create_refc_plugin"
     );
 

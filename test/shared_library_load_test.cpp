@@ -8,26 +8,55 @@
 
 #include <boost/dll.hpp>
 #include <boost/test/minimal.hpp>
-
-#include "../example/shared_lib_path.hpp"
 // Unit Tests
 
+
+inline boost::filesystem::path drop_version(const boost::filesystem::path& lhs) {
+    boost::filesystem::path ext = lhs.filename().extension();
+    if (ext.native().size() > 1 && std::isdigit(ext.string()[1])) {
+        ext = lhs;
+        ext.replace_extension().replace_extension().replace_extension();
+        return ext;
+    }
+
+    return lhs;
+}
+
 inline bool lib_path_equal(const boost::filesystem::path& lhs, const boost::filesystem::path& rhs) {
-    // ./b2 may create symlinks. We assume that there are no two files with same names,
-    // si if `lhs.filename() == rhs.filename()` then paths are same.
-    const bool res = (lhs.filename() == rhs.filename() && lhs.is_absolute() && rhs.is_absolute());
+    const bool res = (drop_version(lhs) == drop_version(rhs));
     if (!res) {
         std::cerr << "lhs != rhs: " << lhs << " != " << rhs << '\n';
     }
     return res;
 }
 
+struct fs_copy_guard {
+    const boost::filesystem::path actual_path_;
+
+    inline explicit fs_copy_guard(const boost::filesystem::path& shared_library_path)
+        : actual_path_( drop_version(shared_library_path) )
+    {
+        boost::system::error_code ignore;
+        boost::filesystem::remove(actual_path_, ignore);
+        boost::filesystem::copy(shared_library_path, actual_path_, ignore);
+    }
+
+    inline ~fs_copy_guard() {
+        boost::system::error_code ignore;
+        boost::filesystem::remove(actual_path_, ignore);
+    }
+};
+
 int test_main(int argc, char* argv[])
 {
     using namespace boost::dll;
 
-    BOOST_CHECK(argc >= 2);
-    boost::filesystem::path shared_library_path = shared_lib_path(argv[1], L"test_library");
+    BOOST_CHECK(argc >= 3);
+    boost::filesystem::path shared_library_path = argv[2]; // test_library
+    if (shared_library_path.string().find("test_library") == std::string::npos) {
+        shared_library_path = argv[1];
+    }
+    BOOST_CHECK(shared_library_path.string().find("test_library") != std::string::npos);
     std::cout << "Library: " << shared_library_path;
 
     {
@@ -131,42 +160,25 @@ int test_main(int argc, char* argv[])
         BOOST_CHECK(lib_path_equal(sl.location(), shared_library_path));
    }
 
-
    {
-        boost::filesystem::path platform_independent_path = shared_library_path;
+        fs_copy_guard guard(shared_library_path);
+
+        boost::filesystem::path platform_independent_path = guard.actual_path_;
         platform_independent_path.replace_extension();
         if (platform_independent_path.filename().wstring().find(L"lib") == 0) {
-          platform_independent_path
+            platform_independent_path
                 = platform_independent_path.parent_path() / platform_independent_path.filename().wstring().substr(3);
         }
+        std::cerr << "platform_independent_path: " << platform_independent_path << '\n';
 
         shared_library sl(platform_independent_path, load_mode::append_decorations);
         BOOST_CHECK(sl.is_loaded());
         BOOST_CHECK(sl);
         BOOST_CHECK(lib_path_equal(sl.location(), shared_library_path));
 
-
-        boost::filesystem::copy_file(shared_library_path, boost::filesystem::current_path() / shared_library_path.filename());
-        sl.load("./" / platform_independent_path.filename(), load_mode::append_decorations);
-        BOOST_CHECK(sl.is_loaded());
-        BOOST_CHECK(sl);
-
-        boost::system::error_code ec;
-        sl.load("./" / platform_independent_path.filename(), ec);
-        BOOST_CHECK(ec);
-        BOOST_CHECK(!sl.is_loaded());
-        BOOST_CHECK(!sl);
-
-        sl.load(platform_independent_path.filename(), ec);
-        BOOST_CHECK(ec);
-        BOOST_CHECK(!sl.is_loaded());
-        BOOST_CHECK(!sl);
-
         sl.unload();
         BOOST_CHECK(!sl.is_loaded());
         BOOST_CHECK(!sl);
-
-        boost::filesystem::remove(shared_library_path.filename());
    }
 
    {
@@ -300,13 +312,20 @@ int test_main(int argc, char* argv[])
         BOOST_CHECK(!sl);
    }
 
+
+    shared_library_path = argv[1]; // library1
+    if (shared_library_path.string().find("library1") == std::string::npos) {
+        shared_library_path = argv[2];
+    }
+    fs_copy_guard guard(shared_library_path);
+    BOOST_CHECK(guard.actual_path_.string().find("library1") != std::string::npos);
     shared_library starts_with_lib(
-        boost::filesystem::path(argv[1]) / "library1" BOOST_B2_LIBRARY_DECORATIONS,
+        boost::filesystem::path(guard.actual_path_).replace_extension(),
         load_mode::append_decorations
     );
 
     starts_with_lib.load(
-        boost::filesystem::path(argv[1]) / "library1" BOOST_B2_LIBRARY_DECORATIONS,
+        boost::filesystem::path(guard.actual_path_).replace_extension(),
         load_mode::append_decorations
     );
 

@@ -12,7 +12,7 @@
 #include <boost/dll/library_info.hpp>
 #include <iostream>
 
-void load_and_execute(const boost::filesystem::path* libraries, std::size_t libs_count) {
+void load_and_execute(const boost::filesystem::path libraries[], std::size_t libs_count) {
     const std::string username = "User";
 
     for (std::size_t i = 0; i < libs_count; ++i) {
@@ -34,12 +34,11 @@ void load_and_execute(const boost::filesystem::path* libraries, std::size_t libs
 //]
 
 int main(int argc, char* argv[]) {
-    /*<-*/ BOOST_ASSERT(argc >= 2); /*->*/
-    // argv[1] contains path to our plugin library 
+    /*<-*/ BOOST_ASSERT(argc >= 3); /*->*/
     const std::size_t libs_count = 2;
     boost::filesystem::path libraries[libs_count] = {
-        shared_lib_path(argv[1], L"library1"),
-        shared_lib_path(argv[1], L"library2")
+        argv[1],
+        argv[2],
     };
 
     load_and_execute(libraries, libs_count);

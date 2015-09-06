@@ -12,15 +12,14 @@
 #include <boost/test/minimal.hpp>
 #include <boost/function.hpp>
 
-#include "../example/shared_lib_path.hpp"
-
 
 // Unit Tests
 int test_main(int argc, char* argv[]) {
     using namespace boost::dll;
 
     BOOST_CHECK(argc >= 2);
-    boost::filesystem::path shared_library_path = shared_lib_path(argv[1], L"test_library");
+    boost::filesystem::path shared_library_path = argv[1];
+    BOOST_CHECK(shared_library_path.string().find("test_library") != std::string::npos);
     boost::filesystem::path bad_path = shared_library_path / "directory_that_does_not_exist";
 
     try {

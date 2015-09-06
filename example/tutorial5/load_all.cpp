@@ -51,29 +51,27 @@ public:
 void plugins_collector::load_all() {
     namespace fs = ::boost::filesystem;
     typedef fs::path::string_type string_type;
-    const string_type extension = dll::shared_library::suffix().native();        
+    const string_type extension = dll::shared_library::suffix().native();
 
     // Searching a folder for files with '.so' or '.dll' extension
-    fs::directory_iterator endit;        
-    for (fs::directory_iterator it(plugins_directory_); it != endit; ++it) {
+    fs::recursive_directory_iterator endit;
+    for (fs::recursive_directory_iterator it(plugins_directory_); it != endit; ++it) {
         if (!fs::is_regular_file(*it)) {
             continue;
         }
 
-        const string_type filename = it->path().filename().native();
-        if (filename.find(extension) != filename.size() - extension.size()) {
-            // Does not ends on '.so' or '.dll'
-            continue;
-        }
-
         // We found a file. Trying to load it
-        dll::shared_library plugin(it->path());      
+        boost::system::error_code error;
+        dll::shared_library plugin(it->path(), error);
+        if (error) {
+            continue;
+        }      
         std::cout << "Loaded (" << plugin.native() << "):" << it->path() << '\n';
 
         // Gets plugin using "create_plugin" or "plugin" function
         insert_plugin(boost::move(plugin));
     }
-    
+
     dll::shared_library plugin(dll::program_location());
     std::cout << "Loaded self\n";
     insert_plugin(boost::move(plugin));
@@ -111,13 +109,27 @@ std::size_t plugins_collector::count() const {
 
 //[plugcpp_load_all
 int main(int argc, char* argv[]) {
-    BOOST_ASSERT(argc == 2);
+    /*<-*/
+    BOOST_ASSERT(argc >= 3);
+    boost::filesystem::path path1(argv[1]);
+    boost::filesystem::path path2(argv[2]);
+    boost::filesystem::path res;
+    for (boost::filesystem::path::iterator it1 = path1.begin(), it2 = path2.begin();
+        it1 != path1.end() && it2 != path2.end() && *it1 == *it2;
+        ++it1, ++it2)
+    {
+        res /= *it1;
+    }
+    std::string new_argv = res.string();
+    std::cout << "\nPlugins path: " << new_argv << ":\n";
+    argv[1] = &new_argv[0];
+    /*->*/
     plugins_collector plugins(argv[1]);
 
     std::cout << "\n\nUnique plugins " << plugins.count() << ":\n";
     plugins.print_plugins();
     // ...
 //]
-    BOOST_ASSERT(plugins.count() == 3);
+    BOOST_ASSERT(plugins.count() >= 3);
 }
 
