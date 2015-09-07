@@ -131,7 +131,7 @@ public:
                 boost::system::generic_category()
             );
 
-            return;
+            return NULL;
         }
 
         // Judging by the documentation of GetProcAddress
