@@ -54,7 +54,10 @@ namespace boost { namespace dll { namespace detail {
 
 #elif BOOST_OS_BSD_FREE
 
+#include <sys/types.h>
+#include <sys/sysctl.h>
 #include <stdlib.h>
+
 namespace boost { namespace dll { namespace detail {
     inline boost::filesystem::path program_location_impl(boost::system::error_code& ec) {
         int mib[4];

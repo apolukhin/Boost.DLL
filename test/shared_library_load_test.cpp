@@ -8,6 +8,7 @@
 
 #include <boost/dll.hpp>
 #include <boost/test/minimal.hpp>
+#include <boost/filesystem.hpp>
 // Unit Tests
 
 

@@ -19,6 +19,9 @@
 #elif BOOST_OS_MACOS || BOOST_OS_IOS
 #   include <mach-o/loader.h>
 #   include <mach-o/nlist.h>
+#elif BOOST_OS_QNX
+// QNX's copy of <elf.h> and <link.h> reside in sys folder
+#   include <sys/elf.h>
 #else
     #include <elf.h>
 #endif

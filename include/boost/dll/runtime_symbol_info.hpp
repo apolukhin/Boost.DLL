@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -46,7 +47,9 @@ namespace detail {
 #else
     inline boost::filesystem::path symbol_location_impl(const void* symbol) {
         Dl_info info;
-        const int res = dladdr(symbol, &info);
+
+        // Some of the libc headers miss `const` in `dladdr(const void*, Dl_info*)`
+        const int res = dladdr(const_cast<void*>(symbol), &info);
         return res ? boost::filesystem::path(info.dli_fname) : boost::filesystem::path();
     }
 #endif

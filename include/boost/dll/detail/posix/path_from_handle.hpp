@@ -61,7 +61,13 @@ namespace boost { namespace dll { namespace detail {
 }}} // namespace boost::dll::detail
 
 #else // #if BOOST_OS_MACOS || BOOST_OS_IOS
+
+#if BOOST_OS_QNX
+// QNX's copy of <elf.h> and <link.h> reside in sys folder
+#   include <sys/link.h>
+#else
 #   include <link.h>    // struct link_map
+#endif
 
 namespace boost { namespace dll { namespace detail {
 
