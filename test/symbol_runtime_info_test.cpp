@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -9,6 +10,7 @@
 
 #include <boost/dll.hpp>
 #include <boost/dll/runtime_symbol_info.hpp>
+#include <boost/filesystem/operations.hpp>
 
 #include <boost/test/minimal.hpp>
 
