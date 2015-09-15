@@ -42,8 +42,10 @@ std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugi
 int main(int argc, char* argv[]) { 
     BOOST_ASSERT(argc >= 3);
     std::vector<boost::filesystem::path> plugins;
-    plugins.push_back(argv[1]);
-    plugins.push_back(argv[2]);
+    plugins.reserve(argc - 1);
+    for (int i = 1; i < argc; ++i) {
+        plugins.push_back(argv[i]);
+    }
 
     const std::size_t res = search_for_symbols(plugins);
     BOOST_ASSERT(res == 1);

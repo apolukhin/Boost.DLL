@@ -112,15 +112,20 @@ int main(int argc, char* argv[]) {
     /*<-*/
     BOOST_ASSERT(argc >= 3);
     boost::filesystem::path path1(argv[1]);
-    boost::filesystem::path path2(argv[2]);
-    boost::filesystem::path res;
-    for (boost::filesystem::path::iterator it1 = path1.begin(), it2 = path2.begin();
-        it1 != path1.end() && it2 != path2.end() && *it1 == *it2;
-        ++it1, ++it2)
-    {
-        res /= *it1;
+    for (int i = 2; i < argc; ++i) {
+        boost::filesystem::path path2(argv[i]);
+        boost::filesystem::path res;
+        for (boost::filesystem::path::iterator it1 = path1.begin(), it2 = path2.begin();
+            it1 != path1.end() && it2 != path2.end() && *it1 == *it2;
+            ++it1, ++it2)
+        {
+            res /= *it1;
+        }
+
+        path1 = res;
     }
-    std::string new_argv = res.string();
+
+    std::string new_argv = path1.string();
     std::cout << "\nPlugins path: " << new_argv << ":\n";
     argv[1] = &new_argv[0];
     /*->*/

@@ -6,6 +6,7 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include "../shared_lib_path.hpp"
+#include <vector>
 
 //[callplugcpp_tutorial7
 #include <boost/dll/shared_library.hpp>
@@ -35,11 +36,11 @@ void load_and_execute(const boost::filesystem::path libraries[], std::size_t lib
 
 int main(int argc, char* argv[]) {
     /*<-*/ BOOST_ASSERT(argc >= 3); /*->*/
-    const std::size_t libs_count = 2;
-    boost::filesystem::path libraries[libs_count] = {
-        argv[1],
-        argv[2],
-    };
+    std::vector<boost::filesystem::path> libraries;
+    libraries.reserve(argc - 1);
+    for (int i = 1; i < argc; ++i) {
+        libraries.push_back(argv[i]);
+    }
 
-    load_and_execute(libraries, libs_count);
+    load_and_execute(&libraries[0], libraries.size());
 }
