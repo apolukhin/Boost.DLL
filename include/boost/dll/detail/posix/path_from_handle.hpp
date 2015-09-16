@@ -71,6 +71,16 @@ namespace boost { namespace dll { namespace detail {
 
 namespace boost { namespace dll { namespace detail {
 
+#if BOOST_OS_ANDROID
+    // Android misses struct link_map
+    struct link_map {
+        ElfW(Addr) l_addr;                  // Base address shared object is loaded at
+        char *l_name;                       // Absolute file name object was found in
+        ElfW(Dyn) *l_ld;                    // Dynamic section of the shared object
+        struct link_map *l_next, *l_prev;   // Chain of loaded objects
+    };
+#endif // #if BOOST_OS_ANDROID
+
     inline boost::filesystem::path path_from_handle(const void* handle, boost::system::error_code &ec) {
         // RTLD_DI_LINKMAP (RTLD_DI_ORIGIN returns only folder and is not suitable for this case)
         // Obtain the Link_map for the handle  that  is  specified.
