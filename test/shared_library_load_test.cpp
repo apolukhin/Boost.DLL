@@ -50,16 +50,26 @@ struct fs_copy_guard {
     }
 };
 
+// Disgusting workarounds for b2 on Windows platform
+inline boost::filesystem::path do_find_correct_libs_path(int argc, char* argv[], const char* lib_name) {
+    boost::filesystem::path ret;
+
+    for (int i = 1; i < argc; ++i) {
+        ret = argv[i];
+        if (ret.string().find(lib_name) != std::string::npos && ret.string().find(".lib") == std::string::npos) {
+            return ret;
+        }
+    }
+
+    return lib_name;
+}
+
 int test_main(int argc, char* argv[])
 {
     using namespace boost::dll;
 
     BOOST_CHECK(argc >= 3);
-    boost::filesystem::path shared_library_path = argv[2]; // test_library
-    if (shared_library_path.string().find("test_library") == std::string::npos) {
-        shared_library_path = argv[1];
-    }
-    BOOST_CHECK(shared_library_path.string().find("test_library") != std::string::npos);
+    boost::filesystem::path shared_library_path = do_find_correct_libs_path(argc, argv, "test_library");
     std::cout << "Library: " << shared_library_path;
 
     {
@@ -316,12 +326,8 @@ int test_main(int argc, char* argv[])
    }
 
 
-    shared_library_path = argv[1]; // library1
-    if (shared_library_path.string().find("library1") == std::string::npos) {
-        shared_library_path = argv[2];
-    }
+    shared_library_path = do_find_correct_libs_path(argc, argv, "library1");
     fs_copy_guard guard(shared_library_path);
-    BOOST_CHECK(guard.actual_path_.string().find("library1") != std::string::npos);
     shared_library starts_with_lib(
         boost::filesystem::path(guard.actual_path_).replace_extension(),
         load_mode::append_decorations

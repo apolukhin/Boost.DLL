@@ -44,7 +44,9 @@ int main(int argc, char* argv[]) {
     std::vector<boost::filesystem::path> plugins;
     plugins.reserve(argc - 1);
     for (int i = 1; i < argc; ++i) {
-        plugins.push_back(argv[i]);
+        if (std::string(argv[i]).find(".lib") == std::string::npos) {
+            plugins.push_back(argv[i]);
+        }
     }
 
     const std::size_t res = search_for_symbols(plugins);

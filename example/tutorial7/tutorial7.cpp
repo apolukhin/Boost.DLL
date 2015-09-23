@@ -39,7 +39,9 @@ int main(int argc, char* argv[]) {
     std::vector<boost::filesystem::path> libraries;
     libraries.reserve(argc - 1);
     for (int i = 1; i < argc; ++i) {
-        libraries.push_back(argv[i]);
+        if (std::string(argv[i]).find(".lib") == std::string::npos) {
+            libraries.push_back(argv[i]);
+        }
     }
 
     load_and_execute(&libraries[0], libraries.size());

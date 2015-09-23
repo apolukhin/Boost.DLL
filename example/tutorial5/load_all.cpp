@@ -59,7 +59,11 @@ void plugins_collector::load_all() {
         if (!fs::is_regular_file(*it)) {
             continue;
         }
-
+        /*<-*/
+        if ((*it).path().string().find(".lib") != std::string::npos) {
+            continue;
+        }
+        /*->*/
         // We found a file. Trying to load it
         boost::system::error_code error;
         dll::shared_library plugin(it->path(), error);
