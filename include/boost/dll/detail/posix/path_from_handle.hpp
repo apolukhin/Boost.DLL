@@ -71,7 +71,7 @@ namespace boost { namespace dll { namespace detail {
 
 namespace boost { namespace dll { namespace detail {
 
-#if BOOST_OS_ANDROID
+#if BOOST_OS_ANDROID || BOOST_OS_QNX
     // Android misses struct link_map
     struct link_map {
         ElfW(Addr) l_addr;                  // Base address shared object is loaded at
