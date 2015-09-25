@@ -93,18 +93,27 @@ namespace boost { namespace dll { namespace detail {
         // HP-UX 11, IRIX 6.5, OSF/1 5.1, Cygwin, mingw, Interix 3.5, BeOS.
         // Fortunately investigating the sources of open source projects brought the understanding, that
         // `handle` is just a `struct link_map*` that contains full library name.
-        if (!handle) {
-            ec = boost::system::error_code(
-                boost::system::errc::bad_file_descriptor,
-                boost::system::generic_category()
-            );
 
-            return boost::filesystem::path();
+#if BOOST_OS_BSD_FREE
+        // FreeBSD has it's own logic http://code.metager.de/source/xref/freebsd/libexec/rtld-elf/rtld.c
+        // Fortunately it has the dlinfo call.
+        const struct link_map * link_map;
+        if (dlinfo(handle, RTLD_DI_LINKMAP, &link_map) >= 0) {
+            return boost::filesystem::path(link_map->l_name);
         }
-
-        return boost::filesystem::path(
-            static_cast<const struct link_map*>(handle)->l_name
+#else
+        if (handle) {
+            return boost::filesystem::path(
+                static_cast<const struct link_map*>(handle)->l_name
+            );
+        }
+#endif
+        ec = boost::system::error_code(
+            boost::system::errc::bad_file_descriptor,
+            boost::system::generic_category()
         );
+
+        return boost::filesystem::path();
     }
 
 }}} // namespace boost::dll::detail
