@@ -81,7 +81,7 @@ namespace boost { namespace dll { namespace detail {
     };
 #endif // #if BOOST_OS_ANDROID
 
-    inline boost::filesystem::path path_from_handle(const void* handle, boost::system::error_code &ec) {
+    inline boost::filesystem::path path_from_handle(void* handle, boost::system::error_code &ec) {
         // RTLD_DI_LINKMAP (RTLD_DI_ORIGIN returns only folder and is not suitable for this case)
         // Obtain the Link_map for the handle  that  is  specified.
         // The  p  argument  points to a Link_map pointer (Link_map
