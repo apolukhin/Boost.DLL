@@ -14,8 +14,8 @@
 #include <string>
 
 namespace boost {
-namespace detail {
 namespace dll {
+namespace detail {
 namespace win_dll {
 
 

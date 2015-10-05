@@ -12,8 +12,8 @@
 
 
 namespace boost {
-namespace detail {
 namespace dll {
+namespace detail {
 namespace elf {
 
 struct elf_t {};

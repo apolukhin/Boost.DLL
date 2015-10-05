@@ -13,10 +13,13 @@
 #ifndef INCLUDE_BOOST_DEMANGLE_HPP_
 #define INCLUDE_BOOST_DEMANGLE_HPP_
 
-namespace boost
-{
+
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
+#include <boost/detail/winapi/dbghelp.hpp>
+
+namespace boost
+{
 
 inline std::string demangle(const std::string& mangled_name)
 {
@@ -30,9 +33,11 @@ inline std::string demangle(const char *mangled_name)
 
 	return std::string(unmangled_name);
 }
-
+}
 #elif defined(BOOST_GCC) || defined(BOOST_INTEL) || defined(BOOST_CLANG)
-
+namespace boost
+{
+#include <cxxabi.h>
 inline std::string demangle(const char *mangled_name)
 {
 	int status;
@@ -51,9 +56,8 @@ inline std::string demangle(const std::string &mangled_name)
 {
 	return demangle(mangled_name.c_str());
 }
-
+}
 #endif
 
-}
 
 #endif /* INCLUDE_BOOST_DEMANGLE_HPP_ */
