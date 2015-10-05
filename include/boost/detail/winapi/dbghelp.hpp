@@ -1,16 +1,16 @@
-/*
- * dbghelp.hpp
- *
- *  Created on: 05.10.2015
- *      Author: Klemens
- */
+//  dbghelp.hpp  --------------------------------------------------------------//
 
-#ifndef INCLUDE_BOOST_DETAIL_WINAPI_DBGHELP_HPP_
-#define INCLUDE_BOOST_DETAIL_WINAPI_DBGHELP_HPP_
+//  Copyright 2015 Klemens Morgenstern
+
+//  Distributed under the Boost Software License, Version 1.0.
+//  See http://www.boost.org/LICENSE_1_0.txt
+
+#ifndef BOOST_DETAIL_WINAPI_DBGHELP_HPP_
+#define BOOST_DETAIL_WINAPI_DBGHELP_HPP_
 
 
 #include <boost/detail/winapi/basic_types.hpp>
-
+#include <dbghelp.h>
 namespace boost
 {
 namespace detail
@@ -19,6 +19,11 @@ namespace winapi
 {
 extern "C"
 {
+
+typedef const WCHAR_ *PCWSTR_;
+typedef WCHAR_ 		 *PWSTR_;
+typedef const CHAR_  *PCSTR_;
+typedef CHAR_ 		 *PSTR_;
 
 
 typedef struct IMAGE_DATA_DIRECTORY_ {
@@ -143,6 +148,17 @@ typedef struct IMAGE_NT_HEADERS32_ {
 
 __declspec(dllimport) IMAGE_NT_HEADERS_*  WINAPI ImageNtHeader(PVOID_ Base);
 
+__declspec(dllimport) DWORD_ UnDecorateSymbolName
+		(PCSTR DecoratedName,
+		 PSTR_ UnDecoratedName,
+		 DWORD_ UndecoratedLength,
+		 DWORD_ Flags);
+
+__declspec(dllimport) DWORD_ UnDecorateSymbolNameW
+		(PCWSTR_ DecoratedName,
+		 PWSTR_ UnDecoratedName,
+		 DWORD_ UndecoratedLength,
+		 DWORD_ Flags);
 
 }
 }}}
