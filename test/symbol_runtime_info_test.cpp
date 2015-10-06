@@ -58,7 +58,7 @@ int test_main(int argc, char* argv[]) {
         symbol_location(lib.get<const int>("const_integer_g")) == lib.location()
     );
 
-    // Cheking that symbols are still available, after another load+unload of the library
+    // Checking that symbols are still available, after another load+unload of the library
     { shared_library sl2(shared_library_path); }
 
     BOOST_CHECK(

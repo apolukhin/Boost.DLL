@@ -54,7 +54,7 @@ namespace boost { namespace dll {
 #define BOOST_DLL_SELECTANY
 #else // #if BOOST_OS_WINDOWS
 /*!
-* \brief Macro that allows linker to select any occurence of this symbol instead of
+* \brief Macro that allows linker to select any occurrence of this symbol instead of
 * failing with 'multiple definitions' error at linktime.
 */
 #define BOOST_DLL_SELECTANY __attribute__((weak))
@@ -114,7 +114,7 @@ namespace boost { namespace dll {
 /*!
 * \brief Makes an alias name for exported function or variable.
 *
-* This macro is usefull in cases of long mangled C++ names. For example some `void boost::foo(std::sting)`
+* This macro is useful in cases of long mangled C++ names. For example some `void boost::foo(std::sting)`
 * function name will change to something like `N5boostN3foosE` after mangling.
 * Importing function by `N5boostN3foosE` name does not looks user friendly, especially assuming the fact
 * that different compilers have different mangling schemes. AliasName is the name that won't be mangled
@@ -122,7 +122,7 @@ namespace boost { namespace dll {
 *
 *
 * Can be used in any namespace, including global. FunctionOrVar must be fully qualified,
-* so that address of it could be taken. Multiple different alises for a single variable/function
+* so that address of it could be taken. Multiple different aliases for a single variable/function
 * are allowed.
 *
 * Make sure that AliasNames are unique per library/executable. Functions or variables
@@ -133,7 +133,7 @@ namespace boost { namespace dll {
 * Puts all the aliases into the \b "boostdll" read only section of the binary. Equal to
 * \forcedmacrolink{BOOST_DLL_ALIAS_SECTIONED}(FunctionOrVar, AliasName, boostdll).
 *
-* \param FunctionOrVar Function or variable for wich an alias must be made.
+* \param FunctionOrVar Function or variable for which an alias must be made.
 * \param AliasName Name of the alias. Must be a valid C identifier.
 *
 * \b Example:
@@ -175,7 +175,7 @@ namespace boost { namespace dll {
 /*!
 * \brief Same as \forcedmacrolink{BOOST_DLL_ALIAS} but puts alias name into the user specified section.
 *
-* \param FunctionOrVar Function or variable for wich an alias must be made.
+* \param FunctionOrVar Function or variable for which an alias must be made.
 * \param AliasName Name of the alias. Must be a valid C identifier.
 * \param SectionName Name of the section. Must be a valid C identifier without quotes not longer than 8 bytes.
 *
@@ -202,7 +202,7 @@ namespace boost { namespace dll {
 /*!
 * \brief Exports variable or function with unmangled alias name.
 *
-* This macro is usefull in cases of long mangled C++ names. For example some `void boost::foo(std::sting)`
+* This macro is useful in cases of long mangled C++ names. For example some `void boost::foo(std::sting)`
 * function name will change to something like `N5boostN3foosE` after mangling.
 * Importing function by `N5boostN3foosE` name does not looks user friendly, especially assuming the fact
 * that different compilers have different mangling schemes.*
@@ -216,7 +216,7 @@ namespace boost { namespace dll {
 * Puts all the aliases into the \b "boostdll" read only section of the binary. Almost same as
 * \forcedmacrolink{BOOST_DLL_ALIAS}(FunctionOrVar, FunctionOrVar).
 *
-* \param FunctionOrVar Function or variable for wich an unmangled alias must be made.
+* \param FunctionOrVar Function or variable for which an unmangled alias must be made.
 *
 * \b Example:
 * \code

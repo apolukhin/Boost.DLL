@@ -6,7 +6,7 @@
 
 [section Limitations]
 
-Some platforms and compileres do not provide all the required functionality to have a fully functional Boost.DLL.
+Some platforms and compilers do not provide all the required functionality to have a fully functional Boost.DLL.
 Such compilers are mentioned in this section along with possible workarounds for those limitations.
 
 [section MinGW]

@@ -117,7 +117,7 @@ private:
 public:
     /*!
     * Opens file with specified path and prepares for information extraction.
-    * \param library_path Path to the binary file from wich the info must be extracted.
+    * \param library_path Path to the binary file from which the info must be extracted.
     * \param throw_if_not_native_format Throw an exception if this file format is not
     * supported by OS.
     */
