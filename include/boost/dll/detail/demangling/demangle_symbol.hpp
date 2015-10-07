@@ -53,20 +53,33 @@ namespace detail
 
 inline std::string demangle_symbol(const char *mangled_name)
 {
-	return boost::core::demangle(mangled_name);
+
+	if (*mangled_name == '_')
+	{
+		//because it start's with an underline _
+		auto dm = boost::core::demangle(mangled_name +1);
+		if (!dm.empty())
+			return dm;
+		else//not mangled, but has the entry point mark.
+			return (mangled_name + 1);
+	}
+
+	//could not demangled
+	return "";
+
+
 }
 
+
+//for my personal convinience
 inline std::string demangle_symbol(const std::string& mangled_name)
 {
-	return boost::core::demangle(mangled_name.c_str());
+	return demangle_symbol(mangled_name.c_str());
 }
 
 
 }}}
 
-
-
 #endif
-
 
 #endif /* INCLUDE_BOOST_DEMANGLE_HPP_ */
