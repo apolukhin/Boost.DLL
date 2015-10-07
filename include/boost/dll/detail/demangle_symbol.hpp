@@ -51,7 +51,16 @@ namespace dll
 namespace detail
 {
 
-using ::boost::core::demangle;
+inline std::string demangle_symbol(const char *mangled_name)
+{
+	return boost::core::demangle(mangled_name);
+}
+
+inline std::string demangle_symbol(const std::string& mangled_name)
+{
+	return boost::core::demangle(mangled_name.c_str());
+}
+
 
 }}}
 
