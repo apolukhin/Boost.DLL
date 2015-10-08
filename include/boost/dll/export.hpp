@@ -12,7 +12,7 @@
 
 
 #if defined(BOOST_GCC)
-#define BOOST_MEMBER_EXPORT __attribute((thiscall)) BOOST_SYMBOL_EXPORT
+#define BOOST_MEMBER_EXPORT BOOST_SYMBOL_EXPORT
 #else
 #define BOOST_MEMBER_EXPORT
 #endif

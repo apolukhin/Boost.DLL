@@ -8,9 +8,9 @@
 #ifndef BOOST_DLL_DETAIL_DEMANGLING_ITANIUM_HPP_
 #define BOOST_DLL_DETAIL_DEMANGLING_ITANIUM_HPP_
 
+#include <boost/dll/detail/demangling/mangled_storage_base_base.hpp>
 #include <iterator>
 #include <algorithm>
-#include <boost/dll/detail/demangling/mangle_storage.hpp>
 #include <boost/dll/detail/demangling/tokenizer.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_volatile.hpp>
@@ -19,7 +19,7 @@ namespace boost { namespace dll { namespace detail {
 
 
 
-class mangled_storage_impl : public mangled_storage
+class mangled_storage_impl : public mangled_storage_base
 {
 	template<typename T>
 	struct dummy {};
@@ -35,11 +35,16 @@ class mangled_storage_impl : public mangled_storage
 		return get_name<Return>();
 	}
 public:
+	using mangled_storage_base::mangled_storage_base;
 	struct ctor_t
 	{
 		std::string C0;
 		std::string C1;
 		std::string C2;
+		bool empty() const
+		{
+			return C0.empty() || C1.empty() || C2.empty();
+		}
 	};
 
 	struct dtor_t
@@ -47,6 +52,10 @@ public:
 		std::string D0;
 		std::string D1;
 		std::string D2;
+		bool empty() const
+		{
+			return D0.empty() || D1.empty() || D2.empty();
+		}
 	};
 
 	template<typename T>
@@ -65,6 +74,26 @@ public:
 	dtor_t get_destructor();
 
 };
+
+inline bool match_types(const std::string &lhs, const std::string &rhs)
+{
+	using namespace boost;
+	using namespace std;
+	char_separator<char> sep(" ");
+	tokenizer<char_separator<char>> tlhs(lhs, sep);
+	tokenizer<char_separator<char>> trhs(rhs, sep);
+
+	vector<string> vlhs(tlhs.begin(), tlhs.end());
+	vector<string> vrhs(trhs.begin(), trhs.end());
+	if (vlhs.size() != vrhs.size())
+		return false;
+
+	sort(vlhs.begin(), vlhs.end());
+	sort(vrhs.begin(), vrhs.end());
+
+	return std::equal(vlhs.begin(), vlhs.end(), vrhs.begin());
+}
+
 
 template<typename Range, typename Iterator>
 bool match_params(const Range &range, Iterator & itr, const Iterator & end)
@@ -87,12 +116,11 @@ auto match_function(
 		const std::vector<std::string> &params,
 		const std::string& name)
 {
-	return [&](const mangled_storage_impl::entry& e)
+	return [params, name](const mangled_storage_impl::entry& e)
 	{
 		//ok, we need to tokenize it, but that should be rathers fast
 		tokenizer<tokenize_function> tkz(e.demangled);
 		auto itr = tkz.begin();
-
 		if (itr == tkz.end()) //errornous name
 			return false;
 
@@ -134,7 +162,8 @@ auto match_mem_fn(const std::string &class_name,
 {
 	auto mem_fn_name = class_name + "::" + name;
 
-	return [&](const mangled_storage_impl::entry& e)
+	return [params, name, is_const, is_volatile, mem_fn_name]
+			(const mangled_storage_impl::entry& e)
 	{
 		//ok, we need to tokenize it, but that should be rathers fast
 		tokenizer<tokenize_function> tkz(e.demangled);
@@ -215,14 +244,6 @@ auto match_constructor(const std::string &ctor_name,
 				itr++;
 
 		if (itr != tkz.end())
-			if ((*itr == "const") && is_const)
-				itr++;
-
-		if (itr != tkz.end())
-			if ((*itr == "volatile") && is_volatile)
-				itr++;
-
-		if (itr != tkz.end())
 			return false;
 
 		return true;
@@ -236,6 +257,8 @@ template<typename T> std::string mangled_storage_impl::get_variable(const std::s
 			{
 				if (e.demangled == name)
 					return true;
+				else
+					return false;
 			});
 
 	if (found != storage.end())
@@ -297,7 +320,7 @@ auto mangled_storage_impl::get_constructor() -> ctor_t
 			ctor_name = class_name+ "::" + unscoped_cname;
 		}
 	}
-	auto predicate = match_ctors(
+	auto predicate = match_constructor(
 				ctor_name,
 				get_func_params(dummy<Signature>()));
 
@@ -311,15 +334,15 @@ auto mangled_storage_impl::get_constructor() -> ctor_t
 	{
 		if (e.mangled.find(unscoped_cname +"C0E") != std::string::npos)
 		{
-			ct.C0 = e;
+			ct.C0 = e.mangled;
 		}
 		else if (e.mangled.find(unscoped_cname +"C1E") != std::string::npos)
 		{
-			ct.C1 = e;
+			ct.C1 = e.mangled;
 		}
 		else if (e.mangled.find(unscoped_cname +"C2E") != std::string::npos)
 		{
-			ct.C2 = e;
+			ct.C2 = e.mangled;
 		}
 	}
 	return ct;

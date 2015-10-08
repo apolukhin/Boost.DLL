@@ -57,11 +57,11 @@ inline std::string demangle_symbol(const char *mangled_name)
 	if (*mangled_name == '_')
 	{
 		//because it start's with an underline _
-		auto dm = boost::core::demangle(mangled_name +1);
+		auto dm = boost::core::demangle(mangled_name);
 		if (!dm.empty())
 			return dm;
-		else//not mangled, but has the entry point mark.
-			return (mangled_name + 1);
+		else
+			return (mangled_name);
 	}
 
 	//could not demangled

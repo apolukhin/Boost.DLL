@@ -8,11 +8,11 @@
 #ifndef BOOST_DLL_DETAIL_DEMANGLING_MSVC_HPP_
 #define BOOST_DLL_DETAIL_DEMANGLING_MSVC_HPP_
 
-#include <boost/dll/detail/demangling/mangle_storage.hpp>
+#include <boost/dll/detail/demangling/mangled_storage_base_base.hpp>
 
 namespace boost { namespace dll { namespace detail {
 
-class signature_matcher  : public mangled_storage
+class signature_matcher  : public mangled_storage_base
 {
 public:
 	struct ctor_t
