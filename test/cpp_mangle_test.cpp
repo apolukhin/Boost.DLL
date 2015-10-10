@@ -28,7 +28,19 @@ int test_main(int argc, char* argv[])
    
     //argv[2] == dll location.
 
-    library_info lib{boost::filesystem::path(argv[2])};
+    boost::filesystem::path a1(argv[1]);
+    boost::filesystem::path a2(argv[2]);
+
+
+    boost::filesystem::path * selection;
+    if (a1.extension() == ".dll")
+    	selection = &a1;
+    else if (a2.extension() == ".dll")
+    	selection = &a2;
+    else
+    	return 1;
+
+    library_info lib{*selection};
 
     mangled_storage ms(lib);
 
@@ -46,7 +58,7 @@ int test_main(int argc, char* argv[])
 
 	BOOST_CHECK(!v.empty()); //check if a symbols was found.
 
-	v = ms.get_variable<const double>("unscoped_var");
+	v = ms.get_variable<int>("unscoped_var");
 
 	BOOST_CHECK(!v.empty()); //check if a symbols was found.
 
@@ -77,10 +89,10 @@ int test_main(int argc, char* argv[])
 	ms.add_alias<override_class>("some_space::some_class");
 
 	auto ctor1 = ms.get_constructor<override_class()>();
-	BOOST_CHECK(!v.empty());
+	BOOST_CHECK(!ctor1.empty());
 
 	auto ctor2 = ms.get_constructor<override_class(int)>();
-	BOOST_CHECK(!v.empty());
+	BOOST_CHECK(!ctor2.empty());
 
 
 	v = ms.get_mem_fn<override_class, double(double, double)>("func");
@@ -90,9 +102,9 @@ int test_main(int argc, char* argv[])
 	BOOST_CHECK(!v.empty());
 
 
-  auto dtor = ms.get_destructor<override_class>();
+	auto dtor = ms.get_destructor<override_class>();
 
-
+	BOOST_CHECK(!dtor.empty());
 
     return 0;
 }

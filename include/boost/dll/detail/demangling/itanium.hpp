@@ -43,7 +43,7 @@ public:
 		std::string C2;
 		bool empty() const
 		{
-			return C0.empty() || C1.empty() || C2.empty();
+			return C0.empty() && C1.empty() && C2.empty();
 		}
 	};
 
@@ -54,7 +54,7 @@ public:
 		std::string D2;
 		bool empty() const
 		{
-			return D0.empty() || D1.empty() || D2.empty();
+			return D0.empty() && D1.empty() && D2.empty();
 		}
 	};
 
@@ -229,9 +229,16 @@ auto match_constructor(const std::string &ctor_name,
 		if (*itr != "(")
 			return false;
 		itr++;
+		using namespace std;;
+
+		for (auto i = itr; i != tkz.end(); i++)
+			cout << *i << ", ";
+		cout << endl;
 
 		if (!match_params(params, itr, tkz.end()))
 			return false;
+
+
 
 		if (itr == tkz.end())
 			return false;

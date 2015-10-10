@@ -30,7 +30,8 @@ inline std::string demangle_symbol(const char *mangled_name)
 {
 	char unmangled_name[512];
 
-	UnDecorateSymbolName(mangled_name, unmangled_name, 512, UNDNAME_COMPLETE);
+	::boost::detail::winapi::
+	 	 UnDecorateSymbolName(mangled_name, unmangled_name, 512, 0);
 
 	return std::string(unmangled_name);
 }

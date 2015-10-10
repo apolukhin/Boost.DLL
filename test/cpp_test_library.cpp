@@ -36,7 +36,7 @@ BOOST_SYMBOL_EXPORT void overloaded(double d)
 namespace some_space
 {
 
-BOOST_SYMBOL_EXPORT struct some_class
+struct BOOST_SYMBOL_EXPORT some_class
 {
 	BOOST_MEMBER_EXPORT static int value ;
 	BOOST_MEMBER_EXPORT static void set_value(int i) { value = i;}

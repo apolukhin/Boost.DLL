@@ -10,7 +10,6 @@
 
 
 #include <boost/detail/winapi/basic_types.hpp>
-#include <dbghelp.h>
 namespace boost
 {
 namespace detail
@@ -26,7 +25,7 @@ typedef const CHAR_  *PCSTR_;
 typedef CHAR_ 		 *PSTR_;
 
 
-typedef struct IMAGE_DATA_DIRECTORY_ {
+struct IMAGE_DATA_DIRECTORY_ {
   DWORD_ VirtualAddress;
   DWORD_ Size;
 };
@@ -45,7 +44,7 @@ struct IMAGE_EXPORT_DIRECTORY_ {
   DWORD_ AddressOfNameOrdinals;
 };
 
-typedef struct IMAGE_FILE_HEADER_ {
+struct IMAGE_FILE_HEADER_ {
   WORD_ Machine;
   WORD_ NumberOfSections;
   DWORD_ TimeDateStamp;
@@ -55,7 +54,6 @@ typedef struct IMAGE_FILE_HEADER_ {
   WORD_ Characteristics;
 } ;
 
-static constexpr std::size_t IMAGE_NUMBEROF_DIRECTORY_ENTRIES_ = 16;
 
 struct IMAGE_OPTIONAL_HEADER32_ {
 
@@ -89,10 +87,10 @@ struct IMAGE_OPTIONAL_HEADER32_ {
   DWORD_ SizeOfHeapCommit;
   DWORD_ LoaderFlags;
   DWORD_ NumberOfRvaAndSizes;
-  IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES_];
+  IMAGE_DATA_DIRECTORY_ DataDirectory[16];
 };
 
-typedef struct IMAGE_OPTIONAL_HEADER64_ {
+struct IMAGE_OPTIONAL_HEADER64_ {
   WORD_ Magic;
   BYTE_ MajorLinkerVersion;
   BYTE_ MinorLinkerVersion;
@@ -122,17 +120,17 @@ typedef struct IMAGE_OPTIONAL_HEADER64_ {
   ULONGLONG_ SizeOfHeapCommit;
   DWORD_ LoaderFlags;
   DWORD_ NumberOfRvaAndSizes;
-  IMAGE_DATA_DIRECTORY DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES_];
+  IMAGE_DATA_DIRECTORY_ DataDirectory[16];
 };
 
 
-typedef struct IMAGE_NT_HEADERS64_ {
+struct IMAGE_NT_HEADERS64_ {
   DWORD_ Signature;
   IMAGE_FILE_HEADER_ FileHeader;
   IMAGE_OPTIONAL_HEADER64_ OptionalHeader;
 };
 
-typedef struct IMAGE_NT_HEADERS32_ {
+struct IMAGE_NT_HEADERS32_ {
   DWORD_ Signature;
   IMAGE_FILE_HEADER_ FileHeader;
   IMAGE_OPTIONAL_HEADER32_ OptionalHeader;
@@ -148,13 +146,13 @@ typedef struct IMAGE_NT_HEADERS32_ {
 
 __declspec(dllimport) IMAGE_NT_HEADERS_*  WINAPI ImageNtHeader(PVOID_ Base);
 
-__declspec(dllimport) DWORD_ UnDecorateSymbolName
-		(PCSTR DecoratedName,
+__declspec(dllimport) DWORD_ WINAPI UnDecorateSymbolName
+		(PCSTR_ DecoratedName,
 		 PSTR_ UnDecoratedName,
 		 DWORD_ UndecoratedLength,
 		 DWORD_ Flags);
 
-__declspec(dllimport) DWORD_ UnDecorateSymbolNameW
+__declspec(dllimport) DWORD_ WINAPI UnDecorateSymbolNameW
 		(PCWSTR_ DecoratedName,
 		 PWSTR_ UnDecoratedName,
 		 DWORD_ UndecoratedLength,
