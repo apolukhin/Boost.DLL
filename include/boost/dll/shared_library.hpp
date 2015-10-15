@@ -39,7 +39,7 @@ namespace boost { namespace dll {
 * All the shared_library instances share reference count to an actual DLL/DSO, so it
 * is safe to have multiple instances of shared_library referencing the same DLL/DSO.
 *
-* On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recomended for use on Linux/POSIX.
+* On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recommended for use on Linux/POSIX.
 */
 class shared_library
 /// @cond
@@ -230,7 +230,7 @@ public:
     BOOST_EXPLICIT_OPERATOR_BOOL()
 
     /*!
-    * Seach for a given symbol on loaded library. Works for all symbols, including alias names.
+    * Search for a given symbol on loaded library. Works for all symbols, including alias names.
     *
     * \param symbol_name Null-terminated symbol name. Can handle std::string, char*, const char*.
     *

@@ -114,8 +114,8 @@ public:
             boost::system::generic_category()
         );
 
-        // Maybe user whanted to load the executable itself? Checking...
-        // We assume that usualy user whants to load a dynamic library not the executable itself, that's why
+        // Maybe user wanted to load the executable itself? Checking...
+        // We assume that usually user wants to load a dynamic library not the executable itself, that's why
         // we try this only after traditional load fails.
         boost::system::error_code prog_loc_err;
         boost::filesystem::path loc = boost::dll::detail::program_location_impl(prog_loc_err);

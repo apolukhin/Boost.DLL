@@ -58,7 +58,7 @@ namespace detail {
     /*!
     * On success returns full path and name of the binary object that holds symbol.
     * \tparam T Type of the symbol, must not be explicitly specified.
-    * \param symbol Symbol which location is to be determinated.
+    * \param symbol Symbol which location is to be determined.
     * \return Path to the binary object that holds symbol or empty path in case error.
     * \throws std::bad_alloc in case of insufficient memory.
     *
@@ -91,7 +91,7 @@ namespace detail {
 
     /*!
     * On success returns full path and name of the binary object that holds the current line of code
-    * (the line in wich the `this_line_location()` method was called).
+    * (the line in which the `this_line_location()` method was called).
     *
     * \throws std::bad_alloc in case of insufficient memory.
     */

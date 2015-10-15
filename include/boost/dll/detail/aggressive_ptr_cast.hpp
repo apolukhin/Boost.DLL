@@ -20,7 +20,7 @@
 namespace boost { namespace dll { namespace detail {
 
 // GCC warns when reinterpret_cast between function pointer and object pointer occur.
-// This method supress the warnings and ensures that such casts are safe.
+// This method suppress the warnings and ensures that such casts are safe.
 template <class To, class From>
 BOOST_FORCEINLINE To aggressive_ptr_cast(From* v) BOOST_NOEXCEPT {
     BOOST_STATIC_ASSERT_MSG(

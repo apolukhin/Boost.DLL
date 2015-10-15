@@ -143,7 +143,7 @@ int test_main(int argc, char* argv[]) {
     BOOST_CHECK(inc(2) == 3);
     BOOST_CHECK(inc(3) == 4);
 
-    // Cheking that symbols are still available, after another load+unload of the library
+    // Checking that symbols are still available, after another load+unload of the library
     { shared_library sl2(shared_library_path); }
 
     BOOST_CHECK(inc(1) == 2);

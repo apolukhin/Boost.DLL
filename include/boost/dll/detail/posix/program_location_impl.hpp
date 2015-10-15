@@ -101,7 +101,7 @@ namespace boost { namespace dll { namespace detail {
     inline boost::filesystem::path program_location_impl(boost::system::error_code &ec) {
         // We can not use
         // boost::dll::detail::path_from_handle(dlopen(NULL, RTLD_LAZY | RTLD_LOCAL), ignore);
-        // because such code returns empy path.
+        // because such code returns empty path.
 
         return boost::filesystem::read_symlink("/proc/self/exe", ec);   // Linux specific
     }

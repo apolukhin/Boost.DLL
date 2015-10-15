@@ -54,7 +54,7 @@ namespace boost { namespace dll { namespace detail {
         }
         
         if (ec) {
-            // Error other than ERROR_INSUFFICIENT_BUFFER_ occured or failed to allocate buffer big enough
+            // Error other than ERROR_INSUFFICIENT_BUFFER_ occurred or failed to allocate buffer big enough
             return boost::filesystem::path();
         }
         
