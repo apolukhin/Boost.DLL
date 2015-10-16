@@ -72,12 +72,11 @@ namespace boost { namespace dll { namespace detail {
 namespace boost { namespace dll { namespace detail {
 
 #if BOOST_OS_ANDROID || BOOST_OS_QNX
-    // Android misses struct link_map
+    // Android and QNX miss struct link_map. QNX misses ElfW macro, so avoiding it.
     struct link_map {
-        ElfW(Addr) l_addr;                  // Base address shared object is loaded at
-        char *l_name;                       // Absolute file name object was found in
-        ElfW(Dyn) *l_ld;                    // Dynamic section of the shared object
-        struct link_map *l_next, *l_prev;   // Chain of loaded objects
+        void *l_addr;   // Base address shared object is loaded at
+        char *l_name;   // Absolute file name object was found in
+        // ...          // Ignoring remaning parts of the structure
     };
 #endif // #if BOOST_OS_ANDROID
 
