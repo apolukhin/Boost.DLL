@@ -8,10 +8,6 @@
 
 // For more information, see http://www.boost.org
 
-#ifdef TEST_FORCE_USE_OF_WINDOWS_H
-#include <windows.h>
-#endif
-
 #include <boost/dll.hpp>
 #include <boost/test/minimal.hpp>
 #include <boost/function.hpp>

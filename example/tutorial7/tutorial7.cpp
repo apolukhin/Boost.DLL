@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     std::vector<boost::filesystem::path> libraries;
     libraries.reserve(argc - 1);
     for (int i = 1; i < argc; ++i) {
-        if (std::string(argv[i]).find(".lib") == std::string::npos) {
+        if (std::string(argv[i]).find(".lib") == std::string::npos && std::string(argv[i]).find(".exp") == std::string::npos && std::string(argv[i]).find(".pdb") == std::string::npos) {
             libraries.push_back(argv[i]);
         }
     }

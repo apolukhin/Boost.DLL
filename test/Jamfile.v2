@@ -52,7 +52,7 @@ project
         [ run shared_library_get_symbol_test.cpp
                 :
                 : test_library
-                : $(RDYNAMIC) <target-os>windows:<define>TEST_FORCE_USE_OF_WINDOWS_H <link>shared
+                : $(RDYNAMIC) <target-os>windows:<define>BOOST_USE_WINDOWS_H <link>shared
                 : get_symbol_windows_h_forced
         ]
         [ run symbol_runtime_info_test.cpp : : test_library : $(RDYNAMIC) <link>shared ]

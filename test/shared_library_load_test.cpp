@@ -26,7 +26,7 @@ inline boost::filesystem::path drop_version(const boost::filesystem::path& lhs) 
 }
 
 inline bool lib_path_equal(const boost::filesystem::path& lhs, const boost::filesystem::path& rhs) {
-    const bool res = (drop_version(lhs) == drop_version(rhs));
+    const bool res = (drop_version(lhs).filename() == drop_version(rhs).filename());
     if (!res) {
         std::cerr << "lhs != rhs: " << lhs << " != " << rhs << '\n';
     }
@@ -35,18 +35,24 @@ inline bool lib_path_equal(const boost::filesystem::path& lhs, const boost::file
 
 struct fs_copy_guard {
     const boost::filesystem::path actual_path_;
+    const bool same_;
 
     inline explicit fs_copy_guard(const boost::filesystem::path& shared_library_path)
         : actual_path_( drop_version(shared_library_path) )
+        , same_(actual_path_ == shared_library_path)
     {
-        boost::system::error_code ignore;
-        boost::filesystem::remove(actual_path_, ignore);
-        boost::filesystem::copy(shared_library_path, actual_path_, ignore);
+        if (!same_) {
+            boost::system::error_code ignore;
+            boost::filesystem::remove(actual_path_, ignore);
+            boost::filesystem::copy(shared_library_path, actual_path_, ignore);
+        }
     }
 
     inline ~fs_copy_guard() {
-        boost::system::error_code ignore;
-        boost::filesystem::remove(actual_path_, ignore);
+        if (!same_) {
+            boost::system::error_code ignore;
+            boost::filesystem::remove(actual_path_, ignore);
+        }
     }
 };
 

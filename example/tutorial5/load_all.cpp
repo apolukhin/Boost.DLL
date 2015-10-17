@@ -60,7 +60,10 @@ void plugins_collector::load_all() {
             continue;
         }
         /*<-*/
-        if ((*it).path().string().find(".lib") != std::string::npos) {
+        if ((*it).path().string().find(".lib") != std::string::npos || (*it).path().string().find(".exp") != std::string::npos
+            || (*it).path().string().find(".pdb") != std::string::npos || (*it).path().string().find(".manifest") != std::string::npos
+            || (*it).path().string().find(".rsp") != std::string::npos || (*it).path().string().find(".obj") != std::string::npos)
+        {
             continue;
         }
         /*->*/

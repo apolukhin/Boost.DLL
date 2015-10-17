@@ -37,7 +37,7 @@ namespace boost { namespace dll { namespace detail {
         // If this parameter is NULL, GetModuleFileName retrieves the path of the
         // executable file of the current process.
         boost::detail::winapi::WCHAR_ path_hldr[DEFAULT_PATH_SIZE_];
-        boost::detail::winapi::LPCWSTR_ path = path_hldr;
+        boost::detail::winapi::LPWSTR_ path = path_hldr;
         boost::detail::winapi::GetModuleFileNameW(handle, path, DEFAULT_PATH_SIZE_);
         ec = last_error_code();
 
