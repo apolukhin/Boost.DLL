@@ -37,8 +37,8 @@ class mangled_storage_impl  : public mangled_storage_base
 		return get_name<Return>();
 	}
 public:
-	using ctor_t = std::string;
-	using dtor_t = std::string;
+	using ctor_sym = std::string;
+	using dtor_sym = std::string;
 
 	using mangled_storage_base::mangled_storage_base;
 
@@ -52,10 +52,10 @@ public:
 	std::string get_mem_fn(const std::string &name);
 
 	template<typename Signature>
-	ctor_t get_constructor();
+	ctor_sym get_constructor();
 
 	template<typename Class>
-	dtor_t get_destructor();
+	dtor_sym get_destructor();
 };
 
 
@@ -508,7 +508,7 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 
 
 template<typename Signature>
-auto mangled_storage_impl::get_constructor() -> ctor_t
+auto mangled_storage_impl::get_constructor() -> ctor_sym
 {
 
 	std::string ctor_name; // = class_name + "::" + name;
@@ -540,7 +540,7 @@ auto mangled_storage_impl::get_constructor() -> ctor_t
 }
 
 template<typename Class>
-auto mangled_storage_impl::get_destructor() -> dtor_t
+auto mangled_storage_impl::get_destructor() -> dtor_sym
 {
 
 	std::string dtor_name; // = class_name + "::" + name;

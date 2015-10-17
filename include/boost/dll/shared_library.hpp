@@ -79,7 +79,7 @@ public:
     *
     */
     shared_library(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
-        load(lib_path, mode);
+    	shared_library::load(lib_path, mode);
     }
 
     /*!
@@ -96,12 +96,12 @@ public:
     * \throw std::bad_alloc in case of insufficient memory.
     */
     shared_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
-        load(lib_path, mode, ec);
+    	shared_library::load(lib_path, mode, ec);
     }
 
     //! \overload shared_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
     shared_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
-        load(lib_path, mode, ec);
+    	shared_library::load(lib_path, mode, ec);
     }
 
    /*!
@@ -135,7 +135,7 @@ public:
     *
     * \throw Nothing.
     */
-    ~shared_library() BOOST_NOEXCEPT {}
+    virtual ~shared_library() BOOST_NOEXCEPT {}
 
     /*!
     * Loads a library by specified path with a specified mode.
@@ -151,8 +151,9 @@ public:
     * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     *
     */
-    void load(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
+    virtual void load(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
         boost::system::error_code ec;
+
         base_t::load(lib_path, mode, ec);
 
         if (ec) {
@@ -173,13 +174,13 @@ public:
     *
     * \throw std::bad_alloc in case of insufficient memory.
     */
-    void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
+    virtual void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
         ec.clear();
         base_t::load(lib_path, mode, ec);
     }
 
     //! \overload void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
-    void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
+    virtual void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
         ec.clear();
         base_t::load(lib_path, mode, ec);
     }

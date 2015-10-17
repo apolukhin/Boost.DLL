@@ -58,6 +58,14 @@ public:
 
 	}
 
+	void load(library_info & li) { storage.clear(); add_symbols(li.symbols()); };
+	void load(const boost::filesystem::path& library_path,
+			bool throw_if_not_native_format = true)
+	{
+		storage.clear();
+		add_symbols(library_info(library_path, throw_if_not_native_format).symbols());
+	};
+
 	/*! Allows do add a class as alias, if the class imported is not known
 	 * in this binary.
 	 * @tparam Alias The Alias type

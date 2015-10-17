@@ -36,7 +36,7 @@ class mangled_storage_impl : public mangled_storage_base
 	}
 public:
 	using mangled_storage_base::mangled_storage_base;
-	struct ctor_t
+	struct ctor_sym
 	{
 		std::string C0;
 		std::string C1;
@@ -47,7 +47,7 @@ public:
 		}
 	};
 
-	struct dtor_t
+	struct dtor_sym
 	{
 		std::string D0;
 		std::string D1;
@@ -68,10 +68,10 @@ public:
 	std::string get_mem_fn(const std::string &name);
 
 	template<typename Signature>
-	ctor_t get_constructor();
+	ctor_sym get_constructor();
 
 	template<typename Class>
-	dtor_t get_destructor();
+	dtor_sym get_destructor();
 
 };
 
@@ -308,7 +308,7 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 
 
 template<typename Signature>
-auto mangled_storage_impl::get_constructor() -> ctor_t
+auto mangled_storage_impl::get_constructor() -> ctor_sym
 {
 
 	std::string ctor_name; // = class_name + "::" + name;
@@ -335,7 +335,7 @@ auto mangled_storage_impl::get_constructor() -> ctor_t
 	std::copy_if(storage.begin(), storage.end(),
 			std::back_inserter(findings), predicate);
 
-	ctor_t ct;
+	ctor_sym ct;
 
 	for (auto & e : findings)
 	{
@@ -356,7 +356,7 @@ auto mangled_storage_impl::get_constructor() -> ctor_t
 }
 
 template<typename Class>
-auto mangled_storage_impl::get_destructor() -> dtor_t
+auto mangled_storage_impl::get_destructor() -> dtor_sym
 {
 
 	std::string dtor_name; // = class_name + "::" + name;
@@ -380,7 +380,7 @@ auto mangled_storage_impl::get_destructor() -> dtor_t
 	auto d1 = unscoped_cname + "D1Ev";
 	auto d2 = unscoped_cname + "D2Ev";
 
-	dtor_t dt;
+	dtor_sym dt;
 	//this is so simple, i don#t need a predicate
 	for (auto & s : storage)
 	{
