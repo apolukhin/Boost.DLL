@@ -11,7 +11,7 @@
 #include <boost/dll/detail/pe_info.hpp>
 #include <boost/dll/detail/macho_info.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/test/minimal.hpp>
+#include <boost/core/lightweight_test.hpp>
 #include <boost/predef/os.h>
 
 #if BOOST_OS_WINDOWS
@@ -42,7 +42,7 @@ inline std::size_t get_offset(const T1& v1, const T2& v2) {
 
 #define CHECK_FIELD(Field)                                              \
     BOOST_STATIC_ASSERT(sizeof(v1.Field) == sizeof(v2.Field));          \
-    BOOST_CHECK(get_offset(v1, v1.Field) == get_offset(v2, v2.Field))   \
+    BOOST_TEST(get_offset(v1, v1.Field) == get_offset(v2, v2.Field))   \
     /**/
 
 
@@ -299,7 +299,7 @@ void generic_header_check(const T& v1, const dd::load_command_& v2) {
 
 
 // Unit Tests
-int test_main(int /*argc*/, char* /*argv*/[]) {
+int main(int /*argc*/, char* /*argv*/[]) {
 
 #if BOOST_OS_WINDOWS
     generic_header_check(::IMAGE_DOS_HEADER(), dd::IMAGE_DOS_HEADER_());
@@ -340,6 +340,6 @@ int test_main(int /*argc*/, char* /*argv*/[]) {
     elf_sym_header_checks(::Elf64_Sym(), dd::Elf64_Sym_());
 #endif 
 
-    return 0;
+    return boost::report_errors();
 }
 

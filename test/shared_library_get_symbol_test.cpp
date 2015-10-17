@@ -9,7 +9,7 @@
 // For more information, see http://www.boost.org
 
 #include <boost/dll.hpp>
-#include <boost/test/minimal.hpp>
+#include <boost/core/lightweight_test.hpp>
 #include <boost/function.hpp>
 #include <boost/fusion/container.hpp>
 // lib functions
@@ -45,7 +45,7 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
     {
         boost::function<std::size_t(const std::vector<int>&)> sz
             = import_alias<std::size_t(const std::vector<int>&)>(shared_library_path, "foo_bar");
-        BOOST_CHECK(sz(v) == 1000);
+        BOOST_TEST(sz(v) == 1000);
     }
 
 
@@ -60,43 +60,43 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
         std::vector<int> v1(1, 1), v2(2, 2), v3(3, 3), v4(4, 4), v5(1000, 5);
         boost::shared_ptr<do_share_res_t> res = f(v1, v2, v3, &v4, &v5);
 
-        BOOST_CHECK(at_c<0>(*res).size() == 1); BOOST_CHECK(at_c<0>(*res).front() == 1);
-        BOOST_CHECK(at_c<1>(*res).size() == 2); BOOST_CHECK(at_c<1>(*res).front() == 2);
-        BOOST_CHECK(at_c<2>(*res).size() == 3); BOOST_CHECK(at_c<2>(*res).front() == 3);
-        BOOST_CHECK(at_c<3>(*res)->size() == 4); BOOST_CHECK(at_c<3>(*res)->front() == 4);
-        BOOST_CHECK(at_c<4>(*res)->size() == 1000); BOOST_CHECK(at_c<4>(*res)->front() == 5);
+        BOOST_TEST(at_c<0>(*res).size() == 1); BOOST_TEST(at_c<0>(*res).front() == 1);
+        BOOST_TEST(at_c<1>(*res).size() == 2); BOOST_TEST(at_c<1>(*res).front() == 2);
+        BOOST_TEST(at_c<2>(*res).size() == 3); BOOST_TEST(at_c<2>(*res).front() == 3);
+        BOOST_TEST(at_c<3>(*res)->size() == 4); BOOST_TEST(at_c<3>(*res)->front() == 4);
+        BOOST_TEST(at_c<4>(*res)->size() == 1000); BOOST_TEST(at_c<4>(*res)->front() == 5);
 
-        BOOST_CHECK(at_c<3>(*res) == &v4);
-        BOOST_CHECK(at_c<4>(*res) == &v5);
-        BOOST_CHECK(at_c<1>(*res).back() == 777);
-        BOOST_CHECK(v5.back() == 9990);
+        BOOST_TEST(at_c<3>(*res) == &v4);
+        BOOST_TEST(at_c<4>(*res) == &v5);
+        BOOST_TEST(at_c<1>(*res).back() == 777);
+        BOOST_TEST(v5.back() == 9990);
     }
 
     {
         boost::shared_ptr<int> i = import<int>(shared_library_path, "integer_g");
-        BOOST_CHECK(*i == 100);
+        BOOST_TEST(*i == 100);
 
         boost::shared_ptr<int> i2;
         i.swap(i2);
-        BOOST_CHECK(*i2 == 100);
+        BOOST_TEST(*i2 == 100);
     }
 
     {
         boost::shared_ptr<const int> i = import<const int>(shared_library_path, "const_integer_g");
-        BOOST_CHECK(*i == 777);
+        BOOST_TEST(*i == 777);
 
         boost::shared_ptr<const int> i2 = i;
         i.reset();
-        BOOST_CHECK(*i2 == 777);
+        BOOST_TEST(*i2 == 777);
     }
 
     {
         boost::shared_ptr<std::string> s = import_alias<std::string>(shared_library_path, "info");
-        BOOST_CHECK(*s == "I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
+        BOOST_TEST(*s == "I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
 
         boost::shared_ptr<std::string> s2;
         s.swap(s2);
-        BOOST_CHECK(*s2 == "I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
+        BOOST_TEST(*s2 == "I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
     }
 }
 
@@ -106,44 +106,44 @@ extern "C" int BOOST_SYMBOL_EXPORT exef() {
 }
 
 // Unit Tests
-int test_main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
     using namespace boost::dll;
 
-    BOOST_CHECK(argc >= 2);
+    BOOST_TEST(argc >= 2);
     boost::filesystem::path shared_library_path = argv[1];
-    BOOST_CHECK(shared_library_path.string().find("test_library") != std::string::npos);
+    BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
 
     refcountable_test(shared_library_path);
 
     shared_library sl(shared_library_path);
 
-    BOOST_CHECK(sl.get<int>("integer_g") == 100);
+    BOOST_TEST(sl.get<int>("integer_g") == 100);
 
     sl.get<int>("integer_g") = 10;
-    BOOST_CHECK(sl.get<int>("integer_g") == 10);
-    BOOST_CHECK(sl.get<int>(std::string("integer_g")) == 10);
+    BOOST_TEST(sl.get<int>("integer_g") == 10);
+    BOOST_TEST(sl.get<int>(std::string("integer_g")) == 10);
 
-    BOOST_CHECK(sl.get<say_hello_func>("say_hello"));
+    BOOST_TEST(sl.get<say_hello_func>("say_hello"));
     sl.get<say_hello_func>("say_hello")();
 
     float ver = sl.get<lib_version_func>("lib_version")();
-    BOOST_CHECK(ver == 1.0);
+    BOOST_TEST(ver == 1.0);
 
     int n = sl.get<increment>("increment")(1);
-    BOOST_CHECK(n == 2);
+    BOOST_TEST(n == 2);
 
-    BOOST_CHECK(sl.get<const int>("const_integer_g") == 777);
+    BOOST_TEST(sl.get<const int>("const_integer_g") == 777);
 
     boost::function<int(int)> inc = sl.get<int(int)>("increment");
-    BOOST_CHECK(inc(1) == 2);
-    BOOST_CHECK(inc(2) == 3);
-    BOOST_CHECK(inc(3) == 4);
+    BOOST_TEST(inc(1) == 2);
+    BOOST_TEST(inc(2) == 3);
+    BOOST_TEST(inc(3) == 4);
 
     // Checking that symbols are still available, after another load+unload of the library
     { shared_library sl2(shared_library_path); }
 
-    BOOST_CHECK(inc(1) == 2);
-    BOOST_CHECK(sl.get<int>("integer_g") == 10);
+    BOOST_TEST(inc(1) == 2);
+    BOOST_TEST(sl.get<int>("integer_g") == 10);
 
 
     // Checking aliases
@@ -151,20 +151,20 @@ int test_main(int argc, char* argv[]) {
         = sl.get_alias<std::size_t(const std::vector<int>&)>("foo_bar");
 
     std::vector<int> v(10);
-    BOOST_CHECK(sz(v) == 10);
-    BOOST_CHECK(sl.get_alias<std::size_t>("foo_variable") == 42);
+    BOOST_TEST(sz(v) == 10);
+    BOOST_TEST(sl.get_alias<std::size_t>("foo_variable") == 42);
 
 
     sz = sl.get<std::size_t(*)(const std::vector<int>&)>("foo_bar");
-    BOOST_CHECK(sz(v) == 10);
-    BOOST_CHECK(*sl.get<std::size_t*>("foo_variable") == 42);
+    BOOST_TEST(sz(v) == 10);
+    BOOST_TEST(*sl.get<std::size_t*>("foo_variable") == 42);
     
     { // self
         shared_library sl(program_location());
         int val = sl.get<int(void)>("exef")();
-        BOOST_CHECK(val == 15);   
+        BOOST_TEST(val == 15);   
     }
 
-    return 0;
+    return boost::report_errors();
 }
 
