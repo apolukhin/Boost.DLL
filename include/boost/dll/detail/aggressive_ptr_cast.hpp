@@ -15,7 +15,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/is_const.hpp>
-#include <stdint.h> // cstdint is not good because it does not define std::uintptr_t
+#include <boost/cstdint.hpp> // boost::uintptr_t
 
 namespace boost { namespace dll { namespace detail {
 
@@ -34,7 +34,7 @@ BOOST_FORCEINLINE To aggressive_ptr_cast(From* v) BOOST_NOEXCEPT {
     );
 
     return reinterpret_cast<To>(
-        reinterpret_cast<uintptr_t>(v)
+        reinterpret_cast<boost::uintptr_t>(v)
     );
 }
 
