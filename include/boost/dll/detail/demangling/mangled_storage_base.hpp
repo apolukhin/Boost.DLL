@@ -15,6 +15,9 @@
 #include <boost/dll/library_info.hpp>
 #include <boost/type_index/stl_type_index.hpp>
 
+
+
+
 namespace boost { namespace dll { namespace detail {
 
 ///stores the mangled names with the demangled name.
@@ -39,7 +42,8 @@ public:
 	std::string get_name() const
 	{
 		auto tx = boost::typeindex::stl_type_index::type_id<T>();
-		return (aliases.count(tx) > 0) ? aliases.at(tx) : tx.pretty_name();
+		auto val = (aliases.count(tx) > 0) ? aliases.at(tx) : tx.pretty_name();
+		return val;
 	}
 
 	mangled_storage_base() = default;

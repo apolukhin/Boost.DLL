@@ -15,7 +15,7 @@
 #include <boost/dll/mangled_storage.hpp>
 #include <boost/test/minimal.hpp>
 #include <boost/filesystem.hpp>
-
+#include <boost/variant.hpp>
 
 struct override_class {};
 
@@ -79,7 +79,7 @@ int test_main(int argc, char* argv[])
 	BOOST_CHECK(!v.empty());
 	BOOST_CHECK(v != "some_space::some_class::value");
 
-	v = ms.get_function<void(int)>("some_space::some_class::set_value");
+	v = ms.get_function<void(const int &)>("some_space::some_class::set_value");
 
 	BOOST_CHECK(!v.empty());
 	BOOST_CHECK(v != "some_space::some_class::set_value");
@@ -105,6 +105,13 @@ int test_main(int argc, char* argv[])
 	auto dtor = ms.get_destructor<override_class>();
 
 	BOOST_CHECK(!dtor.empty());
+
+	auto var1 = ms.get_function<void(boost::variant<int, double> &)>("use_variant");
+	auto var2 = ms.get_function<void(boost::variant<double, int> &)>("use_variant");
+
+	BOOST_CHECK(!var1.empty());
+	BOOST_CHECK(!var2.empty());
+
 
     return 0;
 }

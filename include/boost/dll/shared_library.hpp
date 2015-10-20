@@ -286,6 +286,25 @@ public:
         return get<T>(symbol_name.c_str());
     }
 
+    /*! \overload T& get<void*>(const char* symbol_name) const
+     * overload needed by smart_library, that is giving a way to acces a pure void* pointer.
+     * @param symbol_name
+     * @return A pure void*
+     */
+    inline void* get_void(const std::string& symbol_name) const {
+        return get_impl(symbol_name.c_str());
+    }
+
+    /*! \overload T& get<void*>(const char* symbol_name) const
+     * overload needed by smart_library, that is giving a way to acces a pure void* pointer.
+     * @param symbol_name
+     * @return A pure void*
+     */
+    inline void* get_void(const char* symbol_name) const {
+        return get_impl(symbol_name);
+    }
+
+
     /*!
     * Returns a symbol (function or variable) from a shared library by alias name of the symbol.
     *
@@ -312,7 +331,7 @@ public:
         return *get<T*>(alias_name.c_str());
     }
 
-private:
+public:
 
     /// @cond
     // get_impl is required to reduce binary size: it does not depend on a template
@@ -454,6 +473,8 @@ public:
         base_t::swap(rhs);
     }
 };
+
+
 
 /// Very fast equality check that compares the actual DLL/DSO objects. Throws nothing.
 inline bool operator==(const shared_library& lhs, const shared_library& rhs) BOOST_NOEXCEPT {

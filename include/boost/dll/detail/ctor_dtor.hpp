@@ -33,9 +33,9 @@ template<typename Class, typename ...Args>
 struct ctor_t<Class(Args...)>
 {
 	typedef void(Class::*mem_fn)(Args...) ;
-	typedef Class*const(*pln_fn)(Args...) ;
+	typedef Class*(*pln_fn)(Args...) ;
 	typedef boost::function<void(Class * const, Args...)> standard;
-	typedef boost::function<Class * const(Args...)> allocating;
+	typedef boost::function<Class * (Args...)> allocating;
 
 };
 
@@ -91,7 +91,7 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
 	typedef BOOST_DEDUCED_TYPENAME ctor_t<Signature>::mem_fn f;
 	typedef BOOST_DEDUCED_TYPENAME detail::ctor_t<Signature>::standard standard;
 
-	standard s = detail::mem_fn_cast<f>(lib.get<void*>(ct.C0));
+	standard s = detail::mem_fn_cast<f>(lib.get_void(ct.C0));
 
 	return {s};
 }
@@ -102,7 +102,7 @@ destructor<Signature> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym 
 	typedef void(*f)(Class* const);
 	typedef boost::function<void(Class* const)> fn;
 
-	fn s = detail::mem_fn_cast<f>(lib.get<void*>(dt.D0));
+	fn s = detail::mem_fn_cast<f>(lib.get_void(dt.D0));
 
 	return {s};
 }
@@ -121,11 +121,11 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
 	p C2 = nullptr;
 
 	if (ct.C0.size() > 0)
-		C0 =  detail::mem_fn_cast<f>(lib.get<void*>(ct.C0));
+		C0 =  detail::mem_fn_cast<f>(lib.get_void(ct.C0));
 	if (ct.C1.size() > 0)
-		C1 =  detail::mem_fn_cast<f>(lib.get<void*>(ct.C1));
+		C1 =  detail::mem_fn_cast<f>(lib.get_void(ct.C1));
 	if (ct.C2.size() > 0)
-		C2 =  detail::mem_fn_cast<p>(lib.get<void*>(ct.C2));
+		C2 =  detail::mem_fn_cast<p>(lib.get_void(ct.C2));
 
 
 	typedef BOOST_DEDUCED_TYPENAME detail::ctor_t<Signature>::standard standard;
@@ -156,11 +156,11 @@ destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt
 	f D2 = nullptr;
 
 	if (dt.D0.size() > 0)
-		D0 =  detail::mem_fn_cast<f>(lib.get<void*>(dt.D0));
+		D0 =  detail::mem_fn_cast<f>(lib.get(dt.D0));
 	if (dt.D1.size() > 0)
-		D1 =  detail::mem_fn_cast<f>(lib.get<void*>(dt.D1));
+		D1 =  detail::mem_fn_cast<f>(lib.get(dt.D1));
 	if (dt.D1.size() > 0)
-		D2 =  detail::mem_fn_cast<f>(lib.get<void*>(dt.D2));
+		D2 =  detail::mem_fn_cast<f>(lib.get(dt.D2));
 
 	typedef boost::function<void(Class* const)> fn;
 	fn s;

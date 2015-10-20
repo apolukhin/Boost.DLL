@@ -29,7 +29,7 @@ template<typename T> T mem_fn_cast(void* p)
 {
 	union
 	{
-		T * out;
+		T out;
 		struct
 		{
 			void * in;

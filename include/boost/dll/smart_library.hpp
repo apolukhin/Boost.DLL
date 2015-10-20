@@ -14,6 +14,8 @@
 #include <boost/dll/detail/mem_fn_cast.hpp>
 #include <boost/dll/detail/ctor_dtor.hpp>
 
+#include <iostream>
+
 namespace boost {
 namespace dll {
 
@@ -81,7 +83,7 @@ public:
 	* \throw Nothing.
 	*/
 	smart_library(BOOST_RV_REF(smart_library) lib) BOOST_NOEXCEPT // Move ctor
-		: base_t(boost::move(static_cast<base_t&>(lib))), _storage(boost::move(lib._storage))
+		: shared_library(boost::move(static_cast<shared_library&>(lib))), _storage(boost::move(lib._storage))
 	{}
 	/*!
     * Destroys the smart_library.
@@ -91,7 +93,7 @@ public:
     *
     * \throw Nothing.
     */
-	virtual ~smart_library() BOOST_NOEXCEPT;
+	virtual ~smart_library() BOOST_NOEXCEPT {};
 
     /*!
     * Loads a library by specified path with a specified mode.
@@ -144,15 +146,15 @@ public:
     }
 
 	template<typename T>
-	T* get_variable(const std::string &name)
+	T& get_variable(const std::string &name)
 	{
-		get<T*>(_storage.get_variable<T>(name));
+		return get<T>(_storage.get_variable<T>(name));
 	}
 
 	template<typename Func>
-	Func* get_function(const std::string &name)
+	Func& get_function(const std::string &name)
 	{
-		get<Func*>(_storage.get_function<Func>(name));
+		return get<Func>(_storage.get_function<Func>(name));
 	}
 
 	template<typename Class, typename Func>
@@ -160,7 +162,7 @@ public:
 			get_mem_fn(const std::string &name)
 	{
 		return detail::mem_fn_cast<BOOST_DEDUCED_TYPENAME detail::get_mem_fn_type<Class, Func>::mem_fn>
-				(get<void*>(_storage.get_mem_fn<Class, Func>(name)));
+				(get_void(_storage.get_mem_fn<Class, Func>(name)));
 	}
 
 	template<typename Signature>
@@ -175,7 +177,10 @@ public:
 		return detail::load_dtor<Class>(*this, _storage.get_destructor<Class>());
 
 	}
-
+	template<typename Alias> void add_type_alias(const std::string& name)
+	{
+		this->_storage.add_alias<Alias>(name);
+	}
 };
 
 } /* namespace dll */

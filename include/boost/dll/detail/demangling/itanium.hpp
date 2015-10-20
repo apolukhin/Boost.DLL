@@ -14,6 +14,9 @@
 #include <boost/dll/detail/demangling/tokenizer.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_volatile.hpp>
+#include <boost/type_traits/is_rvalue_reference.hpp>
+#include <boost/type_traits/is_lvalue_reference.hpp>
+
 
 namespace boost { namespace dll { namespace detail {
 
@@ -23,6 +26,20 @@ class mangled_storage_impl : public mangled_storage_base
 {
 	template<typename T>
 	struct dummy {};
+
+	template<typename T>
+	std::string get_name() const
+	{
+		auto tx = boost::typeindex::stl_type_index::type_id<T>();
+		auto val = (aliases.count(tx) > 0) ? aliases.at(tx) : tx.pretty_name();
+		if (is_lvalue_reference<T>::value)
+			val += "&";
+		else if (is_rvalue_reference<T>::value)
+			val += "&&";
+
+
+		return val;
+	}
 
 	template<typename Return, typename ...Args>
 	std::vector<std::string> get_func_params(dummy<Return(Args...)>)
@@ -100,6 +117,8 @@ bool match_params(const Range &range, Iterator & itr, const Iterator & end)
 {
 	for (auto &p : range)
 	{
+		std::cout << "Params: " << p << std::endl;
+		std::cout << "param comp " << *itr << std::endl;
 		if (itr == end)
 		{
 			return false;
@@ -116,10 +135,12 @@ auto match_function(
 		const std::vector<std::string> &params,
 		const std::string& name)
 {
+
 	return [params, name](const mangled_storage_impl::entry& e)
 	{
 		//ok, we need to tokenize it, but that should be rathers fast
 		tokenizer<tokenize_function> tkz(e.demangled);
+
 		auto itr = tkz.begin();
 		if (itr == tkz.end()) //errornous name
 			return false;
