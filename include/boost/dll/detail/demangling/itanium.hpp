@@ -8,7 +8,7 @@
 #ifndef BOOST_DLL_DETAIL_DEMANGLING_ITANIUM_HPP_
 #define BOOST_DLL_DETAIL_DEMANGLING_ITANIUM_HPP_
 
-#include <boost/dll/detail/demangling/mangled_storage_base_base.hpp>
+#include <boost/dll/detail/demangling/mangled_storage_base.hpp>
 #include <iterator>
 #include <algorithm>
 #include <boost/dll/detail/demangling/tokenizer.hpp>

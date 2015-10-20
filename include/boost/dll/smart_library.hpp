@@ -12,6 +12,7 @@
 #include <boost/dll/mangled_storage.hpp>
 #include <boost/dll/detail/get_mem_fn_type.hpp>
 #include <boost/dll/detail/mem_fn_cast.hpp>
+#include <boost/dll/detail/ctor_dtor.hpp>
 
 namespace boost {
 namespace dll {
@@ -163,10 +164,17 @@ public:
 	}
 
 	template<typename Signature>
-	ctor_sym get_constructor();
+	constructor<Signature> get_constructor()
+	{
+		return detail::load_ctor<Signature>(*this, _storage.get_constructor<Signature>());
+	}
 
 	template<typename Class>
-	dtor_sym get_destructor();
+	destructor<Class> get_destructor()
+	{
+		return detail::load_dtor<Class>(*this, _storage.get_destructor<Class>());
+
+	}
 
 };
 
