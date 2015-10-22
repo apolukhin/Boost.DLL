@@ -25,7 +25,7 @@ struct _MEMORY_BASIC_INFORMATION;
 
 namespace boost { namespace detail { namespace winapi {
 
-struct MEMORY_BASIC_INFORMATION_ {
+struct BOOST_DETAIL_WINAPI_MAY_ALIAS MEMORY_BASIC_INFORMATION_ {
     PVOID_  BaseAddress;
     PVOID_  AllocationBase;
     DWORD_  AllocationProtect;
@@ -102,7 +102,7 @@ GetProcAddress(boost::detail::winapi::HMODULE_ hModule, boost::detail::winapi::L
 BOOST_SYMBOL_IMPORT boost::detail::winapi::SIZE_T_ WINAPI
 VirtualQuery(
     boost::detail::winapi::LPCVOID_     lpAddress,
-    struct _MEMORY_BASIC_INFORMATION*  lpBuffer,
+    ::_MEMORY_BASIC_INFORMATION*        lpBuffer,
     boost::detail::winapi::ULONG_PTR_   dwLength
 );
 
@@ -137,7 +137,7 @@ using ::GetProcAddress;
 
 BOOST_FORCEINLINE SIZE_T_ VirtualQuery(LPCVOID_ lpAddress, MEMORY_BASIC_INFORMATION_* lpBuffer, ULONG_PTR_ dwLength)
 {
-    return ::VirtualQuery(lpAddress, reinterpret_cast<struct _MEMORY_BASIC_INFORMATION*>(lpBuffer), dwLength);
+    return ::VirtualQuery(lpAddress, reinterpret_cast<::_MEMORY_BASIC_INFORMATION*>(lpBuffer), dwLength);
 }
 
 #if !defined( BOOST_NO_ANSI_APIS )
