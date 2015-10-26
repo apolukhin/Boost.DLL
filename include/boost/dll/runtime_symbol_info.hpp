@@ -29,28 +29,39 @@ namespace boost { namespace dll {
 
 namespace detail {
 #if BOOST_OS_WINDOWS
-    inline boost::filesystem::path symbol_location_impl(const void* symbol) {
+    inline boost::filesystem::path symbol_location_impl(const void* symbol, boost::system::error_code& ec) {
         boost::filesystem::path ret;
 
         boost::detail::winapi::MEMORY_BASIC_INFORMATION_ mbi;
         if (!boost::detail::winapi::VirtualQuery(symbol, &mbi, sizeof(mbi))) {
+            ec = boost::dll::detail::last_error_code();
             return ret;
         }
 
-        boost::system::error_code ignore;
-        return boost::dll::detail::path_from_handle(reinterpret_cast<boost::detail::winapi::HMODULE_>(mbi.AllocationBase), ignore);
+        return boost::dll::detail::path_from_handle(reinterpret_cast<boost::detail::winapi::HMODULE_>(mbi.AllocationBase), ec);
     }
 
     inline boost::filesystem::path program_location_impl(boost::system::error_code& ec) {
         return boost::dll::detail::path_from_handle(NULL, ec);
-    }    
+    }
 #else
-    inline boost::filesystem::path symbol_location_impl(const void* symbol) {
+    inline boost::filesystem::path symbol_location_impl(const void* symbol, boost::system::error_code& ec) {
+        boost::filesystem::path ret;
         Dl_info info;
 
         // Some of the libc headers miss `const` in `dladdr(const void*, Dl_info*)`
         const int res = dladdr(const_cast<void*>(symbol), &info);
-        return res ? boost::filesystem::path(info.dli_fname) : boost::filesystem::path();
+
+        if (res) {
+            ret = info.dli_fname;
+        } else {
+            ec = boost::system::error_code(
+                boost::system::errc::not_supported,
+                boost::system::generic_category()
+            );
+        }
+
+        return ret;
     }
 #endif
 } // namespace detail
@@ -59,8 +70,9 @@ namespace detail {
     * On success returns full path and name of the binary object that holds symbol.
     * \tparam T Type of the symbol, must not be explicitly specified.
     * \param symbol Symbol which location is to be determined.
+    * \param ec Variable that will be set to the result of the operation.
     * \return Path to the binary object that holds symbol or empty path in case error.
-    * \throws std::bad_alloc in case of insufficient memory.
+    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept boost::system::error_code also throws boost::system::system_error.
     *
     * \b Examples:
     * \code
@@ -77,10 +89,29 @@ namespace detail {
     * \endcode
     */
     template <class T>
-    inline boost::filesystem::path symbol_location(const T& symbol) {
+    inline boost::filesystem::path symbol_location(const T& symbol, boost::system::error_code& ec) {
+        ec.clear();
         return boost::dll::detail::symbol_location_impl(
-            boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol))
+            boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol)),
+            ec
         );
+    }
+
+    //! \overload symbol_location(const T& symbol, boost::system::error_code& ec)
+    template <class T>
+    inline boost::filesystem::path symbol_location(const T& symbol) {
+        boost::filesystem::path ret;
+        boost::system::error_code ec;
+        ret = boost::dll::detail::symbol_location_impl(
+            boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol)),
+            ec
+        );
+
+        if (ec) {
+            boost::dll::detail::report_error(ec, "boost::dll::symbol_location(const T& symbol) failed");
+        }
+
+        return ret;
     }
 
     /// @cond
@@ -93,10 +124,25 @@ namespace detail {
     * On success returns full path and name of the binary object that holds the current line of code
     * (the line in which the `this_line_location()` method was called).
     *
-    * \throws std::bad_alloc in case of insufficient memory.
+    * \param ec Variable that will be set to the result of the operation.
+    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept boost::system::error_code also throws boost::system::system_error.
     */
+    static inline boost::filesystem::path this_line_location(boost::system::error_code& ec) {
+        ec.clear();
+        return boost::dll::symbol_location<boost::filesystem::path(boost::system::error_code& )>(this_line_location, ec);
+    }
+
+    //! \overload this_line_location(boost::system::error_code& ec)
     static inline boost::filesystem::path this_line_location() {
-        return boost::dll::symbol_location(this_line_location);
+        boost::filesystem::path ret;
+        boost::system::error_code ec;
+        ret = boost::dll::symbol_location<boost::filesystem::path()>(this_line_location, ec);
+
+        if (ec) {
+            boost::dll::detail::report_error(ec, "boost::dll::this_line_location() failed");
+        }
+
+        return ret;
     }
 
     /// @cond
@@ -110,11 +156,24 @@ namespace detail {
     * for usage example. Flag '-rdynamic' must be used when linking the plugin into the executable
     * on Linux OS.
     *
-    * \throws std::bad_alloc in case of insufficient memory.
+    * \param ec Variable that will be set to the result of the operation.
+    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept boost::system::error_code also throws boost::system::system_error.
     */
-    static inline boost::filesystem::path program_location() {
-        boost::system::error_code ignore;
-        return boost::dll::detail::program_location_impl(ignore);
+    inline boost::filesystem::path program_location(boost::system::error_code& ec) {
+        return boost::dll::detail::program_location_impl(ec);
+    }
+
+    //! \overload program_location(boost::system::error_code& ec) {
+    inline boost::filesystem::path program_location() {
+        boost::filesystem::path ret;
+        boost::system::error_code ec;
+        ret = boost::dll::detail::program_location_impl(ec);
+
+        if (ec) {
+            boost::dll::detail::report_error(ec, "boost::dll::program_location() failed");
+        }
+
+        return ret;
     }
 
 }} // namespace boost::dll

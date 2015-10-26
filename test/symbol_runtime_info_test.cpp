@@ -39,8 +39,8 @@ int main(int argc, char* argv[]) {
     shared_library lib(shared_library_path);
 
     std::cout << std::endl;
-    std::cout << "shared_library_: " << shared_library_path << std::endl;
-    std::cout << "symbol_location: " << symbol_location(&lib.get<int>("integer_g")) << std::endl;
+    std::cout << "shared_library: " << shared_library_path << std::endl;
+    std::cout << "symbol_location: " << symbol_location(lib.get<int>("integer_g")) << std::endl;
     std::cout << "lib.location():      " << lib.location() << std::endl;
     BOOST_TEST(
         symbol_location(lib.get<int>("integer_g")) == lib.location()
@@ -88,6 +88,20 @@ int main(int argc, char* argv[]) {
         );
     }
 
+    { // self with error_code
+        boost::system::error_code ec;
+        shared_library sl(program_location(ec));
+        BOOST_TEST(!ec);
+
+        BOOST_TEST(
+            (boost::filesystem::equivalent(symbol_location(sl.get<int(void)>("exef"), ec), argv[0]))
+        );
+        BOOST_TEST(!ec);
+
+        symbol_location(&sl.get<int(void)>("exef"), ec);
+        BOOST_TEST(ec);
+    }
+
     std::cout << "\ninternal_function: " << symbol_location(internal_function);
     std::cout << "\nargv[0]          : " << boost::filesystem::absolute(argv[0]);
     BOOST_TEST(
@@ -102,6 +116,15 @@ int main(int argc, char* argv[]) {
     BOOST_TEST(
         (boost::filesystem::equivalent(this_line_location(), argv[0]))
     );
+
+    { // this_line_location with error_code
+        boost::system::error_code ec;
+        BOOST_TEST(
+            (boost::filesystem::equivalent(this_line_location(ec), argv[0]))
+        );
+        BOOST_TEST(!ec);
+    }
+
     BOOST_TEST(
         lib.get_alias<boost::filesystem::path()>("module_location_from_itself")() == lib.location()
     );
