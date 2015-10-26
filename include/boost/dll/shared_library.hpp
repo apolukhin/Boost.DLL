@@ -9,7 +9,7 @@
 #define BOOST_DLL_SHARED_LIBRARY_HPP
 
 /// \file boost/dll/shared_library.hpp
-/// \brief Contains the boost::dll::shared_library class, main class for all the
+/// \brief Contains the boost::dll::shared_library class, core class for all the
 /// DLL/DSO operations.
 
 #include <boost/config.hpp>
@@ -36,8 +36,9 @@ namespace boost { namespace dll {
 *        as dynamic shared objects (DSO's) and get their exported
 *        symbols (functions and variables).
 *
-* All the shared_library instances share reference count to an actual DLL/DSO, so it
-* is safe to have multiple instances of shared_library referencing the same DLL/DSO.
+* shared_library instances share reference count to an actual loaded DLL/DSO, so it
+* is safe and memory efficient to have multiple instances of shared_library referencing the same DLL/DSO
+* even if those instances were loaded using different paths (relative + absolute) referencing the same object.
 *
 * On Linux/POSIX link with library "dl". "-fvisibility=hidden" flag is also recommended for use on Linux/POSIX.
 */
@@ -47,10 +48,7 @@ class shared_library
 /// @endcond
 {
     typedef boost::dll::detail::shared_library_impl base_t;
-    
-    // The 'shared library' is not enabled to be copied but can be movable.
-    // This makes class 'shared library' movable.
-    BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library)
+    BOOST_COPYABLE_AND_MOVABLE(shared_library)
 
 public:
 #ifdef BOOST_DLL_DOXYGEN
@@ -60,11 +58,52 @@ public:
 #endif
 
     /*!
-    * Creates empty shared_library.
+    * Creates shared_library that does not reference any DLL/DSO.
     *
+    * \post this->is_loaded() returns false.
     * \throw Nothing.
     */
     shared_library() BOOST_NOEXCEPT {}
+
+    /*!
+    * Copy constructor that increments the reference count of an underlying shared library.
+    * Same as calling `shared_library(lib.location())`
+    *
+    * \param lib A shared_library to copy.
+    * \post lib == *this
+    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
+    */
+    shared_library(const shared_library& lib)
+        : base_t()
+    {
+        assign(lib);
+    }
+
+    /*!
+    * Copy constructor that increments the reference count of an underlying shared library.
+    * Same as calling `shared_library(lib.location(), ec)`
+    *
+    * \param lib A shared_library to copy.
+    * \param ec Variable that will be set to the result of the operation.
+    * \post lib == *this
+    * \throw std::bad_alloc in case of insufficient memory.
+    */
+    shared_library(const shared_library& lib, boost::system::error_code& ec)
+        : base_t()
+    {
+        assign(lib, ec);
+    }
+
+    /*!
+    * Move constructor. Does not invalidate existing symbols and functions loaded from lib.
+    *
+    * \param lib A shared_library to move from.
+    * \post lib.is_loaded() returns false, this->is_loaded() return true.
+    * \throw Nothing.
+    */
+    shared_library(BOOST_RV_REF(shared_library) lib) BOOST_NOEXCEPT
+        : base_t(boost::move(static_cast<base_t&>(lib)))
+    {}
 
     /*!
     * Creates a shared_library object and loads a library by specified path
@@ -72,13 +111,10 @@ public:
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
     *           const wchar_t* or boost::filesystem::path.
-    *
     * \param mode A mode that will be used on library load.
-    *
     * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
-    *
     */
-    shared_library(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
+    explicit shared_library(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
         load(lib_path, mode);
     }
 
@@ -88,11 +124,8 @@ public:
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
     *           const wchar_t* or boost::filesystem::path.
-    *
     * \param mode A mode that will be used on library load.
-    *
     * \param ec Variable that will be set to the result of the operation.
-    *
     * \throw std::bad_alloc in case of insufficient memory.
     */
     shared_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
@@ -104,22 +137,28 @@ public:
         load(lib_path, mode, ec);
     }
 
-   /*!
-    * Move a shared_library object.
+    /*!
+    * Copy assign a shared_library object. If this->is_loaded() then calls this->unload(). Does not invalidate existing symbols and functions loaded from lib.
     *
-    * \param lib A shared_library to move from.
-    *
-    * \throw Nothing.
+    * \param lib A shared_library to copy.
+    * \post lib == *this
+    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     */
-    shared_library(BOOST_RV_REF(shared_library) lib) BOOST_NOEXCEPT // Move ctor
-        : base_t(boost::move(static_cast<base_t&>(lib)))
-    {}
+    shared_library& operator=(BOOST_COPY_ASSIGN_REF(shared_library) lib) {
+        boost::system::error_code ec;
+        assign(lib, ec);
+        if (ec) {
+            boost::dll::detail::report_error(ec, "shared_library::operator= failed");
+        }
 
-   /*!
-    * Move assign a shared_library object.
+        return *this;
+    }
+
+    /*!
+    * Move assign a shared_library object. If this->is_loaded() then calls this->unload(). Does not invalidate existing symbols and functions loaded from lib.
     *
     * \param lib A shared_library to move from.
-    *
+    * \post lib.is_loaded() returns false.
     * \throw Nothing.
     */
     shared_library& operator=(BOOST_RV_REF(shared_library) lib) BOOST_NOEXCEPT {
@@ -128,14 +167,65 @@ public:
     }
 
     /*!
-    * Destroys the shared_library.
-    * `unload()` is called if the DLL/DSO was loaded. If library was loaded multiple times
+    * Destroys the shared_library by calling
+    * `unload()`. If library was loaded multiple times
     * by different instances of shared_library, the actual DLL/DSO won't be unloaded until
     * there is at least one instance of shared_library.
     *
     * \throw Nothing.
     */
     ~shared_library() BOOST_NOEXCEPT {}
+
+    /*!
+    * Makes *this share the same shared object as lib. If *this is loaded, then unloads it.
+    *
+    * \post lib.location() == this->location(), lib == *this
+    * \param lib A shared_library to copy.
+    * \param ec Variable that will be set to the result of the operation.
+    * \throw std::bad_alloc in case of insufficient memory.
+    */
+    shared_library& assign(const shared_library& lib, boost::system::error_code& ec) {
+        ec.clear();
+
+        if (*this == lib) {
+            return *this;
+        }
+
+        if (!lib) {
+            unload();
+            return *this;
+        }
+
+        boost::filesystem::path loc = lib.location(ec);
+        if (ec) {
+            return *this;
+        }
+
+        shared_library copy(loc, ec);
+        /*if (ec) {
+            return *this;
+        }*/
+
+        swap(copy);
+        return *this;
+    }
+
+    /*!
+    * Makes *this share the same shared object as lib. If *this is loaded, then unloads it.
+    *
+    * \param lib A shared_library instance to share.
+    * \post lib.location() == this->location()
+    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
+    */
+    shared_library& assign(const shared_library& lib) {
+        boost::system::error_code ec;
+        assign(lib, ec);
+        if (ec) {
+            boost::dll::detail::report_error(ec, "assign() failed");
+        }
+
+        return *this;
+    }
 
     /*!
     * Loads a library by specified path with a specified mode.
@@ -145,9 +235,7 @@ public:
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
     *           const wchar_t* or boost::filesystem::path.
-    *
     * \param mode A mode that will be used on library load.
-    *
     * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     *
     */
@@ -168,9 +256,8 @@ public:
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
     *           const wchar_t* or boost::filesystem::path.
-    *
     * \param ec Variable that will be set to the result of the operation.
-    *
+    * \param mode A mode that will be used on library load.
     * \throw std::bad_alloc in case of insufficient memory.
     */
     void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
@@ -189,6 +276,7 @@ public:
     * by different instances of shared_library, the actual DLL/DSO won't be unloaded until
     * there is at least one instance of shared_library holding a reference to it.
     *
+    * \post this->is_loaded() returns false.
     * \throw Nothing.
     */
     void unload() BOOST_NOEXCEPT {
@@ -199,9 +287,7 @@ public:
     * Check if an library is loaded.
     *
     * \return true if a library has been loaded.
-    *
     * \throw Nothing.
-    *
     */
     bool is_loaded() const BOOST_NOEXCEPT {
         return base_t::is_loaded();
@@ -211,9 +297,7 @@ public:
     * Check if an library is not loaded.
     *
     * \return true if a library has not been loaded.
-    *
     * \throw Nothing.
-    *
     */
     bool operator!() const BOOST_NOEXCEPT {
         return !is_loaded();
@@ -223,9 +307,7 @@ public:
     * Check if an library is loaded.
     *
     * \return true if a library has been loaded.
-    *
     * \throw Nothing.
-    *
     */
     BOOST_EXPLICIT_OPERATOR_BOOL()
 
@@ -233,11 +315,8 @@ public:
     * Search for a given symbol on loaded library. Works for all symbols, including alias names.
     *
     * \param symbol_name Null-terminated symbol name. Can handle std::string, char*, const char*.
-    *
     * \return `true` if the loaded library contains a symbol with a given name.
-    *
     * \throw Nothing.
-    *
     */
     bool has(const char* symbol_name) const BOOST_NOEXCEPT {
         boost::system::error_code ec;
@@ -264,13 +343,9 @@ public:
     * \endcode
     *
     * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
-    *
     * \param symbol_name Null-terminated symbol name. Can handle std::string, char*, const char*.
-    *
     * \return Reference to the symbol.
-    *
     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
-    *
     */
     template <typename T>
     inline T& get(const char* symbol_name) const {
@@ -295,9 +370,7 @@ public:
     * \endcode
     *
     * \tparam T Type of the symbol that we are going to import. Must be explicitly specified..
-    *
     * \param alias_name Null-terminated alias symbol name. Can handle std::string, char*, const char*.
-    *
     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
     */
     template <typename T>
@@ -356,10 +429,6 @@ public:
    /*!
     * Returns full path and name of this shared object.
     *
-    * The ability to extract the full file system path of a loaded shared
-    * library can be useful in case that use provide only library name on load, 
-    * and on some time need to get full path of it. 
-    *
     * \b Example:
     * \code
     * shared_library lib("test_lib.dll");
@@ -367,7 +436,6 @@ public:
     * \endcode
     *
     * \return Full path to the shared library.
-    *
     * \throw boost::system::system_error, std::bad_alloc.
     */
     boost::filesystem::path location() const {
@@ -397,10 +465,6 @@ public:
    /*!
     * Returns full path and name of shared module.
     *
-    * The ability to extract the full file system path of a loaded shared
-    * library can be useful in case that use provide only library name on load, 
-    * and on some time need to get full path of it. 
-    *
     * \b Example:
     * \code
     * shared_library lib("test_lib.dll");
@@ -408,9 +472,7 @@ public:
     * \endcode
     *
     * \param ec Variable that will be set to the result of the operation.
-    *    
     * \return Full path to the shared library.
-    *
     * \throw std::bad_alloc.
     */
     boost::filesystem::path location(boost::system::error_code& ec) const {
@@ -430,23 +492,16 @@ public:
     * Returns suffix od shared module:
     * in a call to load() or the constructor/load.
     *
-    * \return The suffix od shared module, like:
-    *
-    * .dll (windows)
-    * .so (unix)
-    * .dylib (mac)
-    *
+    * \return The suffix od shared module: ".dll" (Windows), ".so" (Unix/Linux/BSD), ".dylib" (MacOS/IOS)
     */
     static boost::filesystem::path suffix() {
         return base_t::suffix();
     }
 
     /*!
-    * Swaps two libraries.
-    * Does not invalidate existing symbols and functions loaded from libraries.
+    * Swaps two libraries. Does not invalidate existing symbols and functions loaded from libraries.
     *
     * \param rhs Library to swap with.
-    *
     * \throw Nothing.
     */
     void swap(shared_library& rhs) BOOST_NOEXCEPT {

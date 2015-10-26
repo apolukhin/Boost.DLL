@@ -92,6 +92,37 @@ int main(int argc, char* argv[])
         BOOST_TEST(!sl);
         BOOST_TEST(sl2.is_loaded());
         BOOST_TEST(sl2);
+
+        sl.assign(sl2);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(sl2.is_loaded());
+        BOOST_TEST(sl2);
+        BOOST_TEST(sl2.location() == sl.location());
+
+        sl.assign(sl2);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(sl2.is_loaded());
+        BOOST_TEST(sl2);
+        BOOST_TEST(sl2.location() == sl.location());
+
+        sl2.assign(sl);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(sl2.is_loaded());
+        BOOST_TEST(sl2);
+        BOOST_TEST(sl2.location() == sl.location());
+
+        // Assigning an empty shared library
+        sl2.assign(shared_library());
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(!sl2.is_loaded());
+        BOOST_TEST(!sl2);
+        boost::system::error_code ec;
+        BOOST_TEST(sl2.location(ec) != sl.location());
+        BOOST_TEST(ec);
    }
 
    {
@@ -103,6 +134,38 @@ int main(int argc, char* argv[])
         BOOST_TEST(lib_path_equal(sl.location(), shared_library_path));
         BOOST_TEST(lib_path_equal(sl.location(ec), shared_library_path));
         BOOST_TEST(!ec);
+
+        // Checking self assignment #1
+        sl.assign(sl);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(!ec);
+        BOOST_TEST(lib_path_equal(sl.location(), shared_library_path));
+        BOOST_TEST(lib_path_equal(sl.location(ec), shared_library_path));
+
+        // Checking self assignment #2
+        sl.assign(sl, ec);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(!ec);
+        BOOST_TEST(lib_path_equal(sl.location(), shared_library_path));
+        BOOST_TEST(lib_path_equal(sl.location(ec), shared_library_path));
+   }
+
+   {
+        shared_library sl;
+        BOOST_TEST(!sl.is_loaded());
+
+        sl.assign(sl);
+        BOOST_TEST(!sl);
+
+        shared_library sl2(sl);
+        BOOST_TEST(!sl);
+        BOOST_TEST(!sl2);
+
+        sl2.assign(sl);
+        BOOST_TEST(!sl);
+        BOOST_TEST(!sl2);
    }
 
    {
@@ -222,7 +285,63 @@ int main(int argc, char* argv[])
         BOOST_TEST(sl);
         BOOST_TEST(lib_path_equal(sl.location(), shared_library_path));
    }
-   
+
+
+   {    // Non-default flags with assignment
+        shared_library sl(shared_library_path,
+            load_mode::rtld_now | load_mode::rtld_global | load_mode::load_with_altered_search_path | load_mode::rtld_deepbind
+        );
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+
+        boost::system::error_code ec;
+        shared_library sl2(sl, ec);
+        BOOST_TEST(!ec);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(sl2.is_loaded());
+        BOOST_TEST(sl2);
+        BOOST_TEST(sl2.location() == sl.location());
+
+        shared_library sl3(sl);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(sl3.is_loaded());
+        BOOST_TEST(sl3);
+
+        shared_library sl4;
+        sl4.assign(sl, ec);
+        BOOST_TEST(!ec);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(sl4.is_loaded());
+        BOOST_TEST(sl4);
+   }
+
+   {    // Non-default flags with assignment and error_code
+        boost::system::error_code ec;
+        shared_library sl(shared_library_path, load_mode::rtld_lazy | load_mode::rtld_global, ec);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(!ec);
+        BOOST_TEST(lib_path_equal(sl.location(), shared_library_path));
+
+        shared_library sl2(sl, ec);
+        BOOST_TEST(!ec);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(sl2.is_loaded());
+        BOOST_TEST(sl2);
+        BOOST_TEST(sl2.location() == sl.location());
+
+        shared_library sl3(sl);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(sl3.is_loaded());
+        BOOST_TEST(sl3);
+        BOOST_TEST(sl3.location() == sl.location());
+   }
+
    {  // self_load
         shared_library sl(program_location());
         BOOST_TEST(sl.is_loaded());
@@ -255,6 +374,13 @@ int main(int argc, char* argv[])
         BOOST_TEST(sl == sl2);
         BOOST_TEST(!(sl < sl2 || sl2 <sl));
         BOOST_TEST(!(sl != sl2));
+
+        // assigning self
+        sl.load(program_location());
+        // TODO: known issue  sl2.load(sl.location());
+/*        sl2 = sl;
+        BOOST_TEST(sl == sl2);
+        BOOST_TEST(sl.location() == sl2.location()); */
    }
 
    {
