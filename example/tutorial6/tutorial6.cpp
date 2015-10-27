@@ -16,7 +16,7 @@ void print_unloaded() {
 }
 
 int main(int argc, char* argv[]) {
-    /*<-*/ BOOST_ASSERT(argc >= 2);    /*->*/
+    /*<-*/ BOOST_ASSERT(argc >= 2); (void)argc;   /*->*/
     // argv[1] contains full path to our plugin library
     boost::filesystem::path shared_library_path = argv[1];
 

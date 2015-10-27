@@ -19,11 +19,13 @@ struct argv_to_path {
     argv_to_path(int argc, const Argv& argv) {
         BOOST_ASSERT(argc >= 2);
         whole_path = argv[1];
+        (void)argc;
     }
 };
 
 boost::filesystem::path operator<<(const boost::filesystem::path& p, const argv_to_path& a) {
     BOOST_ASSERT(a.whole_path.string().find(p.filename().string().c_str()) != std::string::npos);
+    (void)p;
     return a.whole_path;
 }
 

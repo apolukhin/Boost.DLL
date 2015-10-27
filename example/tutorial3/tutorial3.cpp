@@ -51,4 +51,5 @@ int main(int argc, char* argv[]) {
 
     const std::size_t res = search_for_symbols(plugins);
     BOOST_ASSERT(res == 1);
+    (void)res;
 }

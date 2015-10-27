@@ -187,7 +187,7 @@ public:
     shared_library& assign(const shared_library& lib, boost::system::error_code& ec) {
         ec.clear();
 
-        if (*this == lib) {
+        if (native() == lib.native()) {
             return *this;
         }
 
@@ -489,7 +489,7 @@ public:
     }
 
     /*!
-    * Returns suffix od shared module:
+    * Returns suffix of shared module:
     * in a call to load() or the constructor/load.
     *
     * \return The suffix od shared module: ".dll" (Windows), ".so" (Unix/Linux/BSD), ".dylib" (MacOS/IOS)
