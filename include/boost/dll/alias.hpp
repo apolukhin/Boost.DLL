@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -48,14 +49,21 @@ namespace boost { namespace dll {
 #else // #if BOOST_COMP_MSVC
 
 
-#if BOOST_OS_WINDOWS
+#if BOOST_OS_WINDOWS || BOOST_OS_ANDROID || BOOST_COMP_IBM
 // There are some problems with mixing `__dllexport__` and `weak` using MinGW
 // See https://sourceware.org/bugzilla/show_bug.cgi?id=17480
+//
+// Android had an issue with exporting weak symbols
+// https://code.google.com/p/android/issues/detail?id=70206
 #define BOOST_DLL_SELECTANY
 #else // #if BOOST_OS_WINDOWS
 /*!
 * \brief Macro that allows linker to select any occurrence of this symbol instead of
 * failing with 'multiple definitions' error at linktime.
+*
+* This macro does not work on Android, IBM XL C/C++ and MinGW+Windows
+* because of linker problems with exporting weak symbols
+* (See https://code.google.com/p/android/issues/detail?id=70206, https://sourceware.org/bugzilla/show_bug.cgi?id=17480)
 */
 #define BOOST_DLL_SELECTANY __attribute__((weak))
 #endif // #if BOOST_OS_WINDOWS
@@ -154,7 +162,7 @@ namespace boost { namespace dll {
     /**/
 
 
-#if BOOST_COMP_GNUC && BOOST_OS_WINDOWS && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION)
+#if ((BOOST_COMP_GNUC && BOOST_OS_WINDOWS) || BOOST_OS_ANDROID || BOOST_COMP_IBM) && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION)
 
 #define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
     namespace _autoaliases {                                                                    \
