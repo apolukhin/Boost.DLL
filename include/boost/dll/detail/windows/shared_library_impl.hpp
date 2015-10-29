@@ -18,7 +18,7 @@
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
 
-#include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
+#include <boost/detail/winapi/dll.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once

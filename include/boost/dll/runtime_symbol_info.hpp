@@ -12,7 +12,7 @@
 #include <boost/predef/os.h>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 #if BOOST_OS_WINDOWS
-#   include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
+#   include <boost/detail/winapi/dll.hpp>
 #   include <boost/dll/detail/windows/path_from_handle.hpp>
 #else
 #   include <dlfcn.h>
