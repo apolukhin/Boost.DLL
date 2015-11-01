@@ -346,11 +346,12 @@ int main(int argc, char* argv[])
         shared_library sl(program_location());
         BOOST_TEST(sl.is_loaded());
         BOOST_TEST(sl);
-
+        BOOST_TEST(sl.location() == program_location());
 
         boost::system::error_code ec;
         shared_library sl2(program_location());
         BOOST_TEST(sl2.is_loaded());
+        BOOST_TEST(sl2.location() == program_location());
         BOOST_TEST(sl2);
         BOOST_TEST(!ec);
 
@@ -377,10 +378,9 @@ int main(int argc, char* argv[])
 
         // assigning self
         sl.load(program_location());
-        // TODO: known issue  sl2.load(sl.location());
-/*        sl2 = sl;
+        sl2 = sl;
         BOOST_TEST(sl == sl2);
-        BOOST_TEST(sl.location() == sl2.location()); */
+        BOOST_TEST(sl.location() == sl2.location());
    }
 
    {

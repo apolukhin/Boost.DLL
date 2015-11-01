@@ -9,6 +9,7 @@
 
 #include <boost/config.hpp>
 #include <boost/dll/detail/system_error.hpp>
+#include <boost/dll/detail/posix/program_location_impl.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/predef/os.h>
 
@@ -93,26 +94,30 @@ namespace boost { namespace dll { namespace detail {
         // Fortunately investigating the sources of open source projects brought the understanding, that
         // `handle` is just a `struct link_map*` that contains full library name.
 
+        const struct link_map* link_map = 0;
 #if BOOST_OS_BSD_FREE
         // FreeBSD has it's own logic http://code.metager.de/source/xref/freebsd/libexec/rtld-elf/rtld.c
         // Fortunately it has the dlinfo call.
-        const struct link_map * link_map;
-        if (dlinfo(handle, RTLD_DI_LINKMAP, &link_map) >= 0) {
-            return boost::filesystem::path(link_map->l_name);
+        if (dlinfo(handle, RTLD_DI_LINKMAP, &link_map) < 0) {
+            link_map = 0;
         }
 #else
-        if (handle) {
-            return boost::filesystem::path(
-                static_cast<const struct link_map*>(handle)->l_name
-            );
-        }
+        link_map = static_cast<const struct link_map*>(handle);
 #endif
-        ec = boost::system::error_code(
-            boost::system::errc::bad_file_descriptor,
-            boost::system::generic_category()
-        );
+        if (!link_map) {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_file_descriptor,
+                boost::system::generic_category()
+            );
 
-        return boost::filesystem::path();
+            return boost::filesystem::path();
+        }
+
+        if (!link_map->l_name || *link_map->l_name == '\0') {
+            return program_location_impl(ec);
+        }
+
+        return boost::filesystem::path(link_map->l_name);
     }
 
 }}} // namespace boost::dll::detail
