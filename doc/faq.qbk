@@ -69,6 +69,30 @@ stability by your own.
 [pre
 ]
 
+* [*Question:]  How to load a shared object from memory??
+  * [*Answer:]  All existing OS avoid loading shared libraries directly from userspace memory, so you'll find no syscall for such case. Currently Boost.DLL provides no means for honest loading shared objects from memory. This requires reimplementing dynamic linker logic in userspace for all the platforms, which is a huge amount of work and very error-prone. However working patches are welcomed!
+
+Workaround would be to write plugin into a temporary file in RAM and load plugin from it:
+```
+#include <boost/filesystem.hpp>
+#include <boost/dll.hpp>
+using namespace boost;
+
+dll:shared_library load_from_memory(unsigned char* data, std::size_t size, const filesystem::path& tmp_plugin_path = filesystem::unique_path() / "libplugin.so") {
+    const filesystem::path plugin_location = filesystem::temp_directory_path() / tmp_plugin_path;
+    filesystem::create_directories(plugin_location.parent_path());
+    filesystem::ofstream ofs(plugin_location, std::ios::out|std::ios::bin|std::ios::trunc);
+    ofs.write(data, size);
+
+    return dll::shared_library(plugin_location);
+}
+```
+
+But there's no guarantee that `filesystem::temp_directory_path()` will actually write to RAM, that's very platform dependent.
+
+[pre
+]
+  
 * [*Question:]  I have found a bug, how do I notify?
   * [*Answer:]  Create an [@https://github.com/apolukhin/Boost.DLL/issues issue at GitHub] with a detailed description.
 

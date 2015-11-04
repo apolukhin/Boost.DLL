@@ -5,7 +5,7 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
 
-[template example_ref[path] '''<ulink url="https://raw.githubusercontent.com/boostorg/dll/develop/example/'''[path]'''">example/'''[path]'''</ulink>''']
+[template example_ref[path] '''<ulink url="https://github.com/apolukhin/Boost.DLL/blob/develop/example/'''[path]'''">example/'''[path]'''</ulink>''']
 
 [def __to_top [link boost_dll.tutorial Back to the Top]]
 
