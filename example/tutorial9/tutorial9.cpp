@@ -10,19 +10,22 @@
 //[callplugcpp_tutorial9
 #include <boost/dll/import.hpp> // for import
 #include <iostream>
+#include <windows.h>
 
 namespace dll = boost::dll;
 
 int main()
 {
-    typedef unsigned long (timeGetTime_fn)();       // function signature
-    boost::function<timeGetTime_fn> plugin 
-        = dll::import<timeGetTime_fn>(              // we import using C name, not alias! Using `import<>`
-            "winmm.dll",                            // Windows dll
-            "timeGetTime"                           // function name
+    typedef HANDLE(__stdcall GetStdHandle_t)(DWORD );       // function signature with calling convention
+    typedef HANDLE(GetStdHandle_no_call_conv_t)(DWORD );    // function signature without calling convention
+
+    boost::function<GetStdHandle_no_call_conv_t> plugin
+        = dll::import<GetStdHandle_t>(              // we import using C name, not alias! Using `import<>`
+            "Kernel32.dll",                         // Windows dll
+            "GetStdHandle"                          // function name
         );
 
-    std::cout << "timeGetTime() returned " << plugin() << std::endl;
+    std::cout << "GetStdHandle(STD_OUTPUT_HANDLE) returned " << plugin(STD_OUTPUT_HANDLE) << std::endl;
     return 0;
 }
 
