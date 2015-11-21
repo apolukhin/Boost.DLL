@@ -13,16 +13,30 @@
 
 namespace dll = boost::dll;
 
-int main()
-{
-    typedef unsigned long (timeGetTime_fn)();       // function signature
-    boost::function<timeGetTime_fn> plugin 
-        = dll::import<timeGetTime_fn>(              // we import using C name, not alias! Using `import<>`
-            "winmm.dll",                            // Windows dll
-            "timeGetTime"                           // function name
-        );
+template <class Func>
+struct helper {
+private:
+    dll::shared_library lib_;
+    Func*               f_;
 
-    std::cout << "timeGetTime() returned " << plugin() << std::endl;
+public:
+    helper(const char* library, const char* function)
+        : lib_(library)
+        , f_(&lib_.get<GetStdHandle_t>(function))
+    {}
+
+    inline operator Func* () const {
+        return f_;
+    }
+};
+
+int main() {
+    typedef HANDLE(__stdcall GetStdHandle_t)(DWORD );       // function signature with calling convention
+    typedef HANDLE(GetStdHandle_no_call_conv_t)(DWORD );    // function signature without calling convention
+    boost::function<GetStdHandle_no_call_conv_t> plugin = helper<GetStdHandle_t>("Kernel32.dll", "GetStdHandle");
+
+    std::cout << "1. GetStdHandle() returned " << plugin(STD_OUTPUT_HANDLE) << std::endl;
+    std::cout << "2. GetStdHandle() returned " << helper<GetStdHandle_t>("Kernel32.dll", "GetStdHandle")(STD_OUTPUT_HANDLE) << std::endl;
     return 0;
 }
 
