@@ -10,6 +10,7 @@
 //[callplugcpp_tutorial9
 #include <boost/dll/import.hpp> // for import
 #include <iostream>
+#include <windows.h>
 
 namespace dll = boost::dll;
 
