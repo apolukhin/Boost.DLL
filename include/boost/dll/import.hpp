@@ -14,7 +14,6 @@
 #include <boost/function.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/dll/shared_library.hpp>
-#include <boost/dll/detail/strip_calling_convention.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -50,9 +49,7 @@ namespace detail {
     template <class T>
     struct import_type<T, typename boost::disable_if<boost::is_object<T> >::type> {
         typedef boost::dll::detail::refc_function<T> base_type;
-        typedef boost::function<
-            typename boost::dll::detail::strip_calling_convention<T>::type
-        > type;
+        typedef boost::function<T> type;
     };
 
     template <class T>
