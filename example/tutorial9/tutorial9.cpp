@@ -23,7 +23,7 @@ private:
 public:
     helper(const char* library, const char* function)
         : lib_(library)
-        , f_(&lib_.get<GetStdHandle_t>(function))
+        , f_(&lib_.get<Func>(function))
     {}
 
     inline operator Func* () const {
