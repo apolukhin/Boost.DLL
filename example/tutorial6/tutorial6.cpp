@@ -7,6 +7,7 @@
 
 //[callplugcpp_tutorial6
 #include <boost/dll/import.hpp>
+#include <boost/function.hpp>
 #include <iostream>
 
 typedef boost::function<void()> callback_t;

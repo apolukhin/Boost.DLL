@@ -7,6 +7,7 @@
 
 #include <boost/core/lightweight_test.hpp>
 #include <boost/dll.hpp>
+#include <boost/function.hpp>
 #include <string>
 
 #include "shared_lib_path.hpp"

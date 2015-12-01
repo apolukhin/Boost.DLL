@@ -82,6 +82,20 @@ void refcountable_test(boost::filesystem::path shared_library_path) {
     }
 
     {
+        boost::function<int&()> f = import_alias<int&()>(shared_library_path, "ref_returning_function");
+        BOOST_TEST(f() == 0);
+
+        f() = 10;
+        BOOST_TEST(f() == 10);
+        
+        boost::function<int&()> f1 = import_alias<int&()>(shared_library_path, "ref_returning_function");
+        BOOST_TEST(f1() == 10);
+
+        f1() += 10;
+        BOOST_TEST(f() == 20);
+    }
+
+    {
         boost::shared_ptr<const int> i = import<const int>(shared_library_path, "const_integer_g");
         BOOST_TEST(*i == 777);
 

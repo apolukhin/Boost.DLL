@@ -11,9 +11,12 @@
 #include <boost/config.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_object.hpp>
-#include <boost/function.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/dll/shared_library.hpp>
+
+#if defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) || defined(BOOST_NO_CXX11_DECLTYPE) || defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#   include <boost/function.hpp>
+#endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -26,21 +29,32 @@
 
 namespace boost { namespace dll {
 
+
 namespace detail {
+
     template <class T>
-    class refc_function {
+    class library_function {
         boost::shared_ptr<shared_library>   lib_;
-        T*                                  func_ptr_;
+        T&                                  f_;
 
     public:
-        refc_function(const boost::shared_ptr<shared_library>& lib, T* func_ptr) BOOST_NOEXCEPT
+        library_function(const boost::shared_ptr<shared_library>& lib, T* func_ptr) BOOST_NOEXCEPT
             : lib_(lib)
-            , func_ptr_(func_ptr)
+            , f_(*func_ptr)
         {}
 
+#if defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) || defined(BOOST_NO_CXX11_DECLTYPE) || defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
         operator T*() const BOOST_NOEXCEPT {
-            return func_ptr_;
+            return &f_; // it is safe to take address using `&`, because `f_` is guaranteed not to be an object and `operator&` could not be redefined.
         }
+#else
+        template <class... Args>
+        inline auto operator()(Args&&... args) const
+            -> decltype( f_(static_cast<Args&&>(args)...) )
+        {
+            return f_(static_cast<Args&&>(args)...);
+        }
+#endif
     };
 
     template <class T, class = void>
@@ -48,8 +62,13 @@ namespace detail {
 
     template <class T>
     struct import_type<T, typename boost::disable_if<boost::is_object<T> >::type> {
-        typedef boost::dll::detail::refc_function<T> base_type;
-        typedef boost::function<T> type;
+        typedef boost::dll::detail::library_function<T> base_type;
+
+#if defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) || defined(BOOST_NO_CXX11_DECLTYPE) || defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+        typedef boost::function<T>                      type;
+#else
+        typedef boost::dll::detail::library_function<T> type;
+#endif
     };
 
     template <class T>
@@ -66,8 +85,8 @@ namespace detail {
 
 
 /*!
-* Returns boost::function<T> or boost::shared_ptr<T> that holds an imported function or variable
-* from the loaded library and refcounts usage
+* Returns callable object or boost::shared_ptr<T> that holds the symbol imported
+* from the loaded library. Teturned value refcounts usage
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
@@ -86,6 +105,7 @@ namespace detail {
 *
 * \code
 * boost::function<int(int)> f = import<int(int)>("test_lib.so", "integer_func_name");
+* auto f_cpp11 = import<int(int)>("test_lib.so", "integer_func_name");
 * \endcode
 *
 * \code
@@ -98,7 +118,7 @@ namespace detail {
 * \param name Null-terminated C or C++ mangled name of the function to import. Can handle std::string, char*, const char*.
 * \param mode An mode that will be used on library load.
 *
-* \return boost::function<T> if T is a function type, or boost::shared_ptr<T> if T is an object type.
+* \return callable object if T is a function type, or boost::shared_ptr<T> if T is an object type.
 *
 * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
@@ -143,8 +163,8 @@ BOOST_DLL_IMPORT_RESULT_TYPE import(const boost::filesystem::path& lib, const ch
 
 
 /*!
-* Returns boost::function<T> or boost::shared_ptr<T> that holds an imported function or variable
-* from the loaded library and refcounts usage
+* Returns callable object or boost::shared_ptr<T> that holds the symbol imported
+* from the loaded library. Teturned value refcounts usage
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
@@ -175,7 +195,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import(const boost::filesystem::path& lib, const ch
 * \param name Null-terminated C or C++ mangled name of the function or variable to import. Can handle std::string, char*, const char*.
 * \param mode An mode that will be used on library load.
 *
-* \return boost::function<T> if T is a function type, or boost::shared_ptr<T> if T is an object type.
+* \return callable object if T is a function type, or boost::shared_ptr<T> if T is an object type.
 *
 * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.

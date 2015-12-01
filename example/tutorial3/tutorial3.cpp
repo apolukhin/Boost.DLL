@@ -8,6 +8,7 @@
 //[callplugcpp_tutorial3
 #include <boost/dll/import.hpp> // for import_alias
 #include <boost/make_shared.hpp>
+#include <boost/function.hpp>
 #include <iostream>
 #include "../tutorial_common/my_plugin_api.hpp"
 

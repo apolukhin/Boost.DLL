@@ -1,5 +1,6 @@
 // Copyright 2011-2012 Renato Tegon Forti
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015, Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -58,6 +59,11 @@ namespace namespace1 { namespace namespace2 { namespace namespace3 {
     }
 
     std::string info("I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
+
+    int& ref_returning_function() {
+        static int i = 0;
+        return i;
+    }
 }}}
 
 
@@ -67,6 +73,8 @@ BOOST_DLL_ALIAS(foo::variable, foo_variable)
 BOOST_DLL_ALIAS(namespace1::namespace2::namespace3::do_share, do_share)
 BOOST_DLL_ALIAS(namespace1::namespace2::namespace3::info, info)
 BOOST_DLL_ALIAS(const_integer_g, const_integer_g_alias)
+BOOST_DLL_ALIAS(namespace1::namespace2::namespace3::ref_returning_function, ref_returning_function)
+
 
 
 int integer_g = 100;
