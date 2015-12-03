@@ -10,6 +10,7 @@
 
 #include "../tutorial4/static_plugin.hpp"
 #include <boost/dll/runtime_symbol_info.hpp> // for program_location()
+#include <boost/dll/shared_library.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/container/map.hpp>
 #include <boost/filesystem.hpp>

@@ -35,24 +35,33 @@ namespace detail {
     template <class T>
     class library_function {
         boost::shared_ptr<shared_library>   lib_;
-        T&                                  f_;
+        T*                                  f_;
 
     public:
-        library_function(const boost::shared_ptr<shared_library>& lib, T* func_ptr) BOOST_NOEXCEPT
+        inline library_function(const boost::shared_ptr<shared_library>& lib, T* func_ptr) BOOST_NOEXCEPT
             : lib_(lib)
-            , f_(*func_ptr)
+            , f_(func_ptr)
         {}
 
 #if defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) || defined(BOOST_NO_CXX11_DECLTYPE) || defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
         operator T*() const BOOST_NOEXCEPT {
-            return &f_; // it is safe to take address using `&`, because `f_` is guaranteed not to be an object and `operator&` could not be redefined.
+            return f_;
         }
 #else
+
+        // Compilation error at this point means that imported function
+        // was called with unmatching parameters.
+        //
+        // Example:
+        // auto f = dll::import<void(int)>("function", "lib.so");
+        // f("Hello");  // error: invalid conversion from 'const char*' to 'int'
+        // f(1, 2);     // error: too many arguments to function
+        // f();         // error: too few arguments to function
         template <class... Args>
         inline auto operator()(Args&&... args) const
-            -> decltype( f_(static_cast<Args&&>(args)...) )
+            -> decltype( (*f_)(static_cast<Args&&>(args)...) )
         {
-            return f_(static_cast<Args&&>(args)...);
+            return (*f_)(static_cast<Args&&>(args)...);
         }
 #endif
     };
@@ -151,6 +160,24 @@ BOOST_DLL_IMPORT_RESULT_TYPE import(const boost::shared_ptr<shared_library>& lib
     return boost::dll::import<T>(lib, name.c_str());
 }
 
+//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
+template <class T>
+BOOST_DLL_IMPORT_RESULT_TYPE import(const shared_library& lib, const std::string& name) {
+    return boost::dll::import<T>(
+        boost::make_shared<boost::dll::shared_library>(lib),
+        name.c_str()
+    );
+}
+
+//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
+template <class T>
+BOOST_DLL_IMPORT_RESULT_TYPE import(const shared_library& lib, const char* name) {
+    return boost::dll::import<T>(
+        boost::make_shared<boost::dll::shared_library>(lib),
+        name
+    );
+}
+
 template <class T>
 BOOST_DLL_IMPORT_RESULT_TYPE import(const boost::filesystem::path& lib, const char* name, load_mode::type mode) {
     return boost::dll::import<T>(
@@ -226,6 +253,24 @@ template <class T>
 BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const boost::shared_ptr<shared_library>& lib, const char* name) {
     typedef typename boost::dll::detail::import_type<T>::base_type type;
     return type(lib, lib->get<T*>(name));
+}
+
+//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
+template <class T>
+BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const shared_library& lib, const std::string& name) {
+    return boost::dll::import_alias<T>(
+        boost::make_shared<boost::dll::shared_library>(lib),
+        name.c_str()
+    );
+}
+
+//! \overload boost::dll::import_alias(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
+template <class T>
+BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const shared_library& lib, const char* name) {
+    return boost::dll::import_alias<T>(
+        boost::make_shared<boost::dll::shared_library>(lib),
+        name
+    );
 }
 
 template <class T>

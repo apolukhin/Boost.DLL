@@ -10,16 +10,13 @@
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/utility/addressof.hpp>
 #include <boost/predef/compiler.h>
 #include <boost/predef/os.h>
-#include <boost/dll/shared_library.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif
-
 
 /// \file boost/dll/alias.hpp
 /// \brief Includes alias methods and macro. You can include this header or
@@ -31,7 +28,12 @@ namespace boost { namespace dll {
 #ifdef BOOST_DLL_DOXYGEN
 /// Define this macro to explicitly specify translation unit in which alias must be instantiated.
 /// See section 'Limitations' for more info. You may find usage examples in source codes of almost each tutorial.
+/// Must be used in code, when \forcedmacrolink{BOOST_DLL_FORCE_NO_WEAK_EXPORTS} is defined
 #define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
+
+/// Define this macro to disable exporting weak symbols and start using the \forcedmacrolink{BOOST_DLL_FORCE_ALIAS_INSTANTIATION}.
+/// This may be usefull for working around linker problems or to test your program for compatability with linkers that do not support export of weak symbols.
+#define BOOST_DLL_FORCE_NO_WEAK_EXPORTS
 #endif
 
 #if BOOST_COMP_MSVC
@@ -162,7 +164,8 @@ namespace boost { namespace dll {
     /**/
 
 
-#if ((BOOST_COMP_GNUC && BOOST_OS_WINDOWS) || BOOST_OS_ANDROID || BOOST_COMP_IBM) && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION)
+#if ((BOOST_COMP_GNUC && BOOST_OS_WINDOWS) || BOOST_OS_ANDROID || BOOST_COMP_IBM || defined(BOOST_DLL_FORCE_NO_WEAK_EXPORTS)) \
+    && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION) && !defined(BOOST_DLL_DOXYGEN)
 
 #define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
     namespace _autoaliases {                                                                    \
