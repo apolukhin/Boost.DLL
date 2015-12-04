@@ -20,7 +20,7 @@ int main() {
 
     // OPTION #0, requires C++11 compatible compiler.
 /*<-*/
-#if defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) || defined(BOOST_NO_CXX11_DECLTYPE) || defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_NO_CXX11_RVALUE_REFERENCES) /*->*/
+#if !defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) /*->*/
     auto get_std_handle = dll::import<GetStdHandle_t>(
         "Kernel32.dll",
         "GetStdHandle"

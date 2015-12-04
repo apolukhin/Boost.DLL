@@ -16,12 +16,11 @@ namespace dll = boost::dll;
 
 std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugins) {
     std::size_t plugins_found = 0;
-    boost::shared_ptr<dll::shared_library> lib = boost::make_shared<dll::shared_library>();
 
     for (std::size_t i = 0; i < plugins.size(); ++i) {
         std::cout << "Loading plugin: " << plugins[i] << '\n';
-        lib->load(plugins[i], dll::load_mode::append_decorations);
-        if (!lib->has("create_plugin")) {
+        dll::shared_library lib(plugins[i], dll::load_mode::append_decorations);
+        if (!lib.has("create_plugin")) {
             // no such symbol
             continue;
         }

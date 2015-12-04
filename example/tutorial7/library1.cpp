@@ -11,6 +11,7 @@
 //[plugcpp_tutorial7_library1
 #include <boost/dll/alias.hpp> // for BOOST_DLL_ALIAS_SECTIONED
 #include <iostream>
+#include <string>
 
 void print(const std::string& s) {
     std::cout << "Hello, " << s << '!' << std::endl;
