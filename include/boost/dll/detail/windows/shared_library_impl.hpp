@@ -47,8 +47,7 @@ public:
     }
 
     shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT {
-        handle_ = sl.handle_;
-        sl.handle_ = NULL;
+        swap(sl);
         return *this;
     }
 

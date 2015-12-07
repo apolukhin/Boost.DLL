@@ -162,7 +162,10 @@ public:
     * \throw Nothing.
     */
     shared_library& operator=(BOOST_RV_REF(shared_library) lib) BOOST_NOEXCEPT {
-        base_t::operator=(boost::move(static_cast<base_t&>(lib)));
+        if (lib.native() != native()) {
+            swap(lib);
+        }
+
         return *this;
     }
 
@@ -202,9 +205,9 @@ public:
         }
 
         shared_library copy(loc, ec);
-        /*if (ec) {
+        if (ec) {
             return *this;
-        }*/
+        }
 
         swap(copy);
         return *this;

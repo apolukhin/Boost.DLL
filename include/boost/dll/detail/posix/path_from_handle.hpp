@@ -17,51 +17,16 @@
 # pragma once
 #endif
 
+#if BOOST_OS_MACOS || BOOST_OS_IOS || BOOST_OS_ANDROID
+
+// `path_from_handle(void* handle, boost::system::error_code &ec)` is not defined for the following platforms:
+//  * Android       - because there's no reliable way to get path from handle in O(1) time
+//  * MacOS and IOS - because on those platforms `path_from_handle` is not thread safe and takes linear time (N*3 syscalls)
+
+#else // #if BOOST_OS_MACOS || BOOST_OS_IOS || BOOST_OS_ANDROID
+
 // for dlinfo
 #include <dlfcn.h>
-
-#if BOOST_OS_MACOS || BOOST_OS_IOS
-#   include <mach-o/dyld.h>
-#   include <mach-o/nlist.h>
-#   include <cstddef> // for std::ptrdiff_t
-
-namespace boost { namespace dll { namespace detail {
-    inline void* strip_handle(void* handle) BOOST_NOEXCEPT {
-        return reinterpret_cast<void*>(
-            (reinterpret_cast<std::ptrdiff_t>(handle) >> 2) << 2
-        );
-    }
-
-    inline boost::filesystem::path path_from_handle(void* handle, boost::system::error_code &ec) {
-        handle = strip_handle(handle);
-
-        // Iterate through all images currently in memory
-        // https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man3/dyld.3.html
-        const std::size_t count = _dyld_image_count(); // not thread safe: other thread my [un]load images
-        for (std::size_t i = 0; i <= count; ++i) {
-            // on last iteration `i` is equal to `count` which is out of range, so `_dyld_get_image_name`
-            // will return NULL. `dlopen(NULL, RTLD_LAZY)` call will open the current executable.
-            const char* image_name = _dyld_get_image_name(i);
-            void* probe_handle = dlopen(image_name, RTLD_LAZY);
-            dlclose(probe_handle);
-
-            // If the handle is the same as what was passed in (modulo mode bits), return this image name
-            if (handle == strip_handle(probe_handle)) {
-                return image_name;
-            }
-        }
-
-        ec = boost::system::error_code(
-            boost::system::errc::bad_file_descriptor,
-            boost::system::generic_category()
-        );
-
-        return boost::filesystem::path();
-    }
-
-}}} // namespace boost::dll::detail
-
-#else // #if BOOST_OS_MACOS || BOOST_OS_IOS
 
 #if BOOST_OS_QNX
 // QNX's copy of <elf.h> and <link.h> reside in sys folder
@@ -72,14 +37,14 @@ namespace boost { namespace dll { namespace detail {
 
 namespace boost { namespace dll { namespace detail {
 
-#if BOOST_OS_ANDROID || BOOST_OS_QNX
+#if BOOST_OS_QNX
     // Android and QNX miss struct link_map. QNX misses ElfW macro, so avoiding it.
     struct link_map {
         void *l_addr;   // Base address shared object is loaded at
         char *l_name;   // Absolute file name object was found in
         // ...          // Ignoring remaning parts of the structure
     };
-#endif // #if BOOST_OS_ANDROID
+#endif // #if BOOST_OS_QNX
 
     inline boost::filesystem::path path_from_handle(void* handle, boost::system::error_code &ec) {
         // RTLD_DI_LINKMAP (RTLD_DI_ORIGIN returns only folder and is not suitable for this case)
