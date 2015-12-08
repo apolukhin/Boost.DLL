@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
     boost::thread_group threads;
     const std::size_t thread_count = 4;
     for (std::size_t i = 0; i < thread_count; ++i) {
-        threads.create_thread(boost::bind(load_unload, paths, 3000));
+        threads.create_thread(boost::bind(load_unload, paths, 1000));
     }
     threads.join_all();
 
