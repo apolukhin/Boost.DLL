@@ -82,5 +82,6 @@ project
         ]
         [ run ../example/tutorial9/tutorial9.cpp ]
         [ compile-fail section_name_too_big.cpp ]
+        [ run shared_library_concurrent_load_test.cpp /boost/thread//boost_thread : : library1 library2 my_plugin_aggregator refcounting_plugin ]
     ;
 }

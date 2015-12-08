@@ -121,7 +121,7 @@ namespace detail {
 *
 * \b Template \b parameter \b T:    Type of the symbol that we are going to import. Must be explicitly specified.
 *
-* \param lib Path or shared pointer to library to load function from.
+* \param lib Path to shared library or shared library to load function from.
 * \param name Null-terminated C or C++ mangled name of the function to import. Can handle std::string, char*, const char*.
 * \param mode An mode that will be used on library load.
 *
@@ -211,7 +211,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import(BOOST_RV_REF(shared_library) lib, const std:
 *
 * \b Template \b parameter \b T:    Type of the symbol alias that we are going to import. Must be explicitly specified.
 *
-* \param lib Path or shared pointer to library to load function from.
+* \param lib Path to shared library or shared library to load function from.
 * \param name Null-terminated C or C++ mangled name of the function or variable to import. Can handle std::string, char*, const char*.
 * \param mode An mode that will be used on library load.
 *

@@ -51,9 +51,6 @@ public:
     
     shared_library_impl(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT
         : handle_(sl.handle_)
-#if BOOST_OS_IOS || BOOST_OS_MACOS || BOOST_OS_ANDROID
-        , path_(boost::move(sl.path_))
-#endif
     {
         sl.handle_ = NULL;
     }
@@ -101,9 +98,6 @@ public:
 
             handle_ = dlopen(actual_path.c_str(), static_cast<native_mode_t>(mode));
             if (handle_) {
-#if BOOST_OS_IOS || BOOST_OS_MACOS || BOOST_OS_ANDROID
-                path_ = boost::move(actual_path);
-#endif
                 return;
             }
         }
@@ -111,9 +105,6 @@ public:
         // Opening by exactly specified path
         handle_ = dlopen(sl.c_str(), static_cast<native_mode_t>(mode));
         if (handle_) {
-#if BOOST_OS_IOS || BOOST_OS_MACOS || BOOST_OS_ANDROID
-            path_ = sl;
-#endif
             return;
         }
 
@@ -140,11 +131,6 @@ public:
                     boost::system::generic_category()
                 );
             }
-#if BOOST_OS_IOS || BOOST_OS_MACOS || BOOST_OS_ANDROID
-            else {
-                path_ = boost::move(loc);
-            }
-#endif
         }
     }
 
@@ -157,28 +143,16 @@ public:
             return;
         }
 
-#if BOOST_OS_IOS || BOOST_OS_MACOS || BOOST_OS_ANDROID
-        path_.clear();
-#endif
-
         dlclose(handle_);
         handle_ = 0;
     }
 
     void swap(shared_library_impl& rhs) BOOST_NOEXCEPT {
         boost::swap(handle_, rhs.handle_);
-#if BOOST_OS_IOS || BOOST_OS_MACOS || BOOST_OS_ANDROID
-        boost::swap(path_, rhs.path_);
-#endif
     }
 
     boost::filesystem::path full_module_path(boost::system::error_code &ec) const {
-#if BOOST_OS_IOS || BOOST_OS_MACOS || BOOST_OS_ANDROID
-        (void)ec;
-        return path_;
-#else
         return boost::dll::detail::path_from_handle(handle_, ec);
-#endif
     }
 
     static boost::filesystem::path suffix() {
@@ -214,9 +188,6 @@ public:
 
 private:
     native_handle_t         handle_;
-#if BOOST_OS_IOS || BOOST_OS_MACOS || BOOST_OS_ANDROID
-    boost::filesystem::path path_;
-#endif
 };
 
 }}} // boost::dll::detail

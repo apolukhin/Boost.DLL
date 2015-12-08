@@ -17,11 +17,70 @@
 # pragma once
 #endif
 
-#if BOOST_OS_MACOS || BOOST_OS_IOS || BOOST_OS_ANDROID
+#if BOOST_OS_MACOS || BOOST_OS_IOS
 
-// `path_from_handle(void* handle, boost::system::error_code &ec)` is not defined for the following platforms:
-//  * Android       - because there's no reliable way to get path from handle in O(1) time
-//  * MacOS and IOS - because on those platforms `path_from_handle` is not thread safe and takes linear time (N*3 syscalls)
+#   include <mach-o/dyld.h>
+#   include <mach-o/nlist.h>
+#   include <cstddef> // for std::ptrdiff_t
+
+namespace boost { namespace dll { namespace detail {
+    inline void* strip_handle(void* handle) BOOST_NOEXCEPT {
+        return reinterpret_cast<void*>(
+            (reinterpret_cast<std::ptrdiff_t>(handle) >> 2) << 2
+        );
+    }
+
+    inline boost::filesystem::path path_from_handle(void* handle, boost::system::error_code &ec) {
+        handle = strip_handle(handle);
+
+        // Iterate through all images currently in memory
+        // https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man3/dyld.3.html
+        const std::size_t count = _dyld_image_count(); // not thread safe: other thread my [un]load images
+        for (std::size_t i = 0; i <= count; ++i) {
+            // on last iteration `i` is equal to `count` which is out of range, so `_dyld_get_image_name`
+            // will return NULL. `dlopen(NULL, RTLD_LAZY)` call will open the current executable.
+            const char* image_name = _dyld_get_image_name(i);
+
+            // dlopen/dlclose must not affect `_dyld_image_count()`, because libraries are already loaded and only the internal counter is affected
+            void* probe_handle = dlopen(image_name, RTLD_LAZY);
+            dlclose(probe_handle);
+
+            // If the handle is the same as what was passed in (modulo mode bits), return this image name
+            if (handle == strip_handle(probe_handle)) {
+                return image_name;
+            }
+        }
+
+        ec = boost::system::error_code(
+            boost::system::errc::bad_file_descriptor,
+            boost::system::generic_category()
+        );
+
+        return boost::filesystem::path();
+    }
+
+}}} // namespace boost::dll::detail
+
+#elif BOOST_OS_ANDROID
+
+#include <boost/dll/runtime_symbol_info.hpp>
+
+namespace boost { namespace dll { namespace detail {
+
+    struct soinfo {
+        const void* phdr;
+        size_t      phnum;
+        void*       entry;
+        void*       base;
+        // ...          // Ignoring remaning parts of the structure
+    };
+
+    inline boost::filesystem::path path_from_handle(void* handle, boost::system::error_code &ec) {
+        const struct soinfo* si = static_cast<const struct soinfo*>(handle);
+        return boost::dll::detail::symbol_location_impl(si->base, ec);
+    }
+
+}}} // namespace boost::dll::detail
 
 #else // #if BOOST_OS_MACOS || BOOST_OS_IOS || BOOST_OS_ANDROID
 
