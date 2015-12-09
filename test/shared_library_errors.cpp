@@ -1,5 +1,6 @@
 // Copyright 2011-2012 Renato Tegon Forti.
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -7,6 +8,7 @@
 
 // For more information, see http://www.boost.org
 
+#include "../example/shared_lib_path.hpp"
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/library_info.hpp>
 #include <boost/core/lightweight_test.hpp>
@@ -20,6 +22,7 @@ int main(int argc, char* argv[]) {
     BOOST_TEST(argc >= 2);
     boost::filesystem::path shared_library_path = argv[1];
     BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
+    BOOST_TEST(dll_test::is_shared_library(shared_library_path));
     boost::filesystem::path bad_path = shared_library_path / "directory_that_does_not_exist";
 
     try {

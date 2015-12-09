@@ -16,10 +16,10 @@
 namespace dll = boost::dll;
 
 int main(int argc, char* argv[]) {
-    /*<-*/ dll_test::argv_to_path workaround(argc, argv); /*->*/
+    /*<-*/ BOOST_ASSERT(argc > 1); (void)argc; /*->*/
     boost::filesystem::path shared_library_path(argv[1]);               // argv[1] contains path to directory with our plugin library
     shared_library_path /= "my_plugin_aggregator";
-    /*<-*/ shared_library_path = (shared_library_path << workaround); /*->*/
+    /*<-*/ shared_library_path = argv[1]; /*->*/
     typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
     boost::function<pluginapi_create_t> creator;
 

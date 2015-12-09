@@ -6,6 +6,8 @@
 
 // For more information, see http://www.boost.org
 
+
+#include "../example/shared_lib_path.hpp"
 #include <boost/dll.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/thread.hpp>
@@ -23,7 +25,7 @@ inline paths_t generate_paths(int argc, char* argv[]) {
 
     for (int i = 1; i < argc; ++i) {
         boost::filesystem::path p = argv[i];
-        if (p.string().find(".lib") == std::string::npos) {
+        if (dll_test::is_shared_library(p)) {
             ret.push_back(p);
         }
     }

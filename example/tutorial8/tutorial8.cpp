@@ -12,9 +12,9 @@
 #include "refcounting_api.hpp"
 
 int main(int argc, char* argv[]) {
-    /*<-*/ dll_test::argv_to_path workaround(argc, argv); /*->*/
+    /*<-*/ BOOST_ASSERT(argc > 1); (void)argc; /*->*/
     boost::shared_ptr<my_refcounting_api> plugin = get_plugin(
-        boost::filesystem::path(argv[1]) / "refcounting_plugin"/*<-*/ << workaround /*->*/,
+        boost::filesystem::path(argv[1]) / "refcounting_plugin"/*<-*/ << dll_test::replace_with_full_path(argv[1]) /*->*/,
         "create_refc_plugin"
     );
 

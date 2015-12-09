@@ -7,6 +7,7 @@
 
 // For more information, see http://www.boost.org
 
+#include "../example/shared_lib_path.hpp"
 #include <boost/dll.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <boost/filesystem.hpp>
@@ -62,7 +63,7 @@ inline boost::filesystem::path do_find_correct_libs_path(int argc, char* argv[],
 
     for (int i = 1; i < argc; ++i) {
         ret = argv[i];
-        if (ret.string().find(lib_name) != std::string::npos && ret.string().find(".lib") == std::string::npos) {
+        if (ret.string().find(lib_name) != std::string::npos && dll_test::is_shared_library(ret)) {
             return ret;
         }
     }

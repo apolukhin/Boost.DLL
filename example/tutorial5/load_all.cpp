@@ -8,6 +8,7 @@
 // MinGW related workaround
 #define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
 
+#include "../shared_lib_path.hpp"
 #include "../tutorial4/static_plugin.hpp"
 #include <boost/dll/runtime_symbol_info.hpp> // for program_location()
 #include <boost/dll/shared_library.hpp>
@@ -61,10 +62,7 @@ void plugins_collector::load_all() {
             continue;
         }
         /*<-*/
-        if ((*it).path().string().find(".lib") != std::string::npos || (*it).path().string().find(".exp") != std::string::npos
-            || (*it).path().string().find(".pdb") != std::string::npos || (*it).path().string().find(".manifest") != std::string::npos
-            || (*it).path().string().find(".rsp") != std::string::npos || (*it).path().string().find(".obj") != std::string::npos)
-        {
+        if ( !dll_test::is_shared_library((*it).path()) ) {
             continue;
         }
         /*->*/

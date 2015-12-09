@@ -18,7 +18,7 @@ namespace dll = boost::dll;
 int main() {
     typedef HANDLE(__stdcall GetStdHandle_t)(DWORD );       // function signature with calling convention
 
-    // OPTION #0, requires C++11 compatible compiler.
+    // OPTION #0, requires C++11 compatible compiler that understands GetStdHandle_t signature.
 /*<-*/
 #if !defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) /*->*/
     auto get_std_handle = dll::import<GetStdHandle_t>(

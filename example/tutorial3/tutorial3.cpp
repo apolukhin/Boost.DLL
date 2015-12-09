@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#include "../shared_lib_path.hpp"
 //[callplugcpp_tutorial3
 #include <boost/dll/import.hpp> // for import_alias
 #include <boost/make_shared.hpp>
@@ -28,7 +29,7 @@ std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugi
         // library has symbol, importing...
         typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
         boost::function<pluginapi_create_t> creator
-            = dll::import_alias<pluginapi_create_t>(lib, "create_plugin");
+            = dll::import_alias<pluginapi_create_t>(boost::move(lib), "create_plugin");
 
         std::cout << "Matching plugin name: " << creator()->name() << std::endl;
         ++ plugins_found;
@@ -44,7 +45,7 @@ int main(int argc, char* argv[]) {
     std::vector<boost::filesystem::path> plugins;
     plugins.reserve(argc - 1);
     for (int i = 1; i < argc; ++i) {
-        if (std::string(argv[i]).find(".lib") == std::string::npos && std::string(argv[i]).find(".exp") == std::string::npos && std::string(argv[i]).find(".pdb") == std::string::npos) {
+        if (dll_test::is_shared_library(argv[i])) {
             plugins.push_back(argv[i]);
         }
     }

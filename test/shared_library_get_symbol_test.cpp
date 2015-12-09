@@ -8,6 +8,7 @@
 
 // For more information, see http://www.boost.org
 
+#include "../example/shared_lib_path.hpp"
 #include <boost/dll.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <boost/function.hpp>
@@ -126,6 +127,7 @@ int main(int argc, char* argv[]) {
     BOOST_TEST(argc >= 2);
     boost::filesystem::path shared_library_path = argv[1];
     BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
+    BOOST_TEST(dll_test::is_shared_library(shared_library_path));
 
     refcountable_test(shared_library_path);
 
