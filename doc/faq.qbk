@@ -8,10 +8,11 @@
 [section F.A.Q.]
 
 * [*Question:]  Is Boost.DLL thread-safe?
-  * [*Answer:]  \b NO. Some libc implementations and platforms allow concurrent calls to `dlopen` like functions, others do not.
-For platforms that allow concurrent calls Boost.DLL is safe in the manner as all the C++ Standard Library containers are: it is
+  * [*Answer:]  Some platforms allow concurrent calls to `dlopen` like functions.
+For those platforms Boost.DLL is safe in the manner as all the C++ Standard Library containers are: it is
 safe to use different instances of shared_library from different threads even if all the instances loaded the same library. On other platforms it
 is not safe to concurrently call any of the functions from Boost.DLL (even a `shared_library::location()` call triggers a race condition).
+See [link boost_dll.limitations.multithread Limitations, Thread safe library loading].
 
 [pre
 ]

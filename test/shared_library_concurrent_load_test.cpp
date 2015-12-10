@@ -11,12 +11,16 @@
 #include <boost/dll.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/thread.hpp>
+#include <boost/thread/barrier.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <boost/bind.hpp>
 #include <cctype>
 #include <vector>
 
 typedef std::vector<boost::filesystem::path> paths_t;
+const std::size_t thread_count = 4;
+boost::barrier b(thread_count);
+
 
 // Disgusting workarounds for b2 on Windows platform
 inline paths_t generate_paths(int argc, char* argv[]) {
@@ -34,13 +38,18 @@ inline paths_t generate_paths(int argc, char* argv[]) {
 }
 
 inline void load_unload(const paths_t& paths, std::size_t count) {
-    boost::filesystem::path ret;
-
-    for (std::size_t j = 0; j < count; ++j) {
+    for (std::size_t j = 0; j < count; j += 2) {
         for (std::size_t i = 0; i < paths.size(); ++i) {
             boost::dll::shared_library lib(paths[i]);
             BOOST_TEST(lib);
         }
+        for (std::size_t i = 0; i < paths.size(); ++i) {
+            boost::dll::shared_library lib(paths[i]);
+            BOOST_TEST(lib.location() != "");
+        }
+
+        // Waiting for all threads to unload shared libraries
+        b.wait();
     }
 }
 
@@ -48,12 +57,13 @@ inline void load_unload(const paths_t& paths, std::size_t count) {
 int main(int argc, char* argv[]) {
     BOOST_TEST(argc >= 3);
     paths_t paths = generate_paths(argc, argv);
-    std::cout << "Libraries:\n";
+    BOOST_TEST(!paths.empty());
+
+    std::cout << "Libraries:\n\t";
     std::copy(paths.begin(), paths.end(), std::ostream_iterator<boost::filesystem::path>(std::cout, ", "));
     std::cout << std::endl;
 
     boost::thread_group threads;
-    const std::size_t thread_count = 4;
     for (std::size_t i = 0; i < thread_count; ++i) {
         threads.create_thread(boost::bind(load_unload, paths, 1000));
     }
