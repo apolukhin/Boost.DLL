@@ -6,6 +6,13 @@
 
 // For more information, see http://www.boost.org
 
+#ifdef BOOST_TRAVISCI_BUILD
+
+int main() {
+    return 0;
+}
+
+#else // #ifdef BOOST_TRAVISCI_BUILD
 
 #include "../example/b2_workarounds.hpp"
 #include <boost/dll.hpp>
@@ -63,13 +70,13 @@ int main(int argc, char* argv[]) {
     std::copy(paths.begin(), paths.end(), std::ostream_iterator<boost::filesystem::path>(std::cout, ", "));
     std::cout << std::endl;
 
-#ifndef BOOST_TRAVISCI_BUILD
     boost::thread_group threads;
     for (std::size_t i = 0; i < thread_count; ++i) {
         threads.create_thread(boost::bind(load_unload, paths, 1000));
     }
     threads.join_all();
-#endif
 
     return boost::report_errors();
 }
+
+#endif // #ifdef BOOST_TRAVISCI_BUILD
