@@ -13,8 +13,8 @@
 sudo: false
 language: cpp
 compiler:
-    - clang
-#    - gcc
+    - gcc
+#    - clang
 
 os:
     - linux
@@ -33,7 +33,7 @@ env:
         # from `Boost.DLL` repo, while Boost already has `dll`.
         #
         # By default is eaual to - BOOST_REMOVE=`basename $TRAVIS_BUILD_DIR`
-        # This will force to use local repo content, instead of th eBoost's default
+        # This will force to use local repo content, instead of the Boost's default
         - BOOST_REMOVE=dll
 
     matrix:
