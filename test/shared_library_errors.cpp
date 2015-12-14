@@ -8,7 +8,7 @@
 
 // For more information, see http://www.boost.org
 
-#include "../example/shared_lib_path.hpp"
+#include "../example/b2_workarounds.hpp"
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/library_info.hpp>
 #include <boost/core/lightweight_test.hpp>
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
     BOOST_TEST(argc >= 2);
     boost::filesystem::path shared_library_path = argv[1];
     BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
-    BOOST_TEST(dll_test::is_shared_library(shared_library_path));
+    BOOST_TEST(b2_workarounds::is_shared_library(shared_library_path));
     boost::filesystem::path bad_path = shared_library_path / "directory_that_does_not_exist";
 
     try {

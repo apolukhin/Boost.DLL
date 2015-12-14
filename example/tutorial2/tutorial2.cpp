@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp" // contains dll_test::argv_to_path to workaround --layout=X
+#include "../b2_workarounds.hpp"
 
 //[callplugcpp_tutorial2
 #include <boost/dll/import.hpp> // for import_alias
@@ -16,10 +16,9 @@
 namespace dll = boost::dll;
 
 int main(int argc, char* argv[]) {
-    /*<-*/ BOOST_ASSERT(argc > 1); (void)argc; /*->*/
+    /*<-*/ b2_workarounds::argv_to_path_guard guard(argc, argv); /*->*/
     boost::filesystem::path shared_library_path(argv[1]);               // argv[1] contains path to directory with our plugin library
     shared_library_path /= "my_plugin_aggregator";
-    /*<-*/ shared_library_path = argv[1]; /*->*/
     typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
     boost::function<pluginapi_create_t> creator;
 

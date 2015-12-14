@@ -55,8 +55,9 @@ namespace detail {
         if (res) {
             ret = info.dli_fname;
         } else {
+            boost::dll::detail::reset_dlerror();
             ec = boost::system::error_code(
-                boost::system::errc::not_supported,
+                boost::system::errc::bad_address,
                 boost::system::generic_category()
             );
         }
@@ -160,6 +161,7 @@ namespace detail {
     * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept boost::system::error_code also throws boost::system::system_error.
     */
     inline boost::filesystem::path program_location(boost::system::error_code& ec) {
+        ec.clear();
         return boost::dll::detail::program_location_impl(ec);
     }
 

@@ -10,8 +10,6 @@
 #include <boost/function.hpp>
 #include <string>
 
-#include "shared_lib_path.hpp"
-
 // Unit Tests
 int main(int argc, char* argv[]) {
     using namespace boost;

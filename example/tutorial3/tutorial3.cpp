@@ -5,7 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp"
+#include "../b2_workarounds.hpp"
 //[callplugcpp_tutorial3
 #include <boost/dll/import.hpp> // for import_alias
 #include <boost/make_shared.hpp>
@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
     std::vector<boost::filesystem::path> plugins;
     plugins.reserve(argc - 1);
     for (int i = 1; i < argc; ++i) {
-        if (dll_test::is_shared_library(argv[i])) {
+        if (b2_workarounds::is_shared_library(argv[i])) {
             plugins.push_back(argv[i]);
         }
     }

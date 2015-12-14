@@ -148,7 +148,7 @@ public:
         boost::system::error_code ec;
         assign(lib, ec);
         if (ec) {
-            boost::dll::detail::report_error(ec, "shared_library::operator= failed");
+            boost::dll::detail::report_error(ec, "boost::dll::shared_library::operator= failed");
         }
 
         return *this;
@@ -224,7 +224,7 @@ public:
         boost::system::error_code ec;
         assign(lib, ec);
         if (ec) {
-            boost::dll::detail::report_error(ec, "assign() failed");
+            boost::dll::detail::report_error(ec, "boost::dll::shared_library::assign() failed");
         }
 
         return *this;
@@ -247,7 +247,7 @@ public:
         base_t::load(lib_path, mode, ec);
 
         if (ec) {
-            boost::dll::detail::report_error(ec, "load() failed");
+            boost::dll::detail::report_error(ec, "boost::dll::shared_library::load() failed");
         }
     }
 
@@ -404,14 +404,14 @@ private:
             // report_error() calls dlsym, do not use it here!
             boost::throw_exception(
                 boost::system::system_error(
-                    ec, "get() failed: no library was loaded"
+                    ec, "boost::dll::shared_library::get() failed: no library was loaded"
                 )
             );
         }
 
         void* const ret = base_t::symbol_addr(sb, ec);
         if (ec || !ret) {
-            boost::dll::detail::report_error(ec, "get() failed");
+            boost::dll::detail::report_error(ec, "boost::dll::shared_library::get() failed");
         }
 
         return ret;
@@ -451,7 +451,7 @@ public:
 
             boost::throw_exception(
                 boost::system::system_error(
-                    ec, "location() failed (no library was loaded)"
+                    ec, "boost::dll::shared_library::location() failed (no library was loaded)"
                 )
             );
         }
@@ -459,7 +459,7 @@ public:
         boost::filesystem::path full_path = base_t::full_module_path(ec);
 
         if (ec) {
-            boost::dll::detail::report_error(ec, "location() failed");
+            boost::dll::detail::report_error(ec, "boost::dll::shared_library::location() failed");
         }
 
         return full_path;
@@ -488,6 +488,7 @@ public:
             return boost::filesystem::path();
         }
 
+        ec.clear();
         return base_t::full_module_path(ec);
     }
 

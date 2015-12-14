@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include "../shared_lib_path.hpp"
 #include <vector>
+#include "../b2_workarounds.hpp"
 
 //[callplugcpp_tutorial7
 #include <boost/dll/shared_library.hpp>
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     std::vector<boost::filesystem::path> libraries;
     libraries.reserve(argc - 1);
     for (int i = 1; i < argc; ++i) {
-        if (dll_test::is_shared_library(argv[i])) {
+        if (b2_workarounds::is_shared_library(argv[i])) {
             libraries.push_back(argv[i]);
         }
     }

@@ -47,10 +47,12 @@ namespace boost { namespace dll { namespace detail {
 
             // If the handle is the same as what was passed in (modulo mode bits), return this image name
             if (handle == strip_handle(probe_handle)) {
+                boost::dll::detail::reset_dlerror();
                 return image_name;
             }
         }
 
+        boost::dll::detail::reset_dlerror();
         ec = boost::system::error_code(
             boost::system::errc::bad_file_descriptor,
             boost::system::generic_category()
@@ -68,6 +70,8 @@ namespace boost { namespace dll { namespace detail {
 namespace boost { namespace dll { namespace detail {
 
     struct soinfo {
+        // if defined(__work_around_b_24465209__), then an array of char[128] goes here.
+        // Unfortunately, __work_around_b_24465209__ is visible only during compilation of Android's linker
         const void* phdr;
         size_t      phnum;
         void*       entry;
@@ -76,8 +80,17 @@ namespace boost { namespace dll { namespace detail {
     };
 
     inline boost::filesystem::path path_from_handle(void* handle, boost::system::error_code &ec) {
-        const struct soinfo* si = static_cast<const struct soinfo*>(handle);
-        return boost::dll::detail::symbol_location_impl(si->base, ec);
+        static const std::size_t work_around_b_24465209__offset = 128;
+        const struct soinfo* si = static_cast<const struct soinfo*>(handle + work_around_b_24465209__offset);
+        boost::filesystem::path ret = boost::dll::detail::symbol_location_impl(si->base, ec);
+
+        if (ec) {
+            ec.clear();
+            si = static_cast<const struct soinfo*>(handle);
+            return boost::dll::detail::symbol_location_impl(si->base, ec);
+        }
+
+        return ret;
     }
 
 }}} // namespace boost::dll::detail
@@ -129,6 +142,7 @@ namespace boost { namespace dll { namespace detail {
         link_map = static_cast<const struct link_map*>(handle);
 #endif
         if (!link_map) {
+            boost::dll::detail::reset_dlerror();
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,
                 boost::system::generic_category()

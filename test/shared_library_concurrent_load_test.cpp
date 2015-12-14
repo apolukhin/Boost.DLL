@@ -7,10 +7,10 @@
 // For more information, see http://www.boost.org
 
 
-#include "../example/shared_lib_path.hpp"
+#include "../example/b2_workarounds.hpp"
 #include <boost/dll.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/thread.hpp>
+#include <boost/thread/thread.hpp>
 #include <boost/thread/barrier.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <boost/bind.hpp>
@@ -29,7 +29,7 @@ inline paths_t generate_paths(int argc, char* argv[]) {
 
     for (int i = 1; i < argc; ++i) {
         boost::filesystem::path p = argv[i];
-        if (dll_test::is_shared_library(p)) {
+        if (b2_workarounds::is_shared_library(p)) {
             ret.push_back(p);
         }
     }
@@ -63,11 +63,13 @@ int main(int argc, char* argv[]) {
     std::copy(paths.begin(), paths.end(), std::ostream_iterator<boost::filesystem::path>(std::cout, ", "));
     std::cout << std::endl;
 
+#ifndef BOOST_TRAVISCI_BUILD
     boost::thread_group threads;
     for (std::size_t i = 0; i < thread_count; ++i) {
         threads.create_thread(boost::bind(load_unload, paths, 1000));
     }
     threads.join_all();
+#endif
 
     return boost::report_errors();
 }

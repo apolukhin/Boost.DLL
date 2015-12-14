@@ -26,10 +26,10 @@ around linker problems or to test your program for compatability with linkers th
 Some platforms ignore section attributes, so that querying for a symbols in a specified section using [classref boost::dll::library_info] may return nothing.
 [endsect]
 
-[section:multithread Thread safe library loading (Fails on MacOS, iOS and some other)]
+[section:multithread Thread safe library loading (Fails on FreeBSD, MacOS, iOS and some other)]
 On some platforms `dlopen`,`dlclose` and some other functions assume that they won't be called concurrently.
 
-Platforms that certaly have that issue are MacOS, iOS.
+Platforms that certaly have that issue are FreeBSD, MacOS, iOS.
 
 Platforms that certaly do not have such issue are Windows, Linux+glibc, Android, QNX.
 

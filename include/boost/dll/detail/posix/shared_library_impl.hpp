@@ -66,6 +66,7 @@ public:
 
         // Do not allow opening NULL paths. User must use program_location() instead
         if (sl.empty()) {
+            boost::dll::detail::reset_dlerror();
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,
                 boost::system::generic_category()
@@ -98,6 +99,7 @@ public:
 
             handle_ = dlopen(actual_path.c_str(), static_cast<native_mode_t>(mode));
             if (handle_) {
+                boost::dll::detail::reset_dlerror();
                 return;
             }
         }
@@ -105,6 +107,7 @@ public:
         // Opening by exactly specified path
         handle_ = dlopen(sl.c_str(), static_cast<native_mode_t>(mode));
         if (handle_) {
+            boost::dll::detail::reset_dlerror();
             return;
         }
 
@@ -124,6 +127,7 @@ public:
             // "handle" for the dynamic library. If filename is NULL, then the 
             // returned handle is for the main program.
             ec.clear();
+            boost::dll::detail::reset_dlerror();
             handle_ = dlopen(NULL, static_cast<native_mode_t>(mode));
             if (!handle_) {
                 ec = boost::system::error_code(

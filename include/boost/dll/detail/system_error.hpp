@@ -23,6 +23,13 @@
 
 namespace boost { namespace dll { namespace detail {
 
+    inline void reset_dlerror() BOOST_NOEXCEPT {
+#if !BOOST_OS_WINDOWS
+        const char* const error_txt = dlerror();
+        (void)error_txt;
+#endif
+    }
+
     inline void report_error(const boost::system::error_code& ec, const char* message) {
 #if !BOOST_OS_WINDOWS
         const char* const error_txt = dlerror();
