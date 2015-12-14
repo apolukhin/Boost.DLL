@@ -13,8 +13,8 @@
 sudo: false
 language: cpp
 compiler:
-    - gcc
-#    - clang
+#    - gcc
+    - clang
 
 os:
     - linux
