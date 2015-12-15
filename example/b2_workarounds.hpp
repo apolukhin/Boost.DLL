@@ -9,6 +9,7 @@
 #define BOOST_DLL_EXAMPLE_COMMON_B2_WORKAROUNDS_HPP
 
 #include <boost/filesystem.hpp>
+#include <cctype>
 
 namespace b2_workarounds {
 

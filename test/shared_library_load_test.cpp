@@ -11,7 +11,6 @@
 #include <boost/dll.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <boost/filesystem.hpp>
-#include <cctype>
 // Unit Tests
 
 
