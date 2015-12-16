@@ -42,8 +42,11 @@ struct argv_to_path_guard {
     }
 
     static inline boost::filesystem::path drop_b2_deco(const boost::filesystem::path& in) {
+        std::size_t pos = in.filename().string().find("-");
         boost::filesystem::path res = in.parent_path() / in.filename().string().substr(0, in.filename().string().find("-"));
-        res += in.extension();
+        if (pos != std::string::npos) {
+            res += in.extension();
+        }
         return res;
     }
 
