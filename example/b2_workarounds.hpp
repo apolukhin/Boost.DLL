@@ -41,9 +41,15 @@ struct argv_to_path_guard {
         return argv[1];
     }
 
+    static inline boost::filesystem::path drop_b2_deco(const boost::filesystem::path& in) {
+        boost::filesystem::path res = in.parent_path() / in.filename().string().substr(0, in.filename().string().find("-"));
+        res += in.extension();
+        return res;
+    }
+
     inline explicit argv_to_path_guard(int argc, char* argv[])
         : original_(first_from_argv(argc, argv))
-        , version_dropped_( drop_version(original_) )
+        , version_dropped_( drop_b2_deco(drop_version(original_)) )
         , just_path_( version_dropped_.parent_path().string() )
         , same_(version_dropped_ == original_)
     {
