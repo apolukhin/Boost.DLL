@@ -79,9 +79,11 @@ namespace boost { namespace dll { namespace detail {
         // ...          // Ignoring remaning parts of the structure
     };
 
-    inline boost::filesystem::path path_from_handle(void* handle, boost::system::error_code &ec) {
+    inline boost::filesystem::path path_from_handle(const void* handle, boost::system::error_code &ec) {
         static const std::size_t work_around_b_24465209__offset = 128;
-        const struct soinfo* si = static_cast<const struct soinfo*>(handle + work_around_b_24465209__offset);
+        const struct soinfo* si = reinterpret_cast<const struct soinfo*>(
+            static_cast<const char*>(handle) + work_around_b_24465209__offset
+        );
         boost::filesystem::path ret = boost::dll::detail::symbol_location_impl(si->base, ec);
 
         if (ec) {
