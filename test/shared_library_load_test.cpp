@@ -346,12 +346,14 @@ int main(int argc, char* argv[])
         shared_library sl(program_location());
         BOOST_TEST(sl.is_loaded());
         BOOST_TEST(sl);
-        BOOST_TEST(sl.location() == program_location());
+        std::cout << "\nProgram location: " << program_location();
+        std::cout << "\nLibrary location: " << sl.location();
+        BOOST_TEST( boost::filesystem::equivalent(sl.location(), program_location()) );
 
         boost::system::error_code ec;
         shared_library sl2(program_location());
         BOOST_TEST(sl2.is_loaded());
-        BOOST_TEST(sl2.location() == program_location());
+        BOOST_TEST( boost::filesystem::equivalent(sl2.location(), program_location()) );
         BOOST_TEST(sl2);
         BOOST_TEST(!ec);
 
