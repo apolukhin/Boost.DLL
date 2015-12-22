@@ -9,6 +9,7 @@
 
 // MinGW related workaround
 #define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
+#include "../example/b2_workarounds.hpp"
 
 #include <boost/dll/library_info.hpp>
 #include <boost/core/lightweight_test.hpp>
@@ -20,8 +21,7 @@
 
 int main(int argc, char* argv[])
 {
-    BOOST_TEST(argc >= 2);
-    boost::filesystem::path shared_library_path = argv[1];
+    boost::filesystem::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
     BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
 
     boost::dll::library_info lib_info(shared_library_path);

@@ -19,8 +19,7 @@
 int main(int argc, char* argv[]) {
     using namespace boost::dll;
 
-    BOOST_TEST(argc >= 2);
-    boost::filesystem::path shared_library_path = argv[1];
+    boost::filesystem::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
     BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
     BOOST_TEST(b2_workarounds::is_shared_library(shared_library_path));
     boost::filesystem::path bad_path = shared_library_path / "directory_that_does_not_exist";
