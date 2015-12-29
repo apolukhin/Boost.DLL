@@ -8,7 +8,8 @@
 #if BOOST_OS_WINDOWS
 
 //[callplugcpp_tutorial9
-#include <boost/dll/import.hpp> // for import
+#include <boost/dll/import.hpp>         // for dll::import
+#include <boost/dll/shared_library.hpp> // for dll::shared_library
 #include <boost/function.hpp>
 #include <iostream>
 #include <windows.h>
@@ -20,7 +21,7 @@ int main() {
 
     // OPTION #0, requires C++11 compatible compiler that understands GetStdHandle_t signature.
 /*<-*/
-#if !defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) /*->*/
+#if defined(_MSC_VER) && !defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) /*->*/
     auto get_std_handle = dll::import<GetStdHandle_t>(
         "Kernel32.dll",
         "GetStdHandle"

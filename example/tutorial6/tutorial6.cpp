@@ -5,6 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#include "../b2_workarounds.hpp"
+
 //[callplugcpp_tutorial6
 #include <boost/dll/import.hpp>
 #include <boost/function.hpp>
@@ -17,9 +19,8 @@ void print_unloaded() {
 }
 
 int main(int argc, char* argv[]) {
-    /*<-*/ BOOST_ASSERT(argc >= 2); (void)argc;   /*->*/
     // argv[1] contains full path to our plugin library
-    boost::filesystem::path shared_library_path = argv[1];
+    boost::filesystem::path shared_library_path = /*<-*/ b2_workarounds::first_lib_from_argv(argc, argv); /*->*/ //=argv[1];
 
     // loading library and getting a function from it
     boost::function<void(const callback_t&)> on_unload
