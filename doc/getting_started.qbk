@@ -17,42 +17,25 @@ using namespace boost;
 ```
 
 [table:starting
-[[ Import (code that uses DLL/DSL): ] [ Export (DLL/DSL sources): ] [ Functions description: ]]
+[[ Import (code that uses DLL/DSL): ] [ Export (DLL/DSL sources): ]]
 [
+    [ [getting_started_imports_cpp11_function] ]
+    [ [getting_started_exports_cpp11_function] ]
+][
     [ [getting_started_imports_cpp_function] ]
     [ [getting_started_exports_cpp_function] ]
-    [
-        [funcref boost::dll::import_alias import_alias<T>(...)]
-
-        [macroref BOOST_DLL_AUTO_ALIAS]
-    ]
 ][
     [ [getting_started_imports_cpp_variable] ]
     [ [getting_started_exports_cpp_variable] ]
-    [
-        [funcref boost::dll::import_alias import_alias<T>(...)]
-
-        [macroref BOOST_DLL_AUTO_ALIAS]
-    ]
 ][
     [ [getting_started_imports_c_function] ]
     [ [getting_started_exports_c_function] ]
-    [ [funcref boost::dll::import import<T>(...) ] ]
 ][
     [ [getting_started_imports_c_variable] ]
     [ [getting_started_exports_c_variable] ]
-    [ [funcref boost::dll::import import<T>(...) ] ]
-][
-    [ [getting_started_imports_cpp11_function] ]
-    [ [getting_started_exports_cpp11_function] ]
-    [
-        [macroref BOOST_DLL_AUTO_ALIAS]
-
-        [funcref boost::dll::import_alias import_alias<T>(...)]
-    ]
 ]]
 
-It is safe to use imported variable or function because the variables returned from `import*` functions
+It is safe to use imported variable or function because the variables returned from [funcref boost::dll::import import<T>(...)] functions
 internally hold a reference to the shared library.
 
 [macroref BOOST_SYMBOL_EXPORT] is just a macro from Boost.Config that expands into the `__declspec(dllexport)` or `__attribute__((visibility("default")))`. You are free to use your own macro for exports.

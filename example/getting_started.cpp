@@ -43,9 +43,8 @@ int main(int argc, char* argv[]) {
 
     //[getting_started_imports_cpp_function
     // Importing C++ function
-    typedef std::string str;
-    function<str(const str&)> cpp_func = dll::import_alias<str(const str&)>(
-            path_to_shared_library, "cpp_function_name"
+    function<std::string(const std::string&)> cpp_func = dll::import<std::string(const std::string&)>(
+            path_to_shared_library, "i_am_cpp_function"
         );
     //]
 
@@ -53,10 +52,10 @@ int main(int argc, char* argv[]) {
     std::string cpp_func_res = cpp_func(std::string("In importer.")); 
     BOOST_TEST(cpp_func_res == "In importer. Hello from lib!");
 
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
+#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_AUTO_DECLARATIONS)
     //[getting_started_imports_cpp11_function
-    // You may use `auto cpp11_func` here for shortness
-    function<int(std::string&&)> cpp11_func = dll::import_alias<int(std::string&&)>(
+    // Importing C++11 function
+    auto cpp11_func = dll::import<int(std::string&&)>(
             path_to_shared_library, "cpp11_function"
         );
     //]
@@ -69,7 +68,7 @@ int main(int argc, char* argv[]) {
 
     //[getting_started_imports_cpp_variable
     // Importing C++ variable
-    shared_ptr<std::string> cpp_var = dll::import_alias<std::string>(
+    shared_ptr<std::string> cpp_var = dll::import<std::string>(
             path_to_shared_library, "cpp_variable_name"
         );
     //]

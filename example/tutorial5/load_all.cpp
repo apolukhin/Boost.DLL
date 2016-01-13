@@ -90,7 +90,7 @@ void plugins_collector::insert_plugin(BOOST_RV_REF(dll::shared_library) lib) {
     if (lib.has("create_plugin")) {
         plugin_name = lib.get_alias<boost::shared_ptr<my_plugin_api>()>("create_plugin")()->name();
     } else if (lib.has("plugin")) {
-        plugin_name = lib.get_alias<my_plugin_api>("plugin").name();
+        plugin_name = lib.get<my_plugin_api>("plugin").name();
     } else {
         return;
     }

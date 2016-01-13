@@ -12,30 +12,24 @@
 #include <string>
 
 //[getting_started_exports_c_function
-extern "C" int BOOST_SYMBOL_EXPORT c_func_name(int);
+extern "C" BOOST_SYMBOL_EXPORT int c_func_name(int);
 //]
 
 //[getting_started_exports_c_variable
-extern "C" int BOOST_SYMBOL_EXPORT c_variable_name;
+extern "C" BOOST_SYMBOL_EXPORT int c_variable_name;
 //]
 
 //[getting_started_exports_cpp_function
 namespace some_namespace {
-
-    std::string cpp_function_name(const std::string& param);
-    BOOST_DLL_AUTO_ALIAS(cpp_function_name)
-
+    extern "C" BOOST_SYMBOL_EXPORT std::string i_am_cpp_function(const std::string& param);
 }
 //]
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 //[getting_started_exports_cpp11_function
 namespace some_namespace {
-
     // C++ Standard does not affect semantics
-    int cpp11_function(std::string&& param);
-    BOOST_DLL_AUTO_ALIAS(cpp11_function)
-
+    extern "C" BOOST_SYMBOL_EXPORT int cpp11_function(std::string&& param);
 }
 
 //]
@@ -43,10 +37,7 @@ namespace some_namespace {
 
 //[getting_started_exports_cpp_variable
 namespace some_namespace {
-
-    std::string cpp_variable_name = "some value";
-    BOOST_DLL_AUTO_ALIAS(cpp_variable_name)
-
+    extern "C" BOOST_SYMBOL_EXPORT std::string cpp_variable_name;
 }
 //]
 
@@ -54,9 +45,10 @@ namespace some_namespace {
 
 int c_func_name(int i) { return ++i; }
 int c_variable_name = 1;
+std::string some_namespace::cpp_variable_name = "some value";
 
 namespace some_namespace {
-    std::string cpp_function_name(const std::string& param) {
+    std::string i_am_cpp_function(const std::string& param) {
         return param + " Hello from lib!";
     }
 
