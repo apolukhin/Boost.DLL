@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2016 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -37,18 +37,16 @@ namespace detail {
     template <class T>
     class library_function {
         // Copying of `boost::dll::shared_library` is very expensive, so we use a `shared_ptr` to make it faster.
-        boost::shared_ptr<shared_library>   lib_;
-        T*                                  f_;
+        boost::shared_ptr<T>   f_;
 
     public:
         inline library_function(const boost::shared_ptr<shared_library>& lib, T* func_ptr) BOOST_NOEXCEPT
-            : lib_(lib)
-            , f_(func_ptr)
+            : f_(lib, func_ptr)
         {}
 
 #if defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) || defined(BOOST_NO_CXX11_DECLTYPE) || defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
         operator T*() const BOOST_NOEXCEPT {
-            return f_;
+            return f_.get();
         }
 #else
 
@@ -98,7 +96,7 @@ namespace detail {
 
 /*!
 * Returns callable object or boost::shared_ptr<T> that holds the symbol imported
-* from the loaded library. Teturned value refcounts usage
+* from the loaded library. Returned value refcounts usage
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
