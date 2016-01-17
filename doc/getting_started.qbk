@@ -5,7 +5,7 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
 
-[section:introduction Getting started]
+[section:getting_started Getting started]
 
 Boost.DLL is a header only library. To start with the library you only need to include `<boost/dll.hpp>` header. After that you are free to import and export functions and variables. Importing code requires linking with `boost_filesystem` and `boost_system` libraries.
 
