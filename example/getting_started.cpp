@@ -42,8 +42,8 @@ int main(int argc, char* argv[]) {
 
 
     //[getting_started_imports_alias
-    // Importing C++ function by alias name
-    /*<-*/ function<std::string(const std::string&)> /*->*/ /*=auto*/ cpp_func = dll::import_alias<std::string(const std::string&)>(
+    // Importing function by alias name
+   /*<-*/ function<std::string(const std::string&)> /*->*/ /*=auto*/ cpp_func = dll::import_alias<std::string(const std::string&)>(
             path_to_shared_library, "pretty_name"
         );
     //]
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 
 #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_NO_CXX11_AUTO_DECLARATIONS)
     //[getting_started_imports_cpp11_function
-    // Importing C++ function.
+    // Importing function.
     auto cpp11_func = dll::import<int(std::string&&)>(
             path_to_shared_library, "i_am_a_cpp11_function"
         );
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 
 
     //[getting_started_imports_cpp_variable
-    // Importing C++ variable.
+    // Importing  variable.
     shared_ptr<std::string> cpp_var = dll::import<std::string>(
             path_to_shared_library, "cpp_variable_name"
         );

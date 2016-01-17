@@ -13,30 +13,32 @@
 
 #define API extern "C" BOOST_SYMBOL_EXPORT
 
-namespace some_namespace {
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
 //[getting_started_exports_cpp11_function
+namespace some_namespace {
     API int i_am_a_cpp11_function(std::string&& param);
+//          ^--------------------  function name to use in dll::import<>
+}
 //]
 #endif
 
 
 //[getting_started_exports_cpp_variable
+namespace your_project_namespace {
     API std::string cpp_variable_name;
+}
 //]
 
 
 
 //[getting_started_exports_alias
-std::string i_am_function_with_ugly_name(const std::string& param);
+namespace some_namespace {
+    std::string i_am_function_with_ugly_name(const std::string& param);
+}
 
-// ...
-
-// When you have no control over function sources or wish to specify
-// a better name.
+// When you have no control over function sources or wish to specify another name.
 BOOST_DLL_ALIAS(some_namespace::i_am_function_with_ugly_name, pretty_name)
 //]
-} // namespace some_namespace
 
 //[getting_started_exports_c_function
 API int c_func_name(int);
@@ -48,7 +50,7 @@ API int c_variable_name;
 
 int c_func_name(int i) { return ++i; }
 int c_variable_name = 1;
-std::string some_namespace::cpp_variable_name = "some value";
+std::string your_project_namespace::cpp_variable_name = "some value";
 
 namespace some_namespace {
     std::string i_am_function_with_ugly_name(const std::string& param) {
