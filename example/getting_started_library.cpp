@@ -58,7 +58,7 @@ namespace some_namespace {
     }
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    int cpp11_function(std::string&& param) {
+    int i_am_a_cpp11_function(std::string&& param) {
         return static_cast<int>(param.size());
     }
 #endif
