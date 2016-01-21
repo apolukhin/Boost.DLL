@@ -11,6 +11,7 @@
 #include <boost/dll/detail/demangling/mangled_storage_base.hpp>
 #include <iterator>
 #include <algorithm>
+#include <array>
 #include <boost/dll/detail/demangling/tokenizer.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_volatile.hpp>
@@ -38,6 +39,9 @@ class mangled_storage_impl  : public mangled_storage_base
 	{
 		return get_name<Return>();
 	}
+	//function to remove preceeding 'class ' or 'struct ' if the are given in this format.
+
+	inline static void trim_typename(std::string & val);
 public:
 	using ctor_sym = std::string;
 	using dtor_sym = std::string;
@@ -58,52 +62,117 @@ public:
 
 	template<typename Class>
 	dtor_sym get_destructor();
+
+	template<typename T> //overload, does not need to virtual.
+	std::string get_name() const
+	{
+		auto nm = mangled_storage_base::get_name<T>();
+		trim_typename(nm);
+		return nm;
+	}
 };
+
+void mangled_storage_impl::trim_typename(std::string & val)
+{
+	//remove preceeding class or struct, because you might want to use a struct as class, et vice versa
+	if (val.size() >= 6)
+	{
+		using namespace std;
+		static constexpr char class_ [7] = "class ";
+		static constexpr char struct_[8] = "struct ";
+
+		if (equal(begin(class_), end(class_)-1, val.begin())) //aklright, starts with 'class '
+			val.erase(0, 6);
+		else if (val.size() >= 7)
+			if (equal(begin(struct_), end(struct_)-1, val.begin()))
+				val.erase(0, 7);
+	}
+}
 
 
 namespace parser
 {
 	namespace x3 = spirit::x3;
 
-	auto visibility = ("public:" | x3::lit("protected:") | "private:") >> x3::space ;
-	auto static_ 	= x3::lit("static") >> x3::space;
+	auto const visibility = ("public:" | x3::lit("protected:") | "private:");
+	auto const virtual_ = x3::space >> "virtual";
+	auto const static_ 	= x3::space >> x3::lit("static") ;
 
-	auto const_rule_impl(true_type )  {return "const"  >> x3::space;};
+	auto const_rule_impl(true_type )  {return x3::space >> "const";};
 	auto const_rule_impl(false_type)  {return x3::eps;};
-
 	template<typename T>
 	auto const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
 
-
-	auto volatile_rule_impl(true_type )  {return "volatile" >> x3::space;};
+	auto volatile_rule_impl(true_type )  {return x3::space >> "volatile";};
 	auto volatile_rule_impl(false_type)  {return x3::eps;};
-
 	template<typename T>
 	auto volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
 
 
+	auto inv_const_rule_impl(true_type )  {return "const" >>  x3::space ;};
+	auto inv_const_rule_impl(false_type)  {return x3::eps;};
+	template<typename T>
+	auto inv_const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
+
+	auto inv_volatile_rule_impl(true_type )  {return "volatile" >> x3::space;};
+	auto inv_volatile_rule_impl(false_type)  {return x3::eps;};
+	template<typename T>
+	auto inv_volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
+
+
 	auto reference_rule_impl(false_type, false_type) {return x3::eps;}
-	auto reference_rule_impl(true_type,  false_type) {return "&"  >> x3::space;}
-	auto reference_rule_impl(false_type, true_type ) {return "&&" >> x3::space;}
+	auto reference_rule_impl(true_type,  false_type) {return x3::space >>"&"  ;}
+	auto reference_rule_impl(false_type, true_type ) {return x3::space >>"&&" ;}
 
 
 	template<typename T>
 	auto reference_rule() {using t_l = is_lvalue_reference<T>; using t_r = is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
 
-	auto class_ = ("class" | x3::lit("struct")) >> x3::space;
+	auto const class_ = ("class" | x3::lit("struct"));
 
 	//it takes a string, because it may be overloaded.
 	template<typename T>
 	auto type_rule(const std::string & type_name)
 	{
-		return -class_ >> type_name >> x3::space >>
+		using namespace std;
+
+		return -(class_ >> x3::space)>> type_name >>
 				const_rule<T>() >>
 				volatile_rule<T>() >>
 				reference_rule<T>();
 	}
+	template<>
+	auto type_rule<void>(const std::string &) { return x3::lit("void"); };
+
+	auto const cdecl_  	= "__cdecl" 	>> x3::space;
+	auto const stdcall  = "__stdcall" 	>> x3::space;
+	auto const thiscall = "__thiscall" 	>> x3::space;
+
+
+
+	template<typename Return, typename Arg>
+	auto arg_list(const mangled_storage_impl & ms, Return (*)(Arg), std::string * p)
+	{
+		using namespace std;
+		*p = ms.get_name<Arg>();
+		return type_rule<Arg>(*p);
+	}
+
+	template<typename Return, typename First, typename Second, typename ...Args>
+	auto arg_list(const mangled_storage_impl & ms, Return (*)(First, Second, Args...), std::string * p)
+	{
+		*p = ms.get_name<First>();
+
+		using next_type = Return (*)(Second, Args...);
+		return type_rule<First>(*p) >> x3::char_(',') >> arg_list(ms, next_type(), p + 1);
+	}
+
+	template<typename Return>
+	auto arg_list(const mangled_storage_impl & ms, Return (*)(), std::string * p)
+	{
+		return x3::lit("void");
+	}
 }
-
-
 
 
 template<typename Range, typename Iterator>
@@ -363,8 +432,8 @@ template<typename T> std::string mangled_storage_impl::get_variable(const std::s
 	auto type_name = get_name<T>();
 
 	auto matcher =
-			-(visibility >> static_) >> //it may be a static class-member
-			parser::type_rule<T>(type_name) >>
+			-(visibility >> static_ >> x3::space) >> //it may be a static class-member
+			parser::type_rule<T>(type_name) >> x3::space >>
 			name;
 
 	auto predicate = [&](const mangled_storage_base::entry & e)
@@ -388,12 +457,34 @@ template<typename T> std::string mangled_storage_impl::get_variable(const std::s
 
 template<typename Func> std::string mangled_storage_impl::get_function(const std::string &name)
 {
+	namespace x3 = spirit::x3;
+	using namespace parser;
+	using func_type = Func*;
+	using return_type = typename function_traits<Func>::result_type;
+	std::string return_type_name = get_name<return_type>();
 
-	auto predicate =
-		match_function<typename function_traits<Func>::result_type>(
-			get_func_params(dummy<Func>()),
-			name,
-			get_return_type(dummy<Func>()));
+	std::array<std::string, function_traits<Func>::arity> arg_buf; //a buffer for the argument types.
+	//if the rule is constructed in functinos and the string goes out of scope, the rule will noch match
+
+
+	auto matcher =
+				-(visibility >> static_ >> x3::space) >> //it may be a static class-member, which does however not have the static attribute.
+				parser::type_rule<return_type>(return_type_name) >>  x3::space >>
+				cdecl_ >> //cdecl declaration for methods. stdcall cannot be
+				name >> x3::lit('(') >> parser::arg_list(*this, func_type(), arg_buf.data()) >> x3::lit(')') ;
+
+
+	auto predicate = [&](const mangled_storage_base::entry & e)
+			{
+				if (e.demangled == name)//maybe not mangled,
+					return true;
+
+				auto itr = e.demangled.begin();
+				auto end = e.demangled.end();
+				auto res = x3::parse(itr, end, matcher);
+
+				return res && (itr == end);
+			};
 
 	auto found = std::find_if(storage.begin(), storage.end(), predicate);
 
@@ -407,13 +498,35 @@ template<typename Func> std::string mangled_storage_impl::get_function(const std
 template<typename Class, typename Func>
 std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 {
-	auto predicate = match_mem_fn<typename function_traits<Func>::result_type>(
-			get_name<Class>(),
-			get_func_params(dummy<Func>()),
-			name,
-			get_return_type(dummy<Func>()),
-			is_const<Class>::value,
-			is_volatile<Class>::value);
+	namespace x3 = spirit::x3;
+	using namespace parser;
+	using func_type = Func*;
+	using return_type = typename function_traits<Func>::result_type;
+	auto return_type_name = get_name<return_type>();
+
+
+	std::array<std::string, function_traits<Func>::arity> arg_buf; //a buffer for the argument types.
+	//if the rule is constructed in functinos and the string goes out of scope, the rule will noch match
+
+	auto cname = get_name<Class>();
+
+	auto matcher =
+				visibility >> -virtual_ >> x3::space >>
+				parser::type_rule<return_type>(return_type_name) >>  x3::space >>
+				thiscall >> //cdecl declaration for methods. stdcall cannot be
+				cname >> "::" >> name >>
+				x3::lit('(') >> parser::arg_list(*this, func_type(), arg_buf.data()) >> x3::lit(')') >>
+				const_rule<Class>() >> volatile_rule<Class>();
+
+
+	auto predicate = [&](const mangled_storage_base::entry & e)
+			{
+				auto itr = e.demangled.begin();
+				auto end = e.demangled.end();
+				auto res = x3::parse(itr, end, matcher);
+
+				return res && (itr == end);
+			};
 
 	auto found = std::find_if(storage.begin(), storage.end(), predicate);
 
@@ -421,13 +534,18 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 		return found->mangled;
 	else
 		return "";
-
 }
 
 
 template<typename Signature>
 auto mangled_storage_impl::get_constructor() -> ctor_sym
 {
+	namespace x3 = spirit::x3;
+	using namespace parser;
+
+	using func_type = Signature*;
+
+	std::array<std::string, function_traits<Signature>::arity> arg_buf; //a buffer for the argument types.
 
 	std::string ctor_name; // = class_name + "::" + name;
 	std::string unscoped_cname; //the unscoped class-name
@@ -436,7 +554,7 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 		auto pos = class_name.rfind("::");
 		if (pos == std::string::npos)
 		{
-			ctor_name = class_name+ "::" +class_name ;
+			ctor_name = class_name+ "::" + class_name ;
 			unscoped_cname = class_name;
 		}
 		else
@@ -445,9 +563,22 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 			ctor_name = class_name+ "::" + unscoped_cname;
 		}
 	}
-	auto predicate = match_constructor(
-				ctor_name,
-				get_func_params(dummy<Signature>()));
+
+	auto matcher =
+				visibility >> x3::space >>
+				thiscall >> //cdecl declaration for methods. stdcall cannot be
+				ctor_name >>
+				x3::lit('(') >> parser::arg_list(*this, func_type(), arg_buf.data()) >> x3::lit(')');
+
+
+	auto predicate = [&](const mangled_storage_base::entry & e)
+			{
+				auto itr = e.demangled.begin();
+				auto end = e.demangled.end();
+				auto res = x3::parse(itr, end, matcher);
+
+				return res && (itr == end);
+			};
 
 	auto f = std::find_if(storage.begin(), storage.end(), predicate);
 
@@ -460,7 +591,8 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 template<typename Class>
 auto mangled_storage_impl::get_destructor() -> dtor_sym
 {
-
+	namespace x3 = spirit::x3;
+	using namespace parser;
 	std::string dtor_name; // = class_name + "::" + name;
 	std::string unscoped_cname; //the unscoped class-name
 	{
@@ -478,41 +610,22 @@ auto mangled_storage_impl::get_destructor() -> dtor_sym
 		}
 	}
 
-	auto found = std::find_if(storage.begin(), storage.end(),
-			[&](const entry& e)
-			{
-				using namespace std;
-				char_separator<char> sep(" ");
-				tokenizer<char_separator<char>> tkz(e.demangled, sep);
-				auto itr = tkz.begin();
-				if (  (*itr == "public:")
-					||(*itr == "private:")
-					||(*itr == "protected:"))
-					{
-						itr++;
-						if (itr == tkz.end())
-							return false;
-					}
+	auto matcher =
+				visibility >> -virtual_ >> x3::space >>
+				thiscall >> //cdecl declaration for methods. stdcall cannot be
+				dtor_name;
 
-				if (*itr == "virtual")
+
+	auto predicate = [&](const mangled_storage_base::entry & e)
 				{
-					itr++;
-					if (itr == tkz.end())
-						return false;
-				}
+					auto itr = e.demangled.begin();
+					auto end = e.demangled.end();
+					auto res = x3::parse(itr, end, matcher);
 
-				if (*itr == "__thiscall")
-				{
-					itr++;
-					if (itr == tkz.end())
-						return false;
-				}
-				else
-					return false;
+					return res && (itr == end);
+				};
 
-				return (*itr == dtor_name);
-			});
-
+	auto found = std::find_if(storage.begin(), storage.end(), predicate);
 
 
 	if (found != storage.end())

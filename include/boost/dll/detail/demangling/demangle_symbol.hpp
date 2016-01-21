@@ -9,10 +9,10 @@
 
 #include <boost/config.hpp>
 #include <string>
+#include <algorithm>
 
 #ifndef BOOST_DLL_DEMANGLE_SYMBOL_HPP_
 #define BOOST_DLL_DEMANGLE_SYMBOL_HPP_
-
 
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
@@ -28,10 +28,10 @@ namespace detail
 
 inline std::string demangle_symbol(const char *mangled_name)
 {
-	char unmangled_name[512];
+	char unmangled_name[2048];
 
 	::boost::detail::winapi::
-	 	 UnDecorateSymbolName(mangled_name, unmangled_name, 512, 0);
+	 	 UnDecorateSymbolName(mangled_name, unmangled_name, 2048, 0);
 
 	return std::string(unmangled_name);
 }
@@ -39,6 +39,7 @@ inline std::string demangle_symbol(const std::string& mangled_name)
 {
 	return demangle_symbol(mangled_name.c_str());
 }
+
 
 }}}
 #else
@@ -70,7 +71,6 @@ inline std::string demangle_symbol(const char *mangled_name)
 
 
 }
-
 
 //for my personal convinience
 inline std::string demangle_symbol(const std::string& mangled_name)

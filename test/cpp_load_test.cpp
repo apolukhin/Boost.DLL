@@ -87,12 +87,12 @@ int test_main(int argc, char* argv[])
 
 
 
-L()   auto &var1 = sm.get_function<void(boost::variant<int, double> &)>("use_variant");
-L()   auto &var2 = sm.get_function<void(boost::variant<double, int> &)>("use_variant");
-L()
-L()   BOOST_REQUIRE(var1 != nullptr);
-L()   BOOST_REQUIRE(var2 != nullptr);
-L()   BOOST_CHECK(reinterpret_cast<void*>(var1) != reinterpret_cast<void*>(var2));
+	auto &var1 = sm.get_function<void(boost::variant<int, double> &)>("use_variant");
+	auto &var2 = sm.get_function<void(boost::variant<double, int> &)>("use_variant");
+
+	BOOST_REQUIRE(var1 != nullptr);
+	BOOST_REQUIRE(var2 != nullptr);
+	BOOST_CHECK(reinterpret_cast<void*>(var1) != reinterpret_cast<void*>(var2));
 
     {
     	 boost::variant<int, double> v1 = 232.22;
