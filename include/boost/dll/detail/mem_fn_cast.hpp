@@ -21,7 +21,13 @@ namespace detail
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
 template<typename T> T mem_fn_cast(void* p)
 {
-	return aggressive_ptr_cast<T>(p);
+	union
+	{
+		T out;
+		void* in;
+	} u;
+	u.in = p;
+	return u.out; //aggressive_ptr_cast<T>(p);
 }
 
 #else

@@ -57,7 +57,10 @@ struct constructor
 	constructor() = delete;
 	constructor(const constructor &) = default;
 
-	constructor(const standard_t & standard, const allocating_t & allocating = nullptr)
+	constructor(const standard_t & standard)
+				: standard(standard) {}
+
+	constructor(const standard_t & standard, const allocating_t & allocating )
 				: standard(standard), allocating(allocating) {}
 
 };
@@ -65,7 +68,7 @@ struct constructor
 template<typename Class>
 struct destructor
 {
-	typedef boost::function<void(Class*)> type;
+	typedef boost::function<void(Class* const)> type;
 
 	const type standard;
 	const type deleting;
@@ -77,7 +80,10 @@ struct destructor
 	destructor() = delete;
 	destructor(const destructor &) = default;
 
-	destructor(const type & standard, const type & deleting = nullptr)
+	destructor(const type & standard)
+					: standard(standard) {}
+
+	destructor(const type & standard, const type & deleting)
 				: standard(standard), deleting(deleting) {}
 
 };
@@ -91,18 +97,17 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
 	typedef BOOST_DEDUCED_TYPENAME ctor_t<Signature>::mem_fn f;
 	typedef BOOST_DEDUCED_TYPENAME detail::ctor_t<Signature>::standard standard;
 
-	standard s = detail::mem_fn_cast<f>(lib.get_void(ct.C0));
+	standard s = detail::mem_fn_cast<f>(lib.get_void(ct));
 
 	return {s};
 }
 
-template<typename Signature, typename Lib>
-destructor<Signature> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt)
+template<typename Class, typename Lib>
+destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt)
 {
-	typedef void(*f)(Class* const);
+	typedef void(__thiscall*f)(Class* const);
 	typedef boost::function<void(Class* const)> fn;
-
-	fn s = detail::mem_fn_cast<f>(lib.get_void(dt.D0));
+	fn s = detail::mem_fn_cast<f>(lib.get_void(dt));
 
 	return {s};
 }

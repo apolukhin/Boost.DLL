@@ -87,8 +87,8 @@ int test_main(int argc, char* argv[])
 
 
 
-	auto &var1 = sm.get_function<void(boost::variant<int, double> &)>("use_variant");
-	auto &var2 = sm.get_function<void(boost::variant<double, int> &)>("use_variant");
+	auto var1 = sm.get_function<void(boost::variant<int, double> &)>("use_variant");
+	auto var2 = sm.get_function<void(boost::variant<double, int> &)>("use_variant");
 
 	BOOST_REQUIRE(var1 != nullptr);
 	BOOST_REQUIRE(var2 != nullptr);
@@ -122,8 +122,8 @@ int test_main(int argc, char* argv[])
 
     //first we import and test the global variables
 
-    auto father_val = sm.get_variable<int>("some_space::father_value");
-    auto static_val = sm.get_variable<int>("some_space::some_class::value");
+    auto &father_val = sm.get_variable<int>("some_space::father_value");
+    auto &static_val = sm.get_variable<int>("some_space::some_class::value");
 
 
     BOOST_REQUIRE(&father_val != nullptr);
@@ -147,29 +147,70 @@ int test_main(int argc, char* argv[])
     auto set = sm.get_mem_fn<override_class, void(int)>("set");
 
     {
-    	auto p = sm.get_mem_fn<override_class, int()>("get") ;
-    	BOOST_CHECK(p == nullptr);
+    	using namespace std;
+    	try
+    	{
+    		sm.get_mem_fn<override_class, int()>("get");
+    		BOOST_REQUIRE(false);
+    	}
+    	catch(boost::system::system_error &) {}
     }
     auto get = sm.get_mem_fn<const override_class, int()>("get");
-
 
     BOOST_REQUIRE(get != nullptr);
     BOOST_REQUIRE(set != nullptr);
 
-    auto func_dd = sm.get_mem_fn<override_class, double(double, double)>("func");
-    auto func_ii = sm.get_mem_fn<override_class, int(int, int)>			("func");
+    auto func_dd  = sm.get_mem_fn<override_class, 				 double(double, double)>("func");
+    auto func_ii  = sm.get_mem_fn<override_class, 				 int(int, int)>			("func");
+    auto func_iiv = sm.get_mem_fn<volatile override_class, 		 int(int, int)>			("func");
+    auto func_ddc = sm.get_mem_fn<const volatile override_class, double(double, double)>("func");
 
 
     BOOST_REQUIRE(func_dd != nullptr);
     BOOST_REQUIRE(func_ii != nullptr);
 
+
+    auto ctor_v = sm.get_constructor<override_class()>();
+    auto ctor_i = sm.get_constructor<override_class(int)>();
+
+    auto dtor   = sm.get_destructor<override_class>();
+
+    if (ctor_v.has_allocating())
+    {
+    	//allocate
+    	auto p = ctor_v.allocating();
+
+    	//assert it works
+    	auto val = (p->*get)();
+    	BOOST_CHECK(val == 123);
+
+    	//deallocate
+    	dtor.deleting(p);
+
+    	//now i cannot assert that it deletes, since it would crash.
+    }
+    //ok, now load the ctor/dtor
     override_class oc;
 
+    for (auto & i : oc.arr)
+    	i = 0;
+
+    BOOST_CHECK((oc.*get)() == 0);
+
+    ctor_i.standard(&oc, 12); //initialized.
+
+    BOOST_CHECK(static_val == 12);
+    BOOST_CHECK((oc.*get)() == 456);
+    (oc.*set)(42);
+    BOOST_CHECK((oc.*get)() == 42);
+
+    BOOST_CHECK((oc.*func_dd)(3,2)   == 6);
+    BOOST_CHECK((oc.*func_ii)(1,2)   == 3);
+    BOOST_CHECK((oc.*func_ddc)(10,2) == 5);
+    BOOST_CHECK((oc.*func_iiv)(9,2)  == 7);
 
 
-
-
-
+    dtor.standard(&oc);
 
     return 0;
 }
