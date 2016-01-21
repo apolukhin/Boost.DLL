@@ -19,6 +19,8 @@
 #include <boost/type_traits/function_traits.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
+#include <boost/spirit/home/x3.hpp>
+
 namespace boost { namespace dll { namespace detail {
 
 class mangled_storage_impl  : public mangled_storage_base
@@ -59,149 +61,49 @@ public:
 };
 
 
-
-inline bool match_types(const std::string &lhs, const std::string &rhs)
+namespace parser
 {
-	using namespace boost;
-	using namespace std;
-	char_separator<char> sep(" ");
-	tokenizer<char_separator<char>> tlhs(lhs, sep);
-	tokenizer<char_separator<char>> trhs(rhs, sep);
+	namespace x3 = spirit::x3;
 
-	vector<string> vlhs(tlhs.begin(), tlhs.end());
-	vector<string> vrhs(trhs.begin(), trhs.end());
+	auto visibility = ("public:" | x3::lit("protected:") | "private:") >> x3::space ;
+	auto static_ 	= x3::lit("static") >> x3::space;
 
-	auto itr = std::find(vlhs.begin(), vlhs.end(), "struct");
-	if (itr != vlhs.end())
-		*itr = "class";
+	auto const_rule_impl(true_type )  {return "const"  >> x3::space;};
+	auto const_rule_impl(false_type)  {return x3::eps;};
 
-	itr = std::find(vrhs.begin(), vrhs.end(), "struct");
-	if (itr != vrhs.end())
-		*itr = "class";
+	template<typename T>
+	auto const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
 
 
-	if (vlhs.size() != vrhs.size())
-		return false;
+	auto volatile_rule_impl(true_type )  {return "volatile" >> x3::space;};
+	auto volatile_rule_impl(false_type)  {return x3::eps;};
 
-	sort(vlhs.begin(), vlhs.end());
-	sort(vrhs.begin(), vrhs.end());
+	template<typename T>
+	auto volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
 
-	return std::equal(vlhs.begin(), vlhs.end(), vrhs.begin(),
-		[](const std::string & lhs, const std::string & rhs)
-		{
-			if (lhs == rhs)
-				return true;
 
-			return false;
-		});
-}
+	auto reference_rule_impl(false_type, false_type) {return x3::eps;}
+	auto reference_rule_impl(true_type,  false_type) {return "&"  >> x3::space;}
+	auto reference_rule_impl(false_type, true_type ) {return "&&" >> x3::space;}
 
-template<typename Iterator>
-inline bool match_static_member(Iterator & itr, const Iterator& end)
-{
-	if ((*itr == "public:")
-	  ||(*itr == "private:")
-	  ||(*itr == "protected:"))
+
+	template<typename T>
+	auto reference_rule() {using t_l = is_lvalue_reference<T>; using t_r = is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
+
+	auto class_ = ("class" | x3::lit("struct")) >> x3::space;
+
+	//it takes a string, because it may be overloaded.
+	template<typename T>
+	auto type_rule(const std::string & type_name)
 	{
-		itr++;
+		return -class_ >> type_name >> x3::space >>
+				const_rule<T>() >>
+				volatile_rule<T>() >>
+				reference_rule<T>();
 	}
-	else
-		return false;
-	if (itr == end) //dll error;
-		return false;
-	if (*itr == "static")
-	{
-		itr++;
-		return true;
-	}
-	return false;
-}
-
-template<typename T, typename Itr>
-bool match_type(const std::string &type, Itr &itr, const Itr& end)
-{
-	if (*itr != type)
-	{
-		return false;
-	}
-	itr++;
-
-	if (is_const<typename remove_reference<T>::type>::value)
-	{
-		if (itr == end)
-			return false;
-		if (*itr == "const")
-			itr++;
-		else
-			return false;
-	}
-	if (is_volatile<typename remove_reference<T>::type>::value)
-	{
-		if (itr == end)
-			return false;
-		if (*itr == "volatile")
-			itr++;
-		else
-			return false;
-	}
-	if (is_lvalue_reference<T>::value)
-	{
-		if (itr == end)
-			return false;
-		if (*itr == "&")
-			itr++;
-		else
-			return false;
-
-	}
-	else if (is_rvalue_reference<T>::value)
-	{
-		if (itr == end)
-			return false;
-		if (*itr == "&&")
-			itr++;
-		else
-			return false;
-	}
-	return true;
-
 }
 
 
-template<typename T>
-auto match_variable(
-		const std::string & type,
-		const std::string& name)
-{
-
-
-
-	//auto descr = type + " " + name;
-	return [type, name]
-				(const mangled_storage_impl::entry& e)
-	{
-		tokenizer<tokenize_function> tkz(e.demangled);
-		auto itr = tkz.begin();
-
-
-		match_static_member(itr, tkz.end());
-
-		if (itr == tkz.end())
-			return false;
-
-		if (!match_type<T>(type, itr, tkz.end()))
-			return false;
-
-		if (itr == tkz.end())
-			return false;
-
-		if (*itr == name)
-			return true;
-
-		return false;
-
-	};
-}
 
 
 template<typename Range, typename Iterator>
@@ -225,9 +127,9 @@ bool match_params(const Range &range, Iterator & itr, const Iterator & end)
 			{
 				return false;
 			}
-			if (! match_types(p, *itr))
+			/*if (! match_types(p, *itr))
 				return false;
-			itr++;
+			*/itr++;
 		}
 	}
 	return true;
@@ -250,7 +152,7 @@ auto match_function(
 
 		//first of, look if it's a static member-function
 
-		match_static_member(itr, tkz.end());
+	//	match_static_member(itr, tkz.end());
 		if (itr == tkz.end()) //errornous name
 			return false;
 
@@ -298,8 +200,8 @@ auto match_function(
  			return false;
 
  		//alright everything fitted, now match the return type
- 		if (match_type<T>(return_type, rt_begin, rt_end))
-			return true;
+ 		//if (match_type<T>(return_type, rt_begin, rt_end))
+			//return true;
 		return false;
 	};
 }
@@ -387,8 +289,8 @@ auto match_mem_fn(const std::string &class_name,
 			return false;
  		//alright everything fitted, now match the return type
 
- 		if (match_type<T>(return_type, rt_begin, rt_end))
-			return true;
+ 		//if (match_type<T>(return_type, rt_begin, rt_end))
+		//	return true;
 		return false;
 	};
 }
@@ -455,10 +357,26 @@ template<typename T> std::string mangled_storage_impl::get_variable(const std::s
 	using namespace std;
 	using namespace boost;
 
+	namespace x3 = spirit::x3;
+	using namespace parser;
 
 	auto type_name = get_name<T>();
 
-	auto predicate = match_variable<T>(type_name, name);
+	auto matcher =
+			-(visibility >> static_) >> //it may be a static class-member
+			parser::type_rule<T>(type_name) >>
+			name;
+
+	auto predicate = [&](const mangled_storage_base::entry & e)
+		{
+			if (e.demangled == name)//maybe not mangled,
+				return true;
+
+			auto itr = e.demangled.begin();
+			auto end = e.demangled.end();
+			auto res = x3::parse(itr, end, matcher);
+			return res && (itr == end);
+		};
 
 	auto found = std::find_if(storage.begin(), storage.end(), predicate);
 
