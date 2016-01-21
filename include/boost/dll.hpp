@@ -18,7 +18,10 @@
 #include <boost/dll/import.hpp>
 #include <boost/dll/library_info.hpp>
 #include <boost/dll/runtime_symbol_info.hpp>
+
+#if __cplusplus > 201402L
 #include <boost/dll/smart_library.hpp>
+#endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
