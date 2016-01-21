@@ -29,8 +29,10 @@ env:
         - IGNORE_COVERAGE='*/detail/pe_info.hpp */detail/macho_info.hpp	*/boost/progress.hpp */filesystem/src/*'
 
     matrix:
-        - CXX_STANDARD=c++98
-        - CXX_STANDARD=c++0x
+         - CXX_STANDARD=c++1y
+#        - CXX_STANDARD=c++98
+#        - CXX_STANDARD=c++0x
+		 
 
 ###############################################################################################################
 # From this point and below code is same for all the Boost libs

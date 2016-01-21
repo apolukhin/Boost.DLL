@@ -18,6 +18,7 @@ local RDYNAMIC = <target-os>freebsd:<linkflags>"-rdynamic" <target-os>solaris:<l
 # Static library that is not linked with any of the boost libs
 lib static_plugin : ../example/tutorial4/static_plugin.cpp : <link>static : : $(RDYNAMIC) ;
 lib static_refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <link>static : : <variant>release $(RDYNAMIC) ;
+lib cpp_plugin : cpp_test_library.cpp : <link>shared ;
 
 project
    : source-location .
@@ -78,6 +79,12 @@ project
                 : <link>static <variant>release <library>static_refcounting_plugin $(RDYNAMIC) <test-info>always_show_run_output
         ]
         [ run ../example/tutorial9/tutorial9.cpp ]
+		# test for shared libraries
         [ compile-fail section_name_too_big.cpp ]
+		         [ run cpp_mangle_test.cpp : : cpp_plugin 
+         		: <toolset>gcc:<cxxflags>-std=c++1y <toolset>msvc:<linkflags>DbgHelp.lib ] 
+         [ run cpp_load_test.cpp : : cpp_plugin 
+        		: <toolset>gcc:<cxxflags>-std=c++1y <toolset>msvc:<linkflags>DbgHelp.lib ] 
+ 
     ;
 }
