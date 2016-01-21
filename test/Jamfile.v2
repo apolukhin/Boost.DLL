@@ -82,9 +82,9 @@ project
 		# test for shared libraries
         [ compile-fail section_name_too_big.cpp ]
 		         [ run cpp_mangle_test.cpp : : cpp_plugin 
-         		: <toolset>gcc:<cxxflags>-std=c++1y <toolset>msvc:<linkflags>DbgHelp.lib <std>c++1y ] 
+         		: <toolset>gcc:<cxxflags>-std=c++1y <toolset>msvc:<linkflags>DbgHelp.lib ] 
          [ run cpp_load_test.cpp : : cpp_plugin 
-        		: <toolset>gcc:<cxxflags>-std=c++1y <toolset>msvc:<linkflags>DbgHelp.lib <std>c++1y ] 
+        		: <toolset>gcc:<cxxflags>-std=c++1y <toolset>msvc:<linkflags>DbgHelp.lib ] 
  
     ;
 }
