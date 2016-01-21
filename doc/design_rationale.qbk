@@ -88,27 +88,6 @@ BOOST_DLL_ALIAS(boost::foo, foo_variant) // in plugin
 
 [endsect]
 
-[section No copy]
-
-At first glance, it looks like it is very simple to implement a copy constructor for shared_library:
-```
-    shared_library(const shared_library& lib) {
-        if (lib.is_loaded()) {
-            load(lib.location());
-        }
-    }
-```
-However a problem with load flags is raised: there is no way to get them.
-
-Of course, we can store those flags on each load and provide methods to get them.
-In that case we receive the problem with flags validity: 
-
-* user loads library with `flag1`
-* user loads the same library with `flag2`
-* now library is loaded with some mix of flags `flag1` + `flag2`, loading library with just `flag1` or `flag2` could 
-result in error that is really hard to debug
-
-[endsect]
 
 [endsect]
 

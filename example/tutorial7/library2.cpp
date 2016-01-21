@@ -10,6 +10,7 @@
 
 //[plugcpp_tutorial7_library2
 #include <boost/dll/alias.hpp> // for BOOST_DLL_ALIAS_SECTIONED
+#include <string>
 #include <iostream>
 
 void print_howdy(const std::string& s) {

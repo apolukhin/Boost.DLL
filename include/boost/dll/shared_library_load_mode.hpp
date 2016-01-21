@@ -13,7 +13,7 @@
 
 #if BOOST_OS_WINDOWS
 //#include <boost/detail/winapi/dll.hpp>
-#include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
+#include <boost/detail/winapi/dll.hpp>
 #else
 #   include <dlfcn.h>
 #endif

@@ -8,11 +8,9 @@
 #include <iostream>
 #include <boost/make_shared.hpp>
 
-// MinGW related workaround
-#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
 
 //[plugcpp_my_plugin_sum
-#include <boost/dll/alias.hpp> // for BOOST_DLL_ALIAS
+#include <boost/config.hpp> // for BOOST_SYMBOL_EXPORT
 #include "../tutorial_common/my_plugin_api.hpp"
 
 namespace my_namespace {
@@ -36,11 +34,10 @@ public:
     }
 };
 
-my_plugin_sum plugin;
-
 // Exporting `my_namespace::plugin` variable with alias name `plugin`
 // (Has the same effect as `BOOST_DLL_ALIAS(my_namespace::plugin, plugin)`)
-BOOST_DLL_AUTO_ALIAS(plugin)
+extern "C" BOOST_SYMBOL_EXPORT my_plugin_sum plugin;
+my_plugin_sum plugin;
 
 } // namespace my_namespace
 

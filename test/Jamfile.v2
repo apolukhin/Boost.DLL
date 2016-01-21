@@ -11,13 +11,15 @@
 import testing ;
 import path ;
 
-local RDYNAMIC = <target-os>freebsd:<linkflags>"-rdynamic" <target-os>solaris:<linkflags>"-rdynamic" <target-os>aix:<linkflags>"-rdynamic"
-    <target-os>qnxnto:<linkflags>"-rdynamic" <target-os>linux:<linkflags>"-rdynamic" <target-os>darwin:<linkflags>"-rdynamic" <target-os>iphone:<linkflags>"-rdynamic" ;
+local RDYNAMIC = <target-os>freebsd:<linkflags>"-rdynamic" <target-os>solaris:<linkflags>"-Bdynamic" <target-os>aix:<linkflags>"-rdynamic"
+    <target-os>qnxnto,<toolset>qcc:<linkflags>"-Bdynamic" <target-os>qnxnto,<toolset>gcc:<linkflags>"-rdynamic"
+    <target-os>android:<linkflags>"-rdynamic" <target-os>linux:<linkflags>"-rdynamic" <target-os>darwin,<toolset>gcc:<linkflags>"-dynamic"
+    <target-os>darwin,<toolset>clang:<linkflags>"-rdynamic" <target-os>iphone:<linkflags>"-rdynamic" ;
 
 
 # Static library that is not linked with any of the boost libs
-lib static_plugin : ../example/tutorial4/static_plugin.cpp : <link>static : : $(RDYNAMIC) ;
-lib static_refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <link>static : : <variant>release $(RDYNAMIC) ;
+lib static_plugin : ../example/tutorial4/static_plugin.cpp : <link>static <define>BOOST_SYSTEM_NO_DEPRECATED : : $(RDYNAMIC) ;
+lib static_refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <link>static <define>BOOST_SYSTEM_NO_DEPRECATED : : <variant>release $(RDYNAMIC) ;
 lib cpp_plugin : cpp_test_library.cpp : <link>shared ;
 
 project
@@ -32,6 +34,7 @@ project
       <library>/boost/filesystem//boost_filesystem
       <library>/boost/system//boost_system
       <threading>multi
+      <define>BOOST_SYSTEM_NO_DEPRECATED
     ;
 {
 
@@ -53,7 +56,7 @@ project
         [ run shared_library_get_symbol_test.cpp
                 :
                 : test_library
-                : $(RDYNAMIC) <target-os>windows:<define>TEST_FORCE_USE_OF_WINDOWS_H <link>shared
+                : $(RDYNAMIC) <target-os>windows:<define>BOOST_USE_WINDOWS_H <link>shared
                 : get_symbol_windows_h_forced
         ]
         [ run symbol_runtime_info_test.cpp : : test_library : $(RDYNAMIC) <link>shared ]
@@ -81,6 +84,7 @@ project
         [ run ../example/tutorial9/tutorial9.cpp ]
 		# test for shared libraries
         [ compile-fail section_name_too_big.cpp ]
+        [ run shared_library_concurrent_load_test.cpp /boost/thread//boost_thread : : library1 library2 my_plugin_aggregator refcounting_plugin : <link>shared ]
 		         [ run cpp_mangle_test.cpp : : cpp_plugin 
          		: <toolset>gcc:<cxxflags>-std=c++1y <toolset>msvc:<linkflags>DbgHelp.lib ] 
          [ run cpp_load_test.cpp : : cpp_plugin 

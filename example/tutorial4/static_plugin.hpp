@@ -7,6 +7,7 @@
 
 //[plugcpp_my_plugin_static
 #include <boost/dll/alias.hpp>                          // for BOOST_DLL_ALIAS
+#include <boost/shared_ptr.hpp>
 #include "../tutorial_common/my_plugin_api.hpp"
 
 namespace my_namespace {

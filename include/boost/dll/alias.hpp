@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -9,16 +10,13 @@
 
 #include <boost/config.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/utility/addressof.hpp>
 #include <boost/predef/compiler.h>
 #include <boost/predef/os.h>
-#include <boost/dll/shared_library.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif
-
 
 /// \file boost/dll/alias.hpp
 /// \brief Includes alias methods and macro. You can include this header or
@@ -30,7 +28,12 @@ namespace boost { namespace dll {
 #ifdef BOOST_DLL_DOXYGEN
 /// Define this macro to explicitly specify translation unit in which alias must be instantiated.
 /// See section 'Limitations' for more info. You may find usage examples in source codes of almost each tutorial.
+/// Must be used in code, when \forcedmacrolink{BOOST_DLL_FORCE_NO_WEAK_EXPORTS} is defined
 #define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
+
+/// Define this macro to disable exporting weak symbols and start using the \forcedmacrolink{BOOST_DLL_FORCE_ALIAS_INSTANTIATION}.
+/// This may be usefull for working around linker problems or to test your program for compatability with linkers that do not support export of weak symbols.
+#define BOOST_DLL_FORCE_NO_WEAK_EXPORTS
 #endif
 
 #if BOOST_COMP_MSVC
@@ -48,14 +51,21 @@ namespace boost { namespace dll {
 #else // #if BOOST_COMP_MSVC
 
 
-#if BOOST_OS_WINDOWS
+#if BOOST_OS_WINDOWS || BOOST_OS_ANDROID || BOOST_COMP_IBM
 // There are some problems with mixing `__dllexport__` and `weak` using MinGW
 // See https://sourceware.org/bugzilla/show_bug.cgi?id=17480
+//
+// Android had an issue with exporting weak symbols
+// https://code.google.com/p/android/issues/detail?id=70206
 #define BOOST_DLL_SELECTANY
 #else // #if BOOST_OS_WINDOWS
 /*!
-* \brief Macro that allows linker to select any occurence of this symbol instead of
+* \brief Macro that allows linker to select any occurrence of this symbol instead of
 * failing with 'multiple definitions' error at linktime.
+*
+* This macro does not work on Android, IBM XL C/C++ and MinGW+Windows
+* because of linker problems with exporting weak symbols
+* (See https://code.google.com/p/android/issues/detail?id=70206, https://sourceware.org/bugzilla/show_bug.cgi?id=17480)
 */
 #define BOOST_DLL_SELECTANY __attribute__((weak))
 #endif // #if BOOST_OS_WINDOWS
@@ -114,7 +124,7 @@ namespace boost { namespace dll {
 /*!
 * \brief Makes an alias name for exported function or variable.
 *
-* This macro is usefull in cases of long mangled C++ names. For example some `void boost::foo(std::sting)`
+* This macro is useful in cases of long mangled C++ names. For example some `void boost::foo(std::sting)`
 * function name will change to something like `N5boostN3foosE` after mangling.
 * Importing function by `N5boostN3foosE` name does not looks user friendly, especially assuming the fact
 * that different compilers have different mangling schemes. AliasName is the name that won't be mangled
@@ -122,7 +132,7 @@ namespace boost { namespace dll {
 *
 *
 * Can be used in any namespace, including global. FunctionOrVar must be fully qualified,
-* so that address of it could be taken. Multiple different alises for a single variable/function
+* so that address of it could be taken. Multiple different aliases for a single variable/function
 * are allowed.
 *
 * Make sure that AliasNames are unique per library/executable. Functions or variables
@@ -133,7 +143,7 @@ namespace boost { namespace dll {
 * Puts all the aliases into the \b "boostdll" read only section of the binary. Equal to
 * \forcedmacrolink{BOOST_DLL_ALIAS_SECTIONED}(FunctionOrVar, AliasName, boostdll).
 *
-* \param FunctionOrVar Function or variable for wich an alias must be made.
+* \param FunctionOrVar Function or variable for which an alias must be made.
 * \param AliasName Name of the alias. Must be a valid C identifier.
 *
 * \b Example:
@@ -154,7 +164,8 @@ namespace boost { namespace dll {
     /**/
 
 
-#if BOOST_COMP_GNUC && BOOST_OS_WINDOWS && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION)
+#if ((BOOST_COMP_GNUC && BOOST_OS_WINDOWS) || BOOST_OS_ANDROID || BOOST_COMP_IBM || defined(BOOST_DLL_FORCE_NO_WEAK_EXPORTS)) \
+    && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION) && !defined(BOOST_DLL_DOXYGEN)
 
 #define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \
     namespace _autoaliases {                                                                    \
@@ -175,7 +186,7 @@ namespace boost { namespace dll {
 /*!
 * \brief Same as \forcedmacrolink{BOOST_DLL_ALIAS} but puts alias name into the user specified section.
 *
-* \param FunctionOrVar Function or variable for wich an alias must be made.
+* \param FunctionOrVar Function or variable for which an alias must be made.
 * \param AliasName Name of the alias. Must be a valid C identifier.
 * \param SectionName Name of the section. Must be a valid C identifier without quotes not longer than 8 bytes.
 *
@@ -202,7 +213,7 @@ namespace boost { namespace dll {
 /*!
 * \brief Exports variable or function with unmangled alias name.
 *
-* This macro is usefull in cases of long mangled C++ names. For example some `void boost::foo(std::sting)`
+* This macro is useful in cases of long mangled C++ names. For example some `void boost::foo(std::sting)`
 * function name will change to something like `N5boostN3foosE` after mangling.
 * Importing function by `N5boostN3foosE` name does not looks user friendly, especially assuming the fact
 * that different compilers have different mangling schemes.*
@@ -216,7 +227,7 @@ namespace boost { namespace dll {
 * Puts all the aliases into the \b "boostdll" read only section of the binary. Almost same as
 * \forcedmacrolink{BOOST_DLL_ALIAS}(FunctionOrVar, FunctionOrVar).
 *
-* \param FunctionOrVar Function or variable for wich an unmangled alias must be made.
+* \param FunctionOrVar Function or variable for which an unmangled alias must be made.
 *
 * \b Example:
 * \code

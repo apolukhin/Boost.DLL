@@ -8,8 +8,10 @@
 // MinGW related workaround
 #define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
 
+#include "../b2_workarounds.hpp"
 #include "../tutorial4/static_plugin.hpp"
 #include <boost/dll/runtime_symbol_info.hpp> // for program_location()
+#include <boost/dll/shared_library.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/container/map.hpp>
 #include <boost/filesystem.hpp>
@@ -60,7 +62,7 @@ void plugins_collector::load_all() {
             continue;
         }
         /*<-*/
-        if ((*it).path().string().find(".lib") != std::string::npos) {
+        if ( !b2_workarounds::is_shared_library((*it).path()) ) {
             continue;
         }
         /*->*/
@@ -88,7 +90,7 @@ void plugins_collector::insert_plugin(BOOST_RV_REF(dll::shared_library) lib) {
     if (lib.has("create_plugin")) {
         plugin_name = lib.get_alias<boost::shared_ptr<my_plugin_api>()>("create_plugin")()->name();
     } else if (lib.has("plugin")) {
-        plugin_name = lib.get_alias<my_plugin_api>("plugin").name();
+        plugin_name = lib.get<my_plugin_api>("plugin").name();
     } else {
         return;
     }

@@ -18,7 +18,7 @@
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
 
-#include <boost/detail/winapi/dll2.hpp> // TODO: FIXME
+#include <boost/detail/winapi/dll.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -47,8 +47,7 @@ public:
     }
 
     shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT {
-        handle_ = sl.handle_;
-        sl.handle_ = NULL;
+        swap(sl);
         return *this;
     }
 
@@ -135,10 +134,10 @@ public:
         }
 
         // Judging by the documentation of GetProcAddress
-        // there is no version for UNICODE, because
+        // there is no version for UNICODE on desktop/server Windows, because
         // names of functions are stored in narrow characters.
         void* const symbol = boost::dll::detail::aggressive_ptr_cast<void*>(
-            boost::detail::winapi::GetProcAddress(handle_, sb)
+            boost::detail::winapi::get_proc_address(handle_, sb)
         );
         if (symbol == NULL) {
             ec = boost::dll::detail::last_error_code();

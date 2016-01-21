@@ -56,8 +56,7 @@ public:
     }
 
     shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT {
-        handle_ = sl.handle_;
-        sl.handle_ = NULL;
+        swap(sl);
         return *this;
     }
 
@@ -67,6 +66,7 @@ public:
 
         // Do not allow opening NULL paths. User must use program_location() instead
         if (sl.empty()) {
+            boost::dll::detail::reset_dlerror();
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,
                 boost::system::generic_category()
@@ -99,6 +99,7 @@ public:
 
             handle_ = dlopen(actual_path.c_str(), static_cast<native_mode_t>(mode));
             if (handle_) {
+                boost::dll::detail::reset_dlerror();
                 return;
             }
         }
@@ -106,6 +107,7 @@ public:
         // Opening by exactly specified path
         handle_ = dlopen(sl.c_str(), static_cast<native_mode_t>(mode));
         if (handle_) {
+            boost::dll::detail::reset_dlerror();
             return;
         }
 
@@ -114,8 +116,8 @@ public:
             boost::system::generic_category()
         );
 
-        // Maybe user whanted to load the executable itself? Checking...
-        // We assume that usualy user whants to load a dynamic library not the executable itself, that's why
+        // Maybe user wanted to load the executable itself? Checking...
+        // We assume that usually user wants to load a dynamic library not the executable itself, that's why
         // we try this only after traditional load fails.
         boost::system::error_code prog_loc_err;
         boost::filesystem::path loc = boost::dll::detail::program_location_impl(prog_loc_err);
@@ -125,6 +127,7 @@ public:
             // "handle" for the dynamic library. If filename is NULL, then the 
             // returned handle is for the main program.
             ec.clear();
+            boost::dll::detail::reset_dlerror();
             handle_ = dlopen(NULL, static_cast<native_mode_t>(mode));
             if (!handle_) {
                 ec = boost::system::error_code(
@@ -188,7 +191,7 @@ public:
     }
 
 private:
-    native_handle_t handle_;
+    native_handle_t         handle_;
 };
 
 }}} // boost::dll::detail

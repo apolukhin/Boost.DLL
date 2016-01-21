@@ -15,6 +15,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/predef/os.h>
 #include <boost/predef/architecture.h>
+#include <boost/type_traits/integral_constant.hpp>
 
 #include <boost/dll/detail/pe_info.hpp>
 #include <boost/dll/detail/elf_info.hpp>
@@ -58,10 +59,15 @@ private:
         return *reinterpret_cast<boost::dll::detail::x_info_interface*>(impl_.address());
     }
 
-    static void throw_if_in_32bit() {
-#if !BOOST_ARCH_X86_64
+    inline static void throw_if_in_32bit_impl(boost::true_type /* is_32bit_platform */) {
         boost::throw_exception(std::runtime_error("Not native format: 64bit binary"));
-#endif
+    }
+
+    inline static void throw_if_in_32bit_impl(boost::false_type /* is_32bit_platform */) BOOST_NOEXCEPT {}
+
+
+    inline static void throw_if_in_32bit() {
+        throw_if_in_32bit_impl( boost::integral_constant<bool, (sizeof(void*) == 4)>() );
     }
 
     static void throw_if_in_windows() {
@@ -117,7 +123,7 @@ private:
 public:
     /*!
     * Opens file with specified path and prepares for information extraction.
-    * \param library_path Path to the binary file from wich the info must be extracted.
+    * \param library_path Path to the binary file from which the info must be extracted.
     * \param throw_if_not_native_format Throw an exception if this file format is not
     * supported by OS.
     */
