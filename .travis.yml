@@ -66,8 +66,7 @@ before_script:
   - sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
   - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
   - sudo ln -s /usr/bin/gcov-5 /usr/bin/gcov
-  - sudo apt-get install 	
-	
+
 before_install:
     # Set this to the name of the library
     - PROJECT_TO_TEST=`basename $TRAVIS_BUILD_DIR`
