@@ -56,6 +56,18 @@ addons:
     - lcov
 
 before_install:
+    # Install GCC-5 and set it as the default value
+    - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    - sudo apt-get update -qq
+    - sudo apt-get install -qq g++-5
+    - export CXX="g++-5" CC="gcc-5"
+    - sudo rm /usr/bin/gcc
+    - sudo rm /usr/bin/g++
+    - sudo rm /usr/bin/gcov
+    - sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
+    - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
+    - sudo ln -s /usr/bin/gcov-5 /usr/bin/gcov
+	
     # Set this to the name of the library
     - PROJECT_TO_TEST=`basename $TRAVIS_BUILD_DIR`
     - echo "Testing $PROJECT_TO_TEST"
