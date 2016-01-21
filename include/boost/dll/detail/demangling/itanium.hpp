@@ -11,11 +11,11 @@
 #include <boost/dll/detail/demangling/mangled_storage_base.hpp>
 #include <iterator>
 #include <algorithm>
-#include <boost/dll/detail/demangling/tokenizer.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/is_rvalue_reference.hpp>
 #include <boost/type_traits/is_lvalue_reference.hpp>
+#include <boost/type_traits/function_traits.hpp>
 
 
 namespace boost { namespace dll { namespace detail {
@@ -26,20 +26,6 @@ class mangled_storage_impl : public mangled_storage_base
 {
 	template<typename T>
 	struct dummy {};
-
-	template<typename T>
-	std::string get_name() const
-	{
-		auto tx = boost::typeindex::stl_type_index::type_id<T>();
-		auto val = (aliases.count(tx) > 0) ? aliases.at(tx) : tx.pretty_name();
-		if (is_lvalue_reference<T>::value)
-			val += "&";
-		else if (is_rvalue_reference<T>::value)
-			val += "&&";
-
-
-		return val;
-	}
 
 	template<typename Return, typename ...Args>
 	std::vector<std::string> get_func_params(dummy<Return(Args...)>)
@@ -92,202 +78,72 @@ public:
 
 };
 
-inline bool match_types(const std::string &lhs, const std::string &rhs)
+
+
+namespace parser
 {
-	using namespace boost;
-	using namespace std;
-	char_separator<char> sep(" ");
-	tokenizer<char_separator<char>> tlhs(lhs, sep);
-	tokenizer<char_separator<char>> trhs(rhs, sep);
 
-	vector<string> vlhs(tlhs.begin(), tlhs.end());
-	vector<string> vrhs(trhs.begin(), trhs.end());
-	if (vlhs.size() != vrhs.size())
-		return false;
+	inline std::string const_rule_impl(true_type )  {return " const";};
+	inline std::string const_rule_impl(false_type)  {return "";};
+	template<typename T>
+	auto const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
 
-	sort(vlhs.begin(), vlhs.end());
-	sort(vrhs.begin(), vrhs.end());
+	inline std::string volatile_rule_impl(true_type )  {return " volatile";};
+	inline std::string volatile_rule_impl(false_type)  {return "";};
+	template<typename T>
+	auto volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
 
-	return std::equal(vlhs.begin(), vlhs.end(), vrhs.begin());
-}
+	inline std::string reference_rule_impl(false_type, false_type) {return "";}
+	inline std::string reference_rule_impl(true_type,  false_type) {return "&" ;}
+	inline std::string reference_rule_impl(false_type, true_type ) {return "&&";}
 
 
-template<typename Range, typename Iterator>
-bool match_params(const Range &range, Iterator & itr, const Iterator & end)
-{
-	for (auto &p : range)
+	template<typename T>
+	auto reference_rule() {using t_l = is_lvalue_reference<T>; using t_r = is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
+
+	//it takes a string, because it may be overloaded.
+	template<typename T>
+	auto type_rule(const std::string & type_name)
 	{
-		std::cout << "Params: " << p << std::endl;
-		std::cout << "param comp " << *itr << std::endl;
-		if (itr == end)
-		{
-			return false;
-		}
-		if (! match_types(p, *itr))
-			return false;
-		itr++;
+		using namespace std;
+
+		return  type_name +
+				const_rule<T>() +
+				volatile_rule<T>() +
+				reference_rule<T>();
 	}
-	return true;
-}
 
 
-auto match_function(
-		const std::vector<std::string> &params,
-		const std::string& name)
-{
-
-	return [params, name](const mangled_storage_impl::entry& e)
+	template<typename Return, typename Arg>
+	std::string arg_list(const mangled_storage_impl & ms, Return (*)(Arg))
 	{
-		//ok, we need to tokenize it, but that should be rathers fast
-		tokenizer<tokenize_function> tkz(e.demangled);
+		using namespace std;
+		auto str = ms.get_name<Arg>();
+		return type_rule<Arg>(str);
+	}
 
-		auto itr = tkz.begin();
-		if (itr == tkz.end()) //errornous name
-			return false;
-
-		if (*itr != name) //alright name matched
-			return false;
-
-		itr++;
-		if (itr == tkz.end()) //exported in a C-manner, errornous for this approach.
-			return false;
-
-		if (*itr != "(") //start the param list
-			return false;
-		itr++;
-
-		if (!match_params(params, itr, tkz.end()))
-			return false;
-
-		//now check the end of the function name, i.e. ")" and the end after this.
-		if (itr == tkz.end())
-			return false;
-
-		if (itr == tkz.end())
-			return false;
-		if (*itr != ")")
-			return false;
-		itr++;
-		if (itr != tkz.end())
-			return false;
-
-		return true;
-	};
-}
-
-auto match_mem_fn(const std::string &class_name,
-		const std::vector<std::string> &params,
-		const std::string& name,
-		bool is_const = false,
-		bool is_volatile = false)
-{
-	auto mem_fn_name = class_name + "::" + name;
-
-	return [params, name, is_const, is_volatile, mem_fn_name]
-			(const mangled_storage_impl::entry& e)
+	template<typename Return, typename First, typename Second, typename ...Args>
+	std::string arg_list(const mangled_storage_impl & ms, Return (*)(First, Second, Args...))
 	{
-		//ok, we need to tokenize it, but that should be rathers fast
-		tokenizer<tokenize_function> tkz(e.demangled);
-		auto itr = tkz.begin();
+		auto st = ms.get_name<First>();
 
-		if (*itr != mem_fn_name)
-			return false;
-		itr++;
-		if (itr == tkz.end()) //no function.
-			return false;
+		using next_type = Return (*)(Second, Args...);
+		return type_rule<First>(st) + ", " + arg_list(ms, next_type());
+	}
 
-
-
-		if (*itr != "(")
-			return false;
-		itr++;
-
-		if (!match_params(params, itr, tkz.end()))
-			return false;
-
-		if (itr == tkz.end())
-			return false;
-		if (*itr != ")")
-			return false;
-		itr++;
-
-		if (itr != tkz.end()) //dummy token in itanium
-			if (*itr == "")
-				itr++;
-
-		if (itr != tkz.end())
-			if ((*itr == "const") && is_const)
-				itr++;
-
-		if (itr != tkz.end())
-			if ((*itr == "volatile") && is_volatile)
-				itr++;
-
-		if (itr != tkz.end())
-			return false;
-
-		return true;
-	};
-}
-
-
-auto match_constructor(const std::string &ctor_name,
-		const std::vector<std::string> &params)
-{
-	return [params, ctor_name](const mangled_storage_impl::entry& e)
+	template<typename Return>
+	std::string arg_list(const mangled_storage_impl &, Return (*)())
 	{
-		//ok, we need to tokenize it, but that should be rathers fast
-		tokenizer<tokenize_function> tkz(e.demangled);
-		auto itr = tkz.begin();
-
-		if (*itr != ctor_name)
-			return false;
-
-		itr++;
-		if (itr == tkz.end()) //no function.
-			return false;
-
-		if (*itr != "(")
-			return false;
-		itr++;
-		using namespace std;;
-
-		for (auto i = itr; i != tkz.end(); i++)
-			cout << *i << ", ";
-		cout << endl;
-
-		if (!match_params(params, itr, tkz.end()))
-			return false;
-
-
-
-		if (itr == tkz.end())
-			return false;
-		if (*itr != ")")
-			return false;
-		itr++;
-
-		if (itr != tkz.end()) //dummy token in itanium
-			if (*itr == "")
-				itr++;
-
-		if (itr != tkz.end())
-			return false;
-
-		return true;
-	};
+		return "";
+	}
 }
+
 
 
 template<typename T> std::string mangled_storage_impl::get_variable(const std::string &name)
 {
-	auto found = std::find_if(storage.begin(), storage.end(), [&](const entry& e)
-			{
-				if (e.demangled == name)
-					return true;
-				else
-					return false;
-			});
+	auto found = std::find_if(storage.begin(), storage.end(),
+			[&](const entry& e) {return e.demangled == name;});
 
 	if (found != storage.end())
 		return found->mangled;
@@ -297,10 +153,11 @@ template<typename T> std::string mangled_storage_impl::get_variable(const std::s
 
 template<typename Func> std::string mangled_storage_impl::get_function(const std::string &name)
 {
-	auto predicate = match_function(get_func_params(dummy<Func>()), name);
+	using func_type = Func*;
 
-	auto found = std::find_if(storage.begin(), storage.end(), predicate);
+	auto matcher = name + '(' + parser::arg_list(*this, func_type()) + ')';
 
+	auto found = std::find_if(storage.begin(), storage.end(), [&](const entry& e) {return e.demangled == matcher;});
 	if (found != storage.end())
 		return found->mangled;
 	else
@@ -311,14 +168,17 @@ template<typename Func> std::string mangled_storage_impl::get_function(const std
 template<typename Class, typename Func>
 std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 {
-	auto predicate = match_mem_fn(
-			get_name<Class>(),
-			get_func_params(dummy<Func>()),
-			name,
-			is_const<Class>::value,
-			is_volatile<Class>::value);
+	using namespace parser;
 
-	auto found = std::find_if(storage.begin(), storage.end(), predicate);
+	using func_type = Func*;
+
+	std::string cname = get_name<Class>();
+
+	auto matcher = cname + "::" + name +
+			 '(' + parser::arg_list(*this, func_type()) + ')'
+			 + const_rule<Class>() + volatile_rule<Class>();
+
+	auto found = std::find_if(storage.begin(), storage.end(), [&](const entry& e) {return e.demangled == matcher;});
 
 	if (found != storage.end())
 		return found->mangled;
@@ -331,6 +191,9 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 template<typename Signature>
 auto mangled_storage_impl::get_constructor() -> ctor_sym
 {
+	using namespace parser;
+
+	using func_type = Signature*;
 
 	std::string ctor_name; // = class_name + "::" + name;
 	std::string unscoped_cname; //the unscoped class-name
@@ -348,13 +211,14 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 			ctor_name = class_name+ "::" + unscoped_cname;
 		}
 	}
-	auto predicate = match_constructor(
-				ctor_name,
-				get_func_params(dummy<Signature>()));
+
+	auto matcher =
+				ctor_name + '(' + parser::arg_list(*this, func_type()) + ')';
+
 
 	std::vector<entry> findings;
 	std::copy_if(storage.begin(), storage.end(),
-			std::back_inserter(findings), predicate);
+			std::back_inserter(findings), [&](const entry& e) {return e.demangled == matcher;});
 
 	ctor_sym ct;
 
@@ -379,7 +243,6 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 template<typename Class>
 auto mangled_storage_impl::get_destructor() -> dtor_sym
 {
-
 	std::string dtor_name; // = class_name + "::" + name;
 	std::string unscoped_cname; //the unscoped class-name
 	{

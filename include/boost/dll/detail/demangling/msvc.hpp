@@ -384,7 +384,6 @@ auto mangled_storage_impl::get_destructor() -> dtor_sym
 		return found->mangled;
 	else
 		return "";
-
 }
 
 

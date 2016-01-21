@@ -69,8 +69,8 @@ int test_main(int argc, char* argv[])
 	BOOST_CHECK(v != "some_space::scoped_fun");
 
 
-	auto v1 = ms.get_function<void(double)>("overloaded");
-	auto v2 = ms.get_function<void(int)>("overloaded");
+	auto v1 = ms.get_function<void(const double)>("overloaded");
+	auto v2 = ms.get_function<void(const volatile int)>("overloaded");
 	BOOST_CHECK(!v1.empty());
 	BOOST_CHECK(!v2.empty());
 	BOOST_CHECK(v1 != v2);

@@ -137,12 +137,12 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
 	typedef BOOST_DEDUCED_TYPENAME detail::ctor_t<Signature>::allocating allocating;
 
 	standard s;
-	if (C1)
+	if (C1 != nullptr)
 		s = C1;
 
 	allocating a;
 
-	if (C2)
+	if (C2 != nullptr)
 		a = C2;
 
 	return {s,a};
@@ -161,11 +161,11 @@ destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt
 	f D2 = nullptr;
 
 	if (dt.D0.size() > 0)
-		D0 =  detail::mem_fn_cast<f>(lib.get(dt.D0));
+		D0 =  detail::mem_fn_cast<f>(lib.get_void(dt.D0));
 	if (dt.D1.size() > 0)
-		D1 =  detail::mem_fn_cast<f>(lib.get(dt.D1));
+		D1 =  detail::mem_fn_cast<f>(lib.get_void(dt.D1));
 	if (dt.D1.size() > 0)
-		D2 =  detail::mem_fn_cast<f>(lib.get(dt.D2));
+		D2 =  detail::mem_fn_cast<f>(lib.get_void(dt.D2));
 
 	typedef boost::function<void(Class* const)> fn;
 	fn s;

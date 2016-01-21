@@ -23,12 +23,12 @@ BOOST_SYMBOL_EXPORT const int & scoped_fun()
 }
 
 
-BOOST_SYMBOL_EXPORT void overloaded(int i)
+BOOST_SYMBOL_EXPORT void overloaded(const volatile int i)
 {
 	unscoped_var = i;
 }
 
-BOOST_SYMBOL_EXPORT void overloaded(double d)
+BOOST_SYMBOL_EXPORT void overloaded(const double d)
 {
 	some_space::variable = d;
 }

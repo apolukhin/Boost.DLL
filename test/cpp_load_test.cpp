@@ -47,6 +47,11 @@ int test_main(int argc, char* argv[])
 
     smart_library sm(*selection);
 
+    for (auto &s : sm.symbol_storage().get_storage())
+    {
+    	std::cout << s.demangled << std::endl;
+    }
+
     auto &unscoped_var = sm.get_variable<int>("unscoped_var");
 
 
@@ -130,10 +135,9 @@ int test_main(int argc, char* argv[])
     BOOST_REQUIRE(&static_val != nullptr);
 
     BOOST_CHECK(father_val == 12);
-    BOOST_CHECK(static_val == -1);
+    BOOST_CHECK(static_val == -1);using namespace std;
     //now get the static function.
     auto set_value = sm.get_function<void(const int &)>("some_space::some_class::set_value");
-
     BOOST_REQUIRE(set_value != nullptr);
 
     set_value(42);
@@ -159,6 +163,8 @@ int test_main(int argc, char* argv[])
 
     BOOST_REQUIRE(get != nullptr);
     BOOST_REQUIRE(set != nullptr);
+
+#define L std::cout << __LINE__ << std::endl;
 
     auto func_dd  = sm.get_mem_fn<override_class, 				 double(double, double)>("func");
     auto func_ii  = sm.get_mem_fn<override_class, 				 int(int, int)>			("func");
@@ -193,7 +199,7 @@ int test_main(int argc, char* argv[])
     override_class oc;
 
     for (auto & i : oc.arr)
-    	i = 0;
+   	i = 0;
 
     BOOST_CHECK((oc.*get)() == 0);
 
