@@ -12,7 +12,7 @@
 
 
 #include <boost/dll.hpp>
-#include <boost/dll/mangled_storage.hpp>
+#include <boost/dll/smart_library.hpp>
 #include <boost/test/minimal.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
@@ -23,6 +23,7 @@ struct override_class {};
 int test_main(int argc, char* argv[])
 {
     using namespace boost::dll;
+    using mangled_storage = detail::mangled_storage_impl;
 
     BOOST_REQUIRE(argc >= 3);
    

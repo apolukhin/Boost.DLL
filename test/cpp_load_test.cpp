@@ -203,7 +203,7 @@ int test_main(int argc, char* argv[])
 
     BOOST_CHECK((oc.*get)() == 0);
 
-    ctor_i.standard(&oc, 12); //initialized.
+    (oc.*(ctor_i.standard))(12); //initialized.
 
     BOOST_CHECK(static_val == 12);
     BOOST_CHECK((oc.*get)() == 456);

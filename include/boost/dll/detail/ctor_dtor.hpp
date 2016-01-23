@@ -9,7 +9,6 @@
 #define INCLUDE_BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
 
 #include <boost/config.hpp>
-#include <boost/function.hpp>
 #include <boost/dll/detail/mem_fn_cast.hpp>
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
@@ -47,7 +46,7 @@ struct constructor
 	const standard_t standard;
 	const allocating_t allocating;
 
-	bool has_allocating() const { return allocating; }
+	bool has_allocating() const { return allocating != nullptr; }
 
 	bool is_empty() const { return !allocating; }
 	operator bool() const { return allocating; }
@@ -55,7 +54,7 @@ struct constructor
 	constructor(const constructor &) = default;
 
 	explicit constructor(const standard_t & standard)
-				: standard(standard) {}
+				: standard(standard), allocating(nullptr) {}
 
 	constructor(const standard_t & standard, const allocating_t & allocating )
 				: standard(standard), allocating(allocating) {}
@@ -65,12 +64,15 @@ struct constructor
 template<typename Class>
 struct destructor
 {
-	typedef void(Class::*type)() ;
-
+#if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
+	typedef void(__thiscall * type)(Class* const);
+#else
+	typedef void(*type)(Class* const);
+#endif
 	const type standard;
 	const type deleting;
 
-	bool has_deleting() const { return deleting; }
+	bool has_deleting() const { return deleting != nullptr; }
 
 	bool is_empty() const { return !deleting; }
 	operator bool() const { return deleting; }
@@ -78,7 +80,7 @@ struct destructor
 	destructor(const destructor &) = default;
 
 	explicit destructor(const type & standard)
-					: standard(standard) {}
+					: standard(standard), deleting(nullptr) {}
 
 	destructor(const type & standard, const type & deleting)
 				: standard(standard), deleting(deleting) {}
@@ -91,30 +93,29 @@ namespace detail
 template<typename Signature, typename Lib>
 constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym & ct)
 {
-	typedef typename ctor_t<Signature>::mem_fn f;
 	typedef typename detail::ctor_t<Signature>::standard standard;
 
-	standard s = detail::mem_fn_cast<f>(lib.get_void(ct));
+	standard s = detail::mem_fn_cast<standard>(lib.get_void(ct));
 
-	return {s};
+	return constructor<Signature>(s);
 }
 
 template<typename Class, typename Lib>
 destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt)
 {
-	typedef void(__thiscall*f)(Class* const);
-	typedef boost::function<void(Class* const)> fn;
-	fn s = detail::mem_fn_cast<f>(lib.get_void(dt));
+	using f = typename destructor<Class>::type;
 
-	return {s};
+	f s = detail::mem_fn_cast<f>(lib.get_void(dt));
+
+	return destructor<Class>(s);
 }
 
 #else
 template<typename Signature, typename Lib>
 constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym & ct)
 {
-	typedef typename ctor_t<Signature>::mem_fn f;
-	typedef typename ctor_t<Signature>::pln_fn p;
+	typedef typename ctor_t<Signature>::standard f;
+	typedef typename ctor_t<Signature>::allocating p;
 	/* father Ctor */
 	f C0 = nullptr;
 	/* normal Ctor */
@@ -129,20 +130,7 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
 	if (ct.C2.size() > 0)
 		C2 =  detail::mem_fn_cast<p>(lib.get_void(ct.C2));
 
-
-	typedef typename detail::ctor_t<Signature>::standard standard;
-	typedef typename detail::ctor_t<Signature>::allocating allocating;
-
-	standard s;
-	if (C1 != nullptr)
-		s = C1;
-
-	allocating a;
-
-	if (C2 != nullptr)
-		a = C2;
-
-	return {s,a};
+	return {C1,C2};
 }
 
 template<typename Class, typename Lib>
@@ -161,18 +149,10 @@ destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt
 		D0 =  detail::mem_fn_cast<f>(lib.get_void(dt.D0));
 	if (dt.D1.size() > 0)
 		D1 =  detail::mem_fn_cast<f>(lib.get_void(dt.D1));
-	if (dt.D1.size() > 0)
+	if (dt.D2.size() > 0)
 		D2 =  detail::mem_fn_cast<f>(lib.get_void(dt.D2));
 
-	typedef boost::function<void(Class* const)> fn;
-	fn s;
-	if (D1)
-		s = D1;
-	fn a;
-	if (D2)
-		a = D2;
-
-	return {s,a};
+	return {D1, D2};
 
 }
 

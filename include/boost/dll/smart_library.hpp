@@ -9,7 +9,6 @@
 #define INCLUDE_BOOST_DLL_SMART_LIBRARY_HPP_
 
 #include <boost/dll/shared_library.hpp>
-#include <boost/dll/mangled_storage.hpp>
 #include <boost/dll/detail/get_mem_fn_type.hpp>
 #include <boost/dll/detail/mem_fn_cast.hpp>
 #include <boost/dll/detail/ctor_dtor.hpp>
@@ -28,10 +27,11 @@
 namespace boost {
 namespace dll {
 
-class smart_library : public detail::mangled_storage_impl
+class smart_library : public shared_library
 {
-	mangled_storage _storage;
+	 detail::mangled_storage_impl _storage;
 public:
+	using mangled_storage = detail::mangled_storage_impl;
     /*!
     * Acces to the mangled storage, which is created on construction.
     *
