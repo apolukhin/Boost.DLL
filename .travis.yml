@@ -50,7 +50,7 @@ env:
 # Installing additional tools
 addons:
   sources:
-    - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r/test
   apt:
     packages:
     - valgrind
