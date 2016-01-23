@@ -95,9 +95,9 @@ project
 
 		test-suite boostdll-smart : 
 		    [ run cpp_mangle_test.cpp : : cpp_plugin 
-         		: <toolset>msvc:<linkflags>DbgHelp.lib <link>shared ] 
+         		: $(RDYNAMIC) <toolset>msvc:<linkflags>DbgHelp.lib <link>shared ] 
 			[ run cpp_load_test.cpp : : cpp_plugin 
-        		: <toolset>msvc:<linkflags>DbgHelp.lib <link>shared ] 
+        		: $(RDYNAMIC) <toolset>msvc:<linkflags>DbgHelp.lib <link>shared ] 
 		;
 	}
 }
