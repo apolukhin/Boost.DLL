@@ -89,7 +89,7 @@ before_install:
     - cp travis.jam user-config.jam
 script:
     # `--coverage` flags required to generate coverage info for Coveralls
-    - ../../../b2 $TEST_SMART testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=. toolset=$TOOLSET
+    - ../../../b2 $TEST_SMART testing.launcher=valgrind address-model=64 architecture=x86 toolset=$TOOLSET cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=.
 
 after_success:
     # Copying Coveralls data to a separate folder
