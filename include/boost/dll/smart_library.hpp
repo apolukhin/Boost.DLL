@@ -14,12 +14,21 @@
 #include <boost/dll/detail/mem_fn_cast.hpp>
 #include <boost/dll/detail/ctor_dtor.hpp>
 
-#include <iostream>
+#include <boost/predef/compiler.h>
+
+
+#if BOOST_COMP_GNUC || BOOST_COMP_CLANG || BOOST_COMP_HPACC || BOOST_COMP_IBM
+#include <boost/dll/detail/demangling/itanium.hpp>
+#elif BOOST_COMP_MSVC
+#include <boost/dll/detail/demangling/msvc.hpp>
+#else
+#error "Compiler not supported"
+#endif
 
 namespace boost {
 namespace dll {
 
-class smart_library : public shared_library
+class smart_library : public detail::mangled_storage_impl
 {
 	mangled_storage _storage;
 public:
@@ -158,10 +167,10 @@ public:
 	}
 
 	template<typename Class, typename Func>
-	BOOST_DEDUCED_TYPENAME detail::get_mem_fn_type<Class, Func>::mem_fn
+	typename detail::get_mem_fn_type<Class, Func>::mem_fn
 			get_mem_fn(const std::string &name)
 	{
-		return detail::mem_fn_cast<BOOST_DEDUCED_TYPENAME detail::get_mem_fn_type<Class, Func>::mem_fn>
+		return detail::mem_fn_cast<typename detail::get_mem_fn_type<Class, Func>::mem_fn>
 				(get_void(_storage.get_mem_fn<Class, Func>(name)));
 	}
 

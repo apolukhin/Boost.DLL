@@ -10,6 +10,7 @@
 
 #include <boost/config.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
+#include <cstring>
 
 namespace boost
 {
@@ -21,30 +22,19 @@ namespace detail
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
 template<typename T> T mem_fn_cast(void* p)
 {
-	union
-	{
-		T out;
-		void* in;
-	} u;
-	u.in = p;
-	return u.out; //aggressive_ptr_cast<T>(p);
+	T out;
+	std::memcpy(&out, &p, sizeof(void*));
+	return out; //aggressive_ptr_cast<T>(p);
 }
 
 #else
 template<typename T> T mem_fn_cast(void* p)
 {
-	union
-	{
-		T out;
-		struct
-		{
-			void * in;
-			void * dummy;
-		} in;
-	} conv;
-	conv.in.in = p;
-	conv.in.dummy = nullptr;
-	return conv.out;
+	T out;
+	std::memset(&out, 0, sizeof(T));
+	std::memcpy(&out, &p, sizeof(void*));
+
+	return out;
 }
 
 #endif

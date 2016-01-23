@@ -135,13 +135,13 @@ namespace parser
 	{
 		using namespace std;
 
-		return -(class_ >> x3::space)>> type_name >>
+		return -(class_ >> x3::space)>> x3::string(type_name) >>
 				const_rule<T>() >>
 				volatile_rule<T>() >>
 				reference_rule<T>();
 	}
 	template<>
-	auto type_rule<void>(const std::string &) { return x3::lit("void"); };
+	auto type_rule<void>(const std::string &) { return x3::string("void"); };
 
 	auto const cdecl_  	= "__cdecl" 	>> x3::space;
 	auto const stdcall  = "__stdcall" 	>> x3::space;
@@ -150,26 +150,25 @@ namespace parser
 
 
 	template<typename Return, typename Arg>
-	auto arg_list(const mangled_storage_impl & ms, Return (*)(Arg), std::string * p)
+	auto arg_list(const mangled_storage_impl & ms, Return (*)(Arg))
 	{
 		using namespace std;
-		*p = ms.get_name<Arg>();
-		return type_rule<Arg>(*p);
+
+		return type_rule<Arg>(ms.get_name<Arg>());
 	}
 
 	template<typename Return, typename First, typename Second, typename ...Args>
-	auto arg_list(const mangled_storage_impl & ms, Return (*)(First, Second, Args...), std::string * p)
+	auto arg_list(const mangled_storage_impl & ms, Return (*)(First, Second, Args...))
 	{
-		*p = ms.get_name<First>();
 
 		using next_type = Return (*)(Second, Args...);
-		return type_rule<First>(*p) >> x3::char_(',') >> arg_list(ms, next_type(), p + 1);
+		return type_rule<First>(ms.get_name<First>()) >> x3::char_(',') >> arg_list(ms, next_type());
 	}
 
 	template<typename Return>
-	auto arg_list(const mangled_storage_impl & ms, Return (*)(), std::string * p)
+	auto arg_list(const mangled_storage_impl & ms, Return (*)())
 	{
-		return x3::lit("void");
+		return x3::string("void");
 	}
 }
 
@@ -224,7 +223,7 @@ template<typename Func> std::string mangled_storage_impl::get_function(const std
 				-(visibility >> static_ >> x3::space) >> //it may be a static class-member, which does however not have the static attribute.
 				parser::type_rule<return_type>(return_type_name) >>  x3::space >>
 				cdecl_ >> //cdecl declaration for methods. stdcall cannot be
-				name >> x3::lit('(') >> parser::arg_list(*this, func_type(), arg_buf.data()) >> x3::lit(')') ;
+				name >> x3::lit('(') >> parser::arg_list(*this, func_type()) >> x3::lit(')') ;
 
 
 	auto predicate = [&](const mangled_storage_base::entry & e)
@@ -268,7 +267,7 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 				parser::type_rule<return_type>(return_type_name) >>  x3::space >>
 				thiscall >> //cdecl declaration for methods. stdcall cannot be
 				cname >> "::" >> name >>
-				x3::lit('(') >> parser::arg_list(*this, func_type(), arg_buf.data()) >> x3::lit(')') >>
+				x3::lit('(') >> parser::arg_list(*this, func_type()) >> x3::lit(')') >>
 				inv_const_rule<Class>() >> inv_volatile_rule<Class>();
 
 	auto predicate = [&](const mangled_storage_base::entry & e)
@@ -320,7 +319,7 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 				visibility >> x3::space >>
 				thiscall >> //cdecl declaration for methods. stdcall cannot be
 				ctor_name >>
-				x3::lit('(') >> parser::arg_list(*this, func_type(), arg_buf.data()) >> x3::lit(')');
+				x3::lit('(') >> parser::arg_list(*this, func_type()) >> x3::lit(')');
 
 
 	auto predicate = [&](const mangled_storage_base::entry & e)

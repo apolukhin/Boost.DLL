@@ -32,11 +32,8 @@ struct ctor_t {};
 template<typename Class, typename ...Args>
 struct ctor_t<Class(Args...)>
 {
-	typedef void(Class::*mem_fn)(Args...) ;
-	typedef Class*(*pln_fn)(Args...) ;
-	typedef boost::function<void(Class * const, Args...)> standard;
-	typedef boost::function<Class * (Args...)> allocating;
-
+	typedef void(Class::*standard)(Args...) ;
+	typedef Class*(*allocating)(Args...) ;
 };
 
 }
@@ -44,8 +41,8 @@ struct ctor_t<Class(Args...)>
 template<typename Signature>
 struct constructor
 {
-	typedef BOOST_DEDUCED_TYPENAME detail::ctor_t<Signature>::standard   standard_t;
-	typedef BOOST_DEDUCED_TYPENAME detail::ctor_t<Signature>::allocating allocating_t;
+	typedef typename detail::ctor_t<Signature>::standard   standard_t;
+	typedef typename detail::ctor_t<Signature>::allocating allocating_t;
 
 	const standard_t standard;
 	const allocating_t allocating;
@@ -57,7 +54,7 @@ struct constructor
 	constructor() = delete;
 	constructor(const constructor &) = default;
 
-	constructor(const standard_t & standard)
+	explicit constructor(const standard_t & standard)
 				: standard(standard) {}
 
 	constructor(const standard_t & standard, const allocating_t & allocating )
@@ -68,7 +65,7 @@ struct constructor
 template<typename Class>
 struct destructor
 {
-	typedef boost::function<void(Class* const)> type;
+	typedef void(Class::*type)() ;
 
 	const type standard;
 	const type deleting;
@@ -80,7 +77,7 @@ struct destructor
 	destructor() = delete;
 	destructor(const destructor &) = default;
 
-	destructor(const type & standard)
+	explicit destructor(const type & standard)
 					: standard(standard) {}
 
 	destructor(const type & standard, const type & deleting)
@@ -94,8 +91,8 @@ namespace detail
 template<typename Signature, typename Lib>
 constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym & ct)
 {
-	typedef BOOST_DEDUCED_TYPENAME ctor_t<Signature>::mem_fn f;
-	typedef BOOST_DEDUCED_TYPENAME detail::ctor_t<Signature>::standard standard;
+	typedef typename ctor_t<Signature>::mem_fn f;
+	typedef typename detail::ctor_t<Signature>::standard standard;
 
 	standard s = detail::mem_fn_cast<f>(lib.get_void(ct));
 
@@ -116,8 +113,8 @@ destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt
 template<typename Signature, typename Lib>
 constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym & ct)
 {
-	typedef BOOST_DEDUCED_TYPENAME ctor_t<Signature>::mem_fn f;
-	typedef BOOST_DEDUCED_TYPENAME ctor_t<Signature>::pln_fn p;
+	typedef typename ctor_t<Signature>::mem_fn f;
+	typedef typename ctor_t<Signature>::pln_fn p;
 	/* father Ctor */
 	f C0 = nullptr;
 	/* normal Ctor */
@@ -133,8 +130,8 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
 		C2 =  detail::mem_fn_cast<p>(lib.get_void(ct.C2));
 
 
-	typedef BOOST_DEDUCED_TYPENAME detail::ctor_t<Signature>::standard standard;
-	typedef BOOST_DEDUCED_TYPENAME detail::ctor_t<Signature>::allocating allocating;
+	typedef typename detail::ctor_t<Signature>::standard standard;
+	typedef typename detail::ctor_t<Signature>::allocating allocating;
 
 	standard s;
 	if (C1 != nullptr)
