@@ -7,6 +7,9 @@
 
 // For more information, see http://www.boost.org
 
+#include "../example/b2_workarounds.hpp"
+
+
 #include <boost/dll.hpp>
 #include <boost/dll/smart_library.hpp>
 #include <boost/test/minimal.hpp>
@@ -29,11 +32,11 @@ int test_main(int argc, char* argv[])
 
     boost::filesystem::path pt;
 
-    for (int i = 1; i < argc; ++i)
+    for (int i = 0; i < argc; ++i)
     {
     	boost::filesystem::path p(argv[i]);
-    	std::cout << "argv[" << i << "] = " << argv[0] << std::endl;
-    	if ((p.extension() == ".dll") || (p.extension() == ".so"))
+    	std::cout << "argv[" << i << "] = " << argv[i] << std::endl;
+    	if (b2_workarounds::is_shared_library(p))
     	{
     		pt = p;
     		break;
