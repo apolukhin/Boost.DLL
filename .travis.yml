@@ -39,8 +39,8 @@ env:
     matrix:
         - CXX_STANDARD=c++98 TOOLSET=gcc TEST_SMART=--no-smart-lib
         - CXX_STANDARD=c++0x TOOLSET=gcc TEST_SMART=--no-smart-lib
-        - CXX_STANDARD=c++1y TOOLSET=gcc-5
-        - CXX_STANDARD=c++1y TOOLSET=clang
+        - CXX_STANDARD=c++1y TOOLSET=gcc-5 CXX=g++-5 CC=gcc-5
+        - CXX_STANDARD=c++1y TOOLSET=clang CXX=clang++ CC=clang
          
 
 ###############################################################################################################
@@ -85,10 +85,9 @@ before_install:
     - ./bootstrap.sh
     - ./b2 headers
     - cd $BOOST/libs/$PROJECT_TO_TEST/test
-    - cp travis.jam user-config.jam 
 script:
     # `--coverage` flags required to generate coverage info for Coveralls
-    - ../../../b2 $TEST_SMART testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=. toolset=$TOOLSET
+    - ../../../b2 $TEST_SMART testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=.
 
 after_success:
     # Copying Coveralls data to a separate folder
