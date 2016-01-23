@@ -7,6 +7,9 @@
 
 // For more information, see http://www.boost.org
 
+#include "../example/b2_workarounds.hpp"
+
+
 #include <boost/dll.hpp>
 #include <boost/dll/smart_library.hpp>
 #include <boost/test/minimal.hpp>
@@ -24,23 +27,14 @@ int test_main(int argc, char* argv[])
 {
     using namespace boost::dll;
 
-    BOOST_REQUIRE(argc >= 3);
+    BOOST_REQUIRE(argc >= 2);
 
     //argv[2] == dll location.
 
-    boost::filesystem::path a1(argv[1]);
-    boost::filesystem::path a2(argv[2]);
+    boost::filesystem::path shared_library_path = do_find_correct_libs_path(argc, argv, "cpp_plugin");
+    std::cout << "Library: " << shared_library_path;
 
-
-    boost::filesystem::path * selection;
-    if ((a1.extension() == ".dll") || (a1.extension() == ".so"))
-    	selection = &a1;
-    else if ((a2.extension() == ".dll") || (a2.extension() == ".so"))
-    	selection = &a2;
-    else
-    	return 1;
-
-    smart_library sm(*selection);
+    smart_library sm(shared_library_path);
 
     for (auto &s : sm.symbol_storage().get_storage())
     {

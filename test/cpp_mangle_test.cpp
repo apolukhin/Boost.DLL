@@ -7,6 +7,7 @@
 
 // For more information, see http://www.boost.org
 
+#include "../example/b2_workarounds.hpp"
 
 #include <boost/dll.hpp>
 #include <boost/dll/smart_library.hpp>
@@ -22,23 +23,10 @@ int test_main(int argc, char* argv[])
     using namespace boost::dll;
     using mangled_storage = detail::mangled_storage_impl;
 
-    BOOST_REQUIRE(argc >= 3);
-   
-    //argv[2] == dll location.
+    boost::filesystem::path shared_library_path = do_find_correct_libs_path(argc, argv, "cpp_plugin");
+    std::cout << "Library: " << shared_library_path;
 
-    boost::filesystem::path a1(argv[1]);
-    boost::filesystem::path a2(argv[2]);
-
-
-    boost::filesystem::path * selection;
-    if (a1.extension() == ".dll")
-    	selection = &a1;
-    else if (a2.extension() == ".dll")
-    	selection = &a2;
-    else
-    	return 1;
-
-    library_info lib{*selection};
+    library_info lib{shared_library_path};
 
     mangled_storage ms(lib);
 
