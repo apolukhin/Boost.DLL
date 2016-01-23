@@ -88,9 +88,9 @@ project
      ;
 	 
 	.argv = [ modules.peek : ARGV ] ;
-	if ! $(--no-smart-lib) in $(.argv) 
+	if ! --no-smart-lib in $(.argv) 
 	{
-		echo declaring cpp smart lib test ;
+
 		lib cpp_plugin : cpp_test_library.cpp : <link>shared ;
 
 		test-suite boostdll-smart : 

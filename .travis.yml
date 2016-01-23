@@ -59,7 +59,7 @@ addons:
     - python-yaml
     - lcov
     - g++-5
-    - clang
+#    - clang
 
 before_install:
     # Set this to the name of the library
