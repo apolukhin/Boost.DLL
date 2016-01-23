@@ -88,15 +88,15 @@ project
      ;
 	 
 	.argv = [ modules.peek : ARGV ] ;
-	if ! $(no-smart-lib) in $(.argv) 
+	if ! $(--no-smart-lib) in $(.argv) 
 	{
 		lib cpp_plugin : cpp_test_library.cpp : <link>shared ;
 
 		test-suite boostdll-smart : 
 		    [ run cpp_mangle_test.cpp : : cpp_plugin 
-         		: <toolset>gcc:<cxxflags>-std=c++1y <toolset>msvc:<linkflags>DbgHelp.lib ] 
+         		: <toolset>msvc:<linkflags>DbgHelp.lib ] 
 			[ run cpp_load_test.cpp : : cpp_plugin 
-        		: <toolset>gcc:<cxxflags>-std=c++1y <toolset>msvc:<linkflags>DbgHelp.lib ] 
+        		: <toolset>msvc:<linkflags>DbgHelp.lib ] 
 		;
 	}
 }
