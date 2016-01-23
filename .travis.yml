@@ -37,9 +37,10 @@ env:
         - BOOST_REMOVE=dll
 
     matrix:
-        - CXX_STANDARD=c++98 TOOLSET=gcc
-        - CXX_STANDARD=c++0x TOOLSET=gcc
-        - CXX_STANDARD=c++1y TOOLSET=gcc-5
+        - CXX_STANDARD=c++98 TOOLSET=gcc-4
+        - CXX_STANDARD=c++0x TOOLSET=gcc-4
+        - CXX_STANDARD=c++1y TOOLSET=gcc-5 TEST_SMART=--no-smart-lib
+        - CXX_STANDARD=c++1y TOOLSET=clang TEST_SMART=--no-smart-lib
          
 
 ###############################################################################################################
@@ -49,14 +50,15 @@ env:
 
 # Installing additional tools
 addons:
-  apt:
-    sources:
+  sources:
     - ubuntu-toolchain-r-test
+  apt:
     packages:
     - valgrind
     - python-yaml
     - lcov
     - g++-5
+    - clang
 
 before_install:
     # Set this to the name of the library
@@ -86,7 +88,7 @@ before_install:
     - cp travis.jam user-config.jam 
 script:
     # `--coverage` flags required to generate coverage info for Coveralls
-    - ../../../b2 testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=. toolset=$TOOLSET
+    - ../../../b2 $TEST_SMART testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=. toolset=$TOOLSET
 
 after_success:
     # Copying Coveralls data to a separate folder
