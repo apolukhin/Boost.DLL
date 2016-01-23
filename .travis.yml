@@ -39,7 +39,7 @@ env:
     matrix:
         - CXX_STANDARD=c++98 TOOLSET=gcc
         - CXX_STANDARD=c++0x TOOLSET=gcc
-        - CXX_STANDARD=c++1y TOOLSET=gcc
+        - CXX_STANDARD=c++1y TOOLSET=gcc-5
          
 
 ###############################################################################################################
