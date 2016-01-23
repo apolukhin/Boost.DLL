@@ -87,8 +87,8 @@ project
 		[ run shared_library_concurrent_load_test.cpp /boost/thread//boost_thread : : library1 library2 my_plugin_aggregator refcounting_plugin : <link>shared ]
      ;
 	 
-	.	argv = [ modules.peek : ARGV ] ;
-	if ! $(no-smart-lib) 
+	.argv = [ modules.peek : ARGV ] ;
+	if ! $(no-smart-lib) in $(.argv) 
 	{
 		lib cpp_plugin : cpp_test_library.cpp : <link>shared ;
 
