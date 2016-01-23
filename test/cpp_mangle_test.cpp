@@ -23,10 +23,22 @@ int test_main(int argc, char* argv[])
     using namespace boost::dll;
     using mangled_storage = detail::mangled_storage_impl;
 
-    boost::filesystem::path shared_library_path = do_find_correct_libs_path(argc, argv, "cpp_plugin");
-    std::cout << "Library: " << shared_library_path;
+    boost::filesystem::path pt;
 
-    library_info lib{shared_library_path};
+    for (int i = 1; i < argc; ++i)
+    {
+    	boost::filesystem::path p(argv[i]);
+    	if ((p.extension() == ".dll") || (p.extension() == ".so"))
+    	{
+    		pt = p;
+    		break;
+    	}
+    }
+    BOOST_REQUIRE(!pt.empty());
+
+
+    std::cout << "Library: " << pt;
+    library_info lib{pt};
 
     mangled_storage ms(lib);
 
