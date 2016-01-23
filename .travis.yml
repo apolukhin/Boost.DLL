@@ -82,11 +82,11 @@ before_install:
     - TRAVIS_BUILD_DIR=$BOOST/libs/$PROJECT_TO_TEST
     - ./bootstrap.sh
     - ./b2 headers
-    - cd $BOOST/libs/$PROJECT_TO_TEST/test/
+    - cd $BOOST/libs/$PROJECT_TO_TEST/test
     - cp travis.jam user-config.jam 
 script:
     # `--coverage` flags required to generate coverage info for Coveralls
-    - ../../../b2 testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=. toolste=$TOOLSET
+    - ../../../b2 testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=. toolset=$TOOLSET
 
 after_success:
     # Copying Coveralls data to a separate folder
