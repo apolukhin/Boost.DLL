@@ -41,7 +41,7 @@ env:
         - CXX_STANDARD=c++98 TOOLSET=gcc TEST_SMART=--no-smart-lib
         - CXX_STANDARD=c++11 TOOLSET=gcc-5.2.1 TEST_SMART=--no-smart-lib
         - CXX_STANDARD=c++1y TOOLSET=gcc-5.2.1
-        - CXX_STANDARD=c++1y TOOLSET=clang
+#        - CXX_STANDARD=c++1y TOOLSET=clang
          
 
 ###############################################################################################################
