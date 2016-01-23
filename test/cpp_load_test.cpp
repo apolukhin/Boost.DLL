@@ -45,9 +45,11 @@ int test_main(int argc, char* argv[])
     BOOST_REQUIRE(!pt.empty());
 
 
-    std::cout << "Library: " << pt;
+    std::cout << "Library: " << pt << std::endl;
 
     smart_library sm(pt);
+
+    std::cout << "Symbols: " << std::endl;
 
     for (auto &s : sm.symbol_storage().get_storage())
     {

@@ -41,7 +41,7 @@ int test_main(int argc, char* argv[])
     BOOST_REQUIRE(!pt.empty());
 
 
-    std::cout << "Library: " << pt;
+    std::cout << "Library: " << pt << std::endl;
     library_info lib{pt};
 
     mangled_storage ms(lib);

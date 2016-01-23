@@ -64,21 +64,21 @@ struct BOOST_SYMBOL_EXPORT some_class : some_father
 	BOOST_DLL_MEMBER_EXPORT static int value ;
 	BOOST_DLL_MEMBER_EXPORT static void set_value(const int &i) { value = i;}
 
-	static some_class* dummy() {return new some_class();}//so it implements an allocating ctor.
+	BOOST_DLL_MEMBER_EXPORT static some_class* dummy() {return new some_class();}//so it implements an allocating ctor.
 
 	BOOST_DLL_MEMBER_EXPORT virtual double  func(double i, double j) {return i*j;}
 	BOOST_DLL_MEMBER_EXPORT virtual int 	func(int i, 	int j) 	 {return i+j;}
 	BOOST_DLL_MEMBER_EXPORT int func(int i, 	int j)   		  volatile {return i-j;;}
 	BOOST_DLL_MEMBER_EXPORT double func(double i, double j) const volatile {return i/j;}
 
-	int mem_val;
+	BOOST_DLL_MEMBER_EXPORT int mem_val;
 	BOOST_DLL_MEMBER_EXPORT int  get() const {return mem_val;}
 	BOOST_DLL_MEMBER_EXPORT void set(int i)  {mem_val = i;}
 
-	BOOST_DLL_MEMBER_EXPORT some_class() 	  : mem_val(123) {value = 23;}
-	BOOST_DLL_MEMBER_EXPORT some_class(int i) : mem_val(456) {value = i;}
+	some_class() 	  : mem_val(123) {value = 23;}
+	some_class(int i) : mem_val(456) {value = i;}
 
-	BOOST_DLL_MEMBER_EXPORT virtual ~some_class()
+	virtual ~some_class()
 	{
 		value = 0;
 	}
