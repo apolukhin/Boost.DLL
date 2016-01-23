@@ -7,17 +7,12 @@
 
 // For more information, see http://www.boost.org
 
-#include <iostream>
-
-
-
 #include <boost/dll.hpp>
 #include <boost/dll/smart_library.hpp>
 #include <boost/test/minimal.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
 
-#define L() std::cout << "Line: " << __LINE__ << std::endl;
 
 struct override_class
 {
@@ -163,8 +158,6 @@ int test_main(int argc, char* argv[])
 
     BOOST_REQUIRE(get != nullptr);
     BOOST_REQUIRE(set != nullptr);
-
-#define L std::cout << __LINE__ << std::endl;
 
     auto func_dd  = sm.get_mem_fn<override_class, 				 double(double, double)>("func");
     auto func_ii  = sm.get_mem_fn<override_class, 				 int(int, int)>			("func");

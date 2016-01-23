@@ -1,2 +1,4 @@
 using gcc :   : g++ ;
 using gcc : 5 : g++-5 ; 
+
+echo travis.jam was called. ;
