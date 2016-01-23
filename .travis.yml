@@ -35,12 +35,13 @@ env:
         # By default is eaual to - BOOST_REMOVE=`basename $TRAVIS_BUILD_DIR`
         # This will force to use local repo content, instead of the Boost's default
         - BOOST_REMOVE=dll
+        -
 
     matrix:
         - CXX_STANDARD=c++98 TOOLSET=gcc TEST_SMART=--no-smart-lib
         - CXX_STANDARD=c++0x TOOLSET=gcc TEST_SMART=--no-smart-lib
-        - CXX_STANDARD=c++1y TOOLSET=gcc-5 CXX=g++-5 CC=gcc-5
-        - CXX_STANDARD=c++1y TOOLSET=clang CXX=clang++ CC=clang
+        - CXX_STANDARD=c++1y TOOLSET=gcc-5.2.1
+        - CXX_STANDARD=c++1y TOOLSET=clang
          
 
 ###############################################################################################################
@@ -85,9 +86,10 @@ before_install:
     - ./bootstrap.sh
     - ./b2 headers
     - cd $BOOST/libs/$PROJECT_TO_TEST/test
+    - cp travis.jam user-config.jam
 script:
     # `--coverage` flags required to generate coverage info for Coveralls
-    - ../../../b2 $TEST_SMART testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=.
+    - ../../../b2 $TEST_SMART testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=. toolset=$TOOLSET
 
 after_success:
     # Copying Coveralls data to a separate folder
