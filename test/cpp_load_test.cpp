@@ -13,6 +13,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
 
+#include <iostream>
 
 struct override_class
 {
@@ -31,6 +32,7 @@ int test_main(int argc, char* argv[])
     for (int i = 1; i < argc; ++i)
     {
     	boost::filesystem::path p(argv[i]);
+    	std::cout << "argv[" << i << "] = " << argv[0] << std::endl;
     	if ((p.extension() == ".dll") || (p.extension() == ".so"))
     	{
     		pt = p;
