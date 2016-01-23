@@ -37,9 +37,9 @@ env:
         - BOOST_REMOVE=dll
 
     matrix:
-       # - CXX_STANDARD=c++98
-       # - CXX_STANDARD=c++0x
-        - CXX_STANDARD=c++1y
+        - CXX_STANDARD=c++98 TOOLSET=gcc
+        - CXX_STANDARD=c++0x TOOLSET=gcc
+        - CXX_STANDARD=c++1y TOOLSET=gcc
          
 
 ###############################################################################################################
@@ -49,23 +49,14 @@ env:
 
 # Installing additional tools
 addons:
+  sources:
+    - ubuntu-toolchain-r-test
   apt:
     packages:
     - valgrind
     - python-yaml
     - lcov
-
-before_script:
-  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq g++-5
-  - export CXX="g++-5" CC="gcc-5"
-  - sudo rm /usr/bin/gcc
-  - sudo rm /usr/bin/g++
-  - sudo rm /usr/bin/gcov
-  - sudo ln -s /usr/bin/gcc-5 /usr/bin/gcc
-  - sudo ln -s /usr/bin/g++-5 /usr/bin/g++
-  - sudo ln -s /usr/bin/gcov-5 /usr/bin/gcov
+    - g++-5
 
 before_install:
     # Set this to the name of the library
@@ -92,10 +83,10 @@ before_install:
     - ./bootstrap.sh
     - ./b2 headers
     - cd $BOOST/libs/$PROJECT_TO_TEST/test/
-
+    - cp travis.jam user-config.jam 
 script:
     # `--coverage` flags required to generate coverage info for Coveralls
-    - ../../../b2 testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage"
+    - ../../../b2 testing.launcher=valgrind address-model=64 architecture=x86 toolset=$CC cxxflags="--coverage -DBOOST_TRAVISCI_BUILD -std=$CXX_STANDARD" linkflags="--coverage" -sBOOST_BUILD_PATH=. toolste=$TOOLSET
 
 after_success:
     # Copying Coveralls data to a separate folder
