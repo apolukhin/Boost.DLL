@@ -37,10 +37,10 @@ env:
         - BOOST_REMOVE=dll
 
     matrix:
-        - CXX_STANDARD=c++98 TOOLSET=gcc-4
-        - CXX_STANDARD=c++0x TOOLSET=gcc-4
-        - CXX_STANDARD=c++1y TOOLSET=gcc-5 TEST_SMART=--no-smart-lib
-        - CXX_STANDARD=c++1y TOOLSET=clang TEST_SMART=--no-smart-lib
+        - CXX_STANDARD=c++98 TOOLSET=gcc-4 TEST_SMART=--no-smart-lib
+        - CXX_STANDARD=c++0x TOOLSET=gcc-4 TEST_SMART=--no-smart-lib
+        - CXX_STANDARD=c++1y TOOLSET=gcc-5
+        - CXX_STANDARD=c++1y TOOLSET=clang
          
 
 ###############################################################################################################
