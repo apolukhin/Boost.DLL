@@ -26,6 +26,7 @@
 
 namespace boost {
 namespace dll {
+namespace experimental {
 
 class smart_library : public shared_library
 {
@@ -192,6 +193,7 @@ public:
 	}
 };
 
+} /* namespace experimental */
 } /* namespace dll */
 } /* namespace boost */
 

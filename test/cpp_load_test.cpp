@@ -27,6 +27,8 @@ struct override_class
 int test_main(int argc, char* argv[])
 {
     using namespace boost::dll;
+    using namespace boost::dll::experimental;
+;
 
     BOOST_REQUIRE(argc >= 2);
 
