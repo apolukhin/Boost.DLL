@@ -1,11 +1,11 @@
-// Copyright 2011-2012 Renato Tegon Forti
-// Copyright 2015 Antony Polukhin
+// Copyright 2015 Klemens Morgenstern
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 // For more information, see http://www.boost.org
+#if __cplusplus >= 201402L
 
 #include "../example/b2_workarounds.hpp"
 
@@ -30,18 +30,8 @@ int test_main(int argc, char* argv[])
 
     BOOST_REQUIRE(argc >= 2);
 
-    boost::filesystem::path pt;
+    boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);;
 
-    for (int i = 0; i < argc; ++i)
-    {
-    	boost::filesystem::path p(argv[i]);
-    	std::cout << "argv[" << i << "] = " << argv[i] << std::endl;
-    	if (b2_workarounds::is_shared_library(p))
-    	{
-    		pt = p;
-    		break;
-    	}
-    }
     BOOST_REQUIRE(!pt.empty());
 
 
@@ -222,3 +212,7 @@ int test_main(int argc, char* argv[])
 
     return 0;
 }
+
+#else
+int main() {return 0;}
+#endif
