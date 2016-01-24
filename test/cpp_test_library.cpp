@@ -58,7 +58,7 @@ namespace some_space
 BOOST_SYMBOL_EXPORT extern int father_value;
 int father_value = 12;
 
-struct some_father
+struct BOOST_SYMBOL_EXPORT some_father
 {
 	some_father() {  father_value = 24; };
 	~some_father() { father_value = 112; };
@@ -68,30 +68,48 @@ struct some_father
 
 struct BOOST_SYMBOL_EXPORT some_class : some_father
 {
-	BOOST_DLL_MEMBER_EXPORT static int value ;
-	BOOST_DLL_MEMBER_EXPORT static void set_value(const int &i) { value = i;}
+	static int value ;
+	static void set_value(const int &i);
 
-	static some_class* dummy() {return new some_class();}//so it implements an allocating ctor.
+	static some_class* dummy();
 
-	BOOST_DLL_MEMBER_EXPORT virtual double  func(double i, double j) {return i*j;}
-	BOOST_DLL_MEMBER_EXPORT virtual int 	func(int i, 	int j) 	 {return i+j;}
-	BOOST_DLL_MEMBER_EXPORT int func(int i, 	int j)   		  volatile {return i-j;;}
-	BOOST_DLL_MEMBER_EXPORT double func(double i, double j) const volatile {return i/j;}
+	virtual double  func(double i, double j);
+	virtual int 	func(int i, 	int j);
+	int func(int i, 	int j)   		  volatile;
+	double func(double i, double j) const volatile;
 
 	int mem_val;
-	BOOST_DLL_MEMBER_EXPORT int  get() const {return mem_val;}
-	BOOST_DLL_MEMBER_EXPORT void set(int i)  {mem_val = i;}
+	int  get() const ;
+	void set(int i)  ;
 
-	BOOST_DLL_MEMBER_EXPORT some_class() 	  : mem_val(123) {value = 23;}
-	BOOST_DLL_MEMBER_EXPORT some_class(int i) : mem_val(456) {value = i;}
+	some_class();
+	some_class(int i);
 
-	BOOST_DLL_MEMBER_EXPORT virtual ~some_class()
-	{
-		value = 0;
-	}
+	virtual ~some_class();
 
 };
 
 int some_class::value = -1;
+
+void some_class::set_value(const int &i) {value = i;}
+
+
+some_class* some_class::dummy() {return new some_class();}//so it implements an allocating ctor.
+
+double  some_class::func(double i, double j) {return i*j;}
+int 	some_class::func(int i, 	int j) 	 {return i+j;}
+int 	some_class::func(int i, 	int j)   		  volatile {return i-j;;}
+double  some_class::func(double i, double j) const volatile {return i/j;}
+
+int  some_class::get() const {return mem_val;}
+void some_class::set(int i)  {mem_val = i;}
+
+some_class::some_class() 	   {value = 23; mem_val = 123;}
+some_class::some_class(int i) : mem_val(456) {value = i;}
+
+some_class::~some_class()
+{
+	value = 0;
+}
 
 }

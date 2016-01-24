@@ -41,12 +41,7 @@ int test_main(int argc, char* argv[])
 
     smart_library sm(pt);
 
-    std::cout << "Symbols: " << std::endl;
 
-    for (auto &s : sm.symbol_storage().get_storage())
-    {
-    	std::cout << s.demangled << std::endl;
-    }
 
     auto &unscoped_var = sm.get_variable<int>("unscoped_var");
 

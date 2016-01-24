@@ -34,6 +34,13 @@ int test_main(int argc, char* argv[])
 
     mangled_storage ms(lib);
 
+    std::cout << "Symbols: " << std::endl;
+
+    for (auto &s : ms.get_storage())
+    {
+    	std::cout << s.demangled << std::endl;
+    }
+
     std::string v;
     v = ms.get_variable<double>("some_space::variable");
 

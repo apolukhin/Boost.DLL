@@ -36,6 +36,28 @@ namespace experimental {
 *
 * \warning Is still very experimental.
 *
+* Currently known limitations:
+*
+* Member functions must be defined outside of the class to be exported. That is:
+* \code
+* //not exported:
+* struct BOOST_SYMBOL_EXPORT my_class { void func() {}};
+* //exported
+* struct BOOST_SYMBOL_EXPORT my_class { void func();};
+* void my_class::func() {};
+* \endcode
+*
+* With the current analysis, the first version does get exported in MSVC.
+* MinGW also does export it, BOOST_SYMBOL_EXPORT is written before it. To allow this on windows one can use
+* BOOST_DLL_MEMBER_EXPORT for this, so that MinGW and MSVC can provide those functions. This does however not work with gcc on linux.
+*
+* Direct initialization of members.
+* On linux the following member variable i will not be initialized when using the allocating contructor:
+* \code
+* struct BOOST_SYMBOL_EXPORT my_class { int i; my_class() : i(42) {} };
+* \endcode
+*
+* This does however not happen when the value is set inside the constructor function.
 */
 class smart_library
 {
