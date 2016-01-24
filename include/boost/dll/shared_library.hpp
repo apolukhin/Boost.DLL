@@ -177,7 +177,7 @@ public:
     *
     * \throw Nothing.
     */
-    virtual ~shared_library() BOOST_NOEXCEPT {}
+    ~shared_library() BOOST_NOEXCEPT {}
 
     /*!
     * Makes *this share the same shared object as lib. If *this is loaded, then unloads it.
@@ -242,7 +242,7 @@ public:
     * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     *
     */
-    virtual void load(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
+    void load(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
         boost::system::error_code ec;
 
         base_t::load(lib_path, mode, ec);
@@ -264,13 +264,13 @@ public:
     * \param mode A mode that will be used on library load.
     * \throw std::bad_alloc in case of insufficient memory.
     */
-    virtual void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
+    void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
         ec.clear();
         base_t::load(lib_path, mode, ec);
     }
 
     //! \overload void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
-    virtual void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
+    void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
         ec.clear();
         base_t::load(lib_path, mode, ec);
     }

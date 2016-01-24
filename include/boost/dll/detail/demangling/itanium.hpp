@@ -142,10 +142,10 @@ namespace parser
 
 template<typename T> std::string mangled_storage_impl::get_variable(const std::string &name)
 {
-	auto found = std::find_if(storage.begin(), storage.end(),
+	auto found = std::find_if(storage_.begin(), storage_.end(),
 			[&](const entry& e) {return e.demangled == name;});
 
-	if (found != storage.end())
+	if (found != storage_.end())
 		return found->mangled;
 	else
 		return "";
@@ -157,8 +157,8 @@ template<typename Func> std::string mangled_storage_impl::get_function(const std
 
 	auto matcher = name + '(' + parser::arg_list(*this, func_type()) + ')';
 
-	auto found = std::find_if(storage.begin(), storage.end(), [&](const entry& e) {return e.demangled == matcher;});
-	if (found != storage.end())
+	auto found = std::find_if(storage_.begin(), storage_.end(), [&](const entry& e) {return e.demangled == matcher;});
+	if (found != storage_.end())
 		return found->mangled;
 	else
 		return "";
@@ -178,9 +178,9 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 			 '(' + parser::arg_list(*this, func_type()) + ')'
 			 + const_rule<Class>() + volatile_rule<Class>();
 
-	auto found = std::find_if(storage.begin(), storage.end(), [&](const entry& e) {return e.demangled == matcher;});
+	auto found = std::find_if(storage_.begin(), storage_.end(), [&](const entry& e) {return e.demangled == matcher;});
 
-	if (found != storage.end())
+	if (found != storage_.end())
 		return found->mangled;
 	else
 		return "";
@@ -217,7 +217,7 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 
 
 	std::vector<entry> findings;
-	std::copy_if(storage.begin(), storage.end(),
+	std::copy_if(storage_.begin(), storage_.end(),
 			std::back_inserter(findings), [&](const entry& e) {return e.demangled == matcher;});
 
 	ctor_sym ct;
@@ -266,7 +266,7 @@ auto mangled_storage_impl::get_destructor() -> dtor_sym
 
 	dtor_sym dt;
 	//this is so simple, i don#t need a predicate
-	for (auto & s : storage)
+	for (auto & s : storage_)
 	{
 		//alright, name fits
 		if (s.demangled == dtor_name)

@@ -36,26 +36,37 @@ struct ctor_t<Class(Args...)>
 };
 
 }
-
+/*!
+ * This class stores a constructor.
+ *
+ * In some compilers there are several constructors in code, which may include an allocating one.
+ * This can be used if the imported class shall be put on the heap, which is why the class provied both types.
+ */
 template<typename Signature>
 struct constructor
 {
 	typedef typename detail::ctor_t<Signature>::standard   standard_t;
 	typedef typename detail::ctor_t<Signature>::allocating allocating_t;
-
+	//! The standard, i.e. not allocating constructor.
 	const standard_t standard;
+	//! The allocating constructor.
 	const allocating_t allocating;
 
+	//! True if a allocating constructor could be loaded.
 	bool has_allocating() const { return allocating != nullptr; }
 
-	bool is_empty() const { return !allocating; }
-	operator bool() const { return allocating; }
+	//! False if neither the allocating nor the standard constructor is available.
+	bool is_empty() const { return !((allocating == nullptr) && (standard != nullptr)) ; }
+	//! False if either the allocating nor the standard constructor is available.
+	operator bool() const { return (allocating != nullptr) || (standard != nullptr); }
 	constructor() = delete;
+	//! Copy Constructor.
 	constructor(const constructor &) = default;
 
+	//! Construct it from only the standard constructor
 	explicit constructor(const standard_t & standard)
 				: standard(standard), allocating(nullptr) {}
-
+	//! Construct it from both the standard constructor and the allocating constructor
 	constructor(const standard_t & standard, const allocating_t & allocating )
 				: standard(standard), allocating(allocating) {}
 
@@ -69,19 +80,28 @@ struct destructor
 #else
 	typedef void(*type)(Class* const);
 #endif
+	//! The standard, i.e. not deleting destructor.
 	const type standard;
+	//! The deleting destructor.
 	const type deleting;
 
+	//! True if a deleting destructor could be loaded.
 	bool has_deleting() const { return deleting != nullptr; }
 
-	bool is_empty() const { return !deleting; }
-	operator bool() const { return deleting; }
+	//! False if neither the deleting nor the standard destructor is available.
+	bool is_empty() const { return !((deleting == nullptr) && (standard != nullptr)) ; }
+	//! False if either the deleting nor the standard destructor is available.
+	operator bool() const { return (deleting != nullptr) || (standard != nullptr); }
 	destructor() = delete;
+
+	//! Copy destructor.
 	destructor(const destructor &) = default;
 
+	//! Construct it from only the standard destructor
 	explicit destructor(const type & standard)
 					: standard(standard), deleting(nullptr) {}
 
+	//! Construct it from both the standard destructor and the allocating destructor
 	destructor(const type & standard, const type & deleting)
 				: standard(standard), deleting(deleting) {}
 

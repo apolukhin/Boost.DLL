@@ -31,18 +31,35 @@ struct mangled_storage_base
 		entry(const std::string & m, const std::string &d) : mangled(m), demangled(d) {}
 		entry(const entry&) = default;
 		entry(entry&&) 		= default;
+		entry &operator= (const entry&) = default;
+		entry &operator= (entry&&) 		= default;
 	};
 protected:
-	std::vector<entry> storage;
+	std::vector<entry> storage_;
 	///if a unknown class is imported it can be overloaded by this type
-	std::map<boost::typeindex::stl_type_index, std::string> aliases;
+	std::map<boost::typeindex::stl_type_index, std::string> aliases_;
 public:
-	const std::vector<entry> & get_storage() const {return storage;};
+	void assign(const mangled_storage_base & storage)
+	{
+		aliases_  = storage.aliases_;
+		storage_  = storage.storage_;
+	}
+	void swap( mangled_storage_base & storage)
+	{
+		aliases_.swap(storage.aliases_);
+		storage_.swap(storage.storage_);
+	}
+	void clear()
+	{
+		storage_.clear();
+		aliases_.clear();
+	}
+	const std::vector<entry> & get_storage() const {return storage_;};
 	template<typename T>
 	std::string get_name() const
 	{
 		auto tx = boost::typeindex::stl_type_index::type_id<T>();
-		auto val = (aliases.count(tx) > 0) ? aliases.at(tx) : tx.pretty_name();
+		auto val = (aliases_.count(tx) > 0) ? aliases_.at(tx) : tx.pretty_name();
 		return val;
 	}
 
@@ -62,11 +79,11 @@ public:
 
 	}
 
-	void load(library_info & li) { storage.clear(); add_symbols(li.symbols()); };
+	void load(library_info & li) { storage_.clear(); add_symbols(li.symbols()); };
 	void load(const boost::filesystem::path& library_path,
 			bool throw_if_not_native_format = true)
 	{
-		storage.clear();
+		storage_.clear();
 		add_symbols(library_info(library_path, throw_if_not_native_format).symbols());
 	};
 
@@ -79,7 +96,7 @@ public:
 	 */
 	template<typename Alias> void add_alias(const std::string& name)
 	{
-		aliases.emplace(
+		aliases_.emplace(
 			boost::typeindex::stl_type_index::type_id<Alias>(),
 			name
 			);
@@ -90,9 +107,9 @@ public:
 		{
 			auto dm = demangle_symbol(sym);
 			if (!dm.empty())
-				storage.emplace_back(sym, dm);
+				storage_.emplace_back(sym, dm);
 			else
-				storage.emplace_back(sym, sym);
+				storage_.emplace_back(sym, sym);
 		}
 	}
 
