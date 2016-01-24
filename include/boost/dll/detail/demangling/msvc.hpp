@@ -11,7 +11,6 @@
 #include <boost/dll/detail/demangling/mangled_storage_base.hpp>
 #include <iterator>
 #include <algorithm>
-#include <array>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/is_lvalue_reference.hpp>
@@ -199,9 +198,9 @@ template<typename T> std::string mangled_storage_impl::get_variable(const std::s
 			return res && (itr == end);
 		};
 
-	auto found = std::find_if(storage.begin(), storage.end(), predicate);
+	auto found = std::find_if(storage_.begin(), storage_.end(), predicate);
 
-	if (found != storage.end())
+	if (found != storage_.end())
 		return found->mangled;
 	else
 		return "";
@@ -214,9 +213,6 @@ template<typename Func> std::string mangled_storage_impl::get_function(const std
 	using func_type = Func*;
 	using return_type = typename function_traits<Func>::result_type;
 	std::string return_type_name = get_name<return_type>();
-
-	std::array<std::string, function_traits<Func>::arity> arg_buf; //a buffer for the argument types.
-	//if the rule is constructed in functinos and the string goes out of scope, the rule will noch match
 
 
 	auto matcher =
@@ -238,9 +234,9 @@ template<typename Func> std::string mangled_storage_impl::get_function(const std
 				return res && (itr == end);
 			};
 
-	auto found = std::find_if(storage.begin(), storage.end(), predicate);
+	auto found = std::find_if(storage_.begin(), storage_.end(), predicate);
 
-	if (found != storage.end())
+	if (found != storage_.end())
 		return found->mangled;
 	else
 		return "";
@@ -256,9 +252,6 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 	using return_type = typename function_traits<Func>::result_type;
 	auto return_type_name = get_name<return_type>();
 
-
-	std::array<std::string, function_traits<Func>::arity> arg_buf; //a buffer for the argument types.
-	//if the rule is constructed in functinos and the string goes out of scope, the rule will noch match
 
 	auto cname = get_name<Class>();
 
@@ -279,9 +272,9 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 				return res && (itr == end);
 			};
 
-	auto found = std::find_if(storage.begin(), storage.end(), predicate);
+	auto found = std::find_if(storage_.begin(), storage_.end(), predicate);
 
-	if (found != storage.end())
+	if (found != storage_.end())
 		return found->mangled;
 	else
 		return "";
@@ -296,7 +289,6 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 
 	using func_type = Signature*;
 
-	std::array<std::string, function_traits<Signature>::arity> arg_buf; //a buffer for the argument types.
 
 	std::string ctor_name; // = class_name + "::" + name;
 	std::string unscoped_cname; //the unscoped class-name
@@ -331,9 +323,9 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 				return res && (itr == end);
 			};
 
-	auto f = std::find_if(storage.begin(), storage.end(), predicate);
+	auto f = std::find_if(storage_.begin(), storage_.end(), predicate);
 
-	if (f != storage.end())
+	if (f != storage_.end())
 		return f->mangled;
 	else
 		return "";
@@ -376,10 +368,10 @@ auto mangled_storage_impl::get_destructor() -> dtor_sym
 					return res && (itr == end);
 				};
 
-	auto found = std::find_if(storage.begin(), storage.end(), predicate);
+	auto found = std::find_if(storage_.begin(), storage_.end(), predicate);
 
 
-	if (found != storage.end())
+	if (found != storage_.end())
 		return found->mangled;
 	else
 		return "";
