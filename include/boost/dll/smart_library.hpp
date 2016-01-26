@@ -13,7 +13,6 @@
 
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/detail/get_mem_fn_type.hpp>
-#include <boost/dll/detail/mem_fn_cast.hpp>
 #include <boost/dll/detail/ctor_dtor.hpp>
 
 #include <boost/predef/compiler.h>
@@ -30,6 +29,9 @@
 namespace boost {
 namespace dll {
 namespace experimental {
+
+using boost::dll::detail::constructor;
+using boost::dll::detail::destructor;
 
 /*!
 * \brief This class is an extension of \ref shared_library, which allows to load C++ symbols.
@@ -268,11 +270,15 @@ public:
      *
      */
     template<typename Class, typename Func>
-    typename detail::get_mem_fn_type<Class, Func>::mem_fn
-            get_mem_fn(const std::string &name)
-    {
-        return detail::mem_fn_cast<typename detail::get_mem_fn_type<Class, Func>::mem_fn>
-                (_lib.get_void(_storage.get_mem_fn<Class, Func>(name)));
+    typename detail::get_mem_fn_type<Class, Func>::mem_fn get_mem_fn(const std::string &name) {
+        typename detail::get_mem_fn_type<Class, Func>::mem_fn res = 0;
+
+        // Not a very nice solution...
+        void* data = &_lib.get<unsigned char>(
+            _storage.get_mem_fn<Class, Func>(name)
+        );
+        std::memcpy(&res, &data, sizeof(res));
+        return res;
     }
 
     /*!

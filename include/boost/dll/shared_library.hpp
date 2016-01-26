@@ -364,25 +364,6 @@ public:
         return get<T>(symbol_name.c_str());
     }
 
-    /*! \overload T& get<void*>(const char* symbol_name) const
-     * overload needed by smart_library, that is giving a way to acces a pure void* pointer.
-     * @param symbol_name
-     * @return A pure void*
-     */
-    inline void* get_void(const std::string& symbol_name) const {
-        return get_impl(symbol_name.c_str());
-    }
-
-    /*! \overload T& get<void*>(const char* symbol_name) const
-     * overload needed by smart_library, that is giving a way to acces a pure void* pointer.
-     * @param symbol_name
-     * @return A pure void*
-     */
-    inline void* get_void(const char* symbol_name) const {
-        return get_impl(symbol_name);
-    }
-
-
     /*!
     * Returns a symbol (function or variable) from a shared library by alias name of the symbol.
     *
@@ -407,8 +388,7 @@ public:
         return *get<T*>(alias_name.c_str());
     }
 
-public:
-
+private:
     /// @cond
     // get_impl is required to reduce binary size: it does not depend on a template
     // parameter and will be instantiated only once.
