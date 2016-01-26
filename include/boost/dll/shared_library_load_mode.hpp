@@ -166,9 +166,9 @@ enum type {
     append_decorations
 #elif BOOST_OS_WINDOWS
     default_mode                          = 0,
-    dont_resolve_dll_references           = 0,//boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
-    load_ignore_code_authz_level          = 0,//boost::detail::winapi::LOAD_IGNORE_CODE_AUTHZ_LEVEL_,
-    load_with_altered_search_path         = 0,//boost::detail::winapi::LOAD_WITH_ALTERED_SEARCH_PATH_,
+    dont_resolve_dll_references           = boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
+    load_ignore_code_authz_level          = boost::detail::winapi::LOAD_IGNORE_CODE_AUTHZ_LEVEL_,
+    load_with_altered_search_path         = boost::detail::winapi::LOAD_WITH_ALTERED_SEARCH_PATH_,
     rtld_lazy                             = 0,
     rtld_now                              = 0,
     rtld_global                           = 0,
