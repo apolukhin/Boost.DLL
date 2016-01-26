@@ -1,9 +1,8 @@
-/*
- * msvc.hpp
- *
- *  Created on: 08.10.2015
- *      Author: Klemens
- */
+//  Copyright 2016 Klemens Morgenstern
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_DLL_DETAIL_DEMANGLING_MSVC_HPP_
 #define BOOST_DLL_DETAIL_DEMANGLING_MSVC_HPP_

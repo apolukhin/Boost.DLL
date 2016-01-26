@@ -1,9 +1,8 @@
-/*
- * itanium.hpp
- *
- *  Created on: 08.10.2015
- *      Author: Klemens
- */
+//  Copyright 2016 Klemens Morgenstern
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_DLL_DETAIL_DEMANGLING_ITANIUM_HPP_
 #define BOOST_DLL_DETAIL_DEMANGLING_ITANIUM_HPP_
@@ -83,13 +82,13 @@ public:
 namespace parser
 {
 
-	inline std::string const_rule_impl(true_type )  {return " const";};
-	inline std::string const_rule_impl(false_type)  {return "";};
+	inline std::string const_rule_impl(true_type )  {return " const";}
+	inline std::string const_rule_impl(false_type)  {return "";}
 	template<typename T>
 	auto const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
 
-	inline std::string volatile_rule_impl(true_type )  {return " volatile";};
-	inline std::string volatile_rule_impl(false_type)  {return "";};
+	inline std::string volatile_rule_impl(true_type )  {return " volatile";}
+	inline std::string volatile_rule_impl(false_type)  {return "";}
 	template<typename T>
 	auto volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
 

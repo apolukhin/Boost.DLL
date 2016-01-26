@@ -1,19 +1,16 @@
-//  demangle.hpp  --------------------------------------------------------------//
-
 //  Copyright 2015 Klemens Morgenstern
-
+//
 // This file provides a demangling for function names, i.e. entry points of a dll.
-
+//
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
-
-#include <boost/config.hpp>
-#include <string>
-#include <algorithm>
 
 #ifndef BOOST_DLL_DEMANGLE_SYMBOL_HPP_
 #define BOOST_DLL_DEMANGLE_SYMBOL_HPP_
 
+#include <boost/config.hpp>
+#include <string>
+#include <algorithm>
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
 #include <boost/detail/winapi/dbghelp.hpp>

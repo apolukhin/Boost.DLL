@@ -1,9 +1,8 @@
-/*
- * cpp_loader.hpp
- *
- *  Created on: 07.10.2015
- *      Author: Klemens
- */
+//  Copyright 2016 Klemens Morgenstern
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_DLL_DETAIL_MANGLE_STORAGE_BASE_HPP_
 #define BOOST_DLL_DETAIL_MANGLE_STORAGE_BASE_HPP_
@@ -14,9 +13,6 @@
 #include <boost/dll/detail/demangling/demangle_symbol.hpp>
 #include <boost/dll/library_info.hpp>
 #include <boost/type_index/stl_type_index.hpp>
-
-
-
 
 namespace boost { namespace dll { namespace detail {
 

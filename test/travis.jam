@@ -1,3 +1,0 @@
-using gcc :   : /usr/bin/g++ ;
-using gcc : 5.2.1 : /usr/bin/g++-5 ; 
-using clang ;

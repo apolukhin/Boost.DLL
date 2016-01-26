@@ -69,7 +69,8 @@ int test_main(int argc, char* argv[])
     BOOST_REQUIRE(scoped_fun != nullptr);
     {
     	auto &res = scoped_fun();
-    	BOOST_CHECK(res == 0xDEADBEEF);
+    	const int expected = 0xDEADBEEF;
+    	BOOST_CHECK(res == expected);
     }
 
     auto ovl1 = sm.get_function<void(int)>   ("overloaded");
