@@ -8,7 +8,7 @@
 #define INCLUDE_BOOST_DLL_SMART_LIBRARY_HPP_
 
 /// \file boost/dll/smart_library.hpp
-/// \warning Extreamely experimental! Will change in next version of Boost!
+/// \warning Extremely experimental! Will change in next version of Boost!
 /// \brief Contains the boost::dll::experimental::smart_library class for loading mangled symbols.
 
 #include <boost/dll/shared_library.hpp>
