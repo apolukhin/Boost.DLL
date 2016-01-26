@@ -115,7 +115,7 @@ public:
     * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     */
     explicit shared_library(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
-    	shared_library::load(lib_path, mode);
+        shared_library::load(lib_path, mode);
     }
 
     /*!
@@ -129,12 +129,12 @@ public:
     * \throw std::bad_alloc in case of insufficient memory.
     */
     shared_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
-    	shared_library::load(lib_path, mode, ec);
+        shared_library::load(lib_path, mode, ec);
     }
 
     //! \overload shared_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
     shared_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
-    	shared_library::load(lib_path, mode, ec);
+        shared_library::load(lib_path, mode, ec);
     }
 
     /*!

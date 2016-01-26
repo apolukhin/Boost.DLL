@@ -23,7 +23,7 @@
 
 struct override_class
 {
-	int arr[32];
+    int arr[32];
 };
 
 
@@ -68,9 +68,9 @@ int test_main(int argc, char* argv[])
 
     BOOST_REQUIRE(scoped_fun != nullptr);
     {
-    	auto &res = scoped_fun();
-    	const int expected = 0xDEADBEEF;
-    	BOOST_CHECK(res == expected);
+        auto &res = scoped_fun();
+        const int expected = 0xDEADBEEF;
+        BOOST_CHECK(res == expected);
     }
 
     auto ovl1 = sm.get_function<void(int)>   ("overloaded");
@@ -87,34 +87,34 @@ int test_main(int argc, char* argv[])
 
 
 
-	auto var1 = sm.get_function<void(boost::variant<int, double> &)>("use_variant");
-	auto var2 = sm.get_function<void(boost::variant<double, int> &)>("use_variant");
+    auto var1 = sm.get_function<void(boost::variant<int, double> &)>("use_variant");
+    auto var2 = sm.get_function<void(boost::variant<double, int> &)>("use_variant");
 
-	BOOST_REQUIRE(var1 != nullptr);
-	BOOST_REQUIRE(var2 != nullptr);
-	BOOST_CHECK(reinterpret_cast<void*>(var1) != reinterpret_cast<void*>(var2));
+    BOOST_REQUIRE(var1 != nullptr);
+    BOOST_REQUIRE(var2 != nullptr);
+    BOOST_CHECK(reinterpret_cast<void*>(var1) != reinterpret_cast<void*>(var2));
 
     {
-    	 boost::variant<int, double> v1 = 232.22;
-    	 boost::variant<double, int> v2 = -1;
+         boost::variant<int, double> v1 = 232.22;
+         boost::variant<double, int> v2 = -1;
 
-    	 var1(v1);
-    	 var2(v2);
+         var1(v1);
+         var2(v2);
 
-    	 struct : boost::static_visitor<void>
-    	 {
-    		 void operator()(double) {BOOST_CHECK(false);}
-    		 void operator()(int i) {BOOST_CHECK(i == 42);}
-    	 } vis1;
+         struct : boost::static_visitor<void>
+         {
+             void operator()(double) {BOOST_CHECK(false);}
+             void operator()(int i) {BOOST_CHECK(i == 42);}
+         } vis1;
 
-    	 struct : boost::static_visitor<void>
-    	 {
-    		 void operator()(double d) {BOOST_CHECK(d == 3.124);}
-    		 void operator()(int ) {BOOST_CHECK(false);}
-    	 } vis2;
+         struct : boost::static_visitor<void>
+         {
+             void operator()(double d) {BOOST_CHECK(d == 3.124);}
+             void operator()(int ) {BOOST_CHECK(false);}
+         } vis2;
 
-    	 boost::apply_visitor(vis1, v1);
-    	 boost::apply_visitor(vis2, v2);
+         boost::apply_visitor(vis1, v1);
+         boost::apply_visitor(vis2, v2);
 
     }
 
@@ -146,22 +146,22 @@ int test_main(int argc, char* argv[])
     auto set = sm.get_mem_fn<override_class, void(int)>("set");
 
     {
-    	using namespace std;
-    	try
-    	{
-    		sm.get_mem_fn<override_class, int()>("get");
-    		BOOST_REQUIRE(false);
-    	}
-    	catch(boost::system::system_error &) {}
+        using namespace std;
+        try
+        {
+            sm.get_mem_fn<override_class, int()>("get");
+            BOOST_REQUIRE(false);
+        }
+        catch(boost::system::system_error &) {}
     }
     auto get = sm.get_mem_fn<const override_class, int()>("get");
 
     BOOST_REQUIRE(get != nullptr);
     BOOST_REQUIRE(set != nullptr);
 
-    auto func_dd  = sm.get_mem_fn<override_class, 				 double(double, double)>("func");
-    auto func_ii  = sm.get_mem_fn<override_class, 				 int(int, int)>			("func");
-    auto func_iiv = sm.get_mem_fn<volatile override_class, 		 int(int, int)>			("func");
+    auto func_dd  = sm.get_mem_fn<override_class,                  double(double, double)>("func");
+    auto func_ii  = sm.get_mem_fn<override_class,                  int(int, int)>            ("func");
+    auto func_iiv = sm.get_mem_fn<volatile override_class,          int(int, int)>            ("func");
     auto func_ddc = sm.get_mem_fn<const volatile override_class, double(double, double)>("func");
 
 
@@ -176,23 +176,23 @@ int test_main(int argc, char* argv[])
 
     if (ctor_v.has_allocating())
     {
-    	//allocate
-    	auto p = ctor_v.allocating();
+        //allocate
+        auto p = ctor_v.allocating();
 
-    	//assert it works
-    	auto val = (p->*get)();
-    	BOOST_CHECK(val == 123);
+        //assert it works
+        auto val = (p->*get)();
+        BOOST_CHECK(val == 123);
 
-    	//deallocate
-    	dtor.deleting(p);
+        //deallocate
+        dtor.deleting(p);
 
-    	//now i cannot assert that it deletes, since it would crash.
+        //now i cannot assert that it deletes, since it would crash.
     }
     //ok, now load the ctor/dtor
     override_class oc;
 
     for (auto & i : oc.arr)
-   	i = 0;
+       i = 0;
 
     BOOST_CHECK((oc.*get)() == 0);
 

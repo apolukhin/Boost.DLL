@@ -22,19 +22,19 @@ namespace detail
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
 template<typename T> T mem_fn_cast(void* p)
 {
-	T out;
-	std::memcpy(&out, &p, sizeof(void*));
-	return out; //aggressive_ptr_cast<T>(p);
+    T out;
+    std::memcpy(&out, &p, sizeof(void*));
+    return out; //aggressive_ptr_cast<T>(p);
 }
 
 #else
 template<typename T> T mem_fn_cast(void* p)
 {
-	T out;
-	std::memset(&out, 0, sizeof(T));
-	std::memcpy(&out, &p, sizeof(void*));
+    T out;
+    std::memset(&out, 0, sizeof(T));
+    std::memcpy(&out, &p, sizeof(void*));
 
-	return out;
+    return out;
 }
 
 #endif

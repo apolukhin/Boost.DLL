@@ -23,57 +23,57 @@ namespace boost { namespace dll { namespace detail {
 
 class mangled_storage_impl : public mangled_storage_base
 {
-	template<typename T>
-	struct dummy {};
+    template<typename T>
+    struct dummy {};
 
-	template<typename Return, typename ...Args>
-	std::vector<std::string> get_func_params(dummy<Return(Args...)>)
-	{
-		return {get_name<Args>()...};
-	}
-	template<typename Return, typename ...Args>
-	std::string get_return_type(dummy<Return(Args...)>)
-	{
-		return get_name<Return>();
-	}
+    template<typename Return, typename ...Args>
+    std::vector<std::string> get_func_params(dummy<Return(Args...)>)
+    {
+        return {get_name<Args>()...};
+    }
+    template<typename Return, typename ...Args>
+    std::string get_return_type(dummy<Return(Args...)>)
+    {
+        return get_name<Return>();
+    }
 public:
-	using mangled_storage_base::mangled_storage_base;
-	struct ctor_sym
-	{
-		std::string C0;
-		std::string C1;
-		std::string C2;
-		bool empty() const
-		{
-			return C0.empty() && C1.empty() && C2.empty();
-		}
-	};
+    using mangled_storage_base::mangled_storage_base;
+    struct ctor_sym
+    {
+        std::string C0;
+        std::string C1;
+        std::string C2;
+        bool empty() const
+        {
+            return C0.empty() && C1.empty() && C2.empty();
+        }
+    };
 
-	struct dtor_sym
-	{
-		std::string D0;
-		std::string D1;
-		std::string D2;
-		bool empty() const
-		{
-			return D0.empty() && D1.empty() && D2.empty();
-		}
-	};
+    struct dtor_sym
+    {
+        std::string D0;
+        std::string D1;
+        std::string D2;
+        bool empty() const
+        {
+            return D0.empty() && D1.empty() && D2.empty();
+        }
+    };
 
-	template<typename T>
-	std::string get_variable(const std::string &name);
+    template<typename T>
+    std::string get_variable(const std::string &name);
 
-	template<typename Func>
-	std::string get_function(const std::string &name);
+    template<typename Func>
+    std::string get_function(const std::string &name);
 
-	template<typename Class, typename Func>
-	std::string get_mem_fn(const std::string &name);
+    template<typename Class, typename Func>
+    std::string get_mem_fn(const std::string &name);
 
-	template<typename Signature>
-	ctor_sym get_constructor();
+    template<typename Signature>
+    ctor_sym get_constructor();
 
-	template<typename Class>
-	dtor_sym get_destructor();
+    template<typename Class>
+    dtor_sym get_destructor();
 
 };
 
@@ -82,107 +82,107 @@ public:
 namespace parser
 {
 
-	inline std::string const_rule_impl(true_type )  {return " const";}
-	inline std::string const_rule_impl(false_type)  {return "";}
-	template<typename T>
-	auto const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
+    inline std::string const_rule_impl(true_type )  {return " const";}
+    inline std::string const_rule_impl(false_type)  {return "";}
+    template<typename T>
+    auto const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
 
-	inline std::string volatile_rule_impl(true_type )  {return " volatile";}
-	inline std::string volatile_rule_impl(false_type)  {return "";}
-	template<typename T>
-	auto volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
+    inline std::string volatile_rule_impl(true_type )  {return " volatile";}
+    inline std::string volatile_rule_impl(false_type)  {return "";}
+    template<typename T>
+    auto volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
 
-	inline std::string reference_rule_impl(false_type, false_type) {return "";}
-	inline std::string reference_rule_impl(true_type,  false_type) {return "&" ;}
-	inline std::string reference_rule_impl(false_type, true_type ) {return "&&";}
-
-
-	template<typename T>
-	auto reference_rule() {using t_l = is_lvalue_reference<T>; using t_r = is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
-
-	//it takes a string, because it may be overloaded.
-	template<typename T>
-	auto type_rule(const std::string & type_name)
-	{
-		using namespace std;
-
-		return  type_name +
-				const_rule<T>() +
-				volatile_rule<T>() +
-				reference_rule<T>();
-	}
+    inline std::string reference_rule_impl(false_type, false_type) {return "";}
+    inline std::string reference_rule_impl(true_type,  false_type) {return "&" ;}
+    inline std::string reference_rule_impl(false_type, true_type ) {return "&&";}
 
 
-	template<typename Return, typename Arg>
-	std::string arg_list(const mangled_storage_impl & ms, Return (*)(Arg))
-	{
-		using namespace std;
-		auto str = ms.get_name<Arg>();
-		return type_rule<Arg>(str);
-	}
+    template<typename T>
+    auto reference_rule() {using t_l = is_lvalue_reference<T>; using t_r = is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
 
-	template<typename Return, typename First, typename Second, typename ...Args>
-	std::string arg_list(const mangled_storage_impl & ms, Return (*)(First, Second, Args...))
-	{
-		auto st = ms.get_name<First>();
+    //it takes a string, because it may be overloaded.
+    template<typename T>
+    auto type_rule(const std::string & type_name)
+    {
+        using namespace std;
 
-		using next_type = Return (*)(Second, Args...);
-		return type_rule<First>(st) + ", " + arg_list(ms, next_type());
-	}
+        return  type_name +
+                const_rule<T>() +
+                volatile_rule<T>() +
+                reference_rule<T>();
+    }
 
-	template<typename Return>
-	std::string arg_list(const mangled_storage_impl &, Return (*)())
-	{
-		return "";
-	}
+
+    template<typename Return, typename Arg>
+    std::string arg_list(const mangled_storage_impl & ms, Return (*)(Arg))
+    {
+        using namespace std;
+        auto str = ms.get_name<Arg>();
+        return type_rule<Arg>(str);
+    }
+
+    template<typename Return, typename First, typename Second, typename ...Args>
+    std::string arg_list(const mangled_storage_impl & ms, Return (*)(First, Second, Args...))
+    {
+        auto st = ms.get_name<First>();
+
+        using next_type = Return (*)(Second, Args...);
+        return type_rule<First>(st) + ", " + arg_list(ms, next_type());
+    }
+
+    template<typename Return>
+    std::string arg_list(const mangled_storage_impl &, Return (*)())
+    {
+        return "";
+    }
 }
 
 
 
 template<typename T> std::string mangled_storage_impl::get_variable(const std::string &name)
 {
-	auto found = std::find_if(storage_.begin(), storage_.end(),
-			[&](const entry& e) {return e.demangled == name;});
+    auto found = std::find_if(storage_.begin(), storage_.end(),
+            [&](const entry& e) {return e.demangled == name;});
 
-	if (found != storage_.end())
-		return found->mangled;
-	else
-		return "";
+    if (found != storage_.end())
+        return found->mangled;
+    else
+        return "";
 }
 
 template<typename Func> std::string mangled_storage_impl::get_function(const std::string &name)
 {
-	using func_type = Func*;
+    using func_type = Func*;
 
-	auto matcher = name + '(' + parser::arg_list(*this, func_type()) + ')';
+    auto matcher = name + '(' + parser::arg_list(*this, func_type()) + ')';
 
-	auto found = std::find_if(storage_.begin(), storage_.end(), [&](const entry& e) {return e.demangled == matcher;});
-	if (found != storage_.end())
-		return found->mangled;
-	else
-		return "";
+    auto found = std::find_if(storage_.begin(), storage_.end(), [&](const entry& e) {return e.demangled == matcher;});
+    if (found != storage_.end())
+        return found->mangled;
+    else
+        return "";
 
 }
 
 template<typename Class, typename Func>
 std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 {
-	using namespace parser;
+    using namespace parser;
 
-	using func_type = Func*;
+    using func_type = Func*;
 
-	std::string cname = get_name<Class>();
+    std::string cname = get_name<Class>();
 
-	auto matcher = cname + "::" + name +
-			 '(' + parser::arg_list(*this, func_type()) + ')'
-			 + const_rule<Class>() + volatile_rule<Class>();
+    auto matcher = cname + "::" + name +
+             '(' + parser::arg_list(*this, func_type()) + ')'
+             + const_rule<Class>() + volatile_rule<Class>();
 
-	auto found = std::find_if(storage_.begin(), storage_.end(), [&](const entry& e) {return e.demangled == matcher;});
+    auto found = std::find_if(storage_.begin(), storage_.end(), [&](const entry& e) {return e.demangled == matcher;});
 
-	if (found != storage_.end())
-		return found->mangled;
-	else
-		return "";
+    if (found != storage_.end())
+        return found->mangled;
+    else
+        return "";
 
 }
 
@@ -190,96 +190,96 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 template<typename Signature>
 auto mangled_storage_impl::get_constructor() -> ctor_sym
 {
-	using namespace parser;
+    using namespace parser;
 
-	using func_type = Signature*;
+    using func_type = Signature*;
 
-	std::string ctor_name; // = class_name + "::" + name;
-	std::string unscoped_cname; //the unscoped class-name
-	{
-		auto class_name = get_return_type(dummy<Signature>());
-		auto pos = class_name.rfind("::");
-		if (pos == std::string::npos)
-		{
-			ctor_name = class_name+ "::" +class_name ;
-			unscoped_cname = class_name;
-		}
-		else
-		{
-			unscoped_cname = class_name.substr(pos+2) ;
-			ctor_name = class_name+ "::" + unscoped_cname;
-		}
-	}
+    std::string ctor_name; // = class_name + "::" + name;
+    std::string unscoped_cname; //the unscoped class-name
+    {
+        auto class_name = get_return_type(dummy<Signature>());
+        auto pos = class_name.rfind("::");
+        if (pos == std::string::npos)
+        {
+            ctor_name = class_name+ "::" +class_name ;
+            unscoped_cname = class_name;
+        }
+        else
+        {
+            unscoped_cname = class_name.substr(pos+2) ;
+            ctor_name = class_name+ "::" + unscoped_cname;
+        }
+    }
 
-	auto matcher =
-				ctor_name + '(' + parser::arg_list(*this, func_type()) + ')';
+    auto matcher =
+                ctor_name + '(' + parser::arg_list(*this, func_type()) + ')';
 
 
-	std::vector<entry> findings;
-	std::copy_if(storage_.begin(), storage_.end(),
-			std::back_inserter(findings), [&](const entry& e) {return e.demangled == matcher;});
+    std::vector<entry> findings;
+    std::copy_if(storage_.begin(), storage_.end(),
+            std::back_inserter(findings), [&](const entry& e) {return e.demangled == matcher;});
 
-	ctor_sym ct;
+    ctor_sym ct;
 
-	for (auto & e : findings)
-	{
-		if (e.mangled.find(unscoped_cname +"C0E") != std::string::npos)
-		{
-			ct.C0 = e.mangled;
-		}
-		else if (e.mangled.find(unscoped_cname +"C1E") != std::string::npos)
-		{
-			ct.C1 = e.mangled;
-		}
-		else if (e.mangled.find(unscoped_cname +"C2E") != std::string::npos)
-		{
-			ct.C2 = e.mangled;
-		}
-	}
-	return ct;
+    for (auto & e : findings)
+    {
+        if (e.mangled.find(unscoped_cname +"C0E") != std::string::npos)
+        {
+            ct.C0 = e.mangled;
+        }
+        else if (e.mangled.find(unscoped_cname +"C1E") != std::string::npos)
+        {
+            ct.C1 = e.mangled;
+        }
+        else if (e.mangled.find(unscoped_cname +"C2E") != std::string::npos)
+        {
+            ct.C2 = e.mangled;
+        }
+    }
+    return ct;
 }
 
 template<typename Class>
 auto mangled_storage_impl::get_destructor() -> dtor_sym
 {
-	std::string dtor_name; // = class_name + "::" + name;
-	std::string unscoped_cname; //the unscoped class-name
-	{
-		auto class_name = get_name<Class>();
-		auto pos = class_name.rfind("::");
-		if (pos == std::string::npos)
-		{
-			dtor_name = class_name+ "::~" + class_name  + "()";
-			unscoped_cname = class_name;
-		}
-		else
-		{
-			unscoped_cname = class_name.substr(pos+2) ;
-			dtor_name = class_name+ "::~" + unscoped_cname + "()";
-		}
-	}
+    std::string dtor_name; // = class_name + "::" + name;
+    std::string unscoped_cname; //the unscoped class-name
+    {
+        auto class_name = get_name<Class>();
+        auto pos = class_name.rfind("::");
+        if (pos == std::string::npos)
+        {
+            dtor_name = class_name+ "::~" + class_name  + "()";
+            unscoped_cname = class_name;
+        }
+        else
+        {
+            unscoped_cname = class_name.substr(pos+2) ;
+            dtor_name = class_name+ "::~" + unscoped_cname + "()";
+        }
+    }
 
-	auto d0 = unscoped_cname + "D0Ev";
-	auto d1 = unscoped_cname + "D1Ev";
-	auto d2 = unscoped_cname + "D2Ev";
+    auto d0 = unscoped_cname + "D0Ev";
+    auto d1 = unscoped_cname + "D1Ev";
+    auto d2 = unscoped_cname + "D2Ev";
 
-	dtor_sym dt;
-	//this is so simple, i don#t need a predicate
-	for (auto & s : storage_)
-	{
-		//alright, name fits
-		if (s.demangled == dtor_name)
-		{
-			if (s.mangled.find(d0) != std::string::npos)
-				dt.D0 = s.mangled;
-			else if (s.mangled.find(d1) != std::string::npos)
-				dt.D1 = s.mangled;
-			else if (s.mangled.find(d2) != std::string::npos)
-				dt.D2 = s.mangled;
+    dtor_sym dt;
+    //this is so simple, i don#t need a predicate
+    for (auto & s : storage_)
+    {
+        //alright, name fits
+        if (s.demangled == dtor_name)
+        {
+            if (s.mangled.find(d0) != std::string::npos)
+                dt.D0 = s.mangled;
+            else if (s.mangled.find(d1) != std::string::npos)
+                dt.D1 = s.mangled;
+            else if (s.mangled.find(d2) != std::string::npos)
+                dt.D2 = s.mangled;
 
-		}
-	}
-	return dt;
+        }
+    }
+    return dt;
 
 }
 

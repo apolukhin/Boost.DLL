@@ -40,7 +40,7 @@ int test_main(int argc, char* argv[])
 
     for (auto &s : ms.get_storage())
     {
-    	std::cout << s.demangled << std::endl;
+        std::cout << s.demangled << std::endl;
     }
 
     std::string v;
@@ -53,63 +53,63 @@ int test_main(int argc, char* argv[])
     BOOST_CHECK(v.empty());
 
 
-	v = ms.get_variable<const double>("unscoped_c_var");
+    v = ms.get_variable<const double>("unscoped_c_var");
 
-	BOOST_CHECK(!v.empty()); //check if a symbols was found.
+    BOOST_CHECK(!v.empty()); //check if a symbols was found.
 
-	v = ms.get_variable<int>("unscoped_var");
+    v = ms.get_variable<int>("unscoped_var");
 
-	BOOST_CHECK(!v.empty()); //check if a symbols was found.
-
-
-	v = ms.get_function<const int &()>("some_space::scoped_fun");
-
-	BOOST_CHECK(!v.empty());
-	BOOST_CHECK(v != "some_space::scoped_fun");
+    BOOST_CHECK(!v.empty()); //check if a symbols was found.
 
 
-	auto v1 = ms.get_function<void(const double)>("overloaded");
-	auto v2 = ms.get_function<void(const volatile int)>("overloaded");
-	BOOST_CHECK(!v1.empty());
-	BOOST_CHECK(!v2.empty());
-	BOOST_CHECK(v1 != v2);
+    v = ms.get_function<const int &()>("some_space::scoped_fun");
 
-	v = ms.get_variable<int>("some_space::some_class::value");
-	BOOST_CHECK(!v.empty());
-	BOOST_CHECK(v != "some_space::some_class::value");
-
-	v = ms.get_function<void(const int &)>("some_space::some_class::set_value");
-
-	BOOST_CHECK(!v.empty());
-	BOOST_CHECK(v != "some_space::some_class::set_value");
+    BOOST_CHECK(!v.empty());
+    BOOST_CHECK(v != "some_space::scoped_fun");
 
 
+    auto v1 = ms.get_function<void(const double)>("overloaded");
+    auto v2 = ms.get_function<void(const volatile int)>("overloaded");
+    BOOST_CHECK(!v1.empty());
+    BOOST_CHECK(!v2.empty());
+    BOOST_CHECK(v1 != v2);
 
-	ms.add_alias<override_class>("some_space::some_class");
+    v = ms.get_variable<int>("some_space::some_class::value");
+    BOOST_CHECK(!v.empty());
+    BOOST_CHECK(v != "some_space::some_class::value");
 
-	auto ctor1 = ms.get_constructor<override_class()>();
-	BOOST_CHECK(!ctor1.empty());
+    v = ms.get_function<void(const int &)>("some_space::some_class::set_value");
 
-	auto ctor2 = ms.get_constructor<override_class(int)>();
-	BOOST_CHECK(!ctor2.empty());
-
-
-	v = ms.get_mem_fn<override_class, double(double, double)>("func");
-	BOOST_CHECK(!v.empty());
-
-	v = ms.get_mem_fn<override_class, int(int, int)>("func");
-	BOOST_CHECK(!v.empty());
+    BOOST_CHECK(!v.empty());
+    BOOST_CHECK(v != "some_space::some_class::set_value");
 
 
-	auto dtor = ms.get_destructor<override_class>();
 
-	BOOST_CHECK(!dtor.empty());
+    ms.add_alias<override_class>("some_space::some_class");
 
-	auto var1 = ms.get_function<void(boost::variant<int, double> &)>("use_variant");
-	auto var2 = ms.get_function<void(boost::variant<double, int> &)>("use_variant");
+    auto ctor1 = ms.get_constructor<override_class()>();
+    BOOST_CHECK(!ctor1.empty());
 
-	BOOST_CHECK(!var1.empty());
-	BOOST_CHECK(!var2.empty());
+    auto ctor2 = ms.get_constructor<override_class(int)>();
+    BOOST_CHECK(!ctor2.empty());
+
+
+    v = ms.get_mem_fn<override_class, double(double, double)>("func");
+    BOOST_CHECK(!v.empty());
+
+    v = ms.get_mem_fn<override_class, int(int, int)>("func");
+    BOOST_CHECK(!v.empty());
+
+
+    auto dtor = ms.get_destructor<override_class>();
+
+    BOOST_CHECK(!dtor.empty());
+
+    auto var1 = ms.get_function<void(boost::variant<int, double> &)>("use_variant");
+    auto var2 = ms.get_function<void(boost::variant<double, int> &)>("use_variant");
+
+    BOOST_CHECK(!var1.empty());
+    BOOST_CHECK(!var2.empty());
 
 
     return 0;
