@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
     BOOST_TEST(!var2.empty());
 
 
-    return 0;
+    return boost::report_errors();
 }
 
 #else

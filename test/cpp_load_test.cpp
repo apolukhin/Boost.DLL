@@ -29,37 +29,25 @@ int main(int argc, char* argv[])
 {
     using namespace boost::dll;
     using namespace boost::dll::experimental;
-    boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);;
+    boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
 
     BOOST_TEST(!pt.empty());
-
-
     std::cout << "Library: " << pt << std::endl;
 
     smart_library sm(pt);
 
-
-
-    auto &unscoped_var = sm.get_variable<int>("unscoped_var");
-
-
-    BOOST_TEST(&unscoped_var != nullptr);
+    auto& unscoped_var = sm.get_variable<int>("unscoped_var");
     BOOST_TEST(unscoped_var == 42);
 
-    auto & unscoped_c_var = sm.get_variable<const double>("unscoped_c_var");
-
-    BOOST_TEST(&unscoped_c_var != nullptr);
+    auto& unscoped_c_var = sm.get_variable<const double>("unscoped_c_var");
     BOOST_TEST(unscoped_c_var == 1.234);
 
 
-    auto & sp_variable = sm.get_variable<double>("some_space::variable");
-
-    BOOST_TEST(&sp_variable != nullptr);
+    auto& sp_variable = sm.get_variable<double>("some_space::variable");
     BOOST_TEST(sp_variable == 0.2);
 
 
     auto scoped_fun = sm.get_function<const int&()>("some_space::scoped_fun");
-
     BOOST_TEST(scoped_fun != nullptr);
     {
         auto &res = scoped_fun();
@@ -116,15 +104,11 @@ int main(int argc, char* argv[])
 
     //first we import and test the global variables
 
-    auto &father_val = sm.get_variable<int>("some_space::father_value");
-    auto &static_val = sm.get_variable<int>("some_space::some_class::value");
-
-
-    BOOST_TEST(&father_val != nullptr);
-    BOOST_TEST(&static_val != nullptr);
-
+    auto& father_val = sm.get_variable<int>("some_space::father_value");
+    auto& static_val = sm.get_variable<int>("some_space::some_class::value");
     BOOST_TEST(father_val == 12);
-    BOOST_TEST(static_val == -1);using namespace std;
+    BOOST_TEST(static_val == -1);
+
     //now get the static function.
     auto set_value = sm.get_function<void(const int &)>("some_space::some_class::set_value");
     BOOST_TEST(set_value != nullptr);
@@ -139,15 +123,10 @@ int main(int argc, char* argv[])
 
     auto set = sm.get_mem_fn<override_class, void(int)>("set");
 
-    {
-        using namespace std;
-        try
-        {
-            sm.get_mem_fn<override_class, int()>("get");
-            BOOST_TEST(false);
-        }
-        catch(boost::system::system_error &) {}
-    }
+    try {
+        sm.get_mem_fn<override_class, int()>("get");
+        BOOST_TEST(false);
+    } catch(boost::system::system_error &) {}
     auto get = sm.get_mem_fn<const override_class, int()>("get");
 
     BOOST_TEST(get != nullptr);
@@ -205,7 +184,7 @@ int main(int argc, char* argv[])
 
     dtor.standard(&oc);
 
-    return 0;
+    return boost::report_errors();
 }
 
 #else

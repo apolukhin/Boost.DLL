@@ -34,9 +34,9 @@ struct constructor<Class(Args...)> {
     typedef Class*(allocating_t)(Args...);
 
     //! The standard, i.e. not allocating constructor.
-    const standard_t* standard;
+    standard_t* standard;
     //! The allocating constructor.
-    const allocating_t* allocating;
+    allocating_t* allocating;
 
     //! True if a allocating constructor could be loaded.
     bool has_allocating() const { return allocating != nullptr; }
@@ -47,7 +47,7 @@ struct constructor<Class(Args...)> {
     constructor() = delete;
     constructor(const constructor &) = default;
 
-    explicit constructor(const standard_t* standard, const allocating_t* allocating = nullptr)
+    explicit constructor(standard_t* standard, allocating_t* allocating = nullptr)
         : standard(standard)
         , allocating(allocating)
     {}
@@ -61,9 +61,9 @@ struct destructor {
     typedef void(type)(Class* const);
 #endif
     //! The standard, i.e. not deleting destructor.
-    const type* standard;
+    type* standard;
     //! The deleting destructor.
-    const type* deleting;
+    type* deleting;
 
     //! True if a deleting destructor could be loaded.
     bool has_deleting() const { return deleting != nullptr; }
