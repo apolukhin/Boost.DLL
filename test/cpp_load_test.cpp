@@ -12,10 +12,8 @@
 
 #include "../example/b2_workarounds.hpp"
 
-
-#include <boost/dll.hpp>
 #include <boost/dll/smart_library.hpp>
-#include <boost/test/minimal.hpp>
+#include <boost/core/lightweight_test.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
 
@@ -23,97 +21,82 @@
 
 struct override_class
 {
-	int arr[32];
+    int arr[32];
 };
 
 
-int test_main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     using namespace boost::dll;
     using namespace boost::dll::experimental;
-;
+    boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
 
-    BOOST_REQUIRE(argc >= 2);
-
-    boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);;
-
-    BOOST_REQUIRE(!pt.empty());
-
-
+    BOOST_TEST(!pt.empty());
     std::cout << "Library: " << pt << std::endl;
 
     smart_library sm(pt);
 
+    auto& unscoped_var = sm.get_variable<int>("unscoped_var");
+    BOOST_TEST(unscoped_var == 42);
+
+    auto& unscoped_c_var = sm.get_variable<const double>("unscoped_c_var");
+    BOOST_TEST(unscoped_c_var == 1.234);
 
 
-    auto &unscoped_var = sm.get_variable<int>("unscoped_var");
-
-
-    BOOST_REQUIRE(&unscoped_var != nullptr);
-    BOOST_CHECK(unscoped_var == 42);
-
-    auto & unscoped_c_var = sm.get_variable<const double>("unscoped_c_var");
-
-    BOOST_REQUIRE(&unscoped_c_var != nullptr);
-    BOOST_CHECK(unscoped_c_var == 1.234);
-
-
-    auto & sp_variable = sm.get_variable<double>("some_space::variable");
-
-    BOOST_REQUIRE(&sp_variable != nullptr);
-    BOOST_CHECK(sp_variable == 0.2);
+    auto& sp_variable = sm.get_variable<double>("some_space::variable");
+    BOOST_TEST(sp_variable == 0.2);
 
 
     auto scoped_fun = sm.get_function<const int&()>("some_space::scoped_fun");
-
-    BOOST_REQUIRE(scoped_fun != nullptr);
+    BOOST_TEST(scoped_fun != nullptr);
     {
-    	auto &res = scoped_fun();
-    	BOOST_CHECK(res == 0xDEADBEEF);
+        auto &res = scoped_fun();
+        const int expected = 0xDEADBEEF;
+        BOOST_TEST(res == expected);
     }
 
     auto ovl1 = sm.get_function<void(int)>   ("overloaded");
     auto ovl2 = sm.get_function<void(double)>("overloaded");
 
-    BOOST_REQUIRE(ovl1 != nullptr);
-    BOOST_REQUIRE(ovl2 != nullptr);
-    BOOST_CHECK(reinterpret_cast<void*>(ovl1) != reinterpret_cast<void*>(ovl2));
+    BOOST_TEST(ovl1 != nullptr);
+    BOOST_TEST(ovl2 != nullptr);
+    BOOST_TEST(reinterpret_cast<void*>(ovl1) != reinterpret_cast<void*>(ovl2));
 
     ovl1(12);
-    BOOST_CHECK(unscoped_var == 12);
+    BOOST_TEST(unscoped_var == 12);
     ovl2(5.0);
-    BOOST_CHECK(sp_variable == 5.0);
+    BOOST_TEST(sp_variable == 5.0);
 
 
 
-	auto var1 = sm.get_function<void(boost::variant<int, double> &)>("use_variant");
-	auto var2 = sm.get_function<void(boost::variant<double, int> &)>("use_variant");
+    auto var1 = sm.get_function<void(boost::variant<int, double> &)>("use_variant");
+    auto var2 = sm.get_function<void(boost::variant<double, int> &)>("use_variant");
 
-	BOOST_REQUIRE(var1 != nullptr);
-	BOOST_REQUIRE(var2 != nullptr);
-	BOOST_CHECK(reinterpret_cast<void*>(var1) != reinterpret_cast<void*>(var2));
+    BOOST_TEST(var1 != nullptr);
+    BOOST_TEST(var2 != nullptr);
+    BOOST_TEST(reinterpret_cast<void*>(var1) != reinterpret_cast<void*>(var2));
 
     {
-    	 boost::variant<int, double> v1 = 232.22;
-    	 boost::variant<double, int> v2 = -1;
+         boost::variant<int, double> v1 = 232.22;
+         boost::variant<double, int> v2 = -1;
 
-    	 var1(v1);
-    	 var2(v2);
+         var1(v1);
+         var2(v2);
 
-    	 struct : boost::static_visitor<void>
-    	 {
-    		 void operator()(double) {BOOST_CHECK(false);}
-    		 void operator()(int i) {BOOST_CHECK(i == 42);}
-    	 } vis1;
+         struct : boost::static_visitor<void>
+         {
+             void operator()(double) {BOOST_TEST(false);}
+             void operator()(int i) {BOOST_TEST(i == 42);}
+         } vis1;
 
-    	 struct : boost::static_visitor<void>
-    	 {
-    		 void operator()(double d) {BOOST_CHECK(d == 3.124);}
-    		 void operator()(int ) {BOOST_CHECK(false);}
-    	 } vis2;
+         struct : boost::static_visitor<void>
+         {
+             void operator()(double d) {BOOST_TEST(d == 3.124);}
+             void operator()(int ) {BOOST_TEST(false);}
+         } vis2;
 
-    	 boost::apply_visitor(vis1, v1);
-    	 boost::apply_visitor(vis2, v2);
+         boost::apply_visitor(vis1, v1);
+         boost::apply_visitor(vis2, v2);
 
     }
 
@@ -121,21 +104,17 @@ int test_main(int argc, char* argv[])
 
     //first we import and test the global variables
 
-    auto &father_val = sm.get_variable<int>("some_space::father_value");
-    auto &static_val = sm.get_variable<int>("some_space::some_class::value");
+    auto& father_val = sm.get_variable<int>("some_space::father_value");
+    auto& static_val = sm.get_variable<int>("some_space::some_class::value");
+    BOOST_TEST(father_val == 12);
+    BOOST_TEST(static_val == -1);
 
-
-    BOOST_REQUIRE(&father_val != nullptr);
-    BOOST_REQUIRE(&static_val != nullptr);
-
-    BOOST_CHECK(father_val == 12);
-    BOOST_CHECK(static_val == -1);using namespace std;
     //now get the static function.
     auto set_value = sm.get_function<void(const int &)>("some_space::some_class::set_value");
-    BOOST_REQUIRE(set_value != nullptr);
+    BOOST_TEST(set_value != nullptr);
 
     set_value(42);
-    BOOST_CHECK(static_val == 42); //alright, static method works.
+    BOOST_TEST(static_val == 42); //alright, static method works.
 
 
     //alright, now import the class members
@@ -144,28 +123,23 @@ int test_main(int argc, char* argv[])
 
     auto set = sm.get_mem_fn<override_class, void(int)>("set");
 
-    {
-    	using namespace std;
-    	try
-    	{
-    		sm.get_mem_fn<override_class, int()>("get");
-    		BOOST_REQUIRE(false);
-    	}
-    	catch(boost::system::system_error &) {}
-    }
+    try {
+        sm.get_mem_fn<override_class, int()>("get");
+        BOOST_TEST(false);
+    } catch(boost::system::system_error &) {}
     auto get = sm.get_mem_fn<const override_class, int()>("get");
 
-    BOOST_REQUIRE(get != nullptr);
-    BOOST_REQUIRE(set != nullptr);
+    BOOST_TEST(get != nullptr);
+    BOOST_TEST(set != nullptr);
 
-    auto func_dd  = sm.get_mem_fn<override_class, 				 double(double, double)>("func");
-    auto func_ii  = sm.get_mem_fn<override_class, 				 int(int, int)>			("func");
-    auto func_iiv = sm.get_mem_fn<volatile override_class, 		 int(int, int)>			("func");
+    auto func_dd  = sm.get_mem_fn<override_class,                  double(double, double)>("func");
+    auto func_ii  = sm.get_mem_fn<override_class,                  int(int, int)>            ("func");
+    auto func_iiv = sm.get_mem_fn<volatile override_class,          int(int, int)>            ("func");
     auto func_ddc = sm.get_mem_fn<const volatile override_class, double(double, double)>("func");
 
 
-    BOOST_REQUIRE(func_dd != nullptr);
-    BOOST_REQUIRE(func_ii != nullptr);
+    BOOST_TEST(func_dd != nullptr);
+    BOOST_TEST(func_ii != nullptr);
 
 
     auto ctor_v = sm.get_constructor<override_class()>();
@@ -175,42 +149,42 @@ int test_main(int argc, char* argv[])
 
     if (ctor_v.has_allocating())
     {
-    	//allocate
-    	auto p = ctor_v.allocating();
+        //allocate
+        auto p = ctor_v.allocating();
 
-    	//assert it works
-    	auto val = (p->*get)();
-    	BOOST_CHECK(val == 123);
+        //assert it works
+        auto val = (p->*get)();
+        BOOST_TEST(val == 123);
 
-    	//deallocate
-    	dtor.deleting(p);
+        //deallocate
+        dtor.deleting(p);
 
-    	//now i cannot assert that it deletes, since it would crash.
+        //now i cannot assert that it deletes, since it would crash.
     }
     //ok, now load the ctor/dtor
     override_class oc;
 
     for (auto & i : oc.arr)
-   	i = 0;
+       i = 0;
 
-    BOOST_CHECK((oc.*get)() == 0);
+    BOOST_TEST((oc.*get)() == 0);
 
-    (oc.*(ctor_i.standard))(12); //initialized.
+    ctor_i.standard(&oc, 12); //initialized.
 
-    BOOST_CHECK(static_val == 12);
-    BOOST_CHECK((oc.*get)() == 456);
+    BOOST_TEST(static_val == 12);
+    BOOST_TEST((oc.*get)() == 456);
     (oc.*set)(42);
-    BOOST_CHECK((oc.*get)() == 42);
+    BOOST_TEST((oc.*get)() == 42);
 
-    BOOST_CHECK((oc.*func_dd)(3,2)   == 6);
-    BOOST_CHECK((oc.*func_ii)(1,2)   == 3);
-    BOOST_CHECK((oc.*func_ddc)(10,2) == 5);
-    BOOST_CHECK((oc.*func_iiv)(9,2)  == 7);
+    BOOST_TEST((oc.*func_dd)(3,2)   == 6);
+    BOOST_TEST((oc.*func_ii)(1,2)   == 3);
+    BOOST_TEST((oc.*func_ddc)(10,2) == 5);
+    BOOST_TEST((oc.*func_iiv)(9,2)  == 7);
 
 
     dtor.standard(&oc);
 
-    return 0;
+    return boost::report_errors();
 }
 
 #else

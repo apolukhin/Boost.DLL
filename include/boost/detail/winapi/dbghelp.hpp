@@ -20,22 +20,22 @@ extern "C"
 {
 
 typedef const WCHAR_ *PCWSTR_;
-typedef WCHAR_ 		 *PWSTR_;
+typedef WCHAR_          *PWSTR_;
 typedef const CHAR_  *PCSTR_;
-typedef CHAR_ 		 *PSTR_;
+typedef CHAR_          *PSTR_;
 
 
 __declspec(dllimport) DWORD_ WINAPI UnDecorateSymbolName
-		(PCSTR_ DecoratedName,
-		 PSTR_ UnDecoratedName,
-		 DWORD_ UndecoratedLength,
-		 DWORD_ Flags);
+        (PCSTR_ DecoratedName,
+         PSTR_ UnDecoratedName,
+         DWORD_ UndecoratedLength,
+         DWORD_ Flags);
 
 __declspec(dllimport) DWORD_ WINAPI UnDecorateSymbolNameW
-		(PCWSTR_ DecoratedName,
-		 PWSTR_ UnDecoratedName,
-		 DWORD_ UndecoratedLength,
-		 DWORD_ Flags);
+        (PCWSTR_ DecoratedName,
+         PWSTR_ UnDecoratedName,
+         DWORD_ UndecoratedLength,
+         DWORD_ Flags);
 
 }
 }}}

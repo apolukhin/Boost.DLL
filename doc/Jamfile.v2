@@ -1,5 +1,5 @@
 # Copyright (c) 2014 Renato Tegon Forti, Antony Polukhin.
-# Copyright (c) 2015 Antony Polukhin.
+# Copyright (c) 2015-2016 Antony Polukhin.
 #
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -56,8 +56,6 @@ doxygen autodoc_shared_library_core
             ../include/boost/dll/library_info.hpp
             ../include/boost/dll/runtime_symbol_info.hpp
             ../include/boost/dll/alias.hpp
-			../include/boost/dll/smart_lib.hpp
-			../include/boost/dll/detail/ctor_dtor.hpp
         ]
     :
         $(doxygen_params)
@@ -66,12 +64,22 @@ doxygen autodoc_shared_library_core
 
 doxygen autodoc_shared_library_refcountable
     :
-        [ glob
+        [ glob 
             ../include/boost/dll/import.hpp
         ]
     :
         $(doxygen_params)
         <xsl:param>"boost.doxygen.reftitle=Shared Library Refcountable Reference"
+    ;
+
+doxygen autodoc_shared_library_experimental
+    :
+        [ glob 
+            ../include/boost/dll/smart_library.hpp
+        ]
+    :
+        $(doxygen_params)
+        <xsl:param>"boost.doxygen.reftitle=Shared Library Experimental"
     ;
 
 
@@ -84,7 +92,8 @@ boostbook dll-doc
     :
         <dependency>autodoc_shared_library_core
         <dependency>autodoc_shared_library_refcountable
-        <xsl:param>boost.root=http://www.boost.org/doc/libs/1_56_0
+        <dependency>autodoc_shared_library_experimental
+        <xsl:param>boost.root=http://www.boost.org/doc/libs/1_60_0
         #<xsl:param>boost.root=../../../.
         <xml:param>html.stylesheet=../../../../doc/src/boostbook.css
     ;
