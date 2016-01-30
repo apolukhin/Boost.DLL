@@ -62,7 +62,7 @@ build_script:
 after_build:
 before_test:
 test_script:
-  - ../../../b2 testing.launcher=valgrind address-model=64 architecture=x86 cxxflags="-DBOOST_TRAVISCI_BUILD" -sBOOST_BUILD_PATH=.
+  - ..\..\..\b2.exe testing.launcher=valgrind address-model=64 architecture=x86 cxxflags="-DBOOST_TRAVISCI_BUILD" -sBOOST_BUILD_PATH=.
 
 after_test:
 on_success:
