@@ -50,7 +50,7 @@ before_build:
     - git clean -fxd
     - git status
     - rm -rf %BOOST%/libs/%BOOST_REMOVE%
-    - mv %APPVEYOR_BUILD_FOLDER%/../%PROJECT_TO_TEST%/ %BOOST%/libs/%PROJECT_TO_TEST%
+    - mv %APPVEYOR_BUILD_FOLDER% %BOOST%/libs/%PROJECT_TO_TEST%
     - set TRAVIS_BUILD_DIR=%BOOST%/libs/%PROJECT_TO_TEST%
 
 build_script:
