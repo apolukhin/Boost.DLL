@@ -10,14 +10,6 @@
 #
 # File revision #6
 
-sudo: false
-language: cpp
-compiler:
-    - gcc
-
-os:
-    - linux
-
 env:
     global:
         # Autodetect Boost branch by using the following code: - BRANCH_TO_TEST=$TRAVIS_BRANCH
@@ -39,13 +31,18 @@ env:
         - CXX_STANDARD=c++98 TOOLSET=gcc 
         - CXX_STANDARD=c++11 TOOLSET=gcc-5
         - CXX_STANDARD=c++1y TOOLSET=gcc-5
-#        - CXX_STANDARD=c++1y TOOLSET=clang
 
 
 ###############################################################################################################
 # From this point and below code is same for all the Boost libs
 ###############################################################################################################
+sudo: false
+language: cpp
+compiler:
+    - gcc
 
+os:
+    - linux
 
 # Installing additional tools
 addons:
@@ -97,7 +94,8 @@ after_success:
     - find ../../../bin.v2/ -name "*.gcno" -exec cp "{}" $TRAVIS_BUILD_DIR/coverals/ \;
 
     # Preparing Coveralls data by changind data format to a readable one
-    - LCOV='lcov --gcov-tool gcov-5'
+    - git clone git@github.com:linux-test-project/lcov.git lcov_dir
+    - LCOV='lcov_dir/bin/lcov --gcov-tool gcov-5'
     - $LCOV --directory $TRAVIS_BUILD_DIR/coverals --base-directory ./ --capture --output-file $TRAVIS_BUILD_DIR/coverals/coverage.info
 
     # ... erasing /test/ /example/ folder data
