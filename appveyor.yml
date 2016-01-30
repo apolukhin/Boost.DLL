@@ -44,7 +44,7 @@ before_build:
     - git pull --recurse-submodules
     - git submodule update --init
     - git checkout %BRANCH_TO_TEST%
-    - git submodule foreach "git reset --quiet --hard; git clean -fxd"
+    # - git submodule foreach "git reset --quiet --hard; git clean -fxd"
     - git reset --hard; git clean -fxd
     - git status
     - rm -rf %BOOST%/libs/%BOOST_REMOVE%
