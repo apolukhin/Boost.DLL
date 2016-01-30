@@ -14,7 +14,6 @@ version: 1.61.{build}-{branch}
  
 # branches to build
 branches:
-  # blacklist
   except:
     - gh-pages
 
@@ -23,17 +22,17 @@ skip_tags: true
 os: Visual Studio 2015
 
 init:
-    - BRANCH_TO_TEST=$APPVEYOR_REPO_BRANCH
+    - set BRANCH_TO_TEST=$APPVEYOR_REPO_BRANCH
 
 platform: x64 
 configuration: Debug
 
 before_build:
     # Set this to the name of the library
-    - PROJECT_TO_TEST=$APPVEYOR_PROJECT_NAME
+    - set PROJECT_TO_TEST=$APPVEYOR_PROJECT_NAME
     - echo "Testing $PROJECT_TO_TEST"
     # Cloning Boost libraries (fast nondeep cloning)
-    - BOOST=C:/boost-local
+    - set BOOST=C:/boost-local
     - git init $BOOST
     - cd $BOOST
     - git remote add --no-tags -t $BRANCH_TO_TEST origin https://github.com/boostorg/boost.git
@@ -49,7 +48,7 @@ before_build:
     - git status
     - rm -rf $BOOST/libs/$BOOST_REMOVE
     - mv $TRAVIS_BUILD_DIR/../$PROJECT_TO_TEST/ $BOOST/libs/$PROJECT_TO_TEST
-    - TRAVIS_BUILD_DIR=$BOOST/libs/$PROJECT_TO_TEST
+    - set TRAVIS_BUILD_DIR=$BOOST/libs/$PROJECT_TO_TEST
 
 build_script:
     - call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x64
