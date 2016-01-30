@@ -95,7 +95,9 @@ after_success:
 
     # Preparing Coveralls data by changind data format to a readable one
     - git clone https://github.com/linux-test-project/lcov.git lcov_dir
-    - LCOV="$BOOST/libs/$PROJECT_TO_TEST/test/lcov_dir/bin/lcov --gcov-tool gcov-5"
+    - GCOV_VERSION=${TOOLSET#*-}
+    - if [ "$GCOV_VERSION" ]; then GCOV_VERSION="--gcov-tool gcov-$GCOV_VERSION"; fi
+    - LCOV="$BOOST/libs/$PROJECT_TO_TEST/test/lcov_dir/bin/lcov $GCOV_VERSION"
     - $LCOV --directory $TRAVIS_BUILD_DIR/coverals --base-directory ./ --capture --output-file $TRAVIS_BUILD_DIR/coverals/coverage.info
 
     # ... erasing /test/ /example/ folder data
