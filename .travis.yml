@@ -94,7 +94,7 @@ after_success:
     - find ../../../bin.v2/ -name "*.gcno" -exec cp "{}" $TRAVIS_BUILD_DIR/coverals/ \;
 
     # Preparing Coveralls data by changind data format to a readable one
-    - git clone git@github.com:linux-test-project/lcov.git lcov_dir
+    - git clone https://github.com/linux-test-project/lcov.git lcov_dir
     - LCOV='lcov_dir/bin/lcov --gcov-tool gcov-5'
     - $LCOV --directory $TRAVIS_BUILD_DIR/coverals --base-directory ./ --capture --output-file $TRAVIS_BUILD_DIR/coverals/coverage.info
 
