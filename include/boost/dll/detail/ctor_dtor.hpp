@@ -67,7 +67,11 @@ struct constructor<Class(Args...)> {
 template <typename Class>
 struct destructor {
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
+#if !defined(_WIN64)
     typedef void(__thiscall * type)(Class* const);
+#else
+    typedef void(__cdecl * type)(Class* const);
+#endif
 #else
     typedef void( *type)(Class* const);
 #endif

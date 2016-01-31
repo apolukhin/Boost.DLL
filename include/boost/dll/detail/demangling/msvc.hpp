@@ -93,14 +93,14 @@ namespace parser
 
     auto ptr_rule_impl(std::integral_constant<std::size_t, 32>)
     {
-        return -(-x3::space >> "__ptr32");
+        return -((-x3::space) >> "__ptr32");
     }
     auto ptr_rule_impl(std::integral_constant<std::size_t, 64>)
     {
-        return -(-x3::space >> "__ptr64");
+        return -((-x3::space) >> "__ptr64");
     }
 
-    auto ptr_rule() { return ptr_rule_impl(std::integral_constant<std::size_t, sizeof(void*)*8>());}
+    auto ptr_rule() { return ptr_rule_impl(std::integral_constant<std::size_t, sizeof(std::size_t)*8>());}
 
     auto const visibility = ("public:" | x3::lit("protected:") | "private:");
     auto const virtual_ = x3::space >> "virtual";
@@ -155,9 +155,11 @@ namespace parser
 
     auto const cdecl_   = "__cdecl"     >> x3::space;
     auto const stdcall  = "__stdcall"     >> x3::space;
+#if defined(_WIN64)//seems to be necessary by msvc 14-x64
+    auto const thiscall = "__cdecl"     >> x3::space;
+#else
     auto const thiscall = "__thiscall"     >> x3::space;
-
-
+#endif
 
     template<typename Return, typename Arg>
     auto arg_list(const mangled_storage_impl & ms, Return (*)(Arg))
