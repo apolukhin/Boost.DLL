@@ -10,6 +10,18 @@
 #
 # File revision #1
 
+init:
+    - set BRANCH_TO_TEST=%APPVEYOR_REPO_BRANCH%
+    - set BOOST_REMOVE=dll
+
+os: Visual Studio 2015
+configuration: Debug
+platform: x64
+
+###############################################################################################################
+# From this point and below code is same for all the Boost libs
+###############################################################################################################
+
 version: 1.61.{build}-{branch}
  
 # branches to build
@@ -18,15 +30,6 @@ branches:
     - gh-pages
 
 skip_tags: true
- 
-os: Visual Studio 2015
-
-init:
-    - set BRANCH_TO_TEST=%APPVEYOR_REPO_BRANCH%
-    - set BOOST_REMOVE=dll
-
-platform: x64 
-configuration: Debug
 
 before_build:
     # Set this to the name of the library
