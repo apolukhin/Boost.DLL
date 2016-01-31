@@ -8,7 +8,7 @@
 
 #include <boost/predef.h>
 
-#if (__cplusplus >= 201402L) || (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(19,0,0))
+#if (__cplusplus >= 201402L) || (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(14,0,0))
 
 #include "../example/b2_workarounds.hpp"
 
@@ -132,9 +132,9 @@ int main(int argc, char* argv[])
     BOOST_TEST(get != nullptr);
     BOOST_TEST(set != nullptr);
 
-    auto func_dd  = sm.get_mem_fn<override_class,                  double(double, double)>("func");
-    auto func_ii  = sm.get_mem_fn<override_class,                  int(int, int)>            ("func");
-    auto func_iiv = sm.get_mem_fn<volatile override_class,          int(int, int)>            ("func");
+    auto func_dd  = sm.get_mem_fn<override_class,                double(double, double)>("func");
+    auto func_ii  = sm.get_mem_fn<override_class,                int(int, int)>         ("func");
+    auto func_iiv = sm.get_mem_fn<volatile override_class,       int(int, int)>         ("func");
     auto func_ddc = sm.get_mem_fn<const volatile override_class, double(double, double)>("func");
 
 
@@ -147,18 +147,17 @@ int main(int argc, char* argv[])
 
     auto dtor   = sm.get_destructor<override_class>();
 
+    //actually never used.
     if (ctor_v.has_allocating())
     {
         //allocate
-        auto p = ctor_v.allocating();
+        auto p = ctor_v.call_allocating();
 
         //assert it works
         auto val = (p->*get)();
         BOOST_TEST(val == 123);
-
         //deallocate
-        dtor.deleting(p);
-
+        dtor.call_deleting(p);
         //now i cannot assert that it deletes, since it would crash.
     }
     //ok, now load the ctor/dtor
@@ -169,7 +168,7 @@ int main(int argc, char* argv[])
 
     BOOST_TEST((oc.*get)() == 0);
 
-    ctor_i.standard(&oc, 12); //initialized.
+    ctor_i.call_standard(&oc, 12); //initialized.
 
     BOOST_TEST(static_val == 12);
     BOOST_TEST((oc.*get)() == 456);
@@ -181,8 +180,8 @@ int main(int argc, char* argv[])
     BOOST_TEST((oc.*func_ddc)(10,2) == 5);
     BOOST_TEST((oc.*func_iiv)(9,2)  == 7);
 
-
-    dtor.standard(&oc);
+    dtor.call_standard(&oc);
+    BOOST_TEST(static_val == 0);
 
     return boost::report_errors();
 }
