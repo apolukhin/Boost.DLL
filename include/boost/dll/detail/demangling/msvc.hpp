@@ -91,6 +91,17 @@ namespace parser
 {
     namespace x3 = spirit::x3;
 
+    auto ptr_rule_impl(std::integral_constant<std::size_t, 32>)
+    {
+        return -((-x3::space) >> "__ptr32");
+    }
+    auto ptr_rule_impl(std::integral_constant<std::size_t, 64>)
+    {
+        return -((-x3::space) >> "__ptr64");
+    }
+
+    auto ptr_rule() { return ptr_rule_impl(std::integral_constant<std::size_t, sizeof(std::size_t)*8>());}
+
     auto const visibility = ("public:" | x3::lit("protected:") | "private:");
     auto const virtual_ = x3::space >> "virtual";
     auto const static_     = x3::space >> x3::lit("static") ;
@@ -136,16 +147,19 @@ namespace parser
         return -(class_ >> x3::space)>> x3::string(type_name) >>
                 const_rule<T>() >>
                 volatile_rule<T>() >>
-                reference_rule<T>();
+                reference_rule<T>() >>
+                ptr_rule();
     }
     template<>
     auto type_rule<void>(const std::string &) { return x3::string("void"); };
 
-    auto const cdecl_      = "__cdecl"     >> x3::space;
+    auto const cdecl_   = "__cdecl"     >> x3::space;
     auto const stdcall  = "__stdcall"     >> x3::space;
+#if defined(_WIN64)//seems to be necessary by msvc 14-x64
+    auto const thiscall = "__cdecl"     >> x3::space;
+#else
     auto const thiscall = "__thiscall"     >> x3::space;
-
-
+#endif
 
     template<typename Return, typename Arg>
     auto arg_list(const mangled_storage_impl & ms, Return (*)(Arg))
@@ -218,7 +232,7 @@ template<typename Func> std::string mangled_storage_impl::get_function(const std
                 -(visibility >> static_ >> x3::space) >> //it may be a static class-member, which does however not have the static attribute.
                 parser::type_rule<return_type>(return_type_name) >>  x3::space >>
                 cdecl_ >> //cdecl declaration for methods. stdcall cannot be
-                name >> x3::lit('(') >> parser::arg_list(*this, func_type()) >> x3::lit(')') ;
+                name >> x3::lit('(') >> parser::arg_list(*this, func_type()) >> x3::lit(')') >>  parser::ptr_rule();
 
 
     auto predicate = [&](const mangled_storage_base::entry & e)
@@ -260,7 +274,7 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
                 thiscall >> //cdecl declaration for methods. stdcall cannot be
                 cname >> "::" >> name >>
                 x3::lit('(') >> parser::arg_list(*this, func_type()) >> x3::lit(')') >>
-                inv_const_rule<Class>() >> inv_volatile_rule<Class>();
+                inv_const_rule<Class>() >> inv_volatile_rule<Class>() >> parser::ptr_rule();
 
     auto predicate = [&](const mangled_storage_base::entry & e)
             {
@@ -310,7 +324,7 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
                 visibility >> x3::space >>
                 thiscall >> //cdecl declaration for methods. stdcall cannot be
                 ctor_name >>
-                x3::lit('(') >> parser::arg_list(*this, func_type()) >> x3::lit(')');
+                x3::lit('(') >> parser::arg_list(*this, func_type()) >> x3::lit(')') >> parser::ptr_rule();
 
 
     auto predicate = [&](const mangled_storage_base::entry & e)
@@ -355,7 +369,7 @@ auto mangled_storage_impl::get_destructor() -> dtor_sym
     auto matcher =
                 visibility >> -virtual_ >> x3::space >>
                 thiscall >> //cdecl declaration for methods. stdcall cannot be
-                dtor_name;
+                dtor_name >> parser::ptr_rule();
 
 
     auto predicate = [&](const mangled_storage_base::entry & e)

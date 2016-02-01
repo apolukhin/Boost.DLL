@@ -71,7 +71,7 @@ struct BOOST_SYMBOL_EXPORT some_class : some_father
     static int value ;
     static void set_value(const int &i);
 
-    static some_class* dummy();
+  //  static some_class* dummy();
 
     virtual double  func(double i, double j);
     virtual int     func(int i,     int j);
@@ -94,7 +94,7 @@ int some_class::value = -1;
 void some_class::set_value(const int &i) {value = i;}
 
 
-some_class* some_class::dummy() {return new some_class();}//so it implements an allocating ctor.
+//some_class* some_class::dummy() {return new some_class();}//so it implements an allocating ctor.
 
 double  some_class::func(double i, double j) {return i*j;}
 int     some_class::func(int i,     int j)      {return i+j;}

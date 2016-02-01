@@ -9,6 +9,7 @@
 #ifndef INCLUDE_BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
 #define INCLUDE_BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
 
+#include <type_traits>
 #include <boost/config.hpp>
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
@@ -30,13 +31,21 @@ struct constructor;
 
 template<typename Class, typename ...Args>
 struct constructor<Class(Args...)> {
-    typedef void(standard_t)(Class*, Args...);
-    typedef Class*(allocating_t)(Args...);
+    typedef typename detail::get_mem_fn_type<Class, void(Args...)>::mem_fn standard_t;
+    typedef Class*(*allocating_t)(Args...);
 
-    //! The standard, i.e. not allocating constructor.
-    standard_t* standard;
-    //! The allocating constructor.
-    allocating_t* allocating;
+
+    //! The standard, i.e. not allocating constructor. @warning May differ with the compiler. Use @ref constructor::call_standard instead.
+    standard_t standard;
+    //! The allocating constructor.  @warning May differ with the compiler. Use @ref constructor::call_allocating instead.
+    allocating_t allocating;
+
+    //! Call the standard contructor
+    void call_standard  (Class * const ptr, Args...args){ (ptr->*standard)(static_cast<Args>(args)...); }
+
+    //! Call the deleting destructor
+    Class * call_allocating(Args...args){ return allocating(static_cast<Args>(args)...); }
+
 
     //! True if a allocating constructor could be loaded.
     bool has_allocating() const { return allocating != nullptr; }
@@ -47,23 +56,38 @@ struct constructor<Class(Args...)> {
     constructor() = delete;
     constructor(const constructor &) = default;
 
-    explicit constructor(standard_t* standard, allocating_t* allocating = nullptr)
+    explicit constructor(standard_t standard, allocating_t allocating = nullptr)
         : standard(standard)
         , allocating(allocating)
     {}
 };
 
+
+
 template <typename Class>
 struct destructor {
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
-    typedef void(__thiscall& type)(Class* const);
+#if !defined(_WIN64)
+    typedef void(__thiscall * type)(Class* const);
 #else
-    typedef void(type)(Class* const);
+    typedef void(__cdecl * type)(Class* const);
 #endif
-    //! The standard, i.e. not deleting destructor.
-    type* standard;
-    //! The deleting destructor.
-    type* deleting;
+#else
+    typedef void( *type)(Class* const);
+#endif
+    typedef type standard_t;
+    typedef type deleting_t;
+
+    //! The standard, i.e. not deleting destructor. @warning May differ with the compiler. Use @ref destructor::call_standard instead.
+    standard_t standard;
+    //! The deleting destructor. @warning May differ with the compiler. Use @ref destructor::call_deallocating instead.
+    deleting_t deleting;
+
+    //! Call the standard contructor
+    void call_standard(Class * const ptr){ standard(ptr); }
+
+    //! Call the deleting destructor
+    void call_deleting(Class * const ptr){ deleting(ptr); }
 
     //! True if a deleting destructor could be loaded.
     bool has_deleting() const { return deleting != nullptr; }
@@ -76,7 +100,7 @@ struct destructor {
     destructor(const destructor &) = default;
 
     //! Construct it from both the standard destructor and the allocating destructor
-    explicit destructor(const type* standard, const type* deleting = nullptr)
+    explicit destructor(const standard_t &standard, const deleting_t &deleting = nullptr)
         : standard(standard)
         , deleting(deleting)
     {}
@@ -86,40 +110,70 @@ struct destructor {
 template<typename Signature, typename Lib>
 constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym & ct) {
     typedef typename constructor<Signature>::standard_t standard_t;
-    return constructor<Signature>(
-        &lib.template get<standard>(ct)
-    );
+    void * buf = &lib.template get<int>(ct);
+    standard_t ctor;
+    std::memcpy(&ctor, &buf, sizeof(ctor));
+
+    return constructor<Signature>(ctor);
 }
 
 template<typename Class, typename Lib>
 destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt) {
-    typedef typename destructor<Class>::type f;
-    return destructor<Class>(
-        &lib.template get<f>(dt)
-    );
+    typedef typename destructor<Class>::standard_t standard_t;
+    void * buf = &lib.template get<int>(dt);
+    standard_t dtor;
+    std::memcpy(&dtor, &buf, sizeof(dtor));
+    return destructor<Class>(dtor);
 }
 
 #else
 
 template<typename Signature, typename Lib>
 constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym & ct) {
-    typedef typename constructor<Signature>::standard_t f;
-    typedef typename constructor<Signature>::allocating_t p;
+    typedef typename constructor<Signature>::standard_t   stand;
+    typedef typename constructor<Signature>::allocating_t alloc;
 
-    return constructor<Signature>(
-        (ct.C1.size() > 0 ? &lib.template get<f>(ct.C1) : nullptr), // normal constructor
-        (ct.C2.size() > 0 ? &lib.template get<p>(ct.C2) : nullptr)  // allocating constructor
-    );
+    stand s = nullptr;
+    alloc a = nullptr;
+
+    //see here for the abi http://mentorembedded.github.io/cxx-abi/abi.html#mangling-special-ctor-dtor
+
+    if (!ct.C1.empty())
+    {
+        void* p = &lib.template get<int>(ct.C1);
+        std::memcpy(&s, &p, sizeof(p));
+    }
+    if (!ct.C3.empty())
+    {
+        void* p = &lib.template get<int>(ct.C3);
+        std::memcpy(&a, &p, sizeof(p));
+    }
+
+    return constructor<Signature>(s,a);
 }
 
 template<typename Class, typename Lib>
 destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt) {
-    typedef typename destructor<Class>::type f;
+    typedef typename destructor<Class>::standard_t stand;
+    typedef typename destructor<Class>::deleting_t delet;
 
-    return destructor<Class>(
-        (dt.D1.size() > 0 ? &lib.template get<f>(dt.D1) : nullptr), // normal destructor
-        (dt.D2.size() > 0 ? &lib.template get<f>(dt.D2) : nullptr)  // deallocating destructor
-    );
+    stand s = nullptr;
+    delet d = nullptr;
+
+    //see here for the abi http://mentorembedded.github.io/cxx-abi/abi.html#mangling-special-ctor-dtor
+
+    if (!dt.D1.empty())
+    {
+        void* p = &lib.template get<int>(dt.D1);
+        std::memcpy(&s, &p, sizeof(p));
+    }
+    if (!dt.D0.empty())
+    {
+        void* p = &lib.template get<int>(dt.D0);
+        std::memcpy(&d, &p, sizeof(p));
+    }
+    return destructor<Class>(s,d);
+
 }
 
 #endif

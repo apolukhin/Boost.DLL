@@ -40,12 +40,13 @@ public:
     using mangled_storage_base::mangled_storage_base;
     struct ctor_sym
     {
-        std::string C0;
         std::string C1;
         std::string C2;
+        std::string C3;
+
         bool empty() const
         {
-            return C0.empty() && C1.empty() && C2.empty();
+            return C1.empty() && C2.empty() && C3.empty();
         }
     };
 
@@ -223,18 +224,13 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 
     for (auto & e : findings)
     {
-        if (e.mangled.find(unscoped_cname +"C0E") != std::string::npos)
-        {
-            ct.C0 = e.mangled;
-        }
-        else if (e.mangled.find(unscoped_cname +"C1E") != std::string::npos)
-        {
+
+        if (e.mangled.find(unscoped_cname +"C1E") != std::string::npos)
             ct.C1 = e.mangled;
-        }
         else if (e.mangled.find(unscoped_cname +"C2E") != std::string::npos)
-        {
             ct.C2 = e.mangled;
-        }
+        else if (e.mangled.find(unscoped_cname +"C3E") != std::string::npos)
+            ct.C3 = e.mangled;
     }
     return ct;
 }
