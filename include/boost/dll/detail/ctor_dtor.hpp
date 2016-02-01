@@ -1,4 +1,4 @@
-// Copyright 2016 Klemens Morgenstern
+// Copyright 2016 Klemens Morgenstern, Antony Polukhin
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -9,8 +9,13 @@
 #ifndef INCLUDE_BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
 #define INCLUDE_BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
 
-#include <type_traits>
 #include <boost/config.hpp>
+#ifdef BOOST_HAS_PRAGMA_ONCE
+# pragma once
+#endif
+
+#include <boost/dll/detail/aggressive_ptr_cast.hpp>
+#include <boost/dll/detail/get_mem_fn_type.hpp>
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
 #   include <boost/dll/detail/demangling/msvc.hpp>
@@ -66,15 +71,14 @@ struct constructor<Class(Args...)> {
 
 template <typename Class>
 struct destructor {
-#if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
-#if !defined(_WIN64)
+#if !defined(BOOST_MSVC) && !defined(BOOST_MSVC_VER)
+    typedef void( *type)(Class* const);
+#elif !defined(_WIN64)
     typedef void(__thiscall * type)(Class* const);
 #else
     typedef void(__cdecl * type)(Class* const);
 #endif
-#else
-    typedef void( *type)(Class* const);
-#endif
+
     typedef type standard_t;
     typedef type deleting_t;
 
@@ -110,19 +114,14 @@ struct destructor {
 template<typename Signature, typename Lib>
 constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym & ct) {
     typedef typename constructor<Signature>::standard_t standard_t;
-    void * buf = &lib.template get<int>(ct);
-    standard_t ctor;
-    std::memcpy(&ctor, &buf, sizeof(ctor));
-
+    standard_t ctor = lib.template get<standard_t>(ct);
     return constructor<Signature>(ctor);
 }
 
 template<typename Class, typename Lib>
 destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt) {
     typedef typename destructor<Class>::standard_t standard_t;
-    void * buf = &lib.template get<int>(dt);
-    standard_t dtor;
-    std::memcpy(&dtor, &buf, sizeof(dtor));
+    standard_t dtor = lib.template get<standard_t>(dt);
     return destructor<Class>(dtor);
 }
 
@@ -138,15 +137,12 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
 
     //see here for the abi http://mentorembedded.github.io/cxx-abi/abi.html#mangling-special-ctor-dtor
 
-    if (!ct.C1.empty())
-    {
-        void* p = &lib.template get<int>(ct.C1);
-        std::memcpy(&s, &p, sizeof(p));
+    if (!ct.C1.empty()) {
+        s = lib.template get<stand>(ct.C1);
     }
-    if (!ct.C3.empty())
-    {
-        void* p = &lib.template get<int>(ct.C3);
-        std::memcpy(&a, &p, sizeof(p));
+
+    if (!ct.C3.empty()) {
+        a = lib.template get<alloc>(ct.C3);
     }
 
     return constructor<Signature>(s,a);
@@ -161,17 +157,14 @@ destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt
     delet d = nullptr;
 
     //see here for the abi http://mentorembedded.github.io/cxx-abi/abi.html#mangling-special-ctor-dtor
+    if (!dt.D1.empty()) {
+        s = &lib.template get< typename boost::remove_pointer<stand>::type >(dt.D1);
+    }
 
-    if (!dt.D1.empty())
-    {
-        void* p = &lib.template get<int>(dt.D1);
-        std::memcpy(&s, &p, sizeof(p));
+    if (!dt.D0.empty()) {
+        d = &lib.template get< typename boost::remove_pointer<delet>::type >(dt.D0);
     }
-    if (!dt.D0.empty())
-    {
-        void* p = &lib.template get<int>(dt.D0);
-        std::memcpy(&d, &p, sizeof(p));
-    }
+
     return destructor<Class>(s,d);
 
 }
