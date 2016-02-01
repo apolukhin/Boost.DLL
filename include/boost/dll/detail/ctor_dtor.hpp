@@ -121,7 +121,7 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
 template<typename Class, typename Lib>
 destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt) {
     typedef typename destructor<Class>::standard_t standard_t;
-    standard_t dtor = lib.template get<standard_t>(dt);
+    standard_t dtor = &lib.template get< typename boost::remove_pointer<stand>::type >(dt);
     return destructor<Class>(dtor);
 }
 

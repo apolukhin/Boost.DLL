@@ -169,6 +169,7 @@ int main(int argc, char* argv[])
     BOOST_TEST((oc.*get)() == 0);
 
     ctor_i.call_standard(&oc, 12); //initialized.
+
     BOOST_TEST(static_val == 12);
     BOOST_TEST((oc.*get)() == 456);
     (oc.*set)(42);
@@ -179,9 +180,7 @@ int main(int argc, char* argv[])
     BOOST_TEST((oc.*func_ddc)(10,2) == 5);
     BOOST_TEST((oc.*func_iiv)(9,2)  == 7);
 
-    std::cerr << 1;
     dtor.call_standard(&oc);
-    std::cerr << 2;
     BOOST_TEST(static_val == 0);
 
     return boost::report_errors();
