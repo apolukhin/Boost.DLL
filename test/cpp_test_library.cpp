@@ -96,9 +96,9 @@ void some_class::set_value(const int &i) {value = i;}
 
 //some_class* some_class::dummy() {return new some_class();}//so it implements an allocating ctor.
 
-double  some_class::func(double i, double j) {return i*j;}
-int     some_class::func(int i,     int j)      {return i+j;}
-int     some_class::func(int i,     int j)             volatile {return i-j;;}
+double  some_class::func(double i, double j)                {return i*j;}
+int     some_class::func(int i,     int j)                  {return i+j;}
+int     some_class::func(int i,     int j)   volatile       {return i-j;;}
 double  some_class::func(double i, double j) const volatile {return i/j;}
 
 int  some_class::get() const {return mem_val;}

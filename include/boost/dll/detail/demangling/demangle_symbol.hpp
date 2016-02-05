@@ -76,7 +76,13 @@ inline std::string demangle_symbol(const std::string& mangled_name)
 }
 
 
-}}}
+}
+namespace experimental
+{
+using ::boost::dll::detail::demangle_symbol;
+}
+
+}}
 
 #endif
 
