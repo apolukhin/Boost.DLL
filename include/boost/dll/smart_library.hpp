@@ -14,7 +14,9 @@
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/detail/get_mem_fn_type.hpp>
 #include <boost/dll/detail/ctor_dtor.hpp>
-
+#include <boost/type_traits/is_object.hpp>
+#include <boost/type_traits/is_void.hpp>
+#include <boost/type_traits/is_function.hpp>
 #include <boost/predef/compiler.h>
 
 
@@ -476,6 +478,45 @@ inline bool operator<(const smart_library& lhs, const smart_library& rhs) BOOST_
 /// Swaps two shared libraries. Does not invalidate symbols and functions loaded from libraries. Throws nothing.
 inline void swap(smart_library& lhs, smart_library& rhs) BOOST_NOEXCEPT {
     lhs.swap(rhs);
+}
+
+
+#ifdef BOOST_DLL_DOXYGEN
+/** Helper functions for overloads.
+ *
+ * Gets either a variable, function or member-function, depending on the signature.
+ *
+ * @code
+ * smart_library sm("lib.so");
+ * get<int>(sm, "space::value"); //import a variable
+ * get<void(int)>(sm, "space::func"); //import a function
+ * get<some_class, void(int)>(sm, "space::class_::mem_fn"); //import a member function
+ * @endcode
+ *
+ * @param sm A reference to the @ref smart_library
+ * @param name The name of the entity to import
+ */
+template<class T, class T2>
+void get(smart_library& sm, const std::string &name);
+#endif
+
+template<class T>
+T& get(smart_library& sm, const std::string &name, typename boost::enable_if<boost::is_object<T>,T>::type* = nullptr)
+
+{
+    return sm.get_variable<T>(name);
+}
+
+template<class T>
+auto get(smart_library& sm, const std::string &name, typename boost::enable_if<boost::is_function<T>>::type* = nullptr)
+{
+    return sm.get_function<T>(name);
+}
+
+template<class Class, class Signature>
+auto get(smart_library& sm, const std::string &name) -> typename detail::get_mem_fn_type<Class, Signature>::mem_fn
+{
+    return sm.get_mem_fn<Class, Signature>(name);
 }
 
 

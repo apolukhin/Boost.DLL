@@ -186,6 +186,25 @@ int main(int argc, char* argv[])
     const auto & ti = sm.get_type_info<override_class>();
 
     BOOST_TEST(&ti != nullptr);
+
+
+    //test the ovls helper.
+    {
+        namespace ex = boost::dll::experimental;
+        auto &var = ex::get<double>(sm, "some_space::variable");
+        BOOST_TEST(&var == &sp_variable);
+
+        auto fun = ex::get<void(int)>(sm, "overloaded");
+        BOOST_TEST(fun == ovl1);
+
+        auto func_ii  = sm.get_mem_fn<override_class,                int(int, int)>         ("func");
+
+        auto mem_fn = ex::get<override_class, int(int, int)>(sm, "func");
+
+        BOOST_TEST(mem_fn == func_ii);
+    }
+
+
     return boost::report_errors();
 }
 
