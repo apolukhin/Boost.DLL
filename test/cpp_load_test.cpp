@@ -183,6 +183,9 @@ int main(int argc, char* argv[])
     dtor.call_standard(&oc);
     BOOST_TEST(static_val == 0);
 
+    const auto & ti = sm.get_type_info<override_class>();
+
+    BOOST_TEST(&ti != nullptr);
     return boost::report_errors();
 }
 

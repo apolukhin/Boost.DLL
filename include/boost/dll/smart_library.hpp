@@ -327,6 +327,29 @@ public:
         return detail::load_dtor<Class>(_lib, _storage.get_destructor<Class>());
 
     }
+    /*!
+     * Load the typeinfo of the given type.
+     *
+     * \b Example (import class is MyClass, which is available inside the library and the host):
+     *
+     * \code
+     * smart_library lib("test_lib.so");
+     *
+     * std::type_info &ti = lib.get_Type_info<MyClass>();
+     * \endcode
+     *
+     * \tparam Class The class whichs typeinfo shall be loaded
+     * \return A reference to a type_info object.
+     *
+     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     *
+     */
+    template<typename Class>
+    const std::type_info& get_type_info()
+    {
+        return _lib.get<const std::type_info>(_storage.get_type_info<Class>());
+
+    }
     /**
      * This function can be used to add a type alias.
      *

@@ -110,6 +110,9 @@ int main(int argc, char* argv[])
     BOOST_TEST(!var1.empty());
     BOOST_TEST(!var2.empty());
 
+    auto ti = ms.get_type_info<override_class>();
+
+    BOOST_TEST(!ti.empty());
 
     return boost::report_errors();
 }

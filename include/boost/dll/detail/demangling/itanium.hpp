@@ -76,6 +76,9 @@ public:
     template<typename Class>
     dtor_sym get_destructor();
 
+    template<typename T>
+    std::string get_type_info();
+
 };
 
 
@@ -278,6 +281,25 @@ auto mangled_storage_impl::get_destructor() -> dtor_sym
     return dt;
 
 }
+
+template<typename T>
+std::string mangled_storage_impl::get_type_info()
+{
+    std::string id = "typeinfo for " + get_name<T>();
+
+
+    auto predicate = [&](const mangled_storage_base::entry & e)
+                {
+                    return e.demangled == id;
+                };
+
+    auto found = std::find_if(storage_.begin(), storage_.end(), predicate);
+
+
+    if (found != storage_.end())
+        return found->mangled;
+    else
+        return "";}
 
 }}}
 
