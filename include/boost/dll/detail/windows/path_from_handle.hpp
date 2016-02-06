@@ -11,7 +11,7 @@
 #include <boost/config.hpp>
 #include <boost/dll/detail/system_error.hpp>
 #include <boost/detail/winapi/dll.hpp>
-#include <boost/detail/winapi/GetLastError.hpp>
+#include <boost/detail/winapi/get_last_error.hpp>
 #include <boost/filesystem/path.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
@@ -21,8 +21,9 @@
 namespace boost { namespace dll { namespace detail {
 
     static inline boost::system::error_code last_error_code() BOOST_NOEXCEPT {
+        boost::detail::winapi::DWORD_ err = boost::detail::winapi::GetLastError();
         return boost::system::error_code(
-            boost::detail::winapi::GetLastError(),
+            err,
             boost::system::system_category()
         );
     }

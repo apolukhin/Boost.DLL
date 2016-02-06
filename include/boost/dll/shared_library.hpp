@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2016 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -14,6 +14,8 @@
 
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_member_pointer.hpp>
 #include <boost/utility/explicit_operator_bool.hpp>
 #include <boost/dll/detail/system_error.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
@@ -58,7 +60,7 @@ public:
 #endif
 
     /*!
-    * Creates shared_library that does not reference any DLL/DSO.
+    * Creates in anstance that does not reference any DLL/DSO.
     *
     * \post this->is_loaded() returns false.
     * \throw Nothing.
@@ -67,9 +69,9 @@ public:
 
     /*!
     * Copy constructor that increments the reference count of an underlying shared library.
-    * Same as calling `shared_library(lib.location())`
+    * Same as calling constructor with `lib.location()` parameter.
     *
-    * \param lib A shared_library to copy.
+    * \param lib A library to copy.
     * \post lib == *this
     * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     */
@@ -81,9 +83,9 @@ public:
 
     /*!
     * Copy constructor that increments the reference count of an underlying shared library.
-    * Same as calling `shared_library(lib.location(), ec)`
+    * Same as calling constructor with `lib.location(), ec` parameters.
     *
-    * \param lib A shared_library to copy.
+    * \param lib A shared library to copy.
     * \param ec Variable that will be set to the result of the operation.
     * \post lib == *this
     * \throw std::bad_alloc in case of insufficient memory.
@@ -97,7 +99,7 @@ public:
     /*!
     * Move constructor. Does not invalidate existing symbols and functions loaded from lib.
     *
-    * \param lib A shared_library to move from.
+    * \param lib A shared library to move from.
     * \post lib.is_loaded() returns false, this->is_loaded() return true.
     * \throw Nothing.
     */
@@ -106,8 +108,7 @@ public:
     {}
 
     /*!
-    * Creates a shared_library object and loads a library by specified path
-    * with a specified mode.
+    * Loads a library by specified path with a specified mode.
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
     *           const wchar_t* or boost::filesystem::path.
@@ -119,8 +120,7 @@ public:
     }
 
     /*!
-    * Creates a shared_library object and loads a library by specified path
-    * with a specified mode.
+    * Loads a library by specified path with a specified mode.
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
     *           const wchar_t* or boost::filesystem::path.
@@ -138,9 +138,9 @@ public:
     }
 
     /*!
-    * Copy assign a shared_library object. If this->is_loaded() then calls this->unload(). Does not invalidate existing symbols and functions loaded from lib.
+    * Assignment operator. If this->is_loaded() then calls this->unload(). Does not invalidate existing symbols and functions loaded from lib.
     *
-    * \param lib A shared_library to copy.
+    * \param lib A shared library to assign from.
     * \post lib == *this
     * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     */
@@ -155,9 +155,9 @@ public:
     }
 
     /*!
-    * Move assign a shared_library object. If this->is_loaded() then calls this->unload(). Does not invalidate existing symbols and functions loaded from lib.
+    * Move assignment operator. If this->is_loaded() then calls this->unload(). Does not invalidate existing symbols and functions loaded from lib.
     *
-    * \param lib A shared_library to move from.
+    * \param lib A library to move from.
     * \post lib.is_loaded() returns false.
     * \throw Nothing.
     */
@@ -170,10 +170,9 @@ public:
     }
 
     /*!
-    * Destroys the shared_library by calling
-    * `unload()`. If library was loaded multiple times
-    * by different instances of shared_library, the actual DLL/DSO won't be unloaded until
-    * there is at least one instance of shared_library.
+    * Destroys the object by calling `unload()`. If library was loaded multiple times
+    * by different instances, the actual DLL/DSO won't be unloaded until
+    * there is at least one instance that references the DLL/DSO.
     *
     * \throw Nothing.
     */
@@ -183,7 +182,7 @@ public:
     * Makes *this share the same shared object as lib. If *this is loaded, then unloads it.
     *
     * \post lib.location() == this->location(), lib == *this
-    * \param lib A shared_library to copy.
+    * \param lib A library to copy.
     * \param ec Variable that will be set to the result of the operation.
     * \throw std::bad_alloc in case of insufficient memory.
     */
@@ -216,7 +215,7 @@ public:
     /*!
     * Makes *this share the same shared object as lib. If *this is loaded, then unloads it.
     *
-    * \param lib A shared_library instance to share.
+    * \param lib A library instance to assign from.
     * \post lib.location() == this->location()
     * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
     */
@@ -233,7 +232,7 @@ public:
     /*!
     * Loads a library by specified path with a specified mode.
     *
-    * Note that if some library is already loaded in this shared_library instance, load will
+    * Note that if some library is already loaded in this instance, load will
     * call unload() and then load the new provided library.
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
@@ -255,7 +254,7 @@ public:
     /*!
     * Loads a library by specified path with a specified mode.
     *
-    * Note that if some library is already loaded in this shared_library instance, load will
+    * Note that if some library is already loaded in this instance, load will
     * call unload() and then load the new provided library.
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
@@ -276,9 +275,9 @@ public:
     }
 
     /*!
-    * Unloads a shared library. If library was loaded multiple times
-    * by different instances of shared_library, the actual DLL/DSO won't be unloaded until
-    * there is at least one instance of shared_library holding a reference to it.
+    * Unloads a shared library.  If library was loaded multiple times
+    * by different instances, the actual DLL/DSO won't be unloaded until
+    * there is at least one instance that references the DLL/DSO.
     *
     * \post this->is_loaded() returns false.
     * \throw Nothing.
@@ -337,11 +336,8 @@ public:
     * This call will always succeed and throw nothing if call to `has(const char* )`
     * member function with the same symbol name returned `true`.
     *
-    * If using this call for an alias name do not forget to add a pointer to a resulting type.
-    *
     * \b Example:
     * \code
-    * shared_library lib("test_lib.so");
     * int& i0 = lib.get<int>("integer_name");
     * int& i1 = *lib.get<int*>("integer_alias_name");
     * \endcode
@@ -352,16 +348,30 @@ public:
     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
     */
     template <typename T>
-    inline T& get(const char* symbol_name) const {
-        return *boost::dll::detail::aggressive_ptr_cast<T*>(
-            get_impl(symbol_name)
+    inline typename boost::enable_if<boost::is_member_pointer<T>, T>::type  get(const std::string& symbol_name) const {
+        return get<T>(symbol_name.c_str());
+    }
+
+    //! \overload T& get(const std::string& symbol_name) const
+    template <typename T>
+    inline typename boost::disable_if<boost::is_member_pointer<T>, T&>::type get(const std::string& symbol_name) const {
+        return get<T>(symbol_name.c_str());
+    }
+
+    //! \overload T& get(const std::string& symbol_name) const
+    template <typename T>
+    inline typename boost::enable_if<boost::is_member_pointer<T>, T>::type get(const char* symbol_name) const {
+        return boost::dll::detail::aggressive_ptr_cast<T>(
+            get_void(symbol_name)
         );
     }
 
-    //! \overload T& get(const char* symbol_name) const
+    //! \overload T& get(const std::string& symbol_name) const
     template <typename T>
-    inline T& get(const std::string& symbol_name) const {
-        return get<T>(symbol_name.c_str());
+    inline typename boost::disable_if<boost::is_member_pointer<T>, T&>::type get(const char* symbol_name) const {
+        return *boost::dll::detail::aggressive_ptr_cast<T*>(
+            get_void(symbol_name)
+        );
     }
 
     /*!
@@ -369,7 +379,6 @@ public:
     *
     * \b Example:
     * \code
-    * shared_library lib("test_lib.so");
     * int& i = lib.get_alias<int>("integer_alias_name");
     * \endcode
     *
@@ -390,9 +399,9 @@ public:
 
 private:
     /// @cond
-    // get_impl is required to reduce binary size: it does not depend on a template
+    // get_void is required to reduce binary size: it does not depend on a template
     // parameter and will be instantiated only once.
-    void* get_impl(const char* sb) const {
+    void* get_void(const char* sb) const {
         boost::system::error_code ec;
 
         if (!is_loaded()) {

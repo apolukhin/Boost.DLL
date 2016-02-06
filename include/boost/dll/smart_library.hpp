@@ -66,15 +66,14 @@ using boost::dll::detail::destructor;
 *
 * This does however not happen when the value is set inside the constructor function.
 */
-class smart_library
-{
+class smart_library {
     shared_library _lib;
     detail::mangled_storage_impl _storage;
+
 public:
     /*!
      * Get the underlying shared_library
      */
-
     const shared_library &shared_lib() const {return _lib;}
 
     using mangled_storage = detail::mangled_storage_impl;
@@ -84,49 +83,22 @@ public:
     * \throw Nothing.
     */
     const mangled_storage &symbol_storage() const {return _storage;}
-    /*!
-    * Creates empty smart_library.
-    *
-    * \throw Nothing.
-    */
-    smart_library() BOOST_NOEXCEPT;
 
-    /*!
-    * Creates a smart_library object and loads a library by specified path
-    * with a specified mode.
-    *
-    * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
-    *           const wchar_t* or boost::filesystem::path.
-    *
-    * \param mode A mode that will be used on library load.
-    *
-    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
-    *
-    */
-    smart_library(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode)
-    {
+    //! \copydoc shared_library::shared_library()
+    smart_library() BOOST_NOEXCEPT {};
+
+    //! \copydoc shared_library::shared_library(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode)
+    smart_library(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
         _lib.load(lib_path, mode);
         _storage.load(lib_path, mode);
     }
 
-    /*!
-    * Creates a smart_library object and loads a library by specified path
-    * with a specified mode.
-    *
-    * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
-    *           const wchar_t* or boost::filesystem::path.
-    *
-    * \param mode A mode that will be used on library load.
-    *
-    * \param ec Variable that will be set to the result of the operation.
-    *
-    * \throw std::bad_alloc in case of insufficient memory.
-    */
+    //! \copydoc shared_library::shared_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
     smart_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
         load(lib_path, mode, ec);
     }
 
-    //! \overload smart_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
+    //! \copydoc shared_library::shared_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec)
     smart_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
         load(lib_path, mode, ec);
     }
@@ -186,21 +158,8 @@ public:
     */
     ~smart_library() BOOST_NOEXCEPT {};
 
-    /*!
-    * Loads a library by specified path with a specified mode.
-    *
-    * Note that if some library is already loaded in this shared_library instance, load will
-    * call unload() and then load the new provided library.
-    *
-    * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
-    *           const wchar_t* or boost::filesystem::path.
-    *
-    * \param mode A mode that will be used on library load.
-    *
-    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
-    *
-    */
-    void load(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode)  {
+    //! \copydoc shared_library::load(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode)
+    void load(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
         boost::system::error_code ec;
         _storage.load(lib_path);
         _lib.load(lib_path, mode, ec);
@@ -210,31 +169,20 @@ public:
         }
     }
 
-    /*!
-    * Loads a library by specified path with a specified mode.
-    *
-    * Note that if some library is already loaded in this shared_library instance, load will
-    * call unload() and then load the new provided library.
-    *
-    * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
-    *           const wchar_t* or boost::filesystem::path.
-    *
-    * \param ec Variable that will be set to the result of the operation.
-    *
-    * \throw std::bad_alloc in case of insufficient memory.
-    */
-    void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)  {
+    //! \copydoc shared_library::load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
+    void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
         ec.clear();
         _storage.load(lib_path);
         _lib.load(lib_path, mode, ec);
     }
 
-    //! \overload void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
-    void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec)  {
+    //! \copydoc shared_library::load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec)
+    void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
         ec.clear();
         _storage.load(lib_path);
         _lib.load(lib_path, mode, ec);
     }
+
     /*!
      * Load a variable from the referenced library.
      *
@@ -250,10 +198,10 @@ public:
      *
      */
     template<typename T>
-    T& get_variable(const std::string &name)
-    {
+    T& get_variable(const std::string &name) {
         return _lib.get<T>(_storage.get_variable<T>(name));
     }
+
     /*!
      * Load a function from the referenced library.
      *
@@ -277,10 +225,10 @@ public:
      *
      */
     template<typename Func>
-    Func& get_function(const std::string &name)
-    {
+    Func& get_function(const std::string &name) {
         return _lib.get<Func>(_storage.get_function<Func>(name));
     }
+
     /*!
      * Load a member-function from the referenced library.
      *
@@ -307,15 +255,10 @@ public:
      *
      */
     template<typename Class, typename Func>
-    typename detail::get_mem_fn_type<Class, Func>::mem_fn get_mem_fn(const std::string &name) {
-        typename detail::get_mem_fn_type<Class, Func>::mem_fn res = 0;
-
-        // Not a very nice solution...
-        void* data = &_lib.get<unsigned char>(
+    typename detail::get_mem_fn_type<Class, Func>::mem_fn get_mem_fn(const std::string& name) {
+        return _lib.get<typename detail::get_mem_fn_type<Class, Func>::mem_fn>(
             _storage.get_mem_fn<Class, Func>(name)
         );
-        std::memcpy(&res, &data, sizeof(res));
-        return res;
     }
 
     /*!
@@ -336,8 +279,7 @@ public:
      *
      */
     template<typename Signature>
-    constructor<Signature> get_constructor()
-    {
+    constructor<Signature> get_constructor() {
         return detail::load_ctor<Signature>(_lib, _storage.get_constructor<Signature>());
     }
 
@@ -359,10 +301,8 @@ public:
      *
      */
     template<typename Class>
-    destructor<Class> get_destructor()
-    {
+    destructor<Class> get_destructor() {
         return detail::load_dtor<Class>(_lib, _storage.get_destructor<Class>());
-
     }
     /*!
      * Load the typeinfo of the given type.
@@ -408,88 +348,48 @@ public:
      * \attention If the alias-type is not large enough for the imported class, it will result in undefined behaviour.
      * \warning The alias will only be applied for the type signature, it will not replace the token in the scoped name.
      */
-    template<typename Alias> void add_type_alias(const std::string& name)
-    {
+    template<typename Alias> void add_type_alias(const std::string& name) {
         this->_storage.add_alias<Alias>(name);
     }
 
-    /*!
-    * Unloads a shared library. If library was loaded multiple times
-    * by different instances of shared_library, the actual DLL/DSO won't be unloaded until
-    * there is at least one instance of shared_library holding a reference to it.
-    *
-    * \post this->is_loaded() returns false.
-    * \throw Nothing.
-    */
+    //! \copydoc shared_library::unload()
     void unload() BOOST_NOEXCEPT {
         _storage.clear();
         _lib.unload();
     }
 
-    /*!
-    * Check if an library is loaded.
-    *
-    * \return true if a library has been loaded.
-    * \throw Nothing.
-    */
+    //! \copydoc shared_library::is_loaded() const
     bool is_loaded() const BOOST_NOEXCEPT {
         return _lib.is_loaded();
     }
 
-    /*!
-    * Check if an library is not loaded.
-    *
-    * \return true if a library has not been loaded.
-    * \throw Nothing.
-    */
+    //! \copydoc shared_library::operator!() const
     bool operator!() const BOOST_NOEXCEPT {
         return !is_loaded();
     }
 
-    /*!
-    * Check if an library is loaded.
-    *
-    * \return true if a library has been loaded.
-    * \throw Nothing.
-    */
+    //! \copydoc shared_library::operator bool() const
     BOOST_EXPLICIT_OPERATOR_BOOL()
 
-    /*!
-    * Search for a given symbol on loaded library. Works for all symbols, including alias names.
-    *
-    * \param symbol_name Null-terminated symbol name. Can handle std::string, char*, const char*.
-    * \return `true` if the loaded library contains a symbol with a given name.
-    * \throw Nothing.
-    */
+    //! \copydoc shared_library::has(const char* symbol_name) const
     bool has(const char* symbol_name) const BOOST_NOEXCEPT {
         return _lib.has(symbol_name);
     }
 
-    //! \overload bool has(const char* symbol_name) const
+    //! \copydoc shared_library::has(const std::string& symbol_name) const
     bool has(const std::string& symbol_name) const BOOST_NOEXCEPT {
         return _lib.has(symbol_name);
     }
-    /*!
-    * Makes *this share the same shared object as lib. If *this is loaded, then unloads it.
-    *
-    * \param lib A shared_library instance to share.
-    * \post lib.location() == this->location()
-    * \throw boost::system::system_error, std::bad_alloc in case of insufficient memory.
-    */
-    smart_library& assign(const smart_library& lib)
-    {
+
+    //! \copydoc shared_library::assign(const shared_library& lib)
+    smart_library& assign(const smart_library& lib) {
        _lib.assign(lib._lib);
        _storage.assign(lib._storage);
        return *this;
     }
-    /*!
-    * Swaps two libraries. Does not invalidate existing symbols and functions loaded from libraries.
-    *
-    * \param rhs Library to swap with.
-    * \throw Nothing.
-    */
-    void swap(smart_library& rhs) BOOST_NOEXCEPT
-    {
+
+    //! \copydoc shared_library::swap(shared_library& rhs)
+    void swap(smart_library& rhs) BOOST_NOEXCEPT {
         _lib.swap(rhs._lib);
         _storage.swap(rhs._storage);
     }
