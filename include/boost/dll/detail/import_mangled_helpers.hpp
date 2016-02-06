@@ -205,6 +205,14 @@ struct is_mem_fn_seq_impl
                  boost::false_type>::type type;
 };
 
+template<class T, class U>
+struct is_mem_fn_seq_impl<T, U>
+{
+    typedef typename boost::conditional<
+                 boost::is_function<U>::value && boost::is_object<T>::value,
+                 boost::true_type, boost::false_type>::type type;
+};
+
 template<class T, class U, class Last>
 struct is_mem_fn_seq_impl<T, U, Last>
 {
