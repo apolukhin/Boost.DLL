@@ -131,25 +131,51 @@ public:
         load(lib_path, mode, ec);
     }
     /*!
-     * copy a shared_library object.
+     * copy a smart_library object.
+     *
+     * \param lib A smart_library to move from.
+     *
+     * \throw Nothing.
+     */
+     smart_library(const smart_library & lib) BOOST_NOEXCEPT
+         : _lib(lib._lib), _storage(lib._storage)
+     {}
+   /*!
+    * Move a smart_library object.
+    *
+    * \param lib A smart_library to move from.
+    *
+    * \throw Nothing.
+    */
+    smart_library(BOOST_RV_REF(smart_library) lib) BOOST_NOEXCEPT
+        : _lib(boost::move(static_cast<shared_library&>(lib._lib))), _storage(boost::move(lib._storage))
+    {}
+
+    /*!
+      * Construct from a shared_library object.
+      *
+      * \param lib A shared_library to move from.
+      *
+      * \throw Nothing.
+      */
+      explicit smart_library(const shared_library & lib) BOOST_NOEXCEPT
+          : _lib(lib)
+      {
+          _storage.load(lib.location());
+      }
+     /*!
+     * Construct from a shared_library object.
      *
      * \param lib A shared_library to move from.
      *
      * \throw Nothing.
      */
-     smart_library(const smart_library & lib) BOOST_NOEXCEPT // Move ctor
-         : _lib(lib._lib), _storage(lib._storage)
-     {}
-   /*!
-    * Move a shared_library object.
-    *
-    * \param lib A shared_library to move from.
-    *
-    * \throw Nothing.
-    */
-    smart_library(BOOST_RV_REF(smart_library) lib) BOOST_NOEXCEPT // Move ctor
-        : _lib(boost::move(static_cast<shared_library&>(lib._lib))), _storage(boost::move(lib._storage))
-    {}
+     explicit smart_library(BOOST_RV_REF(shared_library) lib) BOOST_NOEXCEPT
+         : _lib(boost::move(static_cast<shared_library&>(lib)))
+     {
+         _storage.load(lib.location());
+     }
+
     /*!
     * Destroys the smart_library.
     * `unload()` is called if the DLL/DSO was loaded. If library was loaded multiple times
