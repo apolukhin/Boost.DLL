@@ -121,7 +121,11 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
 template<typename Class, typename Lib>
 destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt) {
     typedef typename destructor<Class>::standard_t standard_t;
-    standard_t dtor = &lib.template get< typename boost::remove_pointer<standard_t>::type >(dt);
+    //@apolukhin That does NOT work this way with MSVC-14 x32 via memcpy. The x64 is different.
+    //standard_t dtor = &lib.template get< typename boost::remove_pointer<standard_t>::type >(dt);
+    void * buf = &lib.template get<int>(dt);
+    standard_t dtor;
+    std::memcpy(&dtor, &buf, sizeof(dtor));
     return destructor<Class>(dtor);
 }
 
