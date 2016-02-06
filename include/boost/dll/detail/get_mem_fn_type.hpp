@@ -6,8 +6,8 @@
 
 // For more information, see http://www.boost.org
 
-#ifndef BOOST_DLL_SMART_LIBRARY_HPP_
-#define BOOST_DLL_SMART_LIBRARY_HPP_
+#ifndef BOOST_DLL_DETAIL_GET_MEM_FN_TYPE_HPP_
+#define BOOST_DLL_DETAIL_GET_MEM_FN_TYPE_HPP_
 
 namespace boost { namespace dll { namespace detail {
 

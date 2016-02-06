@@ -4,8 +4,8 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef INCLUDE_BOOST_DLL_SMART_LIBRARY_HPP_
-#define INCLUDE_BOOST_DLL_SMART_LIBRARY_HPP_
+#ifndef BOOST_DLL_SMART_LIBRARY_HPP_
+#define BOOST_DLL_SMART_LIBRARY_HPP_
 
 /// \file boost/dll/smart_library.hpp
 /// \warning Extremely experimental! Will change in next version of Boost!
