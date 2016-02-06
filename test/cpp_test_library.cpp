@@ -6,6 +6,10 @@
 
 // For more information, see http://www.boost.org
 
+#include <boost/predef.h>
+
+
+#if (__cplusplus >= 201402L) || (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(14,0,0))
 
 #include <boost/config.hpp>
 #include <boost/variant.hpp>
@@ -117,3 +121,5 @@ some_class::~some_class()
 }
 
 }
+
+#endif
