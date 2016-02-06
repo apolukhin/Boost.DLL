@@ -56,8 +56,11 @@ struct constructor<Class(Args...)> {
     //! True if a allocating constructor could be loaded.
     bool has_allocating() const { return allocating != nullptr; }
 
+    //! True if a standard constructor could be loaded.
+    bool has_standard() const { return standard != nullptr; }
+
     //! False if neither the allocating nor the standard constructor is available.
-    bool is_empty() const { return !((allocating == nullptr) && (standard != nullptr)) ; }
+    bool is_empty() const { return (allocating == nullptr) && (standard == nullptr) ; }
 
     constructor() = delete;
     constructor(const constructor &) = default;
@@ -97,8 +100,11 @@ struct destructor {
     //! True if a deleting destructor could be loaded.
     bool has_deleting() const { return deleting != nullptr; }
 
+    //! True if a standard destructor could be loaded.
+    bool has_standard() const { return standard != nullptr; }
+
     //! False if neither the deleting nor the standard destructor is available.
-    bool is_empty() const { return !((deleting == nullptr) && (standard != nullptr)) ; }
+    bool is_empty() const { return (deleting == nullptr) && (standard == nullptr) ; }
     destructor() = delete;
 
     //! Copy destructor.
