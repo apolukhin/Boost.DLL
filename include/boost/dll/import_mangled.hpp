@@ -59,11 +59,11 @@ public:
 };
 
 
-template<class Sequence>
+template<class Class, class Sequence>
 class mangled_library_mem_fn;
 
-template <class ... Ts>
-class mangled_library_mem_fn<sequence<Ts...>> {
+template <class Class, class ... Ts>
+class mangled_library_mem_fn<Class, sequence<Ts...>> {
     // Copying of `boost::dll::shared_library` is very expensive, so we use a `shared_ptr` to make it faster.
     typedef mem_fn_tuple<Ts...> call_tuple_t;
     boost::shared_ptr<call_tuple_t>   f_;
@@ -110,7 +110,7 @@ template <class Class, class ...Args>
 struct mangled_import_type<sequence<Class, Args...>, false, true, false> //is member-function
 {
     typedef typename boost::dll::experimental::detail::make_mem_fn_seq<Class, Args...>::type actual_sequence;
-    typedef typename boost::dll::experimental::detail::mangled_library_mem_fn<actual_sequence> type;
+    typedef typename boost::dll::experimental::detail::mangled_library_mem_fn<Class, actual_sequence> type;
 
 
     template<class ... ArgsIn>
@@ -297,6 +297,26 @@ BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(BOOST_RV_REF(shared_library)
 template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(BOOST_RV_REF(shared_library) lib, const std::string& name) {
     return import_mangled<Args...>(boost::move(lib), name.c_str());
+}
+
+
+//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
+template <class ...Args>
+BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(
+        const boost::shared_ptr<boost::dll::experimental::smart_library>& p,
+        const std::string& name)
+{
+    return import_mangled<Args...>(p, name.c_str());
+}
+
+//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
+template <class ...Args>
+BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(
+        const boost::shared_ptr<boost::dll::experimental::smart_library> & p,
+        const char* name)
+{
+    typedef typename boost::dll::experimental::detail::mangled_import_type<detail::sequence<Args...>> type;
+    return type::make(p, name);
 }
 
 

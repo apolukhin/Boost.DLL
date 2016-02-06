@@ -92,6 +92,10 @@ struct BOOST_SYMBOL_EXPORT some_class : some_father
 };
 
 
+BOOST_SYMBOL_EXPORT extern std::size_t size_of_some_class;
+std::size_t size_of_some_class = sizeof(some_space::some_class);
+
+
 extern "C"  BOOST_SYMBOL_EXPORT const volatile some_class* this_;
 const volatile some_class * this_ = nullptr;
 
@@ -120,5 +124,6 @@ some_class::~some_class()
 }
 
 }
+
 
 #endif

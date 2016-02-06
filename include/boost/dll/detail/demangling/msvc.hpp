@@ -70,6 +70,10 @@ public:
 
     template<typename T>
     std::string get_type_info();
+
+    template<typename T>
+    std::vector<std::string> get_related();
+
 };
 
 void mangled_storage_impl::trim_typename(std::string & val)
@@ -411,6 +415,21 @@ std::string mangled_storage_impl::get_type_info()
         return found->mangled;
     else
         return "";
+}
+
+template<typename T>
+std::vector<std::string> mangled_storage_impl::get_related()
+{
+    std::vector<std::string> ret;
+    auto name = get_name<T>();
+
+    for (auto & c : storage_)
+    {
+        if (c.demangled.find(name) != std::string::npos)
+            ret.push_back(c.demangled);
+    }
+
+    return ret;
 }
 
 
