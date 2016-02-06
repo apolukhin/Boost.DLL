@@ -23,6 +23,7 @@
 #   include <boost/dll/detail/demangling/itanium.hpp>
 #endif
 
+
 namespace boost { namespace dll { namespace detail {
 
 /*!
@@ -71,8 +72,8 @@ struct constructor<Class(Args...)> {
 
 template <typename Class>
 struct destructor {
-#if !defined(BOOST_MSVC) && !defined(BOOST_MSVC_VER)
-    typedef void( *type)(Class* const);
+#if !defined(_WIN32)
+    typedef void(*type)(Class* const);
 #elif !defined(_WIN64)
     typedef void(__thiscall * type)(Class* const);
 #else
@@ -141,12 +142,17 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
 
     //see here for the abi http://mentorembedded.github.io/cxx-abi/abi.html#mangling-special-ctor-dtor
 
-    if (!ct.C1.empty()) {
-        s = lib.template get<stand>(ct.C1);
+    if (!ct.C1.empty())
+    {
+        //the only way this works on mingw/win.
+        //For some reason there is always an 0xA in the following poniter, which screws with the this pointer.
+        void *buf = &lib.template get<int>(ct.C1);
+        std::memcpy(&s, &buf, sizeof(void*));
     }
-
-    if (!ct.C3.empty()) {
-        a = lib.template get<alloc>(ct.C3);
+    if (!ct.C3.empty())
+    {
+        void *buf = &lib.template get<int>(ct.C3);
+        std::memcpy(&a, &buf, sizeof(void*));
     }
 
     return constructor<Signature>(s,a);

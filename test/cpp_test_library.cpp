@@ -8,7 +8,6 @@
 
 #include <boost/predef.h>
 
-
 #if (__cplusplus >= 201402L) || (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(14,0,0))
 
 #include <boost/config.hpp>
