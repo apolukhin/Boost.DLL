@@ -13,6 +13,7 @@
 #include <boost/dll/detail/demangling/demangle_symbol.hpp>
 #include <boost/dll/library_info.hpp>
 #include <boost/type_index/ctti_type_index.hpp>
+#include <boost/type_index/stl_type_index.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
 namespace boost { namespace dll { namespace detail {
@@ -56,7 +57,8 @@ public:
     std::string get_name() const
     {
         auto tx = boost::typeindex::ctti_type_index::type_id<T>();
-        auto val = (aliases_.count(tx) > 0) ? aliases_.at(tx) : tx.pretty_name();
+        using boost::typeindex::type_id;
+        auto val = (aliases_.count(tx) > 0) ? aliases_.at(tx) : type_id<T>().pretty_name();
         return val;
     }
 
