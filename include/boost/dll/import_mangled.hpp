@@ -38,7 +38,7 @@ class mangled_library_function {
 
 public:
     inline mangled_library_function(const boost::shared_ptr<smart_library>& lib, Ts*... func_ptr) BOOST_NOEXCEPT
-        : f_(lib, function_tuple<Ts...>(func_ptr...))
+        : f_(lib, new function_tuple<Ts...>(func_ptr...))
     {}
 
 
@@ -59,32 +59,26 @@ public:
 };
 
 
+template<class Sequence>
+class mangled_library_mem_fn;
 
 template <class ... Ts>
-class mangled_library_mem_fn {
+class mangled_library_mem_fn<sequence<Ts...>> {
     // Copying of `boost::dll::shared_library` is very expensive, so we use a `shared_ptr` to make it faster.
     typedef mem_fn_tuple<Ts...> call_tuple_t;
-    typedef mem_fn_call_proxy<Ts...> call_proxy_t;
     boost::shared_ptr<call_tuple_t>   f_;
 
 public:
     inline mangled_library_mem_fn(const boost::shared_ptr<smart_library>& lib,
-                                  Ts... func_ptr) BOOST_NOEXCEPT
-        : f_(lib, call_tuple_t(func_ptr...))
+                                  typename Ts::mem_fn... func_ptr) BOOST_NOEXCEPT
+        : f_(lib, new call_tuple_t(func_ptr...))
     {}
 
- /*   template <class ClassIn, class... Args>
-    inline auto operator()(ClassIn *cl, Args&&... args,
-            typename boost::enable_if<boost::is_same<typename boost::remove_cv<ClassIn>, Class>>::type * = nullptr
-                    ) const -> decltype( (*f_)(cl, static_cast<Args&&>(args)...) )
+    template <class ClassIn, class... Args>
+    inline auto operator()(ClassIn *cl, Args&&... args) const -> decltype( (*f_)(cl, static_cast<Args&&>(args)...) )
     {
         return (*f_)(cl, static_cast<Args&&>(args)...);
     }
-    template<class ClassIn, class = typename boost::enable_if<boost::is_same<typename boost::remove_cv<ClassIn>, Class>>::type>
-    inline call_proxy_t operator->*(ClassIn* cl)
-    {
-        return mem_fn_call_proxy<ClassIn, call_tuple_t>(cl, *f_);
-    }*/
 };
 
 
@@ -115,8 +109,8 @@ struct mangled_import_type<sequence<Args...>, true,false,false> //is function
 template <class Class, class ...Args>
 struct mangled_import_type<sequence<Class, Args...>, false, true, false> //is member-function
 {
-    typedef boost::dll::experimental::detail::mangled_library_mem_fn<Args...> type;
-    typedef typename boost::dll::experimental::detail::make_mem_fn_seq<Args...>::type actual_sequence;
+    typedef typename boost::dll::experimental::detail::make_mem_fn_seq<Class, Args...>::type actual_sequence;
+    typedef typename boost::dll::experimental::detail::mangled_library_mem_fn<actual_sequence> type;
 
 
     template<class ... ArgsIn>
@@ -125,11 +119,11 @@ struct mangled_import_type<sequence<Class, Args...>, false, true, false> //is me
             const std::string & name,
             sequence<ArgsIn...> * )
     {
-        type(p, boost::addressof(p->get_mem_fn<ArgsIn::class_type, ArgsIn::func_type>(name))...);
+        return type(p, p->get_mem_fn<typename ArgsIn::class_type, typename ArgsIn::func_type>(name)...);
     }
 
     static type make(
-           const boost::shared_ptr<boost::dll::shared_library>& p,
+           const boost::shared_ptr<boost::dll::experimental::smart_library>& p,
            const std::string& name)
     {
         return make_impl(p, name, static_cast<actual_sequence*>(nullptr));
@@ -157,7 +151,7 @@ struct mangled_import_type<sequence<T>, false, false, true> //is variable
 
 #ifndef BOOST_DLL_DOXYGEN
 #   define BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE inline typename \
-    boost::dll::experimental::detail::mangled_import_type<detail::sequence<Args...>>::type
+    boost::dll::experimental::detail::mangled_import_type<boost::dll::experimental::detail::sequence<Args...>>::type
 #endif
 
 /*
@@ -166,6 +160,57 @@ struct mangled_import_type<sequence<T>, false, false, true> //is variable
  * import_mangled<thingy(xyz)>("Function");
  * import mangled<thingy, void(int)>("Function");
  */
+
+/*!
+* Returns callable object or boost::shared_ptr<T> that holds the symbol imported
+* from the loaded library. Returned value refcounts usage
+* of the loaded shared library, so that it won't get unload until all copies of return value
+* are not destroyed.
+*
+* For importing symbols by \b alias names use \forcedlink{import_alias} method.
+*
+* \b Examples:
+*
+* \code
+* boost::function<int(int)> f = import_mangled<int(int)>("test_lib.so", "integer_func_name");
+*
+* auto f_cpp11 = import_mangled<int(int)>("test_lib.so", "integer_func_name");
+* \endcode
+*
+* \code
+* boost::shared_ptr<int> i = import_mangled<int>("test_lib.so", "integer_name");
+* \endcode
+*
+* Additionally you can also import overloaded symbols, including member-functions.
+*
+* \code
+* auto fp = import_mangled<void(int), void(double)>("test_lib.so", "func");
+* \endcode
+*
+* \code
+* auto fp = import_mangled<my_class, void(int), void(double)>("test_lib.so", "func");
+* \endcode
+*
+* If qualified member-functions are needed, this can be set by repeating the class name with const or volatile.
+* All following signatures after the redifintion will use this, i.e. the latest.
+*
+* * * \code
+* auto fp = import_mangled<my_class, void(int), void(double),
+*                          const my_class, void(int), void(double)>("test_lib.so", "func");
+* \endcode
+*
+* \b Template \b parameter \b T:    Type of the symbol that we are going to import. Must be explicitly specified.
+*
+* \param lib Path to shared library or shared library to load function from.
+* \param name Null-terminated C or C++ mangled name of the function to import. Can handle std::string, char*, const char*.
+* \param mode An mode that will be used on library load.
+*
+* \return callable object if T is a function type, or boost::shared_ptr<T> if T is an object type.
+*
+* \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+*       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
+*/
+
 
 template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const boost::filesystem::path& lib, const char* name,
@@ -219,6 +264,38 @@ BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(BOOST_RV_REF(smart_library) 
 //! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
 template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(BOOST_RV_REF(smart_library) lib, const std::string& name) {
+    return import_mangled<Args...>(boost::move(lib), name.c_str());
+}
+
+//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
+template <class ...Args>
+BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const shared_library& lib, const char* name) {
+    typedef typename boost::dll::experimental::detail::mangled_import_type<detail::sequence<Args...>> type;
+
+    boost::shared_ptr<boost::dll::experimental::smart_library> p = boost::make_shared<boost::dll::experimental::smart_library>(lib);
+    return type::make(p, name);
+}
+
+//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
+template <class ...Args>
+BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const shared_library& lib, const std::string& name) {
+    return import_mangled<Args...>(lib, name.c_str());
+}
+
+//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
+template <class ...Args>
+BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(BOOST_RV_REF(shared_library) lib, const char* name) {
+    typedef typename boost::dll::experimental::detail::mangled_import_type<detail::sequence<Args...>> type;
+
+    boost::shared_ptr<boost::dll::experimental::smart_library> p = boost::make_shared<boost::dll::experimental::smart_library>(
+        boost::move(lib)
+    );
+    return type::make(p, name);
+}
+
+//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
+template <class ...Args>
+BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(BOOST_RV_REF(shared_library) lib, const std::string& name) {
     return import_mangled<Args...>(boost::move(lib), name.c_str());
 }
 
