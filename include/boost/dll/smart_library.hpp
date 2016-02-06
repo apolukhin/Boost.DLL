@@ -130,7 +130,16 @@ public:
     smart_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
         load(lib_path, mode, ec);
     }
-
+    /*!
+     * copy a shared_library object.
+     *
+     * \param lib A shared_library to move from.
+     *
+     * \throw Nothing.
+     */
+     smart_library(const smart_library & lib) BOOST_NOEXCEPT // Move ctor
+         : _lib(lib._lib), _storage(lib._storage)
+     {}
    /*!
     * Move a shared_library object.
     *
