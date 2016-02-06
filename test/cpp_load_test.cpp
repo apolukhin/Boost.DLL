@@ -123,6 +123,7 @@ int main(int argc, char* argv[])
 
     auto set = sm.get_mem_fn<override_class, void(int)>("set");
 
+
     try {
         sm.get_mem_fn<override_class, int()>("get");
         BOOST_TEST(false);
@@ -149,7 +150,7 @@ int main(int argc, char* argv[])
 
     //actually never used.
     if (ctor_v.has_allocating())
-    {
+   {
         //allocate
         auto p = ctor_v.call_allocating();
 
@@ -159,28 +160,38 @@ int main(int argc, char* argv[])
         //deallocate
         dtor.call_deleting(p);
         //now i cannot assert that it deletes, since it would crash.
-    }
-    //ok, now load the ctor/dtor
-    override_class oc;
+   }
+    //More tests to assure the correct this-ptr
+
+   typedef override_class * override_class_p;
+   override_class_p &this_dll = sm.shared_lib().get<override_class_p>("this_");
+
+
+   //ok, now load the ctor/dtor
+   override_class oc;
+
+   override_class_p this_exe = &oc;
 
     for (auto & i : oc.arr)
        i = 0;
 
-    BOOST_TEST((oc.*get)() == 0);
 
-    ctor_i.call_standard(&oc, 12); //initialized.
+    BOOST_TEST((oc.*get)() == 0);           BOOST_TEST(this_dll == this_exe);
+
+    ctor_i.call_standard(&oc, 12);          BOOST_TEST(this_dll == this_exe);
 
     BOOST_TEST(static_val == 12);
-    BOOST_TEST((oc.*get)() == 456);
+    BOOST_TEST((oc.*get)() == 456);         BOOST_TEST(this_dll == this_exe);
     (oc.*set)(42);
-    BOOST_TEST((oc.*get)() == 42);
+    BOOST_TEST((oc.*get)() == 42);          BOOST_TEST(this_dll == this_exe);
 
-    BOOST_TEST((oc.*func_dd)(3,2)   == 6);
-    BOOST_TEST((oc.*func_ii)(1,2)   == 3);
-    BOOST_TEST((oc.*func_ddc)(10,2) == 5);
-    BOOST_TEST((oc.*func_iiv)(9,2)  == 7);
 
-    dtor.call_standard(&oc);
+    BOOST_TEST((oc.*func_dd)(3,2)   == 6);  BOOST_TEST(this_dll == this_exe);
+    BOOST_TEST((oc.*func_ii)(1,2)   == 3);  BOOST_TEST(this_dll == this_exe);
+    BOOST_TEST((oc.*func_ddc)(10,2) == 5);  BOOST_TEST(this_dll == this_exe);
+    BOOST_TEST((oc.*func_iiv)(9,2)  == 7);  BOOST_TEST(this_dll == this_exe);
+
+    dtor.call_standard(&oc);                BOOST_TEST(this_dll == this_exe);
     BOOST_TEST(static_val == 0);
 
     const auto & ti = sm.get_type_info<override_class>();
