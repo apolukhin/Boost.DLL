@@ -123,14 +123,14 @@ class imported_class
 public:
     //alias to construct with explicit parameter list
     template<typename ...Args>
-    static imported_class<T> make(const boost::shared_ptr<smart_library>& lib,  Args&&...args)
+    static imported_class<T> make(const boost::shared_ptr<smart_library>& lib,  Args...args)
     {
         typedef detail::sequence<Args...> *seq;
         return imported_class(seq(), lib, static_cast<Args>(args)...);
     }
 
     template<typename ...Args>
-    static imported_class<T> make(const boost::shared_ptr<smart_library>& lib, std::size_t size,  Args&&...args)
+    static imported_class<T> make(const boost::shared_ptr<smart_library>& lib, std::size_t size,  Args...args)
     {
         typedef detail::sequence<Args...> *seq;
         return imported_class(seq(), lib, size, static_cast<Args>(args)...);
@@ -145,9 +145,12 @@ public:
     imported_class& operator=(imported_class&) = delete;
     imported_class& operator=(imported_class&&) = default;
 
+
+#if (!defined(BOOST_MSVC) && !defined(BOOST_MSVC_FULL_VER))
     bool is_move_constructible() {return !_lib->symbol_storage().template get_constructor<T(T&&)>     ().empty();}
-    bool is_copy_constructible() {return !_lib->symbol_storage().template get_constructor<T(const T&)>().empty();}
     bool is_move_assignable()    {return !_lib->symbol_storage().template get_mem_fn<T, T&(T&&)>     ("operator=").empty();}
+#endif
+    bool is_copy_constructible() {return !_lib->symbol_storage().template get_constructor<T(const T&)>().empty();}
     bool is_copy_assignable()    {return !_lib->symbol_storage().template get_mem_fn<T, T&(const T&)>("operator=").empty();}
 
     imported_class<T> copy();

@@ -57,9 +57,12 @@ int main(int argc, char* argv[])
 
 
         BOOST_TEST(!cl.is_copy_assignable());
-        BOOST_TEST( cl.is_move_assignable());
         BOOST_TEST(!cl.is_copy_constructible());
+
+#if (!defined(BOOST_MSVC) && !defined(BOOST_MSVC_FULL_VER))
+        BOOST_TEST( cl.is_move_assignable());
         BOOST_TEST( cl.is_move_constructible());
+#endif
 
         BOOST_TEST(*static_val == 42);
 

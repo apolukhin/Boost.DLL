@@ -283,7 +283,7 @@ public:
      */
     template<typename Signature>
     constructor<Signature> get_constructor() {
-        return detail::load_ctor<Signature>(_lib, _storage.get_constructor<Signature>());
+        return boost::dll::detail::load_ctor<Signature>(_lib, _storage.get_constructor<Signature>());
     }
 
     /*!
@@ -305,7 +305,7 @@ public:
      */
     template<typename Class>
     destructor<Class> get_destructor() {
-        return detail::load_dtor<Class>(_lib, _storage.get_destructor<Class>());
+        return boost::dll::detail::load_dtor<Class>(_lib, _storage.get_destructor<Class>());
     }
     /*!
      * Load the typeinfo of the given type.
