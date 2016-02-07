@@ -84,6 +84,9 @@ public:
     */
     const mangled_storage &symbol_storage() const {return _storage;}
 
+    ///Overload, for current development.
+    mangled_storage &symbol_storage() {return _storage;}
+
     //! \copydoc shared_library::shared_library()
     smart_library() BOOST_NOEXCEPT {};
 

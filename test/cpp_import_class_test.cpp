@@ -52,7 +52,14 @@ int main(int argc, char* argv[])
     std::size_t type_size = *import_mangled<std::size_t>(sm, "some_space::size_of_some_class");
 
     {
-        auto cl = import_class<class override_class, int>(sm, "some_space::some_class", type_size, 42);
+        class override_class{};
+        auto cl = import_class<override_class, int>(sm, "some_space::some_class", type_size, 42);
+
+
+        BOOST_TEST(!cl.is_copy_assignable());
+        BOOST_TEST( cl.is_move_assignable());
+        BOOST_TEST(!cl.is_copy_constructible());
+        BOOST_TEST( cl.is_move_constructible());
 
         BOOST_TEST(*static_val == 42);
 

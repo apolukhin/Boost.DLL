@@ -86,10 +86,19 @@ struct BOOST_SYMBOL_EXPORT some_class : some_father
     void set(int i)  ;
 
     some_class();
+    some_class(some_class &&);
     some_class(int i);
+
+    some_class& operator=(some_class &&);
+
 
     virtual ~some_class();
 };
+
+some_class::some_class(some_class &&){}
+
+
+some_class& some_class::operator=(some_class &&ref) {return ref;}
 
 
 BOOST_SYMBOL_EXPORT extern std::size_t size_of_some_class;

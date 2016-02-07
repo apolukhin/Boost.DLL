@@ -145,10 +145,10 @@ public:
     imported_class& operator=(imported_class&) = delete;
     imported_class& operator=(imported_class&&) = default;
 
-    bool is_move_constructible() const {return !_lib->symbol_storage().template get_constructor<T(T&&)>     ().empty();}
-    bool is_copy_constructible() const {return !_lib->symbol_storage().template get_constructor<T(const T&)>().empty();}
-    bool is_move_assignable()    const {return !_lib->symbol_storage().template get_mem_fn<T&(T&&)>     ("operator=").empty();}
-    bool is_copy_assignable()    const {return !_lib->symbol_storage().template get_mem_fn<T&(const T&)>("operator=").empty();}
+    bool is_move_constructible() {return !_lib->symbol_storage().template get_constructor<T(T&&)>     ().empty();}
+    bool is_copy_constructible() {return !_lib->symbol_storage().template get_constructor<T(const T&)>().empty();}
+    bool is_move_assignable()    {return !_lib->symbol_storage().template get_mem_fn<T, T&(T&&)>     ("operator=").empty();}
+    bool is_copy_assignable()    {return !_lib->symbol_storage().template get_mem_fn<T, T&(const T&)>("operator=").empty();}
 
     imported_class<T> copy();
     imported_class<T> move();
@@ -317,7 +317,6 @@ import_class(const boost::shared_ptr<smart_library>& lib, Args...args)
 template<typename T, typename ... Args> imported_class<T>
 import_class(const boost::shared_ptr<smart_library>& lib, const std::string & alias_name, Args...args)
 {
-    cout << "wrong thingy" << endl;
     lib->add_type_alias<T>(alias_name);
     return imported_class<T>::template make<Args...>(lib, static_cast<Args>(args)...);
 }

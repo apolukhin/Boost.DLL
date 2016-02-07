@@ -12,7 +12,6 @@
 #include <map>
 #include <boost/dll/detail/demangling/demangle_symbol.hpp>
 #include <boost/dll/library_info.hpp>
-#include <boost/type_index/ctti_type_index.hpp>
 #include <boost/type_index/stl_type_index.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
@@ -35,7 +34,7 @@ struct mangled_storage_base
 protected:
     std::vector<entry> storage_;
     ///if a unknown class is imported it can be overloaded by this type
-    std::map<boost::typeindex::ctti_type_index, std::string> aliases_;
+    std::map<boost::typeindex::stl_type_index, std::string> aliases_;
 public:
     void assign(const mangled_storage_base & storage)
     {
@@ -52,13 +51,13 @@ public:
         storage_.clear();
         aliases_.clear();
     }
-    const std::vector<entry> & get_storage() const {return storage_;};
+    std::vector<entry> & get_storage() {return storage_;};
     template<typename T>
     std::string get_name() const
     {
-        auto tx = boost::typeindex::ctti_type_index::type_id<T>();
-        using boost::typeindex::type_id;
-        auto val = (aliases_.count(tx) > 0) ? aliases_.at(tx) : type_id<T>().pretty_name();
+        using boost::typeindex::stl_type_index;
+        auto tx = stl_type_index::type_id<T>();
+        auto val = (aliases_.count(tx) > 0) ? aliases_.at(tx) : stl_type_index::type_id<T>().pretty_name();
         return val;
     }
 
@@ -96,7 +95,7 @@ public:
     template<typename Alias> void add_alias(const std::string& name)
     {
         aliases_.emplace(
-            boost::typeindex::ctti_type_index::type_id<Alias>(),
+            boost::typeindex::stl_type_index::type_id<Alias>(),
             name
             );
     }
