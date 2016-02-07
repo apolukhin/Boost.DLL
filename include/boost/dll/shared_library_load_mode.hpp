@@ -1,4 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
+// Copyright 2015-2016 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -163,7 +164,15 @@ enum type {
     * boost::dll::shared_library lib("./my_plugins/plugin1", load_mode::append_decorations);
     * \endcode
     */
-    append_decorations
+    append_decorations,
+    /*!
+    * \b Platforms: Windows, POSIX
+    *
+    * \b Default: disabled
+    *
+    * Allow loading from system folders if path to library contains no parent path.
+    */
+    search_system_folders
 #elif BOOST_OS_WINDOWS
     default_mode                          = 0,
     dont_resolve_dll_references           = boost::detail::winapi::DONT_RESOLVE_DLL_REFERENCES_,
@@ -174,7 +183,8 @@ enum type {
     rtld_global                           = 0,
     rtld_local                            = 0,
     rtld_deepbind                         = 0,
-    append_decorations                    = 0x00800000
+    append_decorations                    = 0x00800000,
+    search_system_folders                 = (append_decorations << 1)
 #else
     default_mode                          = 0,
     dont_resolve_dll_references           = 0,
@@ -191,21 +201,47 @@ enum type {
     rtld_deepbind                         = RTLD_DEEPBIND,
 #endif
 
-    append_decorations                    = 0x00800000
+    append_decorations                    = 0x00800000,
+    search_system_folders                 = (append_decorations << 1)
 #endif
 };
 
 
 /// Free operators for load_mode::type flag manipulation.
-inline type operator|(type left, type right) BOOST_NOEXCEPT {
-    return (static_cast<type>(
-        static_cast<unsigned int>(left) | static_cast<unsigned int>(right))
+BOOST_CONSTEXPR inline type operator|(type left, type right) BOOST_NOEXCEPT {
+    return static_cast<type>(
+        static_cast<unsigned int>(left) | static_cast<unsigned int>(right)
     );
 }
-
-inline type& operator|=(type& left, type right) BOOST_NOEXCEPT {
+BOOST_CONSTEXPR inline type& operator|=(type& left, type right) BOOST_NOEXCEPT {
     left = left | right;
-    return (left);
+    return left;
+}
+
+BOOST_CONSTEXPR inline type operator&(type left, type right) BOOST_NOEXCEPT {
+    return static_cast<type>(
+        static_cast<unsigned int>(left) & static_cast<unsigned int>(right)
+    );
+}
+BOOST_CONSTEXPR inline type& operator&=(type& left, type right) BOOST_NOEXCEPT {
+    left = left & right;
+    return left;
+}
+
+BOOST_CONSTEXPR inline type operator^(type left, type right) BOOST_NOEXCEPT {
+    return static_cast<type>(
+        static_cast<unsigned int>(left) ^ static_cast<unsigned int>(right)
+    );
+}
+BOOST_CONSTEXPR inline type& operator^=(type& left, type right) BOOST_NOEXCEPT {
+    left = left ^ right;
+    return left;
+}
+
+BOOST_CONSTEXPR inline type operator~(type left) BOOST_NOEXCEPT {
+    return static_cast<type>(
+        ~static_cast<unsigned int>(left)
+    );
 }
 
 }}} // boost::dll::load_mode

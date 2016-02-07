@@ -51,26 +51,32 @@ public:
         return *this;
     }
 
-    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) {
+    void load(const boost::filesystem::path& sl_base, load_mode::type mode, boost::system::error_code &ec) {
         typedef boost::detail::winapi::DWORD_ native_mode_t;
         unload();
 
+        boost::filesystem::path sl =
+            !sl_base.has_parent_path() && !(mode & load_mode::search_system_folders)
+            ? L"." / sl_base
+            : sl_base
+        ;
+        mode &= ~load_mode::search_system_folders;
+
         // Trying to open with appended decorations
         if (!!(mode & load_mode::append_decorations)) {
-            mode = static_cast<load_mode::type>(
-                static_cast<native_mode_t>(mode) & (~static_cast<native_mode_t>(load_mode::append_decorations))
-            );
+            mode &= ~load_mode::append_decorations;
 
             handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, static_cast<native_mode_t>(mode));
             if (!handle_) {
                 // MinGW loves 'lib' prefix and puts it even on Windows platform
+                const boost::filesystem::path load_path = (sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native() + L".dll";
                 handle_ = boost::detail::winapi::LoadLibraryExW(
-                    ((sl.parent_path() / L"lib").native() + sl.filename().native() + L".dll").c_str(),
+                    load_path.c_str(),
                     0,
                     static_cast<native_mode_t>(mode)
                 );
             }
-            
+
             if (handle_) {
                 return;
             }
