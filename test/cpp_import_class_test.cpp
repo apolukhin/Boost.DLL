@@ -28,6 +28,15 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {   
+    auto version = boost::detail::winapi::image_api_version();
+
+
+    cout << "Major Version " << version.major_version << endl;
+    cout << "Minor Version " << version.minor_version << endl;
+    cout << "reserved      " << version.reserved      << endl;
+    cout << "reserved      " << version.reserved      << endl;
+
+    return 1;
 	 using namespace boost::dll;
 	using namespace boost::dll::experimental;
     boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
@@ -59,10 +68,8 @@ int main(int argc, char* argv[])
         BOOST_TEST(!cl.is_copy_assignable());
         BOOST_TEST(!cl.is_copy_constructible());
 
-#if (!defined(BOOST_MSVC) && !defined(BOOST_MSVC_FULL_VER))
         BOOST_TEST( cl.is_move_assignable());
         BOOST_TEST( cl.is_move_constructible());
-#endif
 
         BOOST_TEST(*static_val == 42);
 

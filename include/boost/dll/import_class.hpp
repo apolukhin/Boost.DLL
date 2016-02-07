@@ -146,10 +146,8 @@ public:
     imported_class& operator=(imported_class&&) = default;
 
 
-#if (!defined(BOOST_MSVC) && !defined(BOOST_MSVC_FULL_VER))
     bool is_move_constructible() {return !_lib->symbol_storage().template get_constructor<T(T&&)>     ().empty();}
     bool is_move_assignable()    {return !_lib->symbol_storage().template get_mem_fn<T, T&(T&&)>     ("operator=").empty();}
-#endif
     bool is_copy_constructible() {return !_lib->symbol_storage().template get_constructor<T(const T&)>().empty();}
     bool is_copy_assignable()    {return !_lib->symbol_storage().template get_mem_fn<T, T&(const T&)>("operator=").empty();}
 

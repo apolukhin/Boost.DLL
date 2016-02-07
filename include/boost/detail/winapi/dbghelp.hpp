@@ -19,25 +19,58 @@ namespace winapi
 extern "C"
 {
 
-typedef const WCHAR_ *PCWSTR_;
-typedef WCHAR_          *PWSTR_;
-typedef const CHAR_  *PCSTR_;
-typedef CHAR_          *PSTR_;
-
-
-__declspec(dllimport) DWORD_ WINAPI UnDecorateSymbolName
-        (PCSTR_ DecoratedName,
-         PSTR_ UnDecoratedName,
+BOOST_SYMBOL_IMPORT DWORD_ WINAPI UnDecorateSymbolName
+        (const CHAR_ * DecoratedName,
+         CHAR_ *UnDecoratedName,
          DWORD_ UndecoratedLength,
          DWORD_ Flags);
 
-__declspec(dllimport) DWORD_ WINAPI UnDecorateSymbolNameW
-        (PCWSTR_ DecoratedName,
-         PWSTR_ UnDecoratedName,
+BOOST_SYMBOL_IMPORT DWORD_ WINAPI UnDecorateSymbolNameW
+        (const WCHAR_ * DecoratedName,
+         WCHAR_* UnDecoratedName,
          DWORD_ UndecoratedLength,
          DWORD_ Flags);
 
 }
+
+inline DWORD_ undecorate_symbol_name(const char* decorated_name,
+                              char*  undecorated_name,
+                              DWORD_ undecorated_length,
+                              DWORD_ flags)
+{
+    return UnDecorateSymbolName(decorated_name, undecorated_name, undecorated_length, flags);
+}
+
+inline DWORD_ undecorate_symbol_name(const wchar_t* decorated_name,
+                              wchar_t*  undecorated_name,
+                              DWORD_ undecorated_length,
+                              DWORD_ flags)
+{
+    return UnDecorateSymbolNameW(decorated_name, undecorated_name, undecorated_length, flags);
+}
+
+
+extern "C"
+{
+struct api_version {
+  unsigned short major_version;
+  unsigned short minor_version;
+  unsigned short revision;
+  unsigned short reserved;
+};
+
+struct _API_VERSION;
+
+_API_VERSION* WINAPI ImagehlpApiVersion();
+
+
+
+}
+inline api_version& image_api_version()
+{
+    return *reinterpret_cast<api_version*>(ImagehlpApiVersion());
+}
+
 }}}
 
 
