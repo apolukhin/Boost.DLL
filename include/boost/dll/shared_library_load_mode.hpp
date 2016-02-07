@@ -213,7 +213,7 @@ BOOST_CONSTEXPR inline type operator|(type left, type right) BOOST_NOEXCEPT {
         static_cast<unsigned int>(left) | static_cast<unsigned int>(right)
     );
 }
-BOOST_CONSTEXPR inline type& operator|=(type& left, type right) BOOST_NOEXCEPT {
+BOOST_CXX14_CONSTEXPR inline type& operator|=(type& left, type right) BOOST_NOEXCEPT {
     left = left | right;
     return left;
 }
@@ -223,7 +223,7 @@ BOOST_CONSTEXPR inline type operator&(type left, type right) BOOST_NOEXCEPT {
         static_cast<unsigned int>(left) & static_cast<unsigned int>(right)
     );
 }
-BOOST_CONSTEXPR inline type& operator&=(type& left, type right) BOOST_NOEXCEPT {
+BOOST_CXX14_CONSTEXPR inline type& operator&=(type& left, type right) BOOST_NOEXCEPT {
     left = left & right;
     return left;
 }
@@ -233,7 +233,7 @@ BOOST_CONSTEXPR inline type operator^(type left, type right) BOOST_NOEXCEPT {
         static_cast<unsigned int>(left) ^ static_cast<unsigned int>(right)
     );
 }
-BOOST_CONSTEXPR inline type& operator^=(type& left, type right) BOOST_NOEXCEPT {
+BOOST_CXX14_CONSTEXPR inline type& operator^=(type& left, type right) BOOST_NOEXCEPT {
     left = left ^ right;
     return left;
 }
