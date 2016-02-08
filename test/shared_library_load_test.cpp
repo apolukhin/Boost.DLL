@@ -218,32 +218,26 @@ int main(int argc, char* argv[])
    {
         try {
 #if BOOST_OS_WINDOWS
-            std::cerr << 1;
-            //boost::dll::shared_library("winmm.dll");
-            std::cerr << 2;
-            //BOOST_TEST(!boost::dll::shared_library(L"Kernel32.dll", load_mode::search_system_folders).has("AddDllDirectory"));
-            std::cerr << 3;
-            BOOST_TEST(false);
+            boost::dll::shared_library("winmm.dll");
+            BOOST_TEST(!boost::dll::shared_library(L"Kernel32.dll", load_mode::search_system_folders).has("AddDllDirectory"));
 #elif BOOST_OS_LINUX
             boost::dll::shared_library("libdl.so");
             BOOST_TEST(false);
 #endif
         } catch (...) {}
    }
-/*
+
    {
         try {
 #if BOOST_OS_WINDOWS
-            std::cerr << 4;
             boost::dll::shared_library("winmm", load_mode::search_system_folders | load_mode::append_decorations);
-            std::cerr << 5;
 #elif BOOST_OS_LINUX
             boost::dll::shared_library("dl", boost::dll::load_mode::search_system_folders | load_mode::append_decorations);
 #endif
         } catch (...) {
             BOOST_TEST(false);
         }
-   }*/
+   }
 
    {
         shared_library sl;

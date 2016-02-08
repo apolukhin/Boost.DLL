@@ -73,7 +73,7 @@ public:
 
         if (!(mode & load_mode::search_system_folders) && windows_has_search_application_dir()) {
             // LOAD_LIBRARY_SEARCH_APPLICATION_DIR == 0x00000200
-            mode |= load_mode::type(0x00000200);
+            mode |= load_mode::type(0); //load_mode::type(0x00000200);
         }
 
         mode &= ~load_mode::search_system_folders;
