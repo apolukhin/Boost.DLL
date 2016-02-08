@@ -219,11 +219,11 @@ int main(int argc, char* argv[])
         try {
 #if BOOST_OS_WINDOWS
             boost::dll::shared_library("winmm.dll");
-            std::cerr << "Constructed path: " << ("." / boost::filesystem::path("Kernel32.dll")).string() << '\n';
+            BOOST_TEST(!boost::dll::shared_library(L"Kernel32.dll").has("AddDllDirectory"));
 #elif BOOST_OS_LINUX
             boost::dll::shared_library("libdl.so");
-#endif
             BOOST_TEST(false);
+#endif
         } catch (...) {}
    }
 

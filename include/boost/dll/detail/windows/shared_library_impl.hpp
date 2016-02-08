@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2016 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -51,6 +51,16 @@ public:
         return *this;
     }
 
+    static bool windows_has_search_application_dir() BOOST_NOEXCEPT {
+        shared_library_impl helper;
+        helper.handle_ = boost::detail::winapi::LoadLibraryExW(L"Kernel32.dll", 0, 0);
+        if (!helper.handle_) {
+            return false;
+        }
+
+        return !!boost::detail::winapi::get_proc_address(helper.handle_, "AddDllDirectory");
+    }
+
     void load(const boost::filesystem::path& sl_base, load_mode::type mode, boost::system::error_code &ec) {
         typedef boost::detail::winapi::DWORD_ native_mode_t;
         unload();
@@ -60,6 +70,12 @@ public:
             ? L"." / sl_base
             : sl_base
         ;
+
+        if (!(mode & load_mode::search_system_folders) && windows_has_search_application_dir()) {
+            // LOAD_LIBRARY_SEARCH_APPLICATION_DIR == 0x00000200
+            mode |= load_mode::type(0x00000200);
+        }
+
         mode &= ~load_mode::search_system_folders;
 
         // Trying to open with appended decorations
