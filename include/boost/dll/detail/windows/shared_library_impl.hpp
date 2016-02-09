@@ -17,6 +17,7 @@
 #include <boost/move/utility.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 
 #include <boost/detail/winapi/dll.hpp>
 
@@ -51,32 +52,19 @@ public:
         return *this;
     }
 
-    static bool windows_has_search_application_dir() BOOST_NOEXCEPT {
-        shared_library_impl helper;
-        helper.handle_ = boost::detail::winapi::LoadLibraryExW(L"Kernel32.dll", 0, 0);
-        if (!helper.handle_) {
-            return false;
-        }
-
-        return !!boost::detail::winapi::get_proc_address(helper.handle_, "AddDllDirectory");
-    }
-
-    void load(const boost::filesystem::path& sl_base, load_mode::type mode, boost::system::error_code &ec) {
+    void load(boost::filesystem::path sl, load_mode::type mode, boost::system::error_code &ec) {
         typedef boost::detail::winapi::DWORD_ native_mode_t;
         unload();
 
-        boost::filesystem::path sl =
-            !sl_base.has_parent_path() && !(mode & load_mode::search_system_folders)
-            ? L"." / sl_base
-            : sl_base
-        ;
+        if (!sl.is_absolute() && !(mode & load_mode::search_system_folders)) {
 
-        if (!(mode & load_mode::search_system_folders) && windows_has_search_application_dir()) {
-            // LOAD_LIBRARY_SEARCH_APPLICATION_DIR == 0x00000200 - does not work
-            // LOAD_LIBRARY_SEARCH_USER_DIRS == 0x00000400
-            mode |= load_mode::type(0x00000400);
+            boost::system::error_code current_path_ec;
+            boost::filesystem::path prog_loc = boost::filesystem::current_path(current_path_ec);
+            if (!current_path_ec) {
+                prog_loc /= sl;
+                sl.swap(prog_loc);
+            }
         }
-
         mode &= ~load_mode::search_system_folders;
 
         // Trying to open with appended decorations
