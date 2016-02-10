@@ -18,7 +18,7 @@ env:
 
         # Files, which coverage results must be ignored (files from other projects).
         # Example: - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/*'
-        - IGNORE_COVERAGE='*/detail/pe_info.hpp */detail/macho_info.hpp */boost/progress.hpp */filesystem/src/*.hpp'
+        - IGNORE_COVERAGE='*/detail/pe_info.hpp */detail/macho_info.hpp */boost/progress.hpp */filesystem/src/*.cpp'
 
         # Explicitly remove the following library from Boost. This may be usefull, if you're for example running Travis
         # from `Boost.DLL` repo, while Boost already has `dll`.
