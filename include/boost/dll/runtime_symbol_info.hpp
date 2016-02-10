@@ -98,22 +98,29 @@ namespace detail {
         );
     }
 
-    //! \overload symbol_location(const T& symbol, boost::system::error_code& ec)
-    template <class T>
-    inline boost::filesystem::path symbol_location(const T& symbol) {
-        boost::filesystem::path ret;
-        boost::system::error_code ec;
-        ret = boost::dll::detail::symbol_location_impl(
-            boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol)),
-            ec
-        );
+    // Without this namespace  MSVC 7.1 fails with:
+    //  ..\boost\dll\runtime_symbol_info.hpp(133) : error C2780: 'filesystem::path dll::symbol_location(const T &)' : expects 1 arguments - 2 provided
+    namespace msvc_workaround {
 
-        if (ec) {
-            boost::dll::detail::report_error(ec, "boost::dll::symbol_location(const T& symbol) failed");
+        //! \overload symbol_location(const T& symbol, boost::system::error_code& ec)
+        template <class T>
+        inline boost::filesystem::path symbol_location(const T& symbol) {
+            boost::filesystem::path ret;
+            boost::system::error_code ec;
+            ret = boost::dll::detail::symbol_location_impl(
+                boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol)),
+                ec
+            );
+
+            if (ec) {
+                boost::dll::detail::report_error(ec, "boost::dll::symbol_location(const T& symbol) failed");
+            }
+
+            return ret;
         }
 
-        return ret;
-    }
+    } // namespace msvc_workaround
+    using msvc_workaround::symbol_location;
 
     /// @cond
     // We have anonymous namespace here to make sure that `this_line_location()` method is instantiated in
