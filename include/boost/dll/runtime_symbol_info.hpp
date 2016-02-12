@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2016 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -10,6 +10,7 @@
 
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
+#include <boost/predef/compiler/visualc.h>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 #if BOOST_OS_WINDOWS
 #   include <boost/detail/winapi/dll.hpp>
@@ -98,29 +99,30 @@ namespace detail {
         );
     }
 
-    // Without this namespace  MSVC 7.1 fails with:
+#if BOOST_COMP_MSVC < BOOST_VERSION_NUMBER(14,0,0)
+    // Without this MSVC 7.1 fails with:
     //  ..\boost\dll\runtime_symbol_info.hpp(133) : error C2780: 'filesystem::path dll::symbol_location(const T &)' : expects 1 arguments - 2 provided
-    namespace msvc_workaround {
+    template <class T>
+    inline boost::filesystem::path symbol_location(const T& symbol, const char* /*workaround*/ = 0)
+#else
+    //! \overload symbol_location(const T& symbol, boost::system::error_code& ec)
+    template <class T>
+    inline boost::filesystem::path symbol_location(const T& symbol)
+#endif
+    {
+        boost::filesystem::path ret;
+        boost::system::error_code ec;
+        ret = boost::dll::detail::symbol_location_impl(
+            boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol)),
+            ec
+        );
 
-        //! \overload symbol_location(const T& symbol, boost::system::error_code& ec)
-        template <class T>
-        inline boost::filesystem::path symbol_location(const T& symbol) {
-            boost::filesystem::path ret;
-            boost::system::error_code ec;
-            ret = boost::dll::detail::symbol_location_impl(
-                boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol)),
-                ec
-            );
-
-            if (ec) {
-                boost::dll::detail::report_error(ec, "boost::dll::symbol_location(const T& symbol) failed");
-            }
-
-            return ret;
+        if (ec) {
+            boost::dll::detail::report_error(ec, "boost::dll::symbol_location(const T& symbol) failed");
         }
 
-    } // namespace msvc_workaround
-    using msvc_workaround::symbol_location;
+        return ret;
+    }
 
     /// @cond
     // We have anonymous namespace here to make sure that `this_line_location()` method is instantiated in

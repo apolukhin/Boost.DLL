@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2016 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -60,12 +60,12 @@ public:
         return *this;
     }
 
-    void load(const boost::filesystem::path& sl_base, load_mode::type mode, boost::system::error_code &ec) {
+    void load(const boost::filesystem::path sl, load_mode::type mode, boost::system::error_code &ec) {
         typedef int native_mode_t;
         unload();
 
         // Do not allow opening NULL paths. User must use program_location() instead
-        if (sl_base.empty()) {
+        if (sl.empty()) {
             boost::dll::detail::reset_dlerror();
             ec = boost::system::error_code(
                 boost::system::errc::bad_file_descriptor,
@@ -84,11 +84,21 @@ public:
             mode |= load_mode::rtld_local;
         }
 
-        boost::filesystem::path sl =
-            !sl_base.has_parent_path() && !(mode & load_mode::search_system_folders)
-            ? L"." / sl_base
-            : sl_base
-        ;
+#if BOOST_OS_LINUX || BOOST_OS_ANDROID
+        if (!sl.has_parent_path() && !(mode & load_mode::search_system_folders)) {
+            sl = "." / sl;
+        }
+#else
+        if (!sl.is_absolute() && !(mode & load_mode::search_system_folders)) {
+            boost::system::error_code current_path_ec;
+            boost::filesystem::path prog_loc = boost::filesystem::current_path(current_path_ec);
+            if (!current_path_ec) {
+                prog_loc /= sl;
+                sl.swap(prog_loc);
+            }
+        }
+#endif
+
         mode &= ~load_mode::search_system_folders;
 
         // Trying to open with appended decorations
