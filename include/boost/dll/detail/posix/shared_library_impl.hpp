@@ -60,7 +60,7 @@ public:
         return *this;
     }
 
-    void load(const boost::filesystem::path sl, load_mode::type mode, boost::system::error_code &ec) {
+    void load(boost::filesystem::path sl, load_mode::type mode, boost::system::error_code &ec) {
         typedef int native_mode_t;
         unload();
 
