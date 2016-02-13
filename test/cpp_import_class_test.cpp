@@ -63,8 +63,8 @@ int main(int argc, char* argv[])
         BOOST_TEST(!cl.is_copy_constructible());
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
-        auto &ver = boost::detail::winapi::image_api_version();
-        if (ver.major_version >= 6) //version 4 does not contain that.
+        auto ver = boost::detail::winapi::ImagehlpApiVersion();
+        if (ver->MajorVersion >= 6) //version 4 does not contain that.
 #endif
         {
             BOOST_TEST( cl.is_move_assignable());
