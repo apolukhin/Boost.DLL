@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
     ovl(5.0);
     BOOST_TEST(*sp_variable == 5.0);
 
-    sm.add_type_alias<override_class>("some_space::some_class");
+    sm.add_type_alias<class override_class>("some_space::some_class");
 
     auto func = import_mangled<
             override_class, double(double, double), int(int, int),
@@ -59,14 +59,14 @@ int main(int argc, char* argv[])
             const volatile override_class, double(double, double)>(sm, "func");
 
 
-    override_class ov;
-    volatile override_class &ovv = ov;
-    const volatile override_class &ovcv = ov;
+    override_class *ov;
+    volatile override_class *ovv = ov;
+    const volatile override_class *ovcv = ov;
 
-    BOOST_TEST(func(&ov, 3.,2.) == 6.);
-    BOOST_TEST(func(&ov, 1,2  ) == 3 );
-    BOOST_TEST(func(&ovv, 10,2) == 8 );
-    BOOST_TEST(func(&ovcv, 9,2) == 4.5 );
+    BOOST_TEST(func(ov, 3.,2.) == 6.);
+    BOOST_TEST(func(ov, 1,2  ) == 3 );
+    BOOST_TEST(func(ovv, 10,2) == 8 );
+    BOOST_TEST(func(ovcv, 9,2) == 4.5 );
 
     return boost::report_errors();
 }

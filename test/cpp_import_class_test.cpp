@@ -52,15 +52,24 @@ int main(int argc, char* argv[])
     std::size_t type_size = *import_mangled<std::size_t>(sm, "some_space::size_of_some_class");
 
     {
+
+#if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
         class override_class{};
         auto cl = import_class<override_class, int>(sm, "some_space::some_class", type_size, 42);
-
-
+#else
+        auto cl = import_class<class override_class, int>(sm, "some_space::some_class", type_size, 42);
+#endif
         BOOST_TEST(!cl.is_copy_assignable());
         BOOST_TEST(!cl.is_copy_constructible());
 
-        BOOST_TEST( cl.is_move_assignable());
-        BOOST_TEST( cl.is_move_constructible());
+#if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
+        auto &ver = boost::detail::winapi::image_api_version();
+        if (ver.major_version >= 6) //version 4 does not contain that.
+#endif
+        {
+            BOOST_TEST( cl.is_move_assignable());
+            BOOST_TEST( cl.is_move_constructible());
+        }
 
         BOOST_TEST(*static_val == 42);
 
