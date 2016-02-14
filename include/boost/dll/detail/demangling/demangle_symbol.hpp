@@ -13,7 +13,7 @@
 #include <algorithm>
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
-#include <boost/detail/winapi/dbghelp.hpp>
+#include <boost/dll/detail/windows/dbghelp.hpp>
 
 namespace boost
 {
@@ -27,7 +27,7 @@ inline std::string demangle_symbol(const char *mangled_name)
 {
     char unmangled_name[2048];
 
-    ::boost::detail::winapi::
+    ::boost::dll::detail::winapi::
           UnDecorateSymbolName(mangled_name, unmangled_name, 2048, 0);
 
     return std::string(unmangled_name);
