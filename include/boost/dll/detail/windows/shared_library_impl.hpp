@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2016 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -17,6 +17,7 @@
 #include <boost/move/utility.hpp>
 #include <boost/swap.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
 
 #include <boost/detail/winapi/dll.hpp>
 
@@ -51,26 +52,36 @@ public:
         return *this;
     }
 
-    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) {
+    void load(boost::filesystem::path sl, load_mode::type mode, boost::system::error_code &ec) {
         typedef boost::detail::winapi::DWORD_ native_mode_t;
         unload();
 
+        if (!sl.is_absolute() && !(mode & load_mode::search_system_folders)) {
+
+            boost::system::error_code current_path_ec;
+            boost::filesystem::path prog_loc = boost::filesystem::current_path(current_path_ec);
+            if (!current_path_ec) {
+                prog_loc /= sl;
+                sl.swap(prog_loc);
+            }
+        }
+        mode &= ~load_mode::search_system_folders;
+
         // Trying to open with appended decorations
         if (!!(mode & load_mode::append_decorations)) {
-            mode = static_cast<load_mode::type>(
-                static_cast<native_mode_t>(mode) & (~static_cast<native_mode_t>(load_mode::append_decorations))
-            );
+            mode &= ~load_mode::append_decorations;
 
             handle_ = boost::detail::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, static_cast<native_mode_t>(mode));
             if (!handle_) {
                 // MinGW loves 'lib' prefix and puts it even on Windows platform
+                const boost::filesystem::path load_path = (sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native() + L".dll";
                 handle_ = boost::detail::winapi::LoadLibraryExW(
-                    ((sl.parent_path() / L"lib").native() + sl.filename().native() + L".dll").c_str(),
+                    load_path.c_str(),
                     0,
                     static_cast<native_mode_t>(mode)
                 );
             }
-            
+
             if (handle_) {
                 return;
             }

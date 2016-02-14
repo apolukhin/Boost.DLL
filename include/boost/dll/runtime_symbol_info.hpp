@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2016 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -10,6 +10,7 @@
 
 #include <boost/config.hpp>
 #include <boost/predef/os.h>
+#include <boost/predef/compiler/visualc.h>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 #if BOOST_OS_WINDOWS
 #   include <boost/detail/winapi/dll.hpp>
@@ -98,9 +99,17 @@ namespace detail {
         );
     }
 
+#if BOOST_COMP_MSVC < BOOST_VERSION_NUMBER(14,0,0)
+    // Without this MSVC 7.1 fails with:
+    //  ..\boost\dll\runtime_symbol_info.hpp(133) : error C2780: 'filesystem::path dll::symbol_location(const T &)' : expects 1 arguments - 2 provided
+    template <class T>
+    inline boost::filesystem::path symbol_location(const T& symbol, const char* /*workaround*/ = 0)
+#else
     //! \overload symbol_location(const T& symbol, boost::system::error_code& ec)
     template <class T>
-    inline boost::filesystem::path symbol_location(const T& symbol) {
+    inline boost::filesystem::path symbol_location(const T& symbol)
+#endif
+    {
         boost::filesystem::path ret;
         boost::system::error_code ec;
         ret = boost::dll::detail::symbol_location_impl(
@@ -129,15 +138,16 @@ namespace detail {
     * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept boost::system::error_code also throws boost::system::system_error.
     */
     static inline boost::filesystem::path this_line_location(boost::system::error_code& ec) {
-        ec.clear();
-        return boost::dll::symbol_location<boost::filesystem::path(boost::system::error_code& )>(this_line_location, ec);
+        typedef boost::filesystem::path(func_t)(boost::system::error_code& );
+        func_t& f = this_line_location;
+        return boost::dll::symbol_location(f, ec);
     }
 
     //! \overload this_line_location(boost::system::error_code& ec)
     static inline boost::filesystem::path this_line_location() {
         boost::filesystem::path ret;
         boost::system::error_code ec;
-        ret = boost::dll::symbol_location<boost::filesystem::path()>(this_line_location, ec);
+        ret = this_line_location(ec);
 
         if (ec) {
             boost::dll::detail::report_error(ec, "boost::dll::this_line_location() failed");

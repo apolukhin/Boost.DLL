@@ -205,6 +205,40 @@ int main(int argc, char* argv[])
    }
 
    {
+        boost::system::error_code ec;
+        shared_library sl(shared_library_path, load_mode::search_system_folders, ec);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+        BOOST_TEST(!ec);
+        BOOST_TEST(lib_path_equal(sl.location(), shared_library_path));
+        BOOST_TEST(lib_path_equal(sl.location(ec), shared_library_path));
+        BOOST_TEST(!ec);
+   }
+
+   {
+        try {
+#if BOOST_OS_WINDOWS
+            boost::dll::shared_library("winmm.dll");
+#elif BOOST_OS_LINUX
+            boost::dll::shared_library("libdl.so");
+#endif
+            BOOST_TEST(false);
+        } catch (...) {}
+   }
+
+   {
+        try {
+#if BOOST_OS_WINDOWS
+            boost::dll::shared_library("winmm", load_mode::search_system_folders | load_mode::append_decorations);
+#elif BOOST_OS_LINUX
+            boost::dll::shared_library("dl", boost::dll::load_mode::search_system_folders | load_mode::append_decorations);
+#endif
+        } catch (...) {
+            BOOST_TEST(false);
+        }
+   }
+
+   {
         shared_library sl;
         sl.load(shared_library_path, load_mode::load_with_altered_search_path);
         BOOST_TEST(sl.is_loaded());

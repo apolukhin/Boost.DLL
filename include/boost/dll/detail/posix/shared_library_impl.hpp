@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2016 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -60,7 +60,7 @@ public:
         return *this;
     }
 
-    void load(const boost::filesystem::path &sl, load_mode::type mode, boost::system::error_code &ec) {
+    void load(boost::filesystem::path sl, load_mode::type mode, boost::system::error_code &ec) {
         typedef int native_mode_t;
         unload();
 
@@ -84,15 +84,30 @@ public:
             mode |= load_mode::rtld_local;
         }
 
+#if BOOST_OS_LINUX || BOOST_OS_ANDROID
+        if (!sl.has_parent_path() && !(mode & load_mode::search_system_folders)) {
+            sl = "." / sl;
+        }
+#else
+        if (!sl.is_absolute() && !(mode & load_mode::search_system_folders)) {
+            boost::system::error_code current_path_ec;
+            boost::filesystem::path prog_loc = boost::filesystem::current_path(current_path_ec);
+            if (!current_path_ec) {
+                prog_loc /= sl;
+                sl.swap(prog_loc);
+            }
+        }
+#endif
+
+        mode &= ~load_mode::search_system_folders;
+
         // Trying to open with appended decorations
         if (!!(mode & load_mode::append_decorations)) {
-            mode = static_cast<load_mode::type>(
-                static_cast<native_mode_t>(mode) & (~static_cast<native_mode_t>(load_mode::append_decorations))
-            );
+            mode &= ~load_mode::append_decorations;
 
             boost::filesystem::path actual_path = (
                 std::strncmp(sl.filename().string().c_str(), "lib", 3)
-                ? (sl.parent_path() / "lib").native() + sl.filename().native()
+                ? (sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native()
                 : sl
             );
             actual_path += suffix();
