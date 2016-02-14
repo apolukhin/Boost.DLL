@@ -138,15 +138,16 @@ namespace detail {
     * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept boost::system::error_code also throws boost::system::system_error.
     */
     static inline boost::filesystem::path this_line_location(boost::system::error_code& ec) {
-        ec.clear();
-        return boost::dll::symbol_location<boost::filesystem::path(boost::system::error_code& )>(this_line_location, ec);
+        typedef boost::filesystem::path(func_t)(boost::system::error_code& );
+        func_t& f = this_line_location;
+        return boost::dll::symbol_location(f, ec);
     }
 
     //! \overload this_line_location(boost::system::error_code& ec)
     static inline boost::filesystem::path this_line_location() {
         boost::filesystem::path ret;
         boost::system::error_code ec;
-        ret = boost::dll::symbol_location<boost::filesystem::path()>(this_line_location, ec);
+        ret = this_line_location(ec);
 
         if (ec) {
             boost::dll::detail::report_error(ec, "boost::dll::this_line_location() failed");
