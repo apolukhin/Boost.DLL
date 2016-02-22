@@ -345,7 +345,7 @@ Now lets make a function that binds a newly created instance of `my_refcounting_
 [plugcpp_library_holding_deleter_api_bind]
 
 In `bind` method we call `ptr->location()`. This call results in call to
-[funcref boost::dll::this_line_location] and returns the plugin location. Than a `shared_ptr` that holds a `shared_library`
+[funcref boost::dll::this_line_location] and returns the plugin location. Then a `shared_ptr` that holds a `shared_library`
 is created using the `make_shared` call.
 
 After that we construct a `boost::shared_ptr<my_refcounting_api>` using aliasing constructor of the `boost::shared_ptr`. Now we have an instance of
