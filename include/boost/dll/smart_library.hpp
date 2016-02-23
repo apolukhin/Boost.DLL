@@ -8,7 +8,7 @@
 #define INCLUDE_BOOST_DLL_SMART_LIBRARY_HPP_
 
 /// \file boost/dll/smart_library.hpp
-/// \warning Extremely experimental! Will change in next version of Boost!
+/// \warning Extremely experimental! Requires C++14! Will change in next version of Boost! boost/dll/smart_library.hpp is not included in boost/dll.hpp
 /// \brief Contains the boost::dll::experimental::smart_library class for loading mangled symbols.
 
 #include <boost/dll/shared_library.hpp>
@@ -146,7 +146,6 @@ public:
      * \return A reference to the variable of type T.
      *
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
-     *
      */
     template<typename T>
     T& get_variable(const std::string &name) {
@@ -173,7 +172,6 @@ public:
      * \return A reference to the function of type F.
      *
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
-     *
      */
     template<typename Func>
     Func& get_function(const std::string &name) {
@@ -203,7 +201,6 @@ public:
      * \return A pointer to the member-function with the signature provided
      *
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
-     *
      */
     template<typename Class, typename Func>
     typename detail::get_mem_fn_type<Class, Func>::mem_fn get_mem_fn(const std::string& name) {
@@ -227,7 +224,6 @@ public:
      * \return A constructor object.
      *
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
-     *
      */
     template<typename Signature>
     constructor<Signature> get_constructor() {
