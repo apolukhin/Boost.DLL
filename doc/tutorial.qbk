@@ -350,6 +350,9 @@ is created using the `make_shared` call.
 
 After that we construct a `boost::shared_ptr<my_refcounting_api>` with a `library_holding_deleter` that keeps an instance of the shared library.
 
+[note Use `std::unique_ptr<my_refcounting_api>` instead of `my_refcounting_api*` in production code to avoid memory leaks when `plugin->location()`
+throws or when some other class rises an exception.]
+
 That's it, now we can get instance of a plugin:
 [plugcpp_get_plugin_refcounting]
 
