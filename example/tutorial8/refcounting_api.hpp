@@ -27,7 +27,7 @@ inline boost::shared_ptr<my_refcounting_api> bind(my_refcounting_api* plugin) {
     using namespace boost;
 
     shared_ptr<dll::shared_library> lib = make_shared<dll::shared_library>( // `make_shared` is an efficient way to create shared pointer
-        plugin->location()                                                  // getting location fo the shared library that holds the plugin
+        plugin->location()                                                  // getting location of the shared library that holds the plugin
     );
 
     // `boost::shared_ptr` aliasing constructor.

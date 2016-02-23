@@ -183,7 +183,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import(BOOST_RV_REF(shared_library) lib, const std:
 
 /*!
 * Returns callable object or boost::shared_ptr<T> that holds the symbol imported
-* from the loaded library. Teturned value refcounts usage
+* from the loaded library. Returned value refcounts usage
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
 *
