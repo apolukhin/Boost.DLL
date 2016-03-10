@@ -19,6 +19,7 @@
 [include introduction.qbk]
 [include getting_started.qbk]
 [include tutorial.qbk]
+[include missuses.qbk]
 
 [section Reference]
 [xinclude autodoc_shared_library_core.xml]
@@ -30,4 +31,5 @@
 [include design_rationale.qbk]
 [include dependencies.qbk]
 [include revisionhistory.qbk]
+[include ack.qbk]
 
