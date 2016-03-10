@@ -57,12 +57,12 @@ int c_variable_name = 1;
 std::string your_project_namespace::cpp_variable_name = "some value";
 
 namespace some_namespace {
-    std::string i_am_function_with_ugly_name(const std::string& param) {
+    std::string i_am_function_with_ugly_name(const std::string& param) noexcept {
         return param + " Hello from lib!";
     }
 
 #ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    int i_am_a_cpp11_function(std::string&& param) {
+    int i_am_a_cpp11_function(std::string&& param) noexcept {
         return static_cast<int>(param.size());
     }
 #endif
