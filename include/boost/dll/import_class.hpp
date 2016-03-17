@@ -159,7 +159,7 @@ public:
 
     explicit operator bool() const  {return _data;}
 
-    std::type_info& get_type_info() {return _ti;};
+    const std::type_info& get_type_info() {return _ti;};
 
     template<class Signature>
     const detail::mem_fn_call_proxy<T, Signature> call(const std::string& name)
@@ -347,4 +347,4 @@ import_class(const boost::shared_ptr<smart_library>& lib, const std::string & al
 
 
 
-#endif /* INCLUDE_BOOST_DLL_IMPORT_CLASS_HPP_ */
+#endif /* BOOST_DLL_IMPORT_CLASS_HPP_ */

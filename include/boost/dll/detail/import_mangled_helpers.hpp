@@ -21,7 +21,7 @@
 
 namespace boost { namespace dll { namespace experimental { namespace detail {
 
-
+//the following could be done by fusion, though it's simple enough to just declare it here.
 template<class ...Args>
 struct sequence {};
 
@@ -43,7 +43,7 @@ struct unqalified_is_same :
 
 /* ********************************** function sequence type traits ******************************/
 
-
+//determine if it's a sequence of functions.
 template<class T> struct is_function_seq;
 
 //type-trait for function overloads
@@ -66,6 +66,7 @@ struct is_function_seq<sequence<>> : boost::false_type
 
 /* ********************************* Function Tuple ***************************  */
 
+//a tuple of plain functions.
 template <class ...Ts>
 struct function_tuple;
 
@@ -105,7 +106,6 @@ struct mem_fn_def
     typedef Func  func_type;
     typedef typename boost::dll::detail::get_mem_fn_type<Class, Func>::mem_fn mem_fn;
 };
-
 
 template<class ...Args>
 struct make_mem_fn_seq;
@@ -243,7 +243,9 @@ struct is_mem_fn_seq<sequence<T, Func, Args...>> :
 
 /* ********************************** mem fn sequence tuple ******************************/
 
-
+/* A tuple of member functions
+ * Unlike for plain functions a sequence here might contain classes as well as functions.
+ */
 template <class ...Ts>
 struct mem_fn_tuple;
 
@@ -278,10 +280,5 @@ struct mem_fn_tuple<mem_fn_def<Class, Return(Args...)>>
     }
 };
 
-
-
-
-
-
 }}}}
-#endif /* INCLUDE_BOOST_DLL_DETAIL_IMPORT_MANGLED_HELPERS_HPP_ */
+#endif /* BOOST_DLL_DETAIL_IMPORT_MANGLED_HELPERS_HPP_ */

@@ -18,6 +18,7 @@
 #include <boost/core/lightweight_test.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
+#include <boost/function.hpp>
 
 #include <iostream>
 
@@ -50,6 +51,10 @@ int main(int argc, char* argv[])
     BOOST_TEST(*unscoped_var == 12);
     ovl(5.0);
     BOOST_TEST(*sp_variable == 5.0);
+
+    boost::function<void(int)> f_test = ovl;//test if it binds
+    f_test(-2);
+    BOOST_TEST(*unscoped_var == -2);
 
     sm.add_type_alias<class override_class>("some_space::some_class");
 

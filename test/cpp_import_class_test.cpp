@@ -23,7 +23,7 @@ using namespace std;
 #include <boost/core/lightweight_test.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
-
+#include <boost/function.hpp>
 
 
 int main(int argc, char* argv[])
@@ -39,9 +39,11 @@ int main(int argc, char* argv[])
 
     auto static_val = import_mangled<int>(sm, "some_space::some_class::value");
 
-
+    std::cout << "--------------------- Entry Points ------------------------\n" << std::endl;
     for (auto &s : sm->symbol_storage().get_storage())
         std::cout << s.demangled << std::endl;
+
+    std::cout << "-----------------------------------------------------------\n\n" << std::endl;
 
    // boost::shared_ptr<smart_library> sm = boost::make_shared<smart_library>(pt);
 
@@ -64,6 +66,7 @@ int main(int argc, char* argv[])
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
         auto ver = boost::detail::winapi::ImagehlpApiVersion();
+        std::cout << "DbgHlep Version: " << ver->MajorVersion << std::endl;
         if (ver->MajorVersion >= 6) //version 4 does not contain that.
 #endif
         {
@@ -94,6 +97,21 @@ int main(int argc, char* argv[])
 
         BOOST_TEST((cl->*fun2)(3.,2.) == 6.);
         BOOST_TEST((cl->*fun2)(5 ,2 ) == 7 );
+
+        //test if it binds.
+        boost::function<int(override_class* const, int, int)> mem_fn_obj = func;
+
+
+        const std::type_info & ti = cl.get_type_info();
+        cout << "Ti-Loc:  " << &ti << endl;
+        cout << "Ti-Name: " << ti.name() << endl;
+        std::string imp_name = boost::core::demangle(ti.name());
+#if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
+        std::string exp_name = "struct some_space::some_class";
+#else
+        std::string exp_name = "some_space::some_class";
+#endif
+        BOOST_TEST(imp_name == exp_name);
 
     }
 

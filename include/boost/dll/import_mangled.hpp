@@ -9,14 +9,14 @@
 #define BOOST_DLL_IMPORT_MANGLED_HPP_
 
 #include <boost/config.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_object.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/utility/addressof.hpp>
 #include <boost/move/move.hpp>
 #include <boost/dll/smart_library.hpp>
-#include <boost/type_traits/conditional.hpp>
 #include <boost/dll/detail/import_mangled_helpers.hpp>
+#include <boost/utility/addressof.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/conditional.hpp>
+#include <boost/type_traits/is_object.hpp>
 
 
 
@@ -325,4 +325,4 @@ BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(
 }}}
 
 
-#endif /* INCLUDE_BOOST_DLL_IMPORT_MANGLED_HPP_ */
+#endif /* BOOST_DLL_IMPORT_MANGLED_HPP_ */

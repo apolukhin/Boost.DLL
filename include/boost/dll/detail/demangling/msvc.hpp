@@ -69,7 +69,7 @@ public:
     }
 
     template<typename T>
-    std::string get_type_info();
+    std::string get_vtable();
 
     template<typename T>
     std::vector<std::string> get_related();
@@ -398,10 +398,9 @@ auto mangled_storage_impl::get_destructor() -> dtor_sym
 }
 
 template<typename T>
-std::string mangled_storage_impl::get_type_info()
+std::string mangled_storage_impl::get_vtable()
 {
     std::string id = "const " + get_name<T>() + "::`vftable'";
-
 
     auto predicate = [&](const mangled_storage_base::entry & e)
                 {
@@ -437,4 +436,4 @@ std::vector<std::string> mangled_storage_impl::get_related()
 
 
 
-#endif /* INCLUDE_BOOST_DLL_DETAIL_DEMANGLING_MSVC_HPP_ */
+#endif /* BOOST_DLL_DETAIL_DEMANGLING_MSVC_HPP_ */

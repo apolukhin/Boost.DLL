@@ -6,8 +6,8 @@
 
 // For more information, see http://www.boost.org
 
-#ifndef INCLUDE_BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
-#define INCLUDE_BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
+#ifndef BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
+#define BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
 
 #include <boost/config.hpp>
 #ifdef BOOST_HAS_PRAGMA_ONCE
@@ -189,4 +189,4 @@ destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt
 
 }}} // namespace boost::dll::detail
 
-#endif /* INCLUDE_BOOST_DLL_DETAIL_CTOR_DTOR_HPP_ */
+#endif /* BOOST_DLL_DETAIL_CTOR_DTOR_HPP_ */

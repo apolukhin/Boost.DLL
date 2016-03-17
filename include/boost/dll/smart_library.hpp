@@ -11,15 +11,6 @@
 /// \warning Extremely experimental! Will change in next version of Boost!
 /// \brief Contains the boost::dll::experimental::smart_library class for loading mangled symbols.
 
-#include <boost/dll/shared_library.hpp>
-#include <boost/dll/detail/get_mem_fn_type.hpp>
-#include <boost/dll/detail/ctor_dtor.hpp>
-#include <boost/type_traits/is_object.hpp>
-#include <boost/type_traits/is_void.hpp>
-#include <boost/type_traits/is_function.hpp>
-#include <boost/predef/compiler.h>
-
-
 #if BOOST_COMP_GNUC || BOOST_COMP_CLANG || BOOST_COMP_HPACC || BOOST_COMP_IBM
 #include <boost/dll/detail/demangling/itanium.hpp>
 #elif BOOST_COMP_MSVC
@@ -27,6 +18,17 @@
 #else
 #error "Compiler not supported"
 #endif
+
+#include <boost/dll/shared_library.hpp>
+#include <boost/dll/detail/get_mem_fn_type.hpp>
+#include <boost/dll/detail/ctor_dtor.hpp>
+#include <boost/dll/detail/type_info.hpp>
+#include <boost/type_traits/is_object.hpp>
+#include <boost/type_traits/is_void.hpp>
+#include <boost/type_traits/is_function.hpp>
+#include <boost/predef/compiler.h>
+
+
 
 namespace boost {
 namespace dll {
@@ -327,8 +329,7 @@ public:
     template<typename Class>
     const std::type_info& get_type_info()
     {
-        return _lib.get<const std::type_info>(_storage.get_type_info<Class>());
-
+        return boost::dll::detail::load_type_info<Class>(_lib, _storage);
     }
     /**
      * This function can be used to add a type alias.
@@ -462,4 +463,4 @@ auto get(smart_library& sm, const std::string &name) -> typename detail::get_mem
 } /* namespace dll */
 } /* namespace boost */
 
-#endif /* INCLUDE_BOOST_DLL_SMART_LIBRARY_HPP_ */
+#endif /* BOOST_DLL_SMART_LIBRARY_HPP_ */

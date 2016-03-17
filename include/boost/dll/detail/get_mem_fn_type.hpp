@@ -37,4 +37,4 @@ struct get_mem_fn_type<const volatile Class, Return(Args...)> {
 }}} // namespace boost::dll::detail
 
 
-#endif /* INCLUDE_BOOST_DLL_SMART_LIBRARY_HPP_ */
+#endif /* BOOST_DLL_SMART_LIBRARY_HPP_ */
