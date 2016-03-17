@@ -15,6 +15,9 @@
 namespace boost { namespace dll { namespace detail {
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
+
+#if defined ( _WIN64 )
+
 template<typename Class, typename Lib, typename Storage>
 const std::type_info& load_type_info(Lib & lib, Storage & storage)
 {
@@ -23,18 +26,46 @@ const std::type_info& load_type_info(Lib & lib, Storage & storage)
         boost::detail::winapi::DWORD_ signature; //always zero ?
         boost::detail::winapi::DWORD_ offset;    //offset of this vtable in the complete class
         boost::detail::winapi::DWORD_ cdOffset;  //constructor displacement offset
-        boost::detail::winapi::DWORD_ pTypeDescriptor; //TypeDescriptor of the complete class
-        boost::detail::winapi::DWORD_ pClassDescriptor; //describes inheritance hierarchy (ignored)
+        boost::detail::winapi::DWORD_ pTypeDescriptorOffset; //TypeDescriptor of the complete class
+        boost::detail::winapi::DWORD_ pClassDescriptorOffset; //describes inheritance hierarchy (ignored)
     };
 
     RTTICompleteObjectLocator** vtable_p = &lib.template get<RTTICompleteObjectLocator*>(storage.template get_vtable<Class>());
 
     vtable_p--;
     auto vtable = *vtable_p;
-    const std::type_info * ti_p;
-    std::memcpy(&ti_p, &vtable->pTypeDescriptor, sizeof(boost::detail::winapi::DWORD_));
-    return *ti_p;
+
+    auto nat = reinterpret_cast<const char*>(lib.native().native());
+
+    nat += vtable->pTypeDescriptorOffset;
+
+    return *reinterpret_cast<const std::type_info*>(nat);
+
 }
+
+#else
+
+template<typename Class, typename Lib, typename Storage>
+const std::type_info& load_type_info(Lib & lib, Storage & storage)
+{
+    struct RTTICompleteObjectLocator
+    {
+        boost::detail::winapi::DWORD_ signature; //always zero ?
+        boost::detail::winapi::DWORD_ offset;    //offset of this vtable in the complete class
+        boost::detail::winapi::DWORD_ cdOffset;  //constructor displacement offset
+        const std::type_info* pTypeDescriptor; //TypeDescriptor of the complete class
+        void* pClassDescriptor; //describes inheritance hierarchy (ignored)
+    };
+
+    RTTICompleteObjectLocator** vtable_p = &lib.template get<RTTICompleteObjectLocator*>(storage.template get_vtable<Class>());
+
+    vtable_p--;
+    auto vtable = *vtable_p;
+    return *vtable->pTypeDescriptor;
+
+}
+
+#endif //_WIN64
 
 #else
 
