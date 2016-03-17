@@ -103,8 +103,6 @@ int main(int argc, char* argv[])
 
 
         const std::type_info & ti = cl.get_type_info();
-        cout << "Ti-Loc:  " << &ti << endl;
-        cout << "Ti-Name: " << ti.name() << endl;
         std::string imp_name = boost::core::demangle(ti.name());
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
         std::string exp_name = "struct some_space::some_class";
@@ -112,7 +110,6 @@ int main(int argc, char* argv[])
         std::string exp_name = "some_space::some_class";
 #endif
         BOOST_TEST(imp_name == exp_name);
-
     }
 
     BOOST_TEST(*static_val == 0);

@@ -10,6 +10,7 @@
 #define BOOST_DLL_DETAIL_TYPE_INFO_HPP_
 
 #include <typeinfo>
+#include <cstring>
 
 namespace boost { namespace dll { namespace detail {
 
@@ -22,16 +23,17 @@ const std::type_info& load_type_info(Lib & lib, Storage & storage)
         boost::detail::winapi::DWORD_ signature; //always zero ?
         boost::detail::winapi::DWORD_ offset;    //offset of this vtable in the complete class
         boost::detail::winapi::DWORD_ cdOffset;  //constructor displacement offset
-        const std::type_info* pTypeDescriptor; //TypeDescriptor of the complete class
-        void* pClassDescriptor; //describes inheritance hierarchy (ignored)
+        boost::detail::winapi::DWORD_ pTypeDescriptor; //TypeDescriptor of the complete class
+        boost::detail::winapi::DWORD_ pClassDescriptor; //describes inheritance hierarchy (ignored)
     };
 
     RTTICompleteObjectLocator** vtable_p = &lib.template get<RTTICompleteObjectLocator*>(storage.template get_vtable<Class>());
 
     vtable_p--;
     auto vtable = *vtable_p;
-    return *vtable->pTypeDescriptor;
-
+    const std::type_info * ti_p;
+    std::memcpy(&ti_p, &vtable->pTypeDescriptor, sizeof(boost::detail::winapi::DWORD_));
+    return *ti_p;
 }
 
 #else
