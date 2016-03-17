@@ -35,7 +35,7 @@ const std::type_info& load_type_info(Lib & lib, Storage & storage)
     vtable_p--;
     auto vtable = *vtable_p;
 
-    auto nat = reinterpret_cast<const char*>(lib.native().native());
+    auto nat = reinterpret_cast<const char*>(lib.native());
 
     nat += vtable->pTypeDescriptorOffset;
 
