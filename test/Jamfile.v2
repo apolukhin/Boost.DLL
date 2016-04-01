@@ -86,9 +86,9 @@ project
         # test for shared libraries
         [ compile-fail section_name_too_big.cpp ]
         [ run shared_library_concurrent_load_test.cpp /boost/thread//boost_thread : : library1 library2 my_plugin_aggregator refcounting_plugin : <link>shared ]
-        [ run cpp_mangle_test.cpp : : cpp_plugin : <toolset>msvc:<linkflags>DbgHelp.lib ] 
-        [ run cpp_load_test.cpp   : : cpp_plugin : <toolset>msvc:<linkflags>DbgHelp.lib ]     
-        [ run cpp_import_test.cpp   : : cpp_plugin : <toolset>msvc:<linkflags>DbgHelp.lib ]     
-        [ run cpp_import_class_test.cpp   : : cpp_plugin : <toolset>msvc:<linkflags>DbgHelp.lib ]     
+        [ run cpp_mangle_test.cpp : : cpp_plugin ] 
+        [ run cpp_load_test.cpp   : : cpp_plugin ]     
+        [ run cpp_import_test.cpp   : : cpp_plugin 		  ]     
+        [ run cpp_import_class_test.cpp   : : cpp_plugin  ]     
     ;
 }

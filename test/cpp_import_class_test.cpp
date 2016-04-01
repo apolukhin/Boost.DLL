@@ -64,15 +64,8 @@ int main(int argc, char* argv[])
         BOOST_TEST(!cl.is_copy_assignable());
         BOOST_TEST(!cl.is_copy_constructible());
 
-#if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
-        auto ver = boost::detail::winapi::ImagehlpApiVersion();
-        std::cout << "DbgHlep Version: " << ver->MajorVersion << std::endl;
-        if (ver->MajorVersion >= 6) //version 4 does not contain that.
-#endif
-        {
-            BOOST_TEST( cl.is_move_assignable());
-            BOOST_TEST( cl.is_move_constructible());
-        }
+        BOOST_TEST( cl.is_move_assignable());
+        BOOST_TEST( cl.is_move_constructible());
 
         BOOST_TEST(*static_val == 42);
 
