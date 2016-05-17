@@ -56,6 +56,8 @@ doxygen autodoc_shared_library_core
             ../include/boost/dll/library_info.hpp
             ../include/boost/dll/runtime_symbol_info.hpp
             ../include/boost/dll/alias.hpp
+
+            ../include/boost/dll/smart_library.hpp
         ]
     :
         $(doxygen_params)
@@ -72,17 +74,6 @@ doxygen autodoc_shared_library_refcountable
         <xsl:param>"boost.doxygen.reftitle=Shared Library Refcountable Reference"
     ;
 
-doxygen autodoc_shared_library_experimental
-    :
-        [ glob 
-            ../include/boost/dll/smart_library.hpp
-        ]
-    :
-        $(doxygen_params)
-        <xsl:param>"boost.doxygen.reftitle=Shared Library Experimental"
-    ;
-
-
 #
 # Docs Generation
 #
@@ -92,7 +83,6 @@ boostbook dll-doc
     :
         <dependency>autodoc_shared_library_core
         <dependency>autodoc_shared_library_refcountable
-        <dependency>autodoc_shared_library_experimental
         <xsl:param>boost.root=http://www.boost.org/doc/libs/1_60_0
         #<xsl:param>boost.root=../../../.
         <xml:param>html.stylesheet=../../../../doc/src/boostbook.css

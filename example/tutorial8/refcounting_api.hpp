@@ -23,15 +23,28 @@ public:
 #include <boost/make_shared.hpp>
 #include <boost/dll/shared_library.hpp>
 
+struct library_holding_deleter {
+    boost::shared_ptr<boost::dll::shared_library> lib_;
+
+    void operator()(my_refcounting_api* p) const {
+        delete p;
+    }
+};
+
 inline boost::shared_ptr<my_refcounting_api> bind(my_refcounting_api* plugin) {
-    using namespace boost;
+    // getting location of the shared library that holds the plugin
+    boost::filesystem::path location = plugin->location();
 
-    shared_ptr<dll::shared_library> lib = make_shared<dll::shared_library>( // `make_shared` is an efficient way to create shared pointer
-        plugin->location()                                                  // getting location fo the shared library that holds the plugin
+    // `make_shared` is an efficient way to create a shared pointer
+    boost::shared_ptr<boost::dll::shared_library> lib
+        = boost::make_shared<boost::dll::shared_library>(location);
+
+    library_holding_deleter deleter;
+    deleter.lib_ = lib;
+
+    return boost::shared_ptr<my_refcounting_api>(
+        plugin, deleter
     );
-
-    // `boost::shared_ptr` aliasing constructor.
-    return shared_ptr<my_refcounting_api>(lib, plugin);
 }
 //]
 

@@ -1,6 +1,6 @@
 [/
     Copyright 2014 Renato Tegon Forti, Antony Polukhin
-    Copyright 2015 Antony Polukhin
+    Copyright 2015-2016 Antony Polukhin
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 /]
@@ -344,13 +344,14 @@ This plugin does not differ much from our previous examples except the additiona
 Now lets make a function that binds a newly created instance of `my_refcounting_api` to a shared library:
 [plugcpp_library_holding_deleter_api_bind]
 
-In `bind` method we call `ptr->location()`. This call results in call to
-[funcref boost::dll::this_line_location] and returns the plugin location. Than a `shared_ptr` that holds a `shared_library`
+In `bind` method we call `plugin->location()`. This call results in a call to
+[funcref boost::dll::this_line_location] and returns the plugin location. Then a `shared_ptr` that holds a `shared_library`
 is created using the `make_shared` call.
 
-After that we construct a `boost::shared_ptr<my_refcounting_api>` using aliasing constructor of the `boost::shared_ptr`. Now we have an instance of
-`boost::shared_ptr<my_refcounting_api>` that shares reference counting with an `boost::shared_ptr<boost::dll::shared_library>` and will call the
-desrtuctor of shared library when the last reference to the `boost::shared_ptr<my_refcounting_api>` will go out of scope.
+After that we construct a `boost::shared_ptr<my_refcounting_api>` with a `library_holding_deleter` that keeps an instance of the shared library.
+
+[note Use `std::unique_ptr<my_refcounting_api>` instead of `my_refcounting_api*` in production code to avoid memory leaks when `plugin->location()`
+throws or when some other class rises an exception.]
 
 That's it, now we can get instance of a plugin:
 [plugcpp_get_plugin_refcounting]
