@@ -76,6 +76,12 @@ public:
     template<typename Class>
     dtor_sym get_destructor();
 
+    template<typename T>
+    std::string get_type_info();
+
+    template<typename T>
+    std::vector<std::string> get_related();
+
 };
 
 
@@ -279,7 +285,42 @@ auto mangled_storage_impl::get_destructor() -> dtor_sym
 
 }
 
+template<typename T>
+std::string mangled_storage_impl::get_type_info()
+{
+    std::string id = "typeinfo for " + get_name<T>();
+
+
+    auto predicate = [&](const mangled_storage_base::entry & e)
+                {
+                    return e.demangled == id;
+                };
+
+    auto found = std::find_if(storage_.begin(), storage_.end(), predicate);
+
+
+    if (found != storage_.end())
+        return found->mangled;
+    else
+        return "";
+}
+
+template<typename T>
+std::vector<std::string> mangled_storage_impl::get_related()
+{
+    std::vector<std::string> ret;
+    auto name = get_name<T>();
+
+    for (auto & c : storage_)
+    {
+        if (c.demangled.find(name) != std::string::npos)
+            ret.push_back(c.demangled);
+    }
+
+    return ret;
+}
+
 }}}
 
 
-#endif /* INCLUDE_BOOST_DLL_DETAIL_DEMANGLING_ITANIUM_HPP_ */
+#endif /* BOOST_DLL_DETAIL_DEMANGLING_ITANIUM_HPP_ */

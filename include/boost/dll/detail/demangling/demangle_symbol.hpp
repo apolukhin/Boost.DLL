@@ -13,7 +13,6 @@
 #include <algorithm>
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
-#include <boost/detail/winapi/dbghelp.hpp>
 
 namespace boost
 {
@@ -22,15 +21,35 @@ namespace dll
 namespace detail
 {
 
+typedef void * (__cdecl * allocation_function)(std::size_t);
+typedef void   (__cdecl * free_function)(void *);
+
+extern "C" char* __unDName( char* outputString,
+        const char* name,
+        int maxStringLength,    // Note, COMMA is leading following optional arguments
+        allocation_function pAlloc,
+        free_function pFree,
+        unsigned short disableFlags
+        );
+
 
 inline std::string demangle_symbol(const char *mangled_name)
 {
-    char unmangled_name[2048];
 
-    ::boost::detail::winapi::
-          UnDecorateSymbolName(mangled_name, unmangled_name, 2048, 0);
+    allocation_function alloc =  [](std::size_t size){return static_cast<void*>(new char[size]);};
+    free_function free_f      = [](void* p){delete [] static_cast<char*>(p);};
 
-    return std::string(unmangled_name);
+
+
+    std::unique_ptr<char> name { __unDName(
+            nullptr,
+            mangled_name,
+            0,
+            alloc,
+            free_f,
+            static_cast<unsigned short>(0))};
+
+    return std::string(name.get());
 }
 inline std::string demangle_symbol(const std::string& mangled_name)
 {
@@ -76,8 +95,14 @@ inline std::string demangle_symbol(const std::string& mangled_name)
 }
 
 
-}}}
+}
+namespace experimental
+{
+using ::boost::dll::detail::demangle_symbol;
+}
+
+}}
 
 #endif
 
-#endif /* INCLUDE_BOOST_DEMANGLE_HPP_ */
+#endif /* BOOST_DEMANGLE_HPP_ */
