@@ -41,6 +41,12 @@ cd boost_folder/libs/dll/test
 ```
 [endsect]
 
+[section:nested Nested Function Definitions]
+
+If a function is defined inside the class-definition it may be interpreted as always-inline which can lead to the function not being exported at all. This does however differ between between compilers.
+
+[endsect]
+
 [endsect]
 
 
