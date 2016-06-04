@@ -19,6 +19,7 @@
 [include introduction.qbk]
 [include getting_started.qbk]
 [include tutorial.qbk]
+[include mangled.qbk]
 [include missuses.qbk]
 
 [section Reference]

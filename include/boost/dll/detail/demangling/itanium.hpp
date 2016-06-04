@@ -92,12 +92,12 @@ namespace parser
     inline std::string const_rule_impl(true_type )  {return " const";}
     inline std::string const_rule_impl(false_type)  {return "";}
     template<typename T>
-    auto const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
+    std::string const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
 
     inline std::string volatile_rule_impl(true_type )  {return " volatile";}
     inline std::string volatile_rule_impl(false_type)  {return "";}
     template<typename T>
-    auto volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
+    std::string volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
 
     inline std::string reference_rule_impl(false_type, false_type) {return "";}
     inline std::string reference_rule_impl(true_type,  false_type) {return "&" ;}
@@ -105,11 +105,11 @@ namespace parser
 
 
     template<typename T>
-    auto reference_rule() {using t_l = is_lvalue_reference<T>; using t_r = is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
+    std::string reference_rule() {using t_l = is_lvalue_reference<T>; using t_r = is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
 
     //it takes a string, because it may be overloaded.
     template<typename T>
-    auto type_rule(const std::string & type_name)
+    std::string type_rule(const std::string & type_name)
     {
         using namespace std;
 
