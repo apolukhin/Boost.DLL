@@ -6,7 +6,7 @@
 
 [template mangled_ref[path] '''<ulink url="https://github.com/apolukhin/Boost.DLL/blob/develop/example/'''[path]'''">example/'''[path]'''</ulink>''']
 
-[def __to_top [link boost_dll.mangled Back to the Top]]
+[def __to_top [link boost_dll.mangled_import Back to the Top]]
 
 [section Mangled Import]
 
