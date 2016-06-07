@@ -10,7 +10,26 @@
 
 [section Mangled Import]
 
-This section describes the experimental feature of allowing the import of mangled symbols from an dll. While this feature is unique to this library and looks quite promising, it is not throroughly tested and thus not considered stable. 
+This section describes the experimental feature of allowing the import of mangled symbols from an dll. While this feature is unique to this library and looks quite promising, it is not throroughly tested and thus not considered stable.
+
+As a short example we can import the following functions quite easily:
+
+```
+//library.dll
+namespace foo {
+int    bar(int);
+double bar(double);
+}
+``` 
+
+And the import looks like this:
+
+```
+auto f1 = import_mangled<int(int)>("library.dll", "foo::bar");
+auto f2 = import_mangled<double(double)>("library.dll", "foo::bar");
+cout << f1(42)  << endl;
+cout << f2(3.2) << endl;
+```
 
 [section Support & Requirements]
 

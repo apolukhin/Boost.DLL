@@ -27,12 +27,12 @@ class mangled_storage_impl : public mangled_storage_base
     struct dummy {};
 
     template<typename Return, typename ...Args>
-    std::vector<std::string> get_func_params(dummy<Return(Args...)>)
+    std::vector<std::string> get_func_params(dummy<Return(Args...)>)  const
     {
         return {get_name<Args>()...};
     }
     template<typename Return, typename ...Args>
-    std::string get_return_type(dummy<Return(Args...)>)
+    std::string get_return_type(dummy<Return(Args...)>)  const
     {
         return get_name<Return>();
     }
@@ -62,25 +62,25 @@ public:
     };
 
     template<typename T>
-    std::string get_variable(const std::string &name);
+    std::string get_variable(const std::string &name) const;
 
     template<typename Func>
-    std::string get_function(const std::string &name);
+    std::string get_function(const std::string &name) const;
 
     template<typename Class, typename Func>
-    std::string get_mem_fn(const std::string &name);
+    std::string get_mem_fn(const std::string &name) const;
 
     template<typename Signature>
-    ctor_sym get_constructor();
+    ctor_sym get_constructor() const;
 
     template<typename Class>
-    dtor_sym get_destructor();
+    dtor_sym get_destructor() const;
 
     template<typename T>
-    std::string get_type_info();
+    std::string get_type_info() const;
 
     template<typename T>
-    std::vector<std::string> get_related();
+    std::vector<std::string> get_related() const;
 
 };
 
@@ -146,7 +146,7 @@ namespace parser
 
 
 
-template<typename T> std::string mangled_storage_impl::get_variable(const std::string &name)
+template<typename T> std::string mangled_storage_impl::get_variable(const std::string &name) const
 {
     auto found = std::find_if(storage_.begin(), storage_.end(),
             [&](const entry& e) {return e.demangled == name;});
@@ -157,7 +157,7 @@ template<typename T> std::string mangled_storage_impl::get_variable(const std::s
         return "";
 }
 
-template<typename Func> std::string mangled_storage_impl::get_function(const std::string &name)
+template<typename Func> std::string mangled_storage_impl::get_function(const std::string &name) const
 {
     using func_type = Func*;
 
@@ -172,7 +172,7 @@ template<typename Func> std::string mangled_storage_impl::get_function(const std
 }
 
 template<typename Class, typename Func>
-std::string mangled_storage_impl::get_mem_fn(const std::string &name)
+std::string mangled_storage_impl::get_mem_fn(const std::string &name) const
 {
     using namespace parser;
 
@@ -195,7 +195,7 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name)
 
 
 template<typename Signature>
-auto mangled_storage_impl::get_constructor() -> ctor_sym
+auto mangled_storage_impl::get_constructor() const -> ctor_sym
 {
     using namespace parser;
 
@@ -242,7 +242,7 @@ auto mangled_storage_impl::get_constructor() -> ctor_sym
 }
 
 template<typename Class>
-auto mangled_storage_impl::get_destructor() -> dtor_sym
+auto mangled_storage_impl::get_destructor() const -> dtor_sym
 {
     std::string dtor_name; // = class_name + "::" + name;
     std::string unscoped_cname; //the unscoped class-name
@@ -286,7 +286,7 @@ auto mangled_storage_impl::get_destructor() -> dtor_sym
 }
 
 template<typename T>
-std::string mangled_storage_impl::get_type_info()
+std::string mangled_storage_impl::get_type_info() const
 {
     std::string id = "typeinfo for " + get_name<T>();
 
@@ -306,7 +306,7 @@ std::string mangled_storage_impl::get_type_info()
 }
 
 template<typename T>
-std::vector<std::string> mangled_storage_impl::get_related()
+std::vector<std::string> mangled_storage_impl::get_related()  const
 {
     std::vector<std::string> ret;
     auto name = get_name<T>();
