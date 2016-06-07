@@ -259,7 +259,7 @@ public:
     template<typename Class, typename Func>
     typename boost::dll::detail::get_mem_fn_type<Class, Func>::mem_fn get_mem_fn(const std::string& name) const {
         return _lib.get<typename boost::dll::detail::get_mem_fn_type<Class, Func>::mem_fn>(
-        		_storage.get_mem_fn<Class, Func>(name)
+                _storage.get_mem_fn<Class, Func>(name)
         );
     }
 

@@ -30,8 +30,8 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {   
-	 using namespace boost::dll;
-	using namespace boost::dll::experimental;
+     using namespace boost::dll;
+    using namespace boost::dll::experimental;
     boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
 
     BOOST_TEST(!pt.empty());
@@ -57,10 +57,10 @@ int main(int argc, char* argv[])
     {
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
-	   class override_class{};
-	   auto cl = import_class<override_class, int>(sm, "some_space::some_class", type_size, 42);
+       class override_class{};
+       auto cl = import_class<override_class, int>(sm, "some_space::some_class", type_size, 42);
 #else
-	   auto cl = import_class<class override_class, int>(sm, "some_space::some_class", type_size, 42);
+       auto cl = import_class<class override_class, int>(sm, "some_space::some_class", type_size, 42);
 #endif
        BOOST_TEST(!cl.is_copy_assignable());
        BOOST_TEST(!cl.is_copy_constructible());

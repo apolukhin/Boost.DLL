@@ -30,8 +30,8 @@ struct override_class
 
 int main(int argc, char* argv[])
 {   
-	 using namespace boost::dll;
-	using namespace boost::dll::experimental;
+     using namespace boost::dll;
+    using namespace boost::dll::experimental;
     boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
 
     BOOST_TEST(!pt.empty());

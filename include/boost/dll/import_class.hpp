@@ -167,7 +167,7 @@ public:
     imported_class() = delete;
 
     imported_class(imported_class&) = delete;
-    imported_class(imported_class&&) = default;				///<Move constructor
+    imported_class(imported_class&&) = default;                ///<Move constructor
     imported_class& operator=(imported_class&) = delete;
     imported_class& operator=(imported_class&&) = default;  ///<Move assignmend
 
@@ -418,7 +418,7 @@ inline void boost::dll::experimental::imported_class<T>::move_assign(imported_cl
 template<typename T, typename ... Args> imported_class<T>
 import_class(const smart_library& lib_, std::size_t size, Args...args)
 {
-	smart_library lib(lib_);
+    smart_library lib(lib_);
 
     return imported_class<T>::template make<Args...>(boost::move(lib), size, static_cast<Args>(args)...);
 }
@@ -427,7 +427,7 @@ import_class(const smart_library& lib_, std::size_t size, Args...args)
 template<typename T, typename ... Args> imported_class<T>
 import_class(const smart_library& lib_, Args...args)
 {
-	smart_library lib(lib_);
+    smart_library lib(lib_);
     return imported_class<T>::template make<Args...>(boost::move(lib), static_cast<Args>(args)...);
 }
 
@@ -435,7 +435,7 @@ import_class(const smart_library& lib_, Args...args)
 template<typename T, typename ... Args> imported_class<T>
 import_class(const smart_library& lib_, const std::string & alias_name, Args...args)
 {
-	smart_library lib(lib_);
+    smart_library lib(lib_);
     lib.add_type_alias<T>(alias_name);
     return imported_class<T>::template make<Args...>(boost::move(lib), static_cast<Args>(args)...);
 }
@@ -444,9 +444,9 @@ import_class(const smart_library& lib_, const std::string & alias_name, Args...a
 template<typename T, typename ... Args> imported_class<T>
 import_class(const smart_library& lib_, std::size_t size, const std::string & alias_name, Args...args)
 {
-	smart_library lib(lib_);
+    smart_library lib(lib_);
 
-	lib.add_type_alias<T>(alias_name);
+    lib.add_type_alias<T>(alias_name);
     return imported_class<T>::template make<Args...>(boost::move(lib), size, static_cast<Args>(args)...);
 }
 
@@ -454,7 +454,7 @@ import_class(const smart_library& lib_, std::size_t size, const std::string & al
 template<typename T, typename ... Args> imported_class<T>
 import_class(const smart_library& lib_, const std::string & alias_name, std::size_t size, Args...args)
 {
-	smart_library lib(lib_);
+    smart_library lib(lib_);
 
     lib.add_type_alias<T>(alias_name);
     return imported_class<T>::template make<Args...>(boost::move(lib), size, static_cast<Args>(args)...);
@@ -486,7 +486,7 @@ import_class(smart_library && lib, std::size_t size, Args...args)
 template<typename T, typename ... Args> imported_class<T>
 import_class(smart_library && lib, std::size_t size, const std::string & alias_name, Args...args)
 {
-	lib.add_type_alias<T>(alias_name);
+    lib.add_type_alias<T>(alias_name);
     return imported_class<T>::template make<Args...>(boost::move(lib), size, static_cast<Args>(args)...);
 }
 
@@ -535,7 +535,7 @@ import_class(smart_library & lib, std::size_t size, Args...args)
 template<typename T, typename ... Args> imported_class<T>
 import_class(smart_library & lib, std::size_t size, const std::string & alias_name, Args...args)
 {
-	lib.add_type_alias<T>(alias_name);
+    lib.add_type_alias<T>(alias_name);
     return imported_class<T>::template make<Args...>(lib, size, static_cast<Args>(args)...);
 }
 
