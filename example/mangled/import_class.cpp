@@ -19,7 +19,7 @@
 int main(int argc, char* argv[]) {
     /*<-*/ b2_workarounds::argv_to_path_guard guard(argc, argv); /*->*/
     boost::filesystem::path lib_path(argv[1]);   // argv[1] contains path to directory with our plugin library
-    boost::shared_ptr<smart_library> lib = boost::make_shared<smart_library>(lib_path);// smart library instance
+    smart_library lib(lib_path);// smart library instance
 //]
 //[import_class_size    
     auto size_f = import_mangled<std::size_t()>("space::my_plugin::size"); //get the size function
