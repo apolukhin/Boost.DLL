@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
 //[smart_lib_size    
     auto size_f = lib.get_function<std::size_t()>("space::my_plugin::size"); //get the size function
     
-    auto size = (*size_f)();             // get the size of the class
+    auto size = size_f();             // get the size of the class
     std::unique_ptr<char[], size> buffer(new char[size]);    //allocate a buffer for the import
     alias & inst = *reinterpret_cast<alias*>(buffer.get()); //cast it to our alias type.
 //]

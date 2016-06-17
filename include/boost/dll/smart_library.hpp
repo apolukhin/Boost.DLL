@@ -125,7 +125,7 @@ public:
     * \throw Nothing.
     */
     smart_library(BOOST_RV_REF(smart_library) lib) BOOST_NOEXCEPT
-        : _lib(boost::move(static_cast<shared_library&>(lib._lib))), _storage(boost::move(lib._storage))
+        : _lib(boost::move(lib._lib)), _storage(boost::move(lib._storage))
     {}
 
     /*!
@@ -202,7 +202,7 @@ public:
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename T>
-    T& get_variable(const std::string &name) {
+    T& get_variable(const std::string &name) const {
         return _lib.get<T>(_storage.get_variable<T>(name));
     }
 
@@ -228,7 +228,7 @@ public:
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename Func>
-    Func& get_function(const std::string &name) {
+    Func& get_function(const std::string &name) const {
         return _lib.get<Func>(_storage.get_function<Func>(name));
     }
 
@@ -257,9 +257,9 @@ public:
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename Class, typename Func>
-    typename boost::dll::detail::get_mem_fn_type<Class, Func>::mem_fn get_mem_fn(const std::string& name) {
+    typename boost::dll::detail::get_mem_fn_type<Class, Func>::mem_fn get_mem_fn(const std::string& name) const {
         return _lib.get<typename boost::dll::detail::get_mem_fn_type<Class, Func>::mem_fn>(
-            _storage.get_mem_fn<Class, Func>(name)
+                _storage.get_mem_fn<Class, Func>(name)
         );
     }
 
@@ -280,7 +280,7 @@ public:
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename Signature>
-    constructor<Signature> get_constructor() {
+    constructor<Signature> get_constructor() const {
         return boost::dll::detail::load_ctor<Signature>(_lib, _storage.get_constructor<Signature>());
     }
 
@@ -302,7 +302,7 @@ public:
      *
      */
     template<typename Class>
-    destructor<Class> get_destructor() {
+    destructor<Class> get_destructor() const {
         return boost::dll::detail::load_dtor<Class>(_lib, _storage.get_destructor<Class>());
     }
     /*!
@@ -323,7 +323,7 @@ public:
      *
      */
     template<typename Class>
-    const std::type_info& get_type_info()
+    const std::type_info& get_type_info() const
     {
         return boost::dll::detail::load_type_info<Class>(_lib, _storage);
     }
@@ -432,24 +432,24 @@ inline void swap(smart_library& lhs, smart_library& rhs) BOOST_NOEXCEPT {
  * @param name The name of the entity to import
  */
 template<class T, class T2>
-void get(smart_library& sm, const std::string &name);
+void get(const smart_library& sm, const std::string &name);
 #endif
 
 template<class T>
-T& get(smart_library& sm, const std::string &name, typename boost::enable_if<boost::is_object<T>,T>::type* = nullptr)
+T& get(const smart_library& sm, const std::string &name, typename boost::enable_if<boost::is_object<T>,T>::type* = nullptr)
 
 {
     return sm.get_variable<T>(name);
 }
 
 template<class T>
-auto get(smart_library& sm, const std::string &name, typename boost::enable_if<boost::is_function<T>>::type* = nullptr)
+auto get(const smart_library& sm, const std::string &name, typename boost::enable_if<boost::is_function<T>>::type* = nullptr)
 {
     return sm.get_function<T>(name);
 }
 
 template<class Class, class Signature>
-auto get(smart_library& sm, const std::string &name) -> typename detail::get_mem_fn_type<Class, Signature>::mem_fn
+auto get(const smart_library& sm, const std::string &name) -> typename detail::get_mem_fn_type<Class, Signature>::mem_fn
 {
     return sm.get_mem_fn<Class, Signature>(name);
 }

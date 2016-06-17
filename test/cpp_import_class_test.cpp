@@ -6,6 +6,7 @@
 
 // For more information, see http://www.boost.org
 
+
 #include <boost/predef.h>
 
 #if (__cplusplus >= 201402L) || (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(14,0,0))
@@ -25,22 +26,23 @@ using namespace std;
 #include <boost/variant.hpp>
 #include <boost/function.hpp>
 
+#define L cout << __LINE__ << endl;
 
 int main(int argc, char* argv[])
 {   
-	 using namespace boost::dll;
-	using namespace boost::dll::experimental;
+     using namespace boost::dll;
+    using namespace boost::dll::experimental;
     boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
 
     BOOST_TEST(!pt.empty());
     std::cout << "Library: " << pt << std::endl;
 
-    boost::shared_ptr<smart_library> sm = boost::make_shared<smart_library>(pt);
+    smart_library sm(pt);
 
     auto static_val = import_mangled<int>(sm, "some_space::some_class::value");
 
     std::cout << "--------------------- Entry Points ------------------------\n" << std::endl;
-    for (auto &s : sm->symbol_storage().get_storage())
+    for (auto &s : sm.symbol_storage().get_storage())
         std::cout << s.demangled << std::endl;
 
     std::cout << "-----------------------------------------------------------\n\n" << std::endl;
@@ -52,31 +54,30 @@ int main(int argc, char* argv[])
     auto unscoped_var = import_mangled<int>(sm, "unscoped_var");
 
     std::size_t type_size = *import_mangled<std::size_t>(sm, "some_space::size_of_some_class");
-
     {
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
-        class override_class{};
-        auto cl = import_class<override_class, int>(sm, "some_space::some_class", type_size, 42);
+       class override_class{};
+       auto cl = import_class<override_class, int>(sm, "some_space::some_class", type_size, 42);
 #else
-        auto cl = import_class<class override_class, int>(sm, "some_space::some_class", type_size, 42);
+       auto cl = import_class<class override_class, int>(sm, "some_space::some_class", type_size, 42);
 #endif
-        BOOST_TEST(!cl.is_copy_assignable());
-        BOOST_TEST(!cl.is_copy_constructible());
+       BOOST_TEST(!cl.is_copy_assignable());
+       BOOST_TEST(!cl.is_copy_constructible());
 
-        BOOST_TEST( cl.is_move_assignable());
-        BOOST_TEST( cl.is_move_constructible());
+       BOOST_TEST( cl.is_move_assignable());
+       BOOST_TEST( cl.is_move_constructible());
 
-        BOOST_TEST(*static_val == 42);
+       BOOST_TEST(*static_val == 42);
 
-        auto i = cl.call<const override_class, int()>("get")();
-        BOOST_TEST(i == 456);
-        cl.call<void(int)>("set")(42);
-        i = 0;
-        i = cl.call<const override_class, int()>("get")();
-        BOOST_TEST(i == 42);
+       auto i = cl.call<const override_class, int()>("get")();
+       BOOST_TEST(i == 456);
+       cl.call<void(int)>("set")(42);
+       i = 0;
+       i = cl.call<const override_class, int()>("get")();
+       BOOST_TEST(i == 42);
 
-        auto func = import_mangled<
+         auto func = import_mangled<
                 override_class, double(double, double), int(int, int),
                 volatile override_class, int(int, int),
                 const volatile override_class, double(double, double)>(sm, "func");

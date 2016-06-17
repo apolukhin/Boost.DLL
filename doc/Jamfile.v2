@@ -58,6 +58,7 @@ doxygen autodoc_shared_library_core
             ../include/boost/dll/alias.hpp
 
             ../include/boost/dll/smart_library.hpp
+            ../include/boost/dll/import_class.hpp
         ]
     :
         $(doxygen_params)
