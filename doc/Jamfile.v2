@@ -41,6 +41,7 @@ local doxygen_params =
             shared_library(const shared_library&) = delete; \\
             shared_library& operator=(const shared_library&) = delete; \" \\
         \"BOOST_DLL_IMPORT_RESULT_TYPE=result_type\" \\
+        \"BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE=result_type\" \\
         \"BOOST_EXPLICIT_OPERATOR_BOOL()=explicit operator bool() const noexcept;\" \\
         \"BOOST_DLL_DOXYGEN\" "
     ;
