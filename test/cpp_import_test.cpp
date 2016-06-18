@@ -37,7 +37,6 @@ int main(int argc, char* argv[])
     BOOST_TEST(!pt.empty());
     std::cout << "Library: " << pt << std::endl;
 
-   // boost::shared_ptr<smart_library> sm = boost::make_shared<smart_library>(pt);
     smart_library sm(pt);
 
     auto sp_variable = import_mangled<double>(sm, "some_space::variable");

@@ -298,27 +298,6 @@ BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(BOOST_RV_REF(shared_library)
     return import_mangled<Args...>(boost::move(lib), name.c_str());
 }
 
-
-//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
-template <class ...Args>
-BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(
-        const boost::shared_ptr<boost::dll::experimental::smart_library>& p,
-        const std::string& name)
-{
-    return import_mangled<Args...>(p, name.c_str());
-}
-
-//! \overload boost::dll::import(const boost::filesystem::path& lib, const char* name, load_mode::type mode)
-template <class ...Args>
-BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(
-        const boost::shared_ptr<boost::dll::experimental::smart_library> & p,
-        const char* name)
-{
-    typedef typename boost::dll::experimental::detail::mangled_import_type<detail::sequence<Args...>> type;
-    return type::make(p, name);
-}
-
-
 #undef BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE
 
 }}}
