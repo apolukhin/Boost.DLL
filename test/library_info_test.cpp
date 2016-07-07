@@ -47,6 +47,8 @@ int main(int argc, char* argv[])
     std::vector<std::string> empty = lib_info.symbols("empty");
     BOOST_TEST(empty.empty() == true);
 
+    BOOST_TEST(lib_info.symbols("section_that_does_not_exist").empty());
+
     // Self testing
     std::cout << "Self: " << argv[0];
     boost::dll::library_info self_info(argv[0]);
