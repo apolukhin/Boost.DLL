@@ -91,3 +91,12 @@ boostbook dll-doc
         <xml:param>html.stylesheet=../../../../doc/src/boostbook.css
     ;
 
+###############################################################################
+alias boostdoc
+    : dll-doc/<format>docbook
+    :
+    :
+    : ;
+explicit boostdoc ;
+alias boostrelease ;
+explicit boostrelease ;
