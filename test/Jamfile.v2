@@ -46,7 +46,7 @@ project
     lib on_unload_lib : ../example/tutorial6/on_unload_lib.cpp : <link>shared ;
     lib library1 : ../example/tutorial7/library1.cpp : <link>shared ;
     lib library2 : ../example/tutorial7/library2.cpp : <link>shared ;
-    lib refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <link>shared <define>BOOST_DLL_FORCE_ALIAS_INSTANTIATION ;
+    lib refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <link>shared ;
     lib cpp_plugin : cpp_test_library.cpp : <link>shared ;
 
     test-suite boostdll
