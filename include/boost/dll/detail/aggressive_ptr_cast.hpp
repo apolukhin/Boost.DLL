@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015-2016 Antony Polukhin.
+// Copyright 2015-2017 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -21,9 +21,14 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/cstdint.hpp>    // boost::uintptr_t
 #include <cstring>              // std::memcpy
 
+// Logic from boost/log/detail/header.hpp
+#if defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) \
+        && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wpedantic"
+#endif
 namespace boost { namespace dll { namespace detail {
 
 // GCC warns when reinterpret_cast between function pointer and object pointer occur.
@@ -48,9 +53,7 @@ BOOST_FORCEINLINE typename boost::disable_if_c<boost::is_member_pointer<To>::val
         "Pointer to function and pointer to object differ in size on your platform."
     );
 
-    return reinterpret_cast<To>(
-        reinterpret_cast<boost::uintptr_t>(v)
-    );
+    return reinterpret_cast<To>(v);
 }
 
 template <class To, class From>
@@ -73,12 +76,8 @@ BOOST_FORCEINLINE typename boost::disable_if_c<!boost::is_reference<To>::value |
     );
 
     return static_cast<To>(
-        *reinterpret_cast<typename boost::remove_reference<To>::type*>(
-            *reinterpret_cast<boost::uintptr_t*>(
-                reinterpret_cast<unsigned char*>(
-                    v
-                )
-            )
+        **reinterpret_cast<typename boost::remove_reference<To>::type**>(
+            v
         )
     );
 }
@@ -123,6 +122,11 @@ BOOST_FORCEINLINE typename boost::disable_if_c<boost::is_member_pointer<To>::val
 
     return 0;
 }
+
+#if defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) \
+        && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
+#   pragma GCC diagnostic pop
+#endif
 
 }}} // boost::dll::detail
 
