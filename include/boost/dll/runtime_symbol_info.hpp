@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015-2016 Antony Polukhin.
+// Copyright 2015-2017 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -47,19 +47,30 @@ namespace detail {
     * \b Examples:
     * \code
     * int main() {
-    *    dll::symbol_location_ptr(::signal(SIGSEGV, SIG_DFL));  // returns "/some/path/libmy_signal_handler.so"
-    *    dll::symbol_location_ptr(&std::cerr);                  // returns location of libstdc++: "/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
-    *    dll::symbol_location_ptr(&std::puts);                  // returns location of libc: "/lib/x86_64-linux-gnu/libc.so.6"
+    *    dll::symbol_location_ptr(std::set_terminate(0));       // returns "/some/path/libmy_terminate_handler.so"
+    *    dll::symbol_location_ptr(::signal(SIGSEGV, SIG_DFL));  // returns "/some/path/libmy_symbol_handler.so"
     * }
     * \endcode
     */
-    inline boost::filesystem::path symbol_location_ptr(const void* ptr_to_symbol, boost::system::error_code& ec) {
+    template <class T>
+    inline boost::filesystem::path symbol_location_ptr(T ptr_to_symbol, boost::system::error_code& ec) {
+        BOOST_STATIC_ASSERT_MSG(boost::is_pointer<T>::value, "boost::dll::symbol_location_ptr works only with pointers! `ptr_to_symbol` must be a pointer");
         boost::filesystem::path ret;
+        if (!ptr_to_symbol) {
+            ec = boost::system::error_code(
+                boost::system::errc::bad_address,
+                boost::system::generic_category()
+            );
+
+            return ret;
+        }
         ec.clear();
+
+        const void* ptr = boost::dll::detail::aggressive_ptr_cast<const void*>(ptr_to_symbol);
 
 #if BOOST_OS_WINDOWS
         boost::detail::winapi::MEMORY_BASIC_INFORMATION_ mbi;
-        if (!boost::detail::winapi::VirtualQuery(ptr_to_symbol, &mbi, sizeof(mbi))) {
+        if (!boost::detail::winapi::VirtualQuery(ptr, &mbi, sizeof(mbi))) {
             ec = boost::dll::detail::last_error_code();
             return ret;
         }
@@ -69,7 +80,7 @@ namespace detail {
         Dl_info info;
 
         // Some of the libc headers miss `const` in `dladdr(const void*, Dl_info*)`
-        const int res = dladdr(const_cast<void*>(ptr_to_symbol), &info);
+        const int res = dladdr(const_cast<void*>(ptr), &info);
 
         if (res) {
             ret = info.dli_fname;
@@ -86,13 +97,14 @@ namespace detail {
     }
 
     //! \overload symbol_location_ptr(const void* ptr_to_symbol, boost::system::error_code& ec)
-    inline boost::filesystem::path symbol_location_ptr(const void* ptr_to_symbol) {
+    template <class T>
+    inline boost::filesystem::path symbol_location_ptr(T ptr_to_symbol) {
         boost::filesystem::path ret;
         boost::system::error_code ec;
         ret = boost::dll::symbol_location_ptr(ptr_to_symbol, ec);
 
         if (ec) {
-            boost::dll::detail::report_error(ec, "boost::dll::symbol_location_ptr(const T& symbol) failed");
+            boost::dll::detail::report_error(ec, "boost::dll::symbol_location_ptr(T ptr_to_symbol) failed");
         }
 
         return ret;

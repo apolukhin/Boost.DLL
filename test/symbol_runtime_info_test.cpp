@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2017 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -14,6 +14,9 @@
 
 #include <boost/core/lightweight_test.hpp>
 
+#include <exception> // std::set_terminate
+#include <signal.h> // ::signal
+
 // lib functions
 
 typedef float (lib_version_func)();
@@ -23,6 +26,15 @@ typedef int   (increment)       (int);
 // exe function
 extern "C" int BOOST_SYMBOL_EXPORT exef() {
     return 15;
+}
+
+
+extern "C" void BOOST_SYMBOL_EXPORT my_terminate_handler() {
+    std::abort();
+}
+
+extern "C" void BOOST_SYMBOL_EXPORT my_signal_handler(int) {
+    std::abort();
 }
 
 void internal_function() {}
@@ -131,6 +143,46 @@ int main(int argc, char* argv[]) {
     // Checking docs content
     std::cout << "\nsymbol_location(std::cerr); // " << symbol_location(std::cerr);
     std::cout << "\nsymbol_location(std::puts); // " << symbol_location(std::puts);
+
+    std::set_terminate(&my_terminate_handler);
+    BOOST_TEST((boost::filesystem::equivalent(
+        symbol_location_ptr(std::set_terminate(0)),
+        argv[0]
+    )));
+
+    {
+        boost::system::error_code ec;
+        symbol_location_ptr(std::set_terminate(0), ec),
+        BOOST_TEST(ec);
+    }
+
+    {
+        boost::system::error_code ec;
+        symbol_location(std::set_terminate(0), ec),
+        BOOST_TEST(ec);
+    }
+
+    {
+        std::set_terminate(&my_terminate_handler);
+        boost::system::error_code ec;
+        symbol_location(std::set_terminate(0), ec),
+        BOOST_TEST(ec);
+    }
+
+    ::signal(SIGSEGV, &my_signal_handler);
+    BOOST_TEST((boost::filesystem::equivalent(
+        symbol_location_ptr(::signal(SIGSEGV, SIG_DFL)),
+        argv[0]
+    )));
+
+    {
+        ::signal(SIGSEGV, &my_signal_handler);
+        boost::system::error_code ec;
+        symbol_location(::signal(SIGSEGV, SIG_DFL), ec);
+        BOOST_TEST(ec);
+    }
+
+
     return boost::report_errors();
 }
 
