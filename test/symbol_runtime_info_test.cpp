@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
 
     {
         boost::system::error_code ec;
-        boost::filesystem::path p = symbol_location_ptr(std::set_terminate(0), ec),
+        boost::filesystem::path p = symbol_location_ptr(std::set_terminate(0), ec);
         BOOST_TEST(ec || !p.empty());
     }
 
