@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
             const volatile override_class, double(double, double)>(sm, "func");
 
 
-    override_class *ov;
+    override_class *ov = 0;
     volatile override_class *ovv = ov;
     const volatile override_class *ovcv = ov;
 

@@ -169,11 +169,15 @@ int main(int argc, char* argv[]) {
         BOOST_TEST(ec);
     }
 
-    ::signal(SIGSEGV, &my_signal_handler);
-    BOOST_TEST((boost::filesystem::equivalent(
-        symbol_location_ptr(::signal(SIGSEGV, SIG_DFL)),
-        argv[0]
-    )));
+    {
+        boost::system::error_code ec;
+        ::signal(SIGSEGV, &my_signal_handler);
+        boost::filesystem::path p = symbol_location_ptr(::signal(SIGSEGV, SIG_DFL), ec);
+        BOOST_TEST((boost::filesystem::equivalent(
+            p,
+            argv[0]
+        )) || ec);
+    }
 
     {
         ::signal(SIGSEGV, &my_signal_handler);

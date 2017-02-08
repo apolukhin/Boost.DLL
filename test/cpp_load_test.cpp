@@ -172,8 +172,9 @@ int main(int argc, char* argv[])
 
    override_class_p this_exe = &oc;
 
-    for (auto & i : oc.arr)
+    for (auto& i : oc.arr) {
        i = 0;
+    }
 
 
     BOOST_TEST((oc.*get)() == 0);           BOOST_TEST(this_dll == this_exe);
@@ -194,9 +195,8 @@ int main(int argc, char* argv[])
     dtor.call_standard(&oc);                BOOST_TEST(this_dll == this_exe);
     BOOST_TEST(static_val == 0);
 
-    const auto & ti = sm.get_type_info<override_class>();
-
-    BOOST_TEST(&ti != nullptr);
+    const auto& ti = sm.get_type_info<override_class>();
+    BOOST_TEST(ti.name() != nullptr);
 
 
     //test the ovls helper.
