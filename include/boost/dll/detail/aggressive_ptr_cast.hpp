@@ -28,7 +28,10 @@
         && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
 #   pragma GCC diagnostic push
 #   pragma GCC diagnostic ignored "-Wpedantic"
+#elif defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__ * 100 + __GNUC_MINOR__ > 301)
+#   pragma GCC system_header
 #endif
+
 namespace boost { namespace dll { namespace detail {
 
 // GCC warns when reinterpret_cast between function pointer and object pointer occur.
@@ -97,7 +100,7 @@ BOOST_FORCEINLINE typename boost::disable_if_c<!boost::is_member_pointer<To>::va
     );
 
     To res = 0;
-    std::memcpy(&res, &v, sizeof(To));
+    std::memcpy(&res, &v, sizeof(From));
     return res;
 }
 
