@@ -23,12 +23,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <cstring>              // std::memcpy
 
-// Logic from boost/log/detail/header.hpp
-#if defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) \
-        && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wpedantic"
-#elif defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__ * 100 + __GNUC_MINOR__ > 301)
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__ * 100 + __GNUC_MINOR__ > 301)
 #   pragma GCC system_header
 #endif
 
@@ -125,11 +120,6 @@ BOOST_FORCEINLINE typename boost::disable_if_c<boost::is_member_pointer<To>::val
 
     return 0;
 }
-
-#if defined(__GNUC__) && !(defined(__INTEL_COMPILER) || defined(__ICL) || defined(__ICC) || defined(__ECC)) \
-        && (__GNUC__ * 100 + __GNUC_MINOR__) >= 406
-#   pragma GCC diagnostic pop
-#endif
 
 }}} // boost::dll::detail
 
