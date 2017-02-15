@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
     f_test(-2);
     BOOST_TEST(*unscoped_var == -2);
 
-    sm.add_type_alias<class override_class>("some_space::some_class");
+    sm.add_type_alias<override_class>("some_space::some_class");
 
     auto func = import_mangled<
             override_class, double(double, double), int(int, int),

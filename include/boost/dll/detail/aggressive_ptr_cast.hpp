@@ -54,6 +54,11 @@ BOOST_FORCEINLINE typename boost::disable_if_c<boost::is_member_pointer<To>::val
     return reinterpret_cast<To>(v);
 }
 
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+#   pragma warning(disable: 4172) // "returning address of local variable or temporary" but **v is not local!
+#endif
+
 template <class To, class From>
 BOOST_FORCEINLINE typename boost::disable_if_c<!boost::is_reference<To>::value || boost::is_member_pointer<From>::value, To>::type
     aggressive_ptr_cast(From v) BOOST_NOEXCEPT
@@ -72,19 +77,16 @@ BOOST_FORCEINLINE typename boost::disable_if_c<!boost::is_reference<To>::value |
         sizeof(v) == sizeof(typename boost::remove_reference<To>::type*),
         "Pointer to function and pointer to object differ in size on your platform."
     );
-#ifdef BOOST_MSVC
-#   pragma warning(push)
-#   pragma warning(disable: 4172) // "returning address of local variable or temporary" but **v is not local!
-#endif
     return static_cast<To>(
         **reinterpret_cast<typename boost::remove_reference<To>::type**>(
             v
         )
     );
+}
+
 #ifdef BOOST_MSVC
 #   pragma warning(pop)
 #endif
-}
 
 template <class To, class From>
 BOOST_FORCEINLINE typename boost::disable_if_c<!boost::is_member_pointer<To>::value || boost::is_member_pointer<From>::value, To>::type
