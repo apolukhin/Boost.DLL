@@ -5,15 +5,13 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+// MinGW related workaround
+#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
 
 //[plugcpp_my_plugin_refcounting
 #include "refcounting_plugin.hpp"
 #include <boost/dll/runtime_symbol_info.hpp> // for this_line_location()
 
-/*<-*/
-// MinGW related workaround
-#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
-/*->*/
 namespace my_namespace {
 
 class my_plugin_refcounting : public my_refcounting_api {
