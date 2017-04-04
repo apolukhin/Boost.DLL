@@ -32,7 +32,7 @@ typedef unsigned char BYTE_;
 typedef unsigned short WORD_;
 typedef boost::uint32_t DWORD_;
 typedef boost::int32_t LONG_;
-typedef boost::int32_t ULONG_;
+typedef boost::uint32_t ULONG_;
 typedef boost::int64_t LONGLONG_;
 typedef boost::uint64_t ULONGLONG_;
 
