@@ -26,7 +26,7 @@ namespace boost { namespace dll { namespace detail {
 // http://msdn.microsoft.com/en-us/magazine/cc301808.aspx
 //
 
-// Basic Windows typedefs. We can not use <boost/detail/winapi/basic_types.hpp> header
+// Basic Windows typedefs. We can not use <boost/winapi/basic_types.hpp> header
 // because that header must be included only on Windows platform
 typedef unsigned char BYTE_;
 typedef unsigned short WORD_;
