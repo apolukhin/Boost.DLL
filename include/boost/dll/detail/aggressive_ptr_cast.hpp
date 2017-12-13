@@ -13,6 +13,7 @@
 #   pragma once
 #endif
 
+#include <boost/core/enable_if.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/is_member_pointer.hpp>
@@ -20,7 +21,6 @@
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <cstring>              // std::memcpy
 
 #if defined(__GNUC__) && defined(__GNUC_MINOR__) && (__GNUC__ * 100 + __GNUC_MINOR__ > 301)
