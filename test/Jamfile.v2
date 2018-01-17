@@ -1,5 +1,5 @@
 #
-# Copyright Renato Tegon Forti, Antony Polukhin 2011 - 2016.
+# Copyright Renato Tegon Forti, Antony Polukhin 2011 - 2018.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          http://www.boost.org/LICENSE_1_0.txt)
@@ -79,7 +79,7 @@ project
         [ run ../example/tutorial8/tutorial8.cpp : : refcounting_plugin : <link>shared ]
         [ run ../example/tutorial8/tutorial8_static.cpp : : : <link>static <variant>release $(RDYNAMIC) <test-info>always_show_run_output <library>static_refcounting_plugin
             # Known problem: unsupported __dllexport__ with weak symbols + GNU linker features (no non-weak unresolved symbols in executable => no need to link libraries)
-            <toolset>gcc-mingw:<build>no
+            <target-os>windows,<toolset>gcc:<build>no
         ]
         [ run ../example/tutorial9/tutorial9.cpp ]
         # test for shared libraries
