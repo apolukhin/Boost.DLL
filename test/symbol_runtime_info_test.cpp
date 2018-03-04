@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015-2017 Antony Polukhin.
+// Copyright 2015-2018 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -14,8 +14,26 @@
 
 #include <boost/core/lightweight_test.hpp>
 
+#include <boost/predef/os.h>
+
+
+#include <cmath>
 #include <exception> // std::set_terminate
 #include <signal.h> // ::signal
+
+// Makes global error variables dirty. Usefull for preventing issues like https://github.com/boostorg/dll/issues/16
+void make_error_code_dirty() {
+    using namespace std;
+    log(-1.0);
+
+#if BOOST_OS_WINDOWS
+    boost::winapi::WCHAR_ path_hldr[10];
+    int some_invalid_handle = 0xFF004242;
+    boost::winapi::GetModuleFileNameW(reinterpret_cast<boost::winapi::HMODULE_>(some_invalid_handle), path_hldr, 10);
+#endif
+}
+
+
 
 // lib functions
 
@@ -47,6 +65,8 @@ int main(int argc, char* argv[]) {
     boost::filesystem::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
     BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
 
+    make_error_code_dirty();
+
     shared_library lib(shared_library_path);
 
     std::cout << std::endl;
@@ -57,6 +77,8 @@ int main(int argc, char* argv[]) {
         symbol_location(lib.get<int>("integer_g")) == lib.location()
     );
 
+    make_error_code_dirty();
+
     BOOST_TEST(
         symbol_location(lib.get<say_hello_func>("say_hello")) == lib.location()
     );
@@ -64,6 +86,8 @@ int main(int argc, char* argv[]) {
     BOOST_TEST(
         symbol_location(lib.get<lib_version_func>("lib_version")) == lib.location()
     );
+
+    make_error_code_dirty();
 
     BOOST_TEST(
         symbol_location(lib.get<const int>("const_integer_g")) == lib.location()
@@ -75,6 +99,9 @@ int main(int argc, char* argv[]) {
     BOOST_TEST(
         symbol_location(lib.get<int>("integer_g")) == lib.location()
     );
+
+
+    make_error_code_dirty();
 
     // Checking aliases
     BOOST_TEST(
@@ -93,7 +120,13 @@ int main(int argc, char* argv[]) {
     );
     
     { // self
+
+        make_error_code_dirty();
+
         shared_library sl(program_location());
+
+        make_error_code_dirty();
+
         BOOST_TEST(
             (boost::filesystem::equivalent(symbol_location(sl.get<int(void)>("exef")), argv[0]))
         );
@@ -123,6 +156,7 @@ int main(int argc, char* argv[]) {
         (boost::filesystem::equivalent(symbol_location(internal_variable), argv[0]))
     );
 
+    make_error_code_dirty();
 
     BOOST_TEST(
         (boost::filesystem::equivalent(this_line_location(), argv[0]))
@@ -130,6 +164,7 @@ int main(int argc, char* argv[]) {
 
     { // this_line_location with error_code
         boost::system::error_code ec;
+        make_error_code_dirty();
         BOOST_TEST(
             (boost::filesystem::equivalent(this_line_location(ec), argv[0]))
         );
@@ -165,6 +200,7 @@ int main(int argc, char* argv[]) {
     {
         std::set_terminate(&my_terminate_handler);
         boost::system::error_code ec;
+        make_error_code_dirty();
         symbol_location(std::set_terminate(0), ec),
         BOOST_TEST(ec);
     }
@@ -182,6 +218,7 @@ int main(int argc, char* argv[]) {
     {
         ::signal(SIGSEGV, &my_signal_handler);
         boost::system::error_code ec;
+        make_error_code_dirty();
         symbol_location(::signal(SIGSEGV, SIG_DFL), ec);
         BOOST_TEST(ec);
     }
