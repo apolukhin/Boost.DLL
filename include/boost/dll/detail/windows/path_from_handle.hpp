@@ -20,7 +20,7 @@
 
 namespace boost { namespace dll { namespace detail {
 
-    static inline boost::system::error_code last_error_code() BOOST_NOEXCEPT {
+    inline boost::system::error_code last_error_code() BOOST_NOEXCEPT {
         boost::winapi::DWORD_ err = boost::winapi::GetLastError();
         return boost::system::error_code(
             err,
@@ -32,11 +32,14 @@ namespace boost { namespace dll { namespace detail {
         BOOST_STATIC_CONSTANT(boost::winapi::DWORD_, ERROR_INSUFFICIENT_BUFFER_ = 0x7A);
         BOOST_STATIC_CONSTANT(boost::winapi::DWORD_, DEFAULT_PATH_SIZE_ = 260);
 
+        // On success, GetModuleFileNameW() doesn't reset last error to ERROR_SUCCESS. Resetting it manually.
+        boost::winapi::GetLastError();
+
         // If `handle` parameter is NULL, GetModuleFileName retrieves the path of the
         // executable file of the current process.
         boost::winapi::WCHAR_ path_hldr[DEFAULT_PATH_SIZE_];
         boost::winapi::GetModuleFileNameW(handle, path_hldr, DEFAULT_PATH_SIZE_);
-        ec = last_error_code();
+        ec = boost::dll::detail::last_error_code();
         if (!ec) {
             return boost::filesystem::path(path_hldr);
         }
@@ -44,7 +47,7 @@ namespace boost { namespace dll { namespace detail {
         for (unsigned i = 2; i < 1025 && static_cast<boost::winapi::DWORD_>(ec.value()) == ERROR_INSUFFICIENT_BUFFER_; i *= 2) {
             std::wstring p(DEFAULT_PATH_SIZE_ * i, L'\0');
             const std::size_t size = boost::winapi::GetModuleFileNameW(handle, &p[0], DEFAULT_PATH_SIZE_ * i);
-            ec = last_error_code();
+            ec = boost::dll::detail::last_error_code();
 
             if (!ec) {
                 p.resize(size);
@@ -52,7 +55,7 @@ namespace boost { namespace dll { namespace detail {
             }
         }
 
-        // Error other than ERROR_INSUFFICIENT_BUFFER_ occurred or failed to allocate buffer big enough
+        // Error other than ERROR_INSUFFICIENT_BUFFER_ occurred or failed to allocate buffer big enough.
         return boost::filesystem::path();
     }
 
