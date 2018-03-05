@@ -30,7 +30,7 @@ void make_error_code_dirty() {
     boost::winapi::WCHAR_ path_hldr[10];
     int some_invalid_value_for_handle = 0xFF004242;
     boost::winapi::HMODULE_ some_invalid_handle;
-    memcpy(&some_invalid_handle, some_invalid_value_for_handle, sizeof(some_invalid_value_for_handle));
+    memcpy(&some_invalid_handle, &some_invalid_value_for_handle, sizeof(some_invalid_value_for_handle));
     boost::winapi::GetModuleFileNameW(some_invalid_handle, path_hldr, 10);
 #endif
 }
