@@ -11,6 +11,7 @@
 #include <boost/config.hpp>
 #include <string>
 #include <algorithm>
+#include <memory>
 
 #if defined(BOOST_MSVC) || defined(BOOST_MSVC_FULL_VER)
 
