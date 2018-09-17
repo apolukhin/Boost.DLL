@@ -160,7 +160,7 @@ namespace parser
                 ptr_rule();
     }
     template<>
-    auto type_rule<void>(const std::string &) { return x3::string("void"); };
+    inline auto type_rule<void>(const std::string &) { return x3::string("void"); };
 
     auto const cdecl_   = "__cdecl"     >> x3::space;
     auto const stdcall  = "__stdcall"     >> x3::space;
