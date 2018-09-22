@@ -27,7 +27,7 @@ project
    : requirements
 
    # linux
-      <target-os>linux:<linkflags>"-ldl" <target-os>linux:<cxxflags>"-fvisibility=hidden"
+      <target-os>linux:<linkflags>"-ldl" <visibility>hidden
       <toolset>gcc:<cxxflags>"-Wall -Wextra -pedantic -Wno-long-long"
 
    # others
