@@ -36,7 +36,7 @@ class mangled_storage_impl  : public mangled_storage_base
     {
         return get_name<Return>();
     }
-    //function to remove preceeding 'class ' or 'struct ' if the are given in this format.
+    //function to remove preceding 'class ' or 'struct ' if the are given in this format.
 
     inline static void trim_typename(std::string & val);
 public:
@@ -78,7 +78,7 @@ public:
 
 void mangled_storage_impl::trim_typename(std::string & val)
 {
-    //remove preceeding class or struct, because you might want to use a struct as class, et vice versa
+    //remove preceding class or struct, because you might want to use a struct as class, et vice versa
     if (val.size() >= 6)
     {
         using namespace std;

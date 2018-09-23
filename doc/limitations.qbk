@@ -18,8 +18,8 @@ where we must explicitly specify translation unit in which [macroref BOOST_DLL_A
 Unit that must hold an instance of [macroref BOOST_DLL_ALIAS] must define [macroref BOOST_DLL_FORCE_ALIAS_INSTANTIATION]
 before including any of the Boost.DLL library headers.
 
-You may explicitly disable export of weak symbols using [macroref BOOST_DLL_FORCE_NO_WEAK_EXPORTS]. This may be usefull for working
-around linker problems or to test your program for compatability with linkers that do not support exporting weak symbols.
+You may explicitly disable export of weak symbols using [macroref BOOST_DLL_FORCE_NO_WEAK_EXPORTS]. This may be useful for working
+around linker problems or to test your program for compatibility with linkers that do not support exporting weak symbols.
 [endsect]
 
 [section User defined section names (Fails on SunOS + Oracle Solaris Studio Compilers)]

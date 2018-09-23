@@ -89,7 +89,7 @@ inline std::string demangle_symbol(const char *mangled_name)
 
 }
 
-//for my personal convinience
+//for my personal convenience
 inline std::string demangle_symbol(const std::string& mangled_name)
 {
     return demangle_symbol(mangled_name.c_str());

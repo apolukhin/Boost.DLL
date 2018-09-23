@@ -61,7 +61,7 @@ using boost::dll::detail::destructor;
 * BOOST_DLL_MEMBER_EXPORT for this, so that MinGW and MSVC can provide those functions. This does however not work with gcc on linux.
 *
 * Direct initialization of members.
-* On linux the following member variable i will not be initialized when using the allocating contructor:
+* On linux the following member variable i will not be initialized when using the allocating constructor:
 * \code
 * struct BOOST_SYMBOL_EXPORT my_class { int i; my_class() : i(42) {} };
 * \endcode
@@ -80,7 +80,7 @@ public:
 
     using mangled_storage = detail::mangled_storage_impl;
     /*!
-    * Acces to the mangled storage, which is created on construction.
+    * Access to the mangled storage, which is created on construction.
     *
     * \throw Nothing.
     */
@@ -295,7 +295,7 @@ public:
      * destructor<MyClass>     f1 = lib.get_mem_fn<MyClass>();
      * \endcode
      *
-     * \tparam Class The class whichs destructor shall be loaded
+     * \tparam Class The class within which the destructor shall be loaded
      * \return A destructor object.
      *
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
@@ -316,7 +316,7 @@ public:
      * std::type_info &ti = lib.get_Type_info<MyClass>();
      * \endcode
      *
-     * \tparam Class The class whichs typeinfo shall be loaded
+     * \tparam Class The class within which the typeinfo shall be loaded
      * \return A reference to a type_info object.
      *
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.

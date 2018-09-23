@@ -20,7 +20,7 @@ env:
         # Example: - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/*'
         - IGNORE_COVERAGE='*/detail/pe_info.hpp */detail/macho_info.hpp */boost/progress.hpp */src/unique_path.cpp */src/codecvt_error_category.cpp */src/portability.cpp */src/operations.cpp */src/path.cpp */src/path_traits.cpp'
 
-        # Explicitly remove the following library from Boost. This may be usefull, if you're for example running Travis
+        # Explicitly remove the following library from Boost. This may be useful, if you're for example running Travis
         # from `Boost.DLL` repo, while Boost already has `dll`.
         #
         # By default is eaual to - BOOST_REMOVE=`basename $TRAVIS_BUILD_DIR`
