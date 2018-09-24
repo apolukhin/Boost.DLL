@@ -295,7 +295,7 @@ public:
      * destructor<MyClass>     f1 = lib.get_mem_fn<MyClass>();
      * \endcode
      *
-     * \tparam Class The class within which the destructor shall be loaded
+     * \tparam Class The class whose destructor shall be loaded
      * \return A destructor object.
      *
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
@@ -316,7 +316,7 @@ public:
      * std::type_info &ti = lib.get_Type_info<MyClass>();
      * \endcode
      *
-     * \tparam Class The class within which the typeinfo shall be loaded
+     * \tparam Class The class whose typeinfo shall be loaded
      * \return A reference to a type_info object.
      *
      * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
