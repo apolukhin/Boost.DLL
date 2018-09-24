@@ -56,7 +56,7 @@ of an abstract class that will be our plugin API:
 [import ../example/mangled/my_cpp_plugin.hpp]
 [cppplug]
 
-Alright, now we have the defintion for the plugin, so we use it in the following full-fleshed example. Mind that there is a more convenient solution to import member-functions which will be discussed later on. This example shows however what the [classref smart_lib] provides as features.
+Alright, now we have the definition for the plugin, so we use it in the following full-fleshed example. Mind that there is a more convenient solution to import member-functions which will be discussed later on. This example shows however what the [classref smart_lib] provides as features.
 
 [import ../example/mangled/smart_lib.cpp]
 
@@ -81,7 +81,7 @@ So since the class is now initialized, we can call the name method. If the funct
 
 [smart_lib_name]
 
-Overloaded functions can only be imported seperately.
+Overloaded functions can only be imported separately.
 
 [smart_lib_calculate]
 
@@ -89,7 +89,7 @@ Import of static variable is done like with plain variable.
 
 [smart_lib_var]
 
-Since we are finished, we call the desctructor of the class. 
+Since we are finished, we call the destructor of the class. 
 
 [smart_lib_dtor]
 

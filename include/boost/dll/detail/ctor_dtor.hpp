@@ -46,7 +46,7 @@ struct constructor<Class(Args...)> {
     //! The allocating constructor.  @warning May differ with the compiler. Use @ref constructor::call_allocating instead.
     allocating_t allocating;
 
-    //! Call the standard contructor
+    //! Call the standard constructor
     void call_standard  (Class * const ptr, Args...args){ (ptr->*standard)(static_cast<Args>(args)...); }
 
     //! Call the deleting destructor
@@ -91,7 +91,7 @@ struct destructor {
     //! The deleting destructor. @warning May differ with the compiler. Use @ref destructor::call_deallocating instead.
     deleting_t deleting;
 
-    //! Call the standard contructor
+    //! Call the standard constructor
     void call_standard(Class * const ptr){ standard(ptr); }
 
     //! Call the deleting destructor
