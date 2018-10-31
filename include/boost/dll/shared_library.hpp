@@ -55,7 +55,7 @@ class shared_library
 public:
 #ifdef BOOST_DLL_DOXYGEN
     typedef platform_specific native_handle_t;
-#else 
+#else
     typedef shared_library_impl::native_handle_t native_handle_t;
 #endif
 
@@ -511,6 +511,10 @@ public:
         return base_t::suffix();
     }
 
+    static boost::filesystem::path append_decorations(boost::filesystem::path sl) {
+        return base_t::append_decorations(sl);
+    }
+
     /*!
     * Swaps two libraries. Does not invalidate existing symbols and functions loaded from libraries.
     *
@@ -547,4 +551,3 @@ inline void swap(shared_library& lhs, shared_library& rhs) BOOST_NOEXCEPT {
 }} // boost::dll
 
 #endif // BOOST_DLL_SHARED_LIBRARY_HPP
-
