@@ -8,7 +8,7 @@
 #ifndef BOOST_DLL_SHARED_LIBRARY_MODE_HPP
 #define BOOST_DLL_SHARED_LIBRARY_MODE_HPP
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #include <boost/predef/os.h>
 #include <boost/predef/library/c.h>
 

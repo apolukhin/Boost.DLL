@@ -8,7 +8,7 @@
 #ifndef BOOST_DLL_ALIAS_HPP
 #define BOOST_DLL_ALIAS_HPP
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/predef/compiler.h>
 #include <boost/predef/os.h>

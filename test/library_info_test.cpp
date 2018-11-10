@@ -21,7 +21,7 @@
 
 int main(int argc, char* argv[])
 {
-    boost::filesystem::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
+    boost::dll::fs::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
     BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
 
     boost::dll::library_info lib_info(shared_library_path);

@@ -9,7 +9,7 @@
 // For more information, see http://www.boost.org
 
 #define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #include <boost/dll/alias.hpp>
 
 int integer_g = 100;

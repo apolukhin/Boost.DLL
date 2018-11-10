@@ -13,7 +13,7 @@
 #include <boost/dll/library_info.hpp>
 #include <iostream>
 
-void load_and_execute(const boost::filesystem::path libraries[], std::size_t libs_count) {
+void load_and_execute(const boost::dll::fs::path libraries[], std::size_t libs_count) {
     const std::string username = "User";
 
     for (std::size_t i = 0; i < libs_count; ++i) {
@@ -36,7 +36,7 @@ void load_and_execute(const boost::filesystem::path libraries[], std::size_t lib
 
 int main(int argc, char* argv[]) {
     /*<-*/ BOOST_ASSERT(argc >= 3); /*->*/
-    std::vector<boost::filesystem::path> libraries;
+    std::vector<boost::dll::fs::path> libraries;
     libraries.reserve(argc - 1);
     for (int i = 1; i < argc; ++i) {
         if (b2_workarounds::is_shared_library(argv[i])) {

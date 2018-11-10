@@ -16,7 +16,7 @@ namespace dll = boost::dll;
 
 int main(int argc, char* argv[]) {
     /*<-*/ b2_workarounds::argv_to_path_guard guard(argc, argv); /*->*/
-    boost::filesystem::path lib_path(argv[1]);          // argv[1] contains path to directory with our plugin library
+    boost::dll::fs::path lib_path(argv[1]);             // argv[1] contains path to directory with our plugin library
     boost::shared_ptr<my_plugin_api> plugin;            // variable to hold a pointer to plugin variable
     std::cout << "Loading the plugin" << std::endl;
      

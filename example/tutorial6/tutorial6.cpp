@@ -20,7 +20,7 @@ void print_unloaded() {
 
 int main(int argc, char* argv[]) {
     // argv[1] contains full path to our plugin library
-    boost::filesystem::path shared_library_path = /*<-*/ b2_workarounds::first_lib_from_argv(argc, argv); /*->*/ //=argv[1];
+    boost::dll::fs::path shared_library_path = /*<-*/ b2_workarounds::first_lib_from_argv(argc, argv); /*->*/ //=argv[1];
 
     // loading library and getting a function from it
     boost::function<void(const callback_t&)> on_unload

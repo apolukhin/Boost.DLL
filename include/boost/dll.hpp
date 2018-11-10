@@ -12,7 +12,7 @@
 /// \file boost/dll.hpp
 /// \brief Includes all the non-experimental headers of the Boost.DLL library.
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/alias.hpp>
 #include <boost/dll/import.hpp>

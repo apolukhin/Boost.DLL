@@ -15,7 +15,7 @@
 int main(int argc, char* argv[]) {
     using namespace boost;
 
-    filesystem::path path_to_shared_library = b2_workarounds::first_lib_from_argv(argc, argv);
+    boost::dll::fs::path path_to_shared_library = b2_workarounds::first_lib_from_argv(argc, argv);
     BOOST_TEST(path_to_shared_library.string().find("getting_started_library") != std::string::npos);
     
     //[getting_started_imports_c_function

@@ -14,7 +14,7 @@
 int main(int argc, char* argv[]) {
     /*<-*/ b2_workarounds::argv_to_path_guard guard(argc, argv); /*->*/
     boost::shared_ptr<my_refcounting_api> plugin = get_plugin(
-        boost::filesystem::path(argv[1]) / "refcounting_plugin",
+        boost::dll::fs::path(argv[1]) / "refcounting_plugin",
         "create_refc_plugin"
     );
 

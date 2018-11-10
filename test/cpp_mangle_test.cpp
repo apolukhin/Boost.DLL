@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     using namespace boost::dll;
     using mangled_storage = detail::mangled_storage_impl;
 
-    boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);;
+    boost::dll::fs::path pt = b2_workarounds::first_lib_from_argv(argc, argv);;
 
     std::cout << "Library: " << pt << std::endl;
     library_info lib{pt};

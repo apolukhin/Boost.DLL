@@ -17,7 +17,7 @@ namespace dll = boost::dll;
 
 int main(int argc, char* argv[]) {
     /*<-*/ b2_workarounds::argv_to_path_guard guard(argc, argv); /*->*/
-    boost::filesystem::path shared_library_path(argv[1]);               // argv[1] contains path to directory with our plugin library
+    boost::dll::fs::path shared_library_path(argv[1]);                  // argv[1] contains path to directory with our plugin library
     shared_library_path /= "my_plugin_aggregator";
     typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
     boost::function<pluginapi_create_t> creator;

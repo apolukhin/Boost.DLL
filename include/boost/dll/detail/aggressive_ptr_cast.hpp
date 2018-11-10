@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015-2017 Antony Polukhin.
+// Copyright 2015-2018 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -8,11 +8,12 @@
 #ifndef BOOST_DLL_DETAIL_AGGRESSIVE_PTR_CAST_HPP
 #define BOOST_DLL_DETAIL_AGGRESSIVE_PTR_CAST_HPP
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #ifdef BOOST_HAS_PRAGMA_ONCE
 #   pragma once
 #endif
 
+#include <boost/core/addressof.hpp>
 #include <boost/core/enable_if.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_pointer.hpp>

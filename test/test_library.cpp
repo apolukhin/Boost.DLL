@@ -11,7 +11,7 @@
 // MinGW related workaround
 #define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #include <boost/dll/alias.hpp>
 #include <iostream>
 #include <vector>
@@ -96,7 +96,7 @@ int increment(int n)
 
 #include <boost/dll/runtime_symbol_info.hpp>
 
-boost::filesystem::path this_module_location_from_itself() {
+boost::dll::fs::path this_module_location_from_itself() {
     return boost::dll::this_line_location();
 }
 

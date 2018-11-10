@@ -28,7 +28,7 @@ typedef boost::shared_ptr<do_share_res_t> (do_share_t)(
             std::vector<int>* v5
         );
 
-void refcountable_test(boost::filesystem::path shared_library_path) {
+void refcountable_test(boost::dll::fs::path shared_library_path) {
     using namespace boost::dll;
     using namespace boost::fusion;
 
@@ -124,7 +124,7 @@ extern "C" int BOOST_SYMBOL_EXPORT exef() {
 int main(int argc, char* argv[]) {
     using namespace boost::dll;
 
-    boost::filesystem::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
+    boost::dll::fs::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
     BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
     BOOST_TEST(b2_workarounds::is_shared_library(shared_library_path));
 

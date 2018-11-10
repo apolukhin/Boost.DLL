@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 {   
      using namespace boost::dll;
     using namespace boost::dll::experimental;
-    boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
+    boost::dll::fs::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
 
     BOOST_TEST(!pt.empty());
     std::cout << "Library: " << pt << std::endl;

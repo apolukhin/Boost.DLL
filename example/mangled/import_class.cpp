@@ -18,7 +18,7 @@
 
 int main(int argc, char* argv[]) {
     /*<-*/ b2_workarounds::argv_to_path_guard guard(argc, argv); /*->*/
-    boost::filesystem::path lib_path(argv[1]);   // argv[1] contains path to directory with our plugin library
+    boost::dll::fs::path lib_path(argv[1]);      // argv[1] contains path to directory with our plugin library
     smart_library lib(lib_path);// smart library instance
 //]
 //[import_class_size    

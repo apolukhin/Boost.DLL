@@ -8,14 +8,14 @@
 #ifndef BOOST_DLL_DETAIL_POSIX_ELF_INFO_HPP
 #define BOOST_DLL_DETAIL_POSIX_ELF_INFO_HPP
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif
 
 #include <cstring>
-#include <boost/filesystem/fstream.hpp>
+#include <fstream>
 #include <boost/dll/detail/x_info_interface.hpp>
 
 namespace boost { namespace dll { namespace detail {
@@ -91,7 +91,7 @@ typedef Elf_Sym_template<boost::uint64_t> Elf64_Sym_;
 
 template <class AddressOffsetT>
 class elf_info: public x_info_interface {
-    boost::filesystem::ifstream& f_;
+    std::ifstream& f_;
 
     typedef boost::dll::detail::Elf_Ehdr_template<AddressOffsetT>  header_t;
     typedef boost::dll::detail::Elf_Shdr_template<AddressOffsetT>  section_t;
@@ -111,7 +111,7 @@ class elf_info: public x_info_interface {
     BOOST_STATIC_CONSTANT(unsigned char, STV_PROTECTED_ = 3);    /* Not preemptible, not exported */
 
 public:
-    static bool parsing_supported(boost::filesystem::ifstream& f) {
+    static bool parsing_supported(std::ifstream& f) {
         const unsigned char magic_bytes[5] = { 
             0x7f, 'E', 'L', 'F', sizeof(boost::uint32_t) == sizeof(AddressOffsetT) ? 1 : 2
         };
@@ -128,7 +128,7 @@ public:
         return true;
     }
 
-    explicit elf_info(boost::filesystem::ifstream& f) BOOST_NOEXCEPT
+    explicit elf_info(std::ifstream& f) BOOST_NOEXCEPT
         : f_(f)
     {}
 
@@ -186,14 +186,14 @@ private:
             if (section.sh_type == SHT_SYMTAB_) {
                 symbols.resize(static_cast<std::size_t>(section.sh_size / sizeof(symbol_t)));
 
-                const boost::filesystem::ifstream::pos_type pos = f_.tellg();
+                const std::ifstream::pos_type pos = f_.tellg();
                 f_.seekg(section.sh_offset);
                 read_raw(symbols[0], static_cast<std::size_t>(section.sh_size - (section.sh_size % sizeof(symbol_t))) );
                 f_.seekg(pos);
             } else if (section.sh_type == SHT_STRTAB_) {
                 text.resize(static_cast<std::size_t>(section.sh_size));
 
-                const boost::filesystem::ifstream::pos_type pos = f_.tellg();
+                const std::ifstream::pos_type pos = f_.tellg();
                 f_.seekg(section.sh_offset);
                 read_raw(text[0], static_cast<std::size_t>(section.sh_size));
                 f_.seekg(pos);

@@ -8,7 +8,7 @@
 #ifndef BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
 #define BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #include <boost/dll/shared_library_load_mode.hpp>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 #include <boost/dll/detail/system_error.hpp>
@@ -16,8 +16,6 @@
 
 #include <boost/move/utility.hpp>
 #include <boost/swap.hpp>
-#include <boost/filesystem/path.hpp>
-#include <boost/filesystem/operations.hpp>
 
 #include <boost/winapi/dll.hpp>
 
@@ -52,14 +50,14 @@ public:
         return *this;
     }
 
-    void load(boost::filesystem::path sl, load_mode::type mode, boost::system::error_code &ec) {
+    void load(boost::dll::fs::path sl, load_mode::type mode, boost::dll::fs::error_code &ec) {
         typedef boost::winapi::DWORD_ native_mode_t;
         unload();
 
         if (!sl.is_absolute() && !(mode & load_mode::search_system_folders)) {
 
-            boost::system::error_code current_path_ec;
-            boost::filesystem::path prog_loc = boost::filesystem::current_path(current_path_ec);
+            boost::dll::fs::error_code current_path_ec;
+            boost::dll::fs::path prog_loc = boost::dll::fs::current_path(current_path_ec);
             if (!current_path_ec) {
                 prog_loc /= sl;
                 sl.swap(prog_loc);
@@ -74,7 +72,7 @@ public:
             handle_ = boost::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, static_cast<native_mode_t>(mode));
             if (!handle_) {
                 // MinGW loves 'lib' prefix and puts it even on Windows platform
-                const boost::filesystem::path load_path = (sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native() + L".dll";
+                const boost::dll::fs::path load_path = (sl.has_parent_path() ? sl.parent_path() / L"lib" : boost::dll::fs::path(L"lib")).native() + sl.filename().native() + L".dll";
                 handle_ = boost::winapi::LoadLibraryExW(
                     load_path.c_str(),
                     0,
@@ -123,22 +121,21 @@ public:
         boost::swap(handle_, rhs.handle_);
     }
 
-    boost::filesystem::path full_module_path(boost::system::error_code &ec) const {
+    boost::dll::fs::path full_module_path(boost::dll::fs::error_code &ec) const {
         return boost::dll::detail::path_from_handle(handle_, ec);
     }
 
-    static boost::filesystem::path suffix() {
+    static boost::dll::fs::path suffix() {
         return L".dll";
     }
 
-    void* symbol_addr(const char* sb, boost::system::error_code &ec) const BOOST_NOEXCEPT {
+    void* symbol_addr(const char* sb, boost::dll::fs::error_code &ec) const BOOST_NOEXCEPT {
         if (is_resource()) {
             // `GetProcAddress` could not be called for libraries loaded with
             // `LOAD_LIBRARY_AS_DATAFILE`, `LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE`
             // or `LOAD_LIBRARY_AS_IMAGE_RESOURCE`.
-            ec = boost::system::error_code(
-                boost::system::errc::operation_not_supported,
-                boost::system::generic_category()
+            ec = boost::dll::fs::make_error_code(
+                boost::dll::fs::errc::operation_not_supported
             );
 
             return NULL;

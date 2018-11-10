@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
 {
     using namespace boost::dll;
     using namespace boost::dll::experimental;
-    boost::filesystem::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
+    boost::dll::fs::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
 
     BOOST_TEST(!pt.empty());
     std::cout << "Library: " << pt << std::endl;
@@ -127,7 +127,7 @@ int main(int argc, char* argv[])
     try {
         sm.get_mem_fn<override_class, int()>("get");
         BOOST_TEST(false);
-    } catch(boost::system::system_error &) {}
+    } catch(boost::dll::fs::system_error &) {}
     auto get = sm.get_mem_fn<const override_class, int()>("get");
 
     BOOST_TEST(get != nullptr);

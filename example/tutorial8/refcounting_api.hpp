@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015-2017 Antony Polukhin.
+// Copyright 2015-2018 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -7,13 +7,13 @@
 
 //[plugcpp_my_plugin_refcounting_api
 #include "../tutorial_common/my_plugin_api.hpp"
-#include <boost/filesystem/path.hpp>
+#include <boost/dll/config.hpp>
 
 class my_refcounting_api: public my_plugin_api {
 public:
     // Returns path to shared object that holds a plugin.
     // Must be instantiated in plugin.
-    virtual boost::filesystem::path location() const = 0;
+    virtual boost::dll::fs::path location() const = 0;
 };
 //]
 
@@ -33,7 +33,7 @@ struct library_holding_deleter {
 
 inline boost::shared_ptr<my_refcounting_api> bind(my_refcounting_api* plugin) {
     // getting location of the shared library that holds the plugin
-    boost::filesystem::path location = plugin->location();
+    boost::dll::fs::path location = plugin->location();
 
     // `make_shared` is an efficient way to create a shared pointer
     boost::shared_ptr<boost::dll::shared_library> lib
@@ -52,7 +52,7 @@ inline boost::shared_ptr<my_refcounting_api> bind(my_refcounting_api* plugin) {
 #include <boost/dll/import.hpp>
 #include <boost/function.hpp>
 inline boost::shared_ptr<my_refcounting_api> get_plugin(
-    boost::filesystem::path path, const char* func_name)
+    boost::dll::fs::path path, const char* func_name)
 {
     typedef my_refcounting_api*(func_t)();
     boost::function<func_t> creator = boost::dll::import_alias<func_t>(

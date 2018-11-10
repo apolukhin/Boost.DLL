@@ -8,7 +8,7 @@
 #ifndef BOOST_DLL_DETAIL_X_INFO_INTERFACE_HPP
 #define BOOST_DLL_DETAIL_X_INFO_INTERFACE_HPP
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif
