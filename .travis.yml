@@ -2,7 +2,7 @@
 # subject to the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-# Copyright Antony Polukhin 2014-2016.
+# Copyright Antony Polukhin 2014-2018.
 
 #
 # See https://svn.boost.org/trac/boost/wiki/TravisCoverals for description of this file
@@ -14,7 +14,8 @@ env:
     global:
         # Autodetect Boost branch by using the following code: - BRANCH_TO_TEST=$TRAVIS_BRANCH
         # or just directly specify it
-        - BRANCH_TO_TEST=$TRAVIS_BRANCH
+        - BRANCH_TO_TEST=develop
+        #$TRAVIS_BRANCH
 
         # Files, which coverage results must be ignored (files from other projects).
         # Example: - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/*'
@@ -30,6 +31,8 @@ env:
     matrix:
         # Note that "--coverage -fsanitize=address,leak,undefined -DBOOST_TRAVISCI_BUILD" are added automatically lower in code
         - CXX_FLAGS="-std=c++98" LINK_FLAGS="" TOOLSET=gcc-6
+        - CXX_FLAGS="-std=c++17 -DBOOST_STACKTRACE_USE_STD" LINK_FLAGS="-lstd-fs" TOOLSET=gcc-8
+        - CXX_FLAGS="-std=c++17" LINK_FLAGS="" TOOLSET=gcc-8
         - CXX_FLAGS="-std=c++11" LINK_FLAGS="" TOOLSET=gcc-6
         - CXX_FLAGS="-std=c++1y" LINK_FLAGS="" TOOLSET=gcc-6
         #- CXX_FLAGS="-std=c++11 -stdlib=libc++" LINK_FLAGS="-stdlib=libc++" TOOLSET=clang
@@ -51,6 +54,7 @@ addons:
     - python-yaml
     - gcc-6
     - g++-6
+    - g++-8
     - clang
     - libc++-dev
 
@@ -90,4 +94,3 @@ after_success:
     - wget https://github.com/linux-test-project/lcov/archive/v1.12.zip
     - unzip v1.12.zip
     - LCOV="`pwd`/lcov-1.12/bin/lcov --gcov-tool gcov-6"
-
