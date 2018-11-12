@@ -60,7 +60,7 @@ public:
         return *this;
     }
 
-    static boost::filesystem::path append_decorations(boost::filesystem::path sl) {
+    static boost::filesystem::path decorate(const boost::filesystem::path & sl) {
         boost::filesystem::path actual_path = (
             std::strncmp(sl.filename().string().c_str(), "lib", 3)
             ? (sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native()
@@ -115,7 +115,7 @@ public:
         if (!!(mode & load_mode::append_decorations)) {
             mode &= ~load_mode::append_decorations;
 
-            boost::filesystem::path actual_path = append_decorations(sl);
+            boost::filesystem::path actual_path = decorate(sl);
 
             handle_ = dlopen(actual_path.c_str(), static_cast<native_mode_t>(mode));
             if (handle_) {

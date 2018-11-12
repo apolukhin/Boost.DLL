@@ -52,7 +52,7 @@ public:
         return *this;
     }
 
-    static boost::filesystem::path append_decorations(boost::filesystem::path sl) {
+    static boost::filesystem::path decorate(const boost::filesystem::path & sl) {
         boost::filesystem::path actual_path = sl;
         actual_path += suffix();
         if (!boost::filesystem::exists(actual_path)) {
@@ -81,7 +81,7 @@ public:
         if (!!(mode & load_mode::append_decorations)) {
             mode &= ~load_mode::append_decorations;
 
-            const boost::filesystem::path load_path = append_decorations(sl);
+            const boost::filesystem::path load_path = decorate(sl);
             handle_ = boost::winapi::LoadLibraryExW(
                 load_path.c_str(),
                 0,
@@ -89,6 +89,11 @@ public:
             );
 
             if (handle_) {
+                return;
+            }
+            if (boost::filesystem::exists(load_path)) {
+                // decorated path exists : current error is not a bad file descriptor
+                ec = boost::dll::detail::last_error_code();
                 return;
             }
         }
