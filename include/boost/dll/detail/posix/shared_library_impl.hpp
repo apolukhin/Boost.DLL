@@ -127,7 +127,7 @@ public:
             if (boost::filesystem::exists(actual_path) && !boost::filesystem::equivalent(sl, loc, prog_loc_err)) {
                 // decorated path exists : current error is not a bad file descriptor and we are not trying to load the executable itself
                 ec = boost::system::error_code(
-                    boost::system::errc::bad_file_descriptor,
+                    boost::system::errc::executable_format_error,
                     boost::system::generic_category()
                 );
                 return;
