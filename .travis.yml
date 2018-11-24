@@ -103,7 +103,8 @@ before_install:
 
   # Replacing Boost module with this project and installing Boost dependencies
   - echo "Testing $BOOST/libs/$BOOST_LIBS_FOLDER moved from $TRAVIS_BUILD_DIR, branch $BOOST_BRANCH"
-  - mv -f $TRAVIS_BUILD_DIR/* $BOOST/libs/$BOOST_LIBS_FOLDER
+  - rm -rf $BOOST/libs/$BOOST_LIBS_FOLDER
+  - mv $TRAVIS_BUILD_DIR $BOOST/libs/$BOOST_LIBS_FOLDER
   - python tools/boostdep/depinst/depinst.py --git_args "--depth 1 --jobs 2" $BOOST_LIBS_FOLDER
   - git status
 
