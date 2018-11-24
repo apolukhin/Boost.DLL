@@ -8,10 +8,10 @@
 # See https://svn.boost.org/trac/boost/wiki/TravisCoverals for description of this file
 # and how it can be used with Boost libraries.
 #
-# File revision #6
+# File revision #6 (DIFF)
 
 init:
-    - set BOOST_REMOVE=%APPVEYOR_PROJECT_NAME%         # Remove this folder from lib from full clone of Boost.
+    - set BOOST_REMOVE=dll   #%APPVEYOR_PROJECT_NAME%         # Remove this folder from lib from full clone of Boost.
 
 ###############################################################################################################
 # From this point and below code is same for all the Boost libs
