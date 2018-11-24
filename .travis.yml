@@ -107,10 +107,10 @@ before_install:
   - git submodule update --init --depth 1 tools/build tools/boostdep
 
   # Replacing Boost module with this project and installing Boost dependencies
-  - rm -rf $BOOST/libs/$BOOST_REMOVE
-  - mv $TRAVIS_BUILD_DIR $BOOST/libs/$PROJECT_TO_TEST
   - TRAVIS_BUILD_DIR=$BOOST/libs/$PROJECT_TO_TEST
+  - mv -f $TRAVIS_BUILD_DIR $BOOST/libs/$PROJECT_TO_TEST
   - python tools/boostdep/depinst/depinst.py --git_args "--depth 1 --jobs 2" $(basename $TRAVIS_BUILD_DIR)
+  - rm -rf $BOOST/libs/$BOOST_REMOVE
   - git status
 
   # Adding missing toolsets and preparing Boost headers
