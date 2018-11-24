@@ -8,7 +8,7 @@
 # See https://svn.boost.org/trac/boost/wiki/TravisCoverals for description of this file
 # and how it can be used with Boost libraries.
 #
-# File revision #9
+# File revision #9 (DIFF)
 
 sudo: false
 language: cpp
@@ -29,7 +29,7 @@ env:
     #
     # By default is eaual to - BOOST_REMOVE=$(basename $TRAVIS_BUILD_DIR)
     # This will force to use local repo content, instead of the Boost's default.
-    - BOOST_REMOVE=$(basename $TRAVIS_BUILD_DIR)
+    - BOOST_REMOVE=dll
 
     # Global options for sanitizers
     - UBSAN_OPTIONS=print_stacktrace=1
