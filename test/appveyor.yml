@@ -61,9 +61,9 @@ before_build:
     - cd %BOOST%
     - git submodule update --init --depth 1 tools/build tools/boostdep
 
-    - rm -rf %BOOST%/libs/%BOOST_REMOVE%
     - mv %APPVEYOR_BUILD_FOLDER% %BOOST%/libs/%APPVEYOR_PROJECT_NAME%
     - python tools/boostdep/depinst/depinst.py --git_args "--depth 1 --jobs 2" %APPVEYOR_PROJECT_NAME%
+    - rm -rf %BOOST%/libs/%BOOST_REMOVE%
 
 build_script:
     - cmd /c bootstrap
