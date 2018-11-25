@@ -44,7 +44,7 @@ matrix:
           sources: ubuntu-toolchain-r-test
           packages: g++-6
 
-    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=gcc-8 cxxflags="--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage  -lasan -lubsan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
+    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=gcc-8 visibility=global cxxflags="--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage  -lasan -lubsan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
       name: "GCC-8"
       sudo: required # Required by leak sanitizer
       addons:
@@ -103,7 +103,7 @@ before_install:
 
   # Replacing Boost module with this project and installing Boost dependencies
   - echo "Testing $BOOST/libs/$BOOST_LIBS_FOLDER moved from $TRAVIS_BUILD_DIR, branch $BOOST_BRANCH"
-  - rm -rf $BOOST/libs/$BOOST_LIBS_FOLDER
+  - rm -rf $BOOST/libs/$BOOST_LIBS_FOLDER || true
   - mv $TRAVIS_BUILD_DIR $BOOST/libs/$BOOST_LIBS_FOLDER
   - python tools/boostdep/depinst/depinst.py --git_args "--depth 1 --jobs 2" $BOOST_LIBS_FOLDER
   - git status
