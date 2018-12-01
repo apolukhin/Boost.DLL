@@ -130,7 +130,7 @@ destructor<Class> load_dtor(Lib & lib, const mangled_storage_impl::dtor_sym & dt
     typedef typename destructor<Class>::standard_t standard_t;
     //@apolukhin That does NOT work this way with MSVC-14 x32 via memcpy. The x64 is different.
     //standard_t dtor = &lib.template get< typename boost::remove_pointer<standard_t>::type >(dt);
-    void * buf = &lib.template get<int>(dt);
+    void * buf = &lib.template get<unsigned char>(dt);
     standard_t dtor;
     std::memcpy(&dtor, &buf, sizeof(dtor));
     return destructor<Class>(dtor);
@@ -152,12 +152,12 @@ constructor<Signature> load_ctor(Lib & lib, const mangled_storage_impl::ctor_sym
     {
         //the only way this works on mingw/win.
         //For some reason there is always an 0xA in the following poniter, which screws with the this pointer.
-        void *buf = &lib.template get<int>(ct.C1);
+        void *buf = &lib.template get<unsigned char>(ct.C1);
         std::memcpy(&s, &buf, sizeof(void*));
     }
     if (!ct.C3.empty())
     {
-        void *buf = &lib.template get<int>(ct.C3);
+        void *buf = &lib.template get<unsigned char>(ct.C3);
         std::memcpy(&a, &buf, sizeof(void*));
     }
 
