@@ -67,7 +67,8 @@ matrix:
 #          sources: ubuntu-toolchain-r-test
 #          packages: g++-8
 
-    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="--coverage -fsanitize=address,leak -fsanitize=enum -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=address,leak,undefined" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.3"'
+    # -fsanitize=enum causes "boost/dll/shared_library_load_mode.hpp:226:19: runtime error: load of value 4278190079, which is not a valid value for type 'boost::dll::load_mode::type'"
+    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="--coverage -fsanitize=address,leak -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=address,leak,undefined" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.3"'
       name: "Clang-5"
       sudo: required # Required by leak sanitizer
       addons:
@@ -75,7 +76,7 @@ matrix:
           sources: llvm-toolchain-trusty-5.0
           packages: clang-5.0
 
-    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="--coverage -fsanitize=address,leak -fsanitize=enum -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=address,leak,undefined" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so"'
+    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="--coverage -fsanitize=address,leak -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=address,leak,undefined" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so"'
       name: "Clang-3.8, libc++"
       sudo: required # Required by leak sanitizer
       addons:
