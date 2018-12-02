@@ -195,7 +195,9 @@ int main(int argc, char* argv[])
     dtor.call_standard(&oc);                BOOST_TEST(this_dll == this_exe);
     BOOST_TEST(static_val == 0);
 
+    std::cerr << 26.5 << ' ';
     const auto& ti = sm.get_type_info<override_class>();
+    std::cerr << 26.6 << ' ';
     BOOST_TEST(ti.name() != nullptr);
 
     std::cerr << 27 << ' ';
