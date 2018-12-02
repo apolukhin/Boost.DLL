@@ -44,7 +44,7 @@ matrix:
           sources: ubuntu-toolchain-r-test
           packages: g++-6
 
-    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=gcc-8 visibility=global cxxflags="--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage  -lasan -lubsan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
+    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=gcc-8 visibility=global cxxflags="--coverage -fsanitize=address,leak -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage  -lasan -lubsan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
       name: "GCC-8"
       sudo: required # Required by leak sanitizer
       addons:
@@ -59,7 +59,7 @@ matrix:
           sources: ubuntu-toolchain-r-test
           packages: g++-4.6
 
-#    - env: B2_ARGS='cxxstd=98,03,11,14,1y toolset=gcc-8 cxxflags="--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD -fno-exceptions" linkflags="--coverage -lasan -lubsan"'
+#    - env: B2_ARGS='cxxstd=98,03,11,14,1y toolset=gcc-8 cxxflags="--coverage -fsanitize=address,leak -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD -fno-exceptions" linkflags="--coverage -lasan -lubsan"'
 #      name: "GCC-8, no exceptions"
 #      sudo: required # Required by leak sanitizer
 #      addons:
@@ -67,7 +67,7 @@ matrix:
 #          sources: ubuntu-toolchain-r-test
 #          packages: g++-8
 
-    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="--coverage -fsanitize=address,leak,undefined -fsanitize=enum -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=address,leak,undefined" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.3"'
+    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="--coverage -fsanitize=address,leak -fsanitize=enum -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=address,leak,undefined" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.3"'
       name: "Clang-5"
       sudo: required # Required by leak sanitizer
       addons:
@@ -75,7 +75,7 @@ matrix:
           sources: llvm-toolchain-trusty-5.0
           packages: clang-5.0
 
-    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="--coverage -fsanitize=address,leak,undefined -fsanitize=enum -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=address,leak,undefined" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so"'
+    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="--coverage -fsanitize=address,leak -fsanitize=enum -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=address,leak,undefined" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so"'
       name: "Clang-3.8, libc++"
       sudo: required # Required by leak sanitizer
       addons:

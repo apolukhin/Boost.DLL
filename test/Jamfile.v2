@@ -27,10 +27,11 @@ project
    : requirements
 
    # linux
-      <target-os>linux:<linkflags>"-ldl" <visibility>hidden
+      <target-os>linux:<linkflags>"-ldl"
       <toolset>gcc:<cxxflags>"-Wall -Wextra -pedantic -Wno-long-long"
 
    # others
+      <local-visibility>hidden
       <library>/boost/filesystem//boost_filesystem
       <library>/boost/system//boost_system
       <threading>multi
