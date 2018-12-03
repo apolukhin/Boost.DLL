@@ -68,17 +68,15 @@ matrix:
 #          packages: g++-8
 
     # -fsanitize=enum causes "boost/dll/shared_library_load_mode.hpp:226:19: runtime error: load of value 4278190079, which is not a valid value for type 'boost::dll::load_mode::type'"
-    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="--coverage -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=undefined"'
+    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="--coverage -DBOOST_TRAVISCI_BUILD" linkflags="--coverage"'
       name: "Clang-5"
-      #sudo: required # Required by leak sanitizer
       addons:
         apt:
           sources: llvm-toolchain-trusty-5.0
           packages: clang-5.0
 
-    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="--coverage -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=undefined"'
+    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="--coverage -DBOOST_TRAVISCI_BUILD" linkflags="--coverage"'
       name: "Clang-3.8, libc++"
-      #sudo: required # Required by leak sanitizer
       addons:
         apt:
           packages: libc++-dev
