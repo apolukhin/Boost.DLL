@@ -8,6 +8,7 @@
 #define BOOST_DLL_MY_PLUGIN_API_HPP
 
 //[plugapi
+#include <boost/config.hpp>
 #include <string>
 
 class BOOST_SYMBOL_VISIBLE my_plugin_api {
