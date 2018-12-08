@@ -14,7 +14,7 @@
 
 namespace my_namespace {
 
-class my_plugin_sum : public my_plugin_api {
+class BOOST_SYMBOL_VISIBLE my_plugin_sum : public my_plugin_api {
 public:
     my_plugin_sum() {
         std::cout << "Constructing my_plugin_sum" << std::endl;
