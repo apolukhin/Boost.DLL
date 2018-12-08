@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2018 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -14,7 +14,7 @@
 
 namespace my_namespace {
 
-class BOOST_SYMBOL_VISIBLE my_plugin_sum : public my_plugin_api {
+class my_plugin_sum : public my_plugin_api {
 public:
     my_plugin_sum() {
         std::cout << "Constructing my_plugin_sum" << std::endl;
