@@ -70,7 +70,8 @@ matrix:
 
     # `-fsanitize=enum` causes "boost/dll/shared_library_load_mode.hpp:226:19: runtime error: load of value 4278190079, which is not a valid value for type 'boost::dll::load_mode::type'"
     # `--coverage` causes SegFailts after passing the tests and exiting main().
-    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="-fsanitize=address,leak -DBOOST_TRAVISCI_BUILD" linkflags="-lasan"'
+    # Link problems with ASAN
+    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="-DBOOST_TRAVISCI_BUILD"'
       name: "Clang-5"
       addons:
         apt:
@@ -78,7 +79,8 @@ matrix:
           packages: clang-5.0
 
     # `--coverage` causes SegFailts after passing the tests and exiting main().
-    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="-DBOOST_TRAVISCI_BUILD" linkflags="-lasan"'
+    # Link problems with ASAN
+    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="-DBOOST_TRAVISCI_BUILD"'
       name: "Clang-3.8, libc++"
       addons:
         apt:
