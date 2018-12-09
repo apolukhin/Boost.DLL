@@ -14,7 +14,9 @@
 #include <boost/predef/os.h>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
 
+#if BOOST_OS_CYGWIN // MSVC does not have <stdint.h> and defines it in some other header
 #include <stdint.h> // intptr_t
+#endif
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
