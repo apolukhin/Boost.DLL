@@ -44,7 +44,8 @@ matrix:
           sources: ubuntu-toolchain-r-test
           packages: g++-6
 
-    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=gcc-8 visibility=global cxxflags="--coverage -fsanitize=address,leak -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage  -lasan -lubsan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
+    # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
+    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=gcc-8 visibility=global cxxflags="--coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD" linkflags="--coverage  -lasan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
       name: "GCC-8"
       sudo: required # Required by leak sanitizer
       addons:
@@ -59,7 +60,7 @@ matrix:
           sources: ubuntu-toolchain-r-test
           packages: g++-4.6
 
-#    - env: B2_ARGS='cxxstd=98,03,11,14,1y toolset=gcc-8 cxxflags="--coverage -fsanitize=address,leak -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD -fno-exceptions" linkflags="--coverage -lasan -lubsan"'
+#    - env: B2_ARGS='cxxstd=98,03,11,14,1y toolset=gcc-8 cxxflags="--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD -fno-exceptions" linkflags="--coverage -lasan -lubsan"'
 #      name: "GCC-8, no exceptions"
 #      sudo: required # Required by leak sanitizer
 #      addons:
@@ -67,18 +68,20 @@ matrix:
 #          sources: ubuntu-toolchain-r-test
 #          packages: g++-8
 
-    # -fsanitize=enum causes "boost/dll/shared_library_load_mode.hpp:226:19: runtime error: load of value 4278190079, which is not a valid value for type 'boost::dll::load_mode::type'"
-    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="--coverage -fsanitize=address,leak -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=address,leak,undefined" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.4"'
+    # `-fsanitize=enum` causes "boost/dll/shared_library_load_mode.hpp:226:19: runtime error: load of value 4278190079, which is not a valid value for type 'boost::dll::load_mode::type'"
+    # `--coverage` causes SegFailts after passing the tests and exiting main().
+    # Link problems with ASAN
+    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="-DBOOST_TRAVISCI_BUILD"'
       name: "Clang-5"
-      sudo: required # Required by leak sanitizer
       addons:
         apt:
           sources: llvm-toolchain-trusty-5.0
           packages: clang-5.0
 
-    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="--coverage -fsanitize=address,leak -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -fsanitize=address,leak,undefined" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.3"'
+    # `--coverage` causes SegFailts after passing the tests and exiting main().
+    # Link problems with ASAN
+    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="-DBOOST_TRAVISCI_BUILD"'
       name: "Clang-3.8, libc++"
-      sudo: required # Required by leak sanitizer
       addons:
         apt:
           packages: libc++-dev
