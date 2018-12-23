@@ -125,7 +125,6 @@ before_install:
   - cd $BOOST/libs/$BOOST_LIBS_FOLDER/test/
 
 script:
-  - echo /usr/lib/x86_64-linux-gnu/libasan*
   - sh -c "../../../b2 -j2 $B2_ARGS"
 
 after_success:
