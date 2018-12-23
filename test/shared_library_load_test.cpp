@@ -1,5 +1,5 @@
 // Copyright 2011-2012 Renato Tegon Forti
-// Copyright 2015 Antony Polukhin
+// Copyright 2015-2018 Antony Polukhin
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -323,7 +323,15 @@ int main(int argc, char* argv[])
 
    {    // Non-default flags with assignment
         shared_library sl(shared_library_path,
-            load_mode::rtld_now | load_mode::rtld_global | load_mode::load_with_altered_search_path | load_mode::rtld_deepbind
+            load_mode::rtld_now | load_mode::rtld_global | load_mode::load_with_altered_search_path
+
+// `load_mode::rtld_deepbind` is incompatible with sanitizers:
+//    You are trying to dlopen a libtest_library.so shared library with RTLD_DEEPBIND flag which is incompatibe with sanitizer runtime 
+//    (see https://github.com/google/sanitizers/issues/611 for details).
+#ifndef BOOST_TRAVISCI_BUILD
+            | load_mode::rtld_deepbind
+#endif
+
         );
         BOOST_TEST(sl.is_loaded());
         BOOST_TEST(sl);

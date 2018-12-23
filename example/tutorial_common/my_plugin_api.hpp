@@ -1,4 +1,4 @@
-// Copyright 2016-2017 Antony Polukhin.
+// Copyright 2016-2018 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -8,9 +8,10 @@
 #define BOOST_DLL_MY_PLUGIN_API_HPP
 
 //[plugapi
+#include <boost/config.hpp>
 #include <string>
 
-class my_plugin_api {
+class BOOST_SYMBOL_VISIBLE my_plugin_api {
 public:
    virtual std::string name() const = 0;
    virtual float calculate(float x, float y) = 0;
