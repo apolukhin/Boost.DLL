@@ -513,23 +513,26 @@ public:
 
     /*!
     * Returns the decorated path to a shared module name, i.e. with needed prefix/suffix added.
+    *
+    * \b Recommendations: Use `load` with `load_mode::append_decorations` instead of constructing the decorated path via `decorate()` and loading by it.
+    *
     * For instance, for a path like "path/to/boost" it returns :
     * - path/to/libboost.so on posix platforms
     * - path/to/libboost.dylib on OSX
     * - path/to/boost.dll on Windows
     *
-    * Method handles both relative and absolute paths. Calling this function with different current directories may produce different results.
+    * Method handles both relative and absolute paths.
     *
-    * - Windows note : if the decorated filepath (with its suffix appended) doesn't exist, decorate() prepends "lib" to the decorated path (for MinGW compatibility purpose)
-    * - Posix note : if the initial module name is already prepended with lib, only the suffix() is appended to the path
+    * - Windows note: `decorate()` does not prepend "lib" to the decorated path. Use `load` with `load_mode::append_decorations` for MinGW compatibility purpose.
+    * - Posix note: if the initial module name is already prepended with lib, only the suffix() is appended to the path
     *
     * \param sl the module name and path to decorate - for instance : /usr/lib/boost
     *
-    * \return The decorated path (the final decorated path may not exists in the filesystem to avoid a supplementary check.)
+    * \return The decorated unportable path that may not exists in the filesystem or could be wrong due to platform specifics.
     */
-    //static boost::filesystem::path decorate(const boost::filesystem::path& sl) {
-    //    return base_t::decorate(sl);
-    //}
+    static boost::filesystem::path decorate(const boost::filesystem::path& sl) {
+        return base_t::decorate(sl);
+    }
 
     /*!
     * Swaps two libraries. Does not invalidate existing symbols and functions loaded from libraries.

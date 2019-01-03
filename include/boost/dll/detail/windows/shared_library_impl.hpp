@@ -52,13 +52,9 @@ public:
         return *this;
     }
 
-    static boost::filesystem::path decorate(const boost::filesystem::path & sl) {
+    static boost::filesystem::path decorate(const boost::filesystem::path& sl) {
         boost::filesystem::path actual_path = sl;
         actual_path += suffix();
-        if (!boost::filesystem::exists(actual_path)) {
-            // MinGW loves 'lib' prefix and puts it even on Windows platform
-            actual_path = (sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native() + suffix().native();
-        }
         return actual_path;
     }
 
@@ -67,7 +63,6 @@ public:
         unload();
 
         if (!sl.is_absolute() && !(mode & load_mode::search_system_folders)) {
-
             boost::system::error_code current_path_ec;
             boost::filesystem::path prog_loc = boost::filesystem::current_path(current_path_ec);
             if (!current_path_ec) {
@@ -82,19 +77,17 @@ public:
             mode &= ~load_mode::append_decorations;
 
             const boost::filesystem::path load_path = decorate(sl);
-            handle_ = boost::winapi::LoadLibraryExW(
-                load_path.c_str(),
-                0,
-                static_cast<native_mode_t>(mode)
-            );
-
-            if (handle_) {
+            if (load_impl(decorate(sl), static_cast<native_mode_t>(mode), ec)) {
                 return;
             }
 
-            ec = boost::dll::detail::last_error_code();
-            if (boost::filesystem::exists(load_path)) {
-                // decorated path exists : current error is not a bad file descriptor
+            // MinGW loves 'lib' prefix and puts it even on Windows platform
+            const boost::filesystem::path mingw_load_path = (
+                sl.has_parent_path()
+                ? sl.parent_path() / L"lib"
+                : L"lib"
+            ).native() + sl.filename().native() + suffix().native();
+            if (load_impl(mingw_load_path, static_cast<native_mode_t>(mode), ec)) {
                 return;
             }
         }
@@ -114,7 +107,6 @@ public:
 
         // LoadLibraryExW method is capable of self loading from program_location() path. No special actions
         // must be taken to allow self loading.
-
         if (!handle_) {
             ec = boost::dll::detail::last_error_code();
         }
@@ -174,6 +166,23 @@ public:
     }
 
 private:
+    // Returns true if this load attempt should be the last one.
+    bool load_impl(const boost::filesystem::path &load_path, native_mode_t mode, boost::system::error_code &ec) {
+        handle_ = boost::winapi::LoadLibraryExW(load_path.c_str(), 0, mode);
+        if (handle_) {
+            return true;
+        }
+
+        ec = boost::dll::detail::last_error_code();
+        if (boost::filesystem::exists(load_path)) {
+            // decorated path exists : current error is not a bad file descriptor
+            return true;
+        }
+
+        ec.reset();
+        return false;
+    }
+
     bool is_resource() const BOOST_NOEXCEPT {
         return false; /*!!(
             reinterpret_cast<boost::winapi::ULONG_PTR_>(handle_) & static_cast<boost::winapi::ULONG_PTR_>(3)
