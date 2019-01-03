@@ -48,7 +48,7 @@ public:
     ~shared_library_impl() BOOST_NOEXCEPT {
         unload();
     }
-    
+
     shared_library_impl(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT
         : handle_(sl.handle_)
     {
@@ -58,6 +58,16 @@ public:
     shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT {
         swap(sl);
         return *this;
+    }
+
+    static boost::filesystem::path decorate(const boost::filesystem::path & sl) {
+        boost::filesystem::path actual_path = (
+            std::strncmp(sl.filename().string().c_str(), "lib", 3)
+            ? (sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native()
+            : sl
+        );
+        actual_path += suffix();
+        return actual_path;
     }
 
     void load(boost::filesystem::path sl, load_mode::type mode, boost::system::error_code &ec) {
@@ -105,16 +115,21 @@ public:
         if (!!(mode & load_mode::append_decorations)) {
             mode &= ~load_mode::append_decorations;
 
-            boost::filesystem::path actual_path = (
-                std::strncmp(sl.filename().string().c_str(), "lib", 3)
-                ? (sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native()
-                : sl
-            );
-            actual_path += suffix();
+            boost::filesystem::path actual_path = decorate(sl);
 
             handle_ = dlopen(actual_path.c_str(), static_cast<native_mode_t>(mode));
             if (handle_) {
                 boost::dll::detail::reset_dlerror();
+                return;
+            }
+            boost::system::error_code prog_loc_err;
+            boost::filesystem::path loc = boost::dll::detail::program_location_impl(prog_loc_err);
+            if (boost::filesystem::exists(actual_path) && !boost::filesystem::equivalent(sl, loc, prog_loc_err)) {
+                // decorated path exists : current error is not a bad file descriptor and we are not trying to load the executable itself
+                ec = boost::system::error_code(
+                    boost::system::errc::executable_format_error,
+                    boost::system::generic_category()
+                );
                 return;
             }
         }
@@ -137,9 +152,9 @@ public:
         boost::system::error_code prog_loc_err;
         boost::filesystem::path loc = boost::dll::detail::program_location_impl(prog_loc_err);
         if (!prog_loc_err && boost::filesystem::equivalent(sl, loc, prog_loc_err) && !prog_loc_err) {
-            // As is known the function dlopen() loads the dynamic library file 
-            // named by the null-terminated string filename and returns an opaque 
-            // "handle" for the dynamic library. If filename is NULL, then the 
+            // As is known the function dlopen() loads the dynamic library file
+            // named by the null-terminated string filename and returns an opaque
+            // "handle" for the dynamic library. If filename is NULL, then the
             // returned handle is for the main program.
             ec.clear();
             boost::dll::detail::reset_dlerror();
@@ -212,4 +227,3 @@ private:
 }}} // boost::dll::detail
 
 #endif // BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
-

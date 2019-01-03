@@ -55,7 +55,7 @@ class shared_library
 public:
 #ifdef BOOST_DLL_DOXYGEN
     typedef platform_specific native_handle_t;
-#else 
+#else
     typedef shared_library_impl::native_handle_t native_handle_t;
 #endif
 
@@ -512,6 +512,26 @@ public:
     }
 
     /*!
+    * Returns the decorated path to a shared module name, i.e. with needed prefix/suffix added.
+    * For instance, for a path like "path/to/boost" it returns :
+    * - path/to/libboost.so on posix platforms
+    * - path/to/libboost.dylib on OSX
+    * - path/to/boost.dll on Windows
+    *
+    * This method handles both relative and absolute paths.
+    *
+    * - Windows note : if the decorated filepath (with its suffix appended) doesn't exist, decorate() prepends "lib" to the decorated path (for Mingw compatibility purpose)
+    * - Posix note : if the initial module name is already prepended with lib, only the suffix() is appended to the path
+    *
+    * \param sl the module name and path to decorate - for instance : /usr/lib/boost
+    *
+    * \return The decorated path (the final decorated path may not exists in the filesystem to avoid a supplementary check. The final check is performed using load(). Library user's can also check for the decorated path existenz.)
+    */
+    static boost::filesystem::path decorate(const boost::filesystem::path & sl) {
+        return base_t::decorate(sl);
+    }
+
+    /*!
     * Swaps two libraries. Does not invalidate existing symbols and functions loaded from libraries.
     *
     * \param rhs Library to swap with.
@@ -547,4 +567,3 @@ inline void swap(shared_library& lhs, shared_library& rhs) BOOST_NOEXCEPT {
 }} // boost::dll
 
 #endif // BOOST_DLL_SHARED_LIBRARY_HPP
-

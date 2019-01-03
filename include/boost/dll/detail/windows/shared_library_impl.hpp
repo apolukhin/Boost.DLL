@@ -40,7 +40,7 @@ public:
     ~shared_library_impl() BOOST_NOEXCEPT {
         unload();
     }
-    
+
     shared_library_impl(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT
         : handle_(sl.handle_)
     {
@@ -50,6 +50,16 @@ public:
     shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT {
         swap(sl);
         return *this;
+    }
+
+    static boost::filesystem::path decorate(const boost::filesystem::path & sl) {
+        boost::filesystem::path actual_path = sl;
+        actual_path += suffix();
+        if (!boost::filesystem::exists(actual_path)) {
+            // MinGW loves 'lib' prefix and puts it even on Windows platform
+            actual_path = (sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native() + suffix().native();
+        }
+        return actual_path;
     }
 
     void load(boost::filesystem::path sl, load_mode::type mode, boost::system::error_code &ec) {
@@ -71,18 +81,19 @@ public:
         if (!!(mode & load_mode::append_decorations)) {
             mode &= ~load_mode::append_decorations;
 
-            handle_ = boost::winapi::LoadLibraryExW((sl.native() + L".dll").c_str(), 0, static_cast<native_mode_t>(mode));
-            if (!handle_) {
-                // MinGW loves 'lib' prefix and puts it even on Windows platform
-                const boost::filesystem::path load_path = (sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native() + L".dll";
-                handle_ = boost::winapi::LoadLibraryExW(
-                    load_path.c_str(),
-                    0,
-                    static_cast<native_mode_t>(mode)
-                );
-            }
+            const boost::filesystem::path load_path = decorate(sl);
+            handle_ = boost::winapi::LoadLibraryExW(
+                load_path.c_str(),
+                0,
+                static_cast<native_mode_t>(mode)
+            );
 
             if (handle_) {
+                return;
+            }
+            if (boost::filesystem::exists(load_path)) {
+                // decorated path exists : current error is not a bad file descriptor
+                ec = boost::dll::detail::last_error_code();
                 return;
             }
         }
@@ -174,4 +185,3 @@ private:
 }}} // boost::dll::detail
 
 #endif // BOOST_DLL_SHARED_LIBRARY_IMPL_HPP
-
