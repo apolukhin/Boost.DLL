@@ -76,12 +76,11 @@ public:
         if (!!(mode & load_mode::append_decorations)) {
             mode &= ~load_mode::append_decorations;
 
-            const boost::filesystem::path load_path = decorate(sl);
             if (load_impl(decorate(sl), static_cast<native_mode_t>(mode), ec)) {
                 return;
             }
 
-            // MinGW loves 'lib' prefix and puts it even on Windows platform
+            // MinGW loves 'lib' prefix and puts it even on Windows platform.
             const boost::filesystem::path mingw_load_path = (
                 sl.has_parent_path()
                 ? sl.parent_path() / L"lib"
@@ -167,7 +166,7 @@ public:
 
 private:
     // Returns true if this load attempt should be the last one.
-    bool load_impl(const boost::filesystem::path &load_path, native_mode_t mode, boost::system::error_code &ec) {
+    bool load_impl(const boost::filesystem::path &load_path, boost::winapi::DWORD_ mode, boost::system::error_code &ec) {
         handle_ = boost::winapi::LoadLibraryExW(load_path.c_str(), 0, mode);
         if (handle_) {
             return true;
