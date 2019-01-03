@@ -178,7 +178,7 @@ private:
             return true;
         }
 
-        ec.reset();
+        ec.clear();
         return false;
     }
 
