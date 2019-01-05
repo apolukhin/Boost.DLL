@@ -21,7 +21,7 @@
 
 #endif
 
-#ifdef BOOST_STACKTRACE_USE_STD
+#ifdef BOOST_DLL_USE_STD_FS
 #include <filesystem>
 #include <system_error>
 
@@ -36,7 +36,7 @@ using std::errc;
 
 }}}
 
-#else // BOOST_STACKTRACE_USE_STD
+#else // BOOST_DLL_USE_STD_FS
 
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -53,7 +53,7 @@ namespace errc = boost::system::errc;
 
 }}}
 
-#endif // BOOST_STACKTRACE_USE_STD
+#endif // BOOST_DLL_USE_STD_FS
 
 #endif // BOOST_DLL_DETAIL_PUSH_OPTIONS_HPP
 

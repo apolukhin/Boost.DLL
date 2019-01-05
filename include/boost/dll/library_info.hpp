@@ -132,7 +132,7 @@ public:
     */
     explicit library_info(const boost::dll::fs::path& library_path, bool throw_if_not_native_format = true)
         : f_(
-        #ifdef BOOST_STACKTRACE_USE_STD
+        #ifdef BOOST_DLL_USE_STD_FS
             library_path,
         //  Copied from boost/filesystem/fstream.hpp
         #elif defined(BOOST_WINDOWS_API)  && (!defined(_CPPLIB_VER) || _CPPLIB_VER < 405 || defined(_STLPORT_VERSION))

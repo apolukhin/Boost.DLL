@@ -14,7 +14,7 @@
 
 namespace boost { namespace dll { namespace fs {
 
-#ifdef BOOST_STACKTRACE_USE_STD
+#ifdef BOOST_DLL_USE_STD_FS
 using std::filesystem::remove;
 using std::filesystem::copy;
 #else

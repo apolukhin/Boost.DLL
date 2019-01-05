@@ -54,7 +54,7 @@ matrix:
           packages: g++-8
 
     # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
-    - env: B2_ARGS='cxxstd=17,2a toolset=gcc-8 visibility=global cxxflags="-DBOOST_STACKTRACE_USE_STD --coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -lstdc++fs -lasan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
+    - env: B2_ARGS='cxxstd=17,2a toolset=gcc-8 visibility=global cxxflags="-DBOOST_DLL_USE_STD_FS --coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -lstdc++fs -lasan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
       name: "GCC-8, C++ Standard FS"
       sudo: required # Required by leak sanitizer
       addons:
