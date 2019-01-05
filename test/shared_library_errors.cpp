@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
     try {
         std::string not_a_binary(argv[1]);
         not_a_binary += "/not_a_binary";
-        std::ofstream ofs(not_a_binary);
+        std::ofstream ofs(not_a_binary.c_str());
         ofs << "This is not a binary file, so library_info must report 'Unsupported binary format'";
         ofs.close();
         library_info lib(not_a_binary);
