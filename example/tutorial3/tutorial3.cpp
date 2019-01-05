@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2018 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -15,7 +15,7 @@
 
 namespace dll = boost::dll;
 
-std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugins) {
+std::size_t search_for_symbols(const std::vector<boost::dll::fs::path>& plugins) {
     std::size_t plugins_found = 0;
 
     for (std::size_t i = 0; i < plugins.size(); ++i) {
@@ -42,7 +42,7 @@ std::size_t search_for_symbols(const std::vector<boost::filesystem::path>& plugi
 
 int main(int argc, char* argv[]) { 
     BOOST_ASSERT(argc >= 3);
-    std::vector<boost::filesystem::path> plugins;
+    std::vector<boost::dll::fs::path> plugins;
     plugins.reserve(argc - 1);
     for (int i = 1; i < argc; ++i) {
         if (b2_workarounds::is_shared_library(argv[i])) {

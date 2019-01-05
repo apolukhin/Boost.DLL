@@ -8,7 +8,7 @@
 #ifndef BOOST_DLL_ALIAS_HPP
 #define BOOST_DLL_ALIAS_HPP
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/predef/compiler.h>
 #include <boost/predef/os.h>
@@ -47,7 +47,7 @@ namespace boost { namespace dll {
 #define BOOST_DLL_SECTION(SectionName, Permissions)                                             \
     BOOST_STATIC_ASSERT_MSG(                                                                    \
         sizeof(#SectionName) < 10,                                                              \
-        "Some platforms require section names to be at most 8 bytest"                           \
+        "Some platforms require section names to be at most 8 bytes"                            \
     );                                                                                          \
     __pragma(section(#SectionName, Permissions)) __declspec(allocate(#SectionName))             \
     /**/
@@ -86,7 +86,7 @@ namespace boost { namespace dll {
 #define BOOST_DLL_SECTION(SectionName, Permissions)                                             \
     BOOST_STATIC_ASSERT_MSG(                                                                    \
         sizeof(#SectionName) < 10,                                                              \
-        "Some platforms require section names to be at most 8 bytest"                           \
+        "Some platforms require section names to be at most 8 bytes"                            \
     );                                                                                          \
     __attribute__ ((section (#SectionName)))                                                    \
     /**/
@@ -95,7 +95,7 @@ namespace boost { namespace dll {
 #define BOOST_DLL_SECTION(SectionName, Permissions)                                             \
     BOOST_STATIC_ASSERT_MSG(                                                                    \
         sizeof(#SectionName) < 10,                                                              \
-        "Some platforms require section names to be at most 8 bytest"                           \
+        "Some platforms require section names to be at most 8 bytes"                            \
     );                                                                                          \
     __attribute__ ((section ( "__DATA," #SectionName)))                                         \
     /**/

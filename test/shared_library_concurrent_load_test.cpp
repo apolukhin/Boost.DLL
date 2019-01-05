@@ -1,4 +1,4 @@
-// Copyright 2015 Antony Polukhin
+// Copyright 2015-2018 Antony Polukhin
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -24,7 +24,7 @@ int main() {
 #include <cctype>
 #include <vector>
 
-typedef std::vector<boost::filesystem::path> paths_t;
+typedef std::vector<boost::dll::fs::path> paths_t;
 const std::size_t thread_count = 4;
 boost::barrier b(thread_count);
 
@@ -35,7 +35,7 @@ inline paths_t generate_paths(int argc, char* argv[]) {
     ret.reserve(argc - 1);
 
     for (int i = 1; i < argc; ++i) {
-        boost::filesystem::path p = argv[i];
+        boost::dll::fs::path p = argv[i];
         if (b2_workarounds::is_shared_library(p)) {
             ret.push_back(p);
         }
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
     BOOST_TEST(!paths.empty());
 
     std::cout << "Libraries:\n\t";
-    std::copy(paths.begin(), paths.end(), std::ostream_iterator<boost::filesystem::path>(std::cout, ", "));
+    std::copy(paths.begin(), paths.end(), std::ostream_iterator<boost::dll::fs::path>(std::cout, ", "));
     std::cout << std::endl;
 
     boost::thread_group threads;

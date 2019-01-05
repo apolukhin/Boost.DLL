@@ -17,7 +17,7 @@ namespace my_namespace {
 class my_plugin_refcounting : public my_refcounting_api {
 public:    
     // Must be instantiated in plugin
-    boost::filesystem::path location() const {
+    boost::dll::fs::path location() const {
         return boost::dll::this_line_location(); // location of this plugin
     }
 

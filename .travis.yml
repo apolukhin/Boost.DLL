@@ -53,6 +53,15 @@ matrix:
           sources: ubuntu-toolchain-r-test
           packages: g++-8
 
+    # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
+    - env: B2_ARGS='cxxstd=17,2a toolset=gcc-8 visibility=global cxxflags="-DBOOST_STACKTRACE_USE_STD --coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -lstdc++fs -lasan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
+      name: "GCC-8, C++ Standard FS"
+      sudo: required # Required by leak sanitizer
+      addons:
+        apt:
+          sources: ubuntu-toolchain-r-test
+          packages: g++-8
+
     - env: B2_ARGS='cxxstd=98,0x toolset=gcc-4.6 cxxflags="--coverage -DBOOST_TRAVISCI_BUILD" linkflags="--coverage"'
       name: "GCC-4.6"
       addons:
@@ -158,3 +167,4 @@ after_success:
   - cd $TRAVIS_BUILD_DIR
   - gem install coveralls-lcov
   - coveralls-lcov coverals/coverage.info
+

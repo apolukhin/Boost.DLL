@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2018 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -24,7 +24,7 @@ class plugins_collector {
     // Name => plugin
     typedef boost::container::map<std::string, dll::shared_library> plugins_t;
 
-    boost::filesystem::path         plugins_directory_;
+    boost::dll::fs::path            plugins_directory_;
     plugins_t                       plugins_;
 
     // loads all plugins in plugins_directory_
@@ -35,7 +35,7 @@ class plugins_collector {
     void insert_plugin(BOOST_RV_REF(dll::shared_library) lib);
 
 public:
-    plugins_collector(const boost::filesystem::path& plugins_directory)
+    plugins_collector(const boost::dll::fs::path& plugins_directory)
         : plugins_directory_(plugins_directory)
     {
         load_all();
@@ -44,14 +44,14 @@ public:
     void print_plugins() const;
 
     std::size_t count() const;
-    // ...   
+    // ...
 };
 //]
 
 
 //[plugcpp_plugins_collector_load_all
 void plugins_collector::load_all() {
-    namespace fs = ::boost::filesystem;
+    namespace fs = ::boost::dll::fs;
     typedef fs::path::string_type string_type;
     const string_type extension = dll::shared_library::suffix().native();
 
@@ -67,11 +67,11 @@ void plugins_collector::load_all() {
         }
         /*->*/
         // We found a file. Trying to load it
-        boost::system::error_code error;
+        boost::dll::fs::error_code error;
         dll::shared_library plugin(it->path(), error);
         if (error) {
             continue;
-        }      
+        }
         std::cout << "Loaded (" << plugin.native() << "):" << it->path() << '\n';
 
         // Gets plugin using "create_plugin" or "plugin" function
@@ -117,11 +117,11 @@ std::size_t plugins_collector::count() const {
 int main(int argc, char* argv[]) {
     /*<-*/
     BOOST_ASSERT(argc >= 3);
-    boost::filesystem::path path1(argv[1]);
+    boost::dll::fs::path path1(argv[1]);
     for (int i = 2; i < argc; ++i) {
-        boost::filesystem::path path2(argv[i]);
-        boost::filesystem::path res;
-        for (boost::filesystem::path::iterator it1 = path1.begin(), it2 = path2.begin();
+        boost::dll::fs::path path2(argv[i]);
+        boost::dll::fs::path res;
+        for (boost::dll::fs::path::iterator it1 = path1.begin(), it2 = path2.begin();
             it1 != path1.end() && it2 != path2.end() && *it1 == *it2;
             ++it1, ++it2)
         {

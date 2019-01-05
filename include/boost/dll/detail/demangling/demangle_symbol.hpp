@@ -8,7 +8,7 @@
 #ifndef BOOST_DLL_DEMANGLE_SYMBOL_HPP_
 #define BOOST_DLL_DEMANGLE_SYMBOL_HPP_
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #include <string>
 #include <algorithm>
 #include <memory>

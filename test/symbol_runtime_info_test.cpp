@@ -64,7 +64,7 @@ int internal_variable = 1;
 int main(int argc, char* argv[]) {
     using namespace boost::dll;
 
-    boost::filesystem::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
+    boost::dll::fs::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
     BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
 
     make_error_code_dirty();
@@ -130,17 +130,17 @@ int main(int argc, char* argv[]) {
         make_error_code_dirty();
 
         BOOST_TEST(
-            (boost::filesystem::equivalent(symbol_location(sl.get<int(void)>("exef")), argv[0]))
+            (boost::dll::fs::equivalent(symbol_location(sl.get<int(void)>("exef")), argv[0]))
         );
     }
 
     { // self with error_code
-        boost::system::error_code ec;
+        boost::dll::fs::error_code ec;
         shared_library sl(program_location(ec));
         BOOST_TEST(!ec);
 
         BOOST_TEST(
-            (boost::filesystem::equivalent(symbol_location(sl.get<int(void)>("exef"), ec), argv[0]))
+            (boost::dll::fs::equivalent(symbol_location(sl.get<int(void)>("exef"), ec), argv[0]))
         );
         BOOST_TEST(!ec);
 
@@ -151,30 +151,30 @@ int main(int argc, char* argv[]) {
     std::cout << "\ninternal_function: " << symbol_location(internal_function);
     std::cout << "\nargv[0]          : " << boost::filesystem::absolute(argv[0]);
     BOOST_TEST(
-        (boost::filesystem::equivalent(symbol_location(internal_function), argv[0]))
+        (boost::dll::fs::equivalent(symbol_location(internal_function), argv[0]))
     );
 
     BOOST_TEST(
-        (boost::filesystem::equivalent(symbol_location(internal_variable), argv[0]))
+        (boost::dll::fs::equivalent(symbol_location(internal_variable), argv[0]))
     );
 
     make_error_code_dirty();
 
     BOOST_TEST(
-        (boost::filesystem::equivalent(this_line_location(), argv[0]))
+        (boost::dll::fs::equivalent(this_line_location(), argv[0]))
     );
 
     { // this_line_location with error_code
-        boost::system::error_code ec;
+        boost::dll::fs::error_code ec;
         make_error_code_dirty();
         BOOST_TEST(
-            (boost::filesystem::equivalent(this_line_location(ec), argv[0]))
+            (boost::dll::fs::equivalent(this_line_location(ec), argv[0]))
         );
         BOOST_TEST(!ec);
     }
 
     BOOST_TEST(
-        lib.get_alias<boost::filesystem::path()>("module_location_from_itself")() == lib.location()
+        lib.get_alias<boost::dll::fs::path()>("module_location_from_itself")() == lib.location()
     );
 
     // Checking docs content
@@ -182,36 +182,36 @@ int main(int argc, char* argv[]) {
     std::cout << "\nsymbol_location(std::puts); // " << symbol_location(std::puts);
 
     std::set_terminate(&my_terminate_handler);
-    BOOST_TEST((boost::filesystem::equivalent(
+    BOOST_TEST((boost::dll::fs::equivalent(
         symbol_location_ptr(std::set_terminate(0)),
         argv[0]
     )));
 
     {
-        boost::system::error_code ec;
-        boost::filesystem::path p = symbol_location_ptr(std::set_terminate(0), ec);
+        boost::dll::fs::error_code ec;
+        boost::dll::fs::path p = symbol_location_ptr(std::set_terminate(0), ec);
         BOOST_TEST(ec || !p.empty());
     }
 
     {
-        boost::system::error_code ec;
+        boost::dll::fs::error_code ec;
         symbol_location(std::set_terminate(0), ec),
         BOOST_TEST(ec);
     }
 
     {
         std::set_terminate(&my_terminate_handler);
-        boost::system::error_code ec;
+        boost::dll::fs::error_code ec;
         make_error_code_dirty();
         symbol_location(std::set_terminate(0), ec),
         BOOST_TEST(ec);
     }
 
     {
-        boost::system::error_code ec;
+        boost::dll::fs::error_code ec;
         ::signal(SIGSEGV, &my_signal_handler);
-        boost::filesystem::path p = symbol_location_ptr(::signal(SIGSEGV, SIG_DFL), ec);
-        BOOST_TEST((boost::filesystem::equivalent(
+        boost::dll::fs::path p = symbol_location_ptr(::signal(SIGSEGV, SIG_DFL), ec);
+        BOOST_TEST((boost::dll::fs::equivalent(
             p,
             argv[0]
         )) || ec);
@@ -219,7 +219,7 @@ int main(int argc, char* argv[]) {
 
     {
         ::signal(SIGSEGV, &my_signal_handler);
-        boost::system::error_code ec;
+        boost::dll::fs::error_code ec;
         make_error_code_dirty();
         symbol_location(::signal(SIGSEGV, SIG_DFL), ec);
         BOOST_TEST(ec);

@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015 Antony Polukhin.
+// Copyright 2015-2018 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -8,7 +8,9 @@
 #ifndef BOOST_DLL_EXAMPLE_COMMON_B2_WORKAROUNDS_HPP
 #define BOOST_DLL_EXAMPLE_COMMON_B2_WORKAROUNDS_HPP
 
+#include <boost/dll/config.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/system/error_code.hpp>
 #include <iostream>
 #include <cctype>
 
@@ -26,8 +28,7 @@ inline boost::filesystem::path drop_version(const boost::filesystem::path& lhs) 
     return lhs;
 }
 
-inline bool is_shared_library(const boost::filesystem::path& p) {
-    const std::string s = p.string();
+inline bool is_shared_library(const std::string& s) {
     return (s.find(".dll") != std::string::npos || s.find(".so") != std::string::npos || s.find(".dylib") != std::string::npos)
             && s.find(".lib") == std::string::npos
             && s.find(".exp") == std::string::npos
@@ -38,12 +39,20 @@ inline bool is_shared_library(const boost::filesystem::path& p) {
             && s.find(".a") == std::string::npos;
 }
 
-inline boost::filesystem::path first_lib_from_argv(int argc, char* argv[]) {
+inline bool is_shared_library(const char* p) {
+    return b2_workarounds::is_shared_library(std::string(p));
+}
+
+inline bool is_shared_library(const boost::filesystem::path& p) {
+    return b2_workarounds::is_shared_library(p.string());
+}
+
+inline boost::dll::fs::path first_lib_from_argv(int argc, char* argv[]) {
     BOOST_ASSERT(argc > 1);
     (void)argc;
 
     for (int i = 1; i < argc; ++i) {
-        if (is_shared_library(argv[i])) {
+        if (b2_workarounds::is_shared_library(argv[i])) {
             return argv[i];
         }
 

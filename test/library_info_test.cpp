@@ -1,5 +1,5 @@
 // Copyright 2011-2012 Renato Tegon Forti
-// Copyright 2015 Antony Polukhin
+// Copyright 2015-2018 Antony Polukhin
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -21,7 +21,7 @@
 
 int main(int argc, char* argv[])
 {
-    boost::filesystem::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
+    boost::dll::fs::path shared_library_path = b2_workarounds::first_lib_from_argv(argc, argv);
     BOOST_TEST(shared_library_path.string().find("test_library") != std::string::npos);
 
     boost::dll::library_info lib_info(shared_library_path);

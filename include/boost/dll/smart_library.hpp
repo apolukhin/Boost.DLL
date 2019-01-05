@@ -92,19 +92,19 @@ public:
     //! \copydoc shared_library::shared_library()
     smart_library() BOOST_NOEXCEPT {};
 
-    //! \copydoc shared_library::shared_library(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode)
-    smart_library(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
+    //! \copydoc shared_library::shared_library(const boost::dll::fs::path& lib_path, load_mode::type mode = load_mode::default_mode)
+    smart_library(const boost::dll::fs::path& lib_path, load_mode::type mode = load_mode::default_mode) {
         _lib.load(lib_path, mode);
         _storage.load(lib_path);
     }
 
-    //! \copydoc shared_library::shared_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
-    smart_library(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
+    //! \copydoc shared_library::shared_library(const boost::dll::fs::path& lib_path, boost::dll::fs::error_code& ec, load_mode::type mode = load_mode::default_mode)
+    smart_library(const boost::dll::fs::path& lib_path, boost::dll::fs::error_code& ec, load_mode::type mode = load_mode::default_mode) {
         load(lib_path, mode, ec);
     }
 
-    //! \copydoc shared_library::shared_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec)
-    smart_library(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
+    //! \copydoc shared_library::shared_library(const boost::dll::fs::path& lib_path, load_mode::type mode, boost::dll::fs::error_code& ec)
+    smart_library(const boost::dll::fs::path& lib_path, load_mode::type mode, boost::dll::fs::error_code& ec) {
         load(lib_path, mode, ec);
     }
     /*!
@@ -163,9 +163,9 @@ public:
     */
     ~smart_library() BOOST_NOEXCEPT {};
 
-    //! \copydoc shared_library::load(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode)
-    void load(const boost::filesystem::path& lib_path, load_mode::type mode = load_mode::default_mode) {
-        boost::system::error_code ec;
+    //! \copydoc shared_library::load(const boost::dll::fs::path& lib_path, load_mode::type mode = load_mode::default_mode)
+    void load(const boost::dll::fs::path& lib_path, load_mode::type mode = load_mode::default_mode) {
+        boost::dll::fs::error_code ec;
         _storage.load(lib_path);
         _lib.load(lib_path, mode, ec);
 
@@ -174,15 +174,15 @@ public:
         }
     }
 
-    //! \copydoc shared_library::load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode)
-    void load(const boost::filesystem::path& lib_path, boost::system::error_code& ec, load_mode::type mode = load_mode::default_mode) {
+    //! \copydoc shared_library::load(const boost::dll::fs::path& lib_path, boost::dll::fs::error_code& ec, load_mode::type mode = load_mode::default_mode)
+    void load(const boost::dll::fs::path& lib_path, boost::dll::fs::error_code& ec, load_mode::type mode = load_mode::default_mode) {
         ec.clear();
         _storage.load(lib_path);
         _lib.load(lib_path, mode, ec);
     }
 
-    //! \copydoc shared_library::load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec)
-    void load(const boost::filesystem::path& lib_path, load_mode::type mode, boost::system::error_code& ec) {
+    //! \copydoc shared_library::load(const boost::dll::fs::path& lib_path, load_mode::type mode, boost::dll::fs::error_code& ec)
+    void load(const boost::dll::fs::path& lib_path, load_mode::type mode, boost::dll::fs::error_code& ec) {
         ec.clear();
         _storage.load(lib_path);
         _lib.load(lib_path, mode, ec);
@@ -199,7 +199,7 @@ public:
      * \tparam T Type of the variable
      * \return A reference to the variable of type T.
      *
-     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename T>
     T& get_variable(const std::string &name) const {
@@ -225,7 +225,7 @@ public:
      * \tparam Func Type of the function, required for determining the overload
      * \return A reference to the function of type F.
      *
-     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename Func>
     Func& get_function(const std::string &name) const {
@@ -254,7 +254,7 @@ public:
      * \tparam Func Signature of the function, required for determining the overload
      * \return A pointer to the member-function with the signature provided
      *
-     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename Class, typename Func>
     typename boost::dll::detail::get_mem_fn_type<Class, Func>::mem_fn get_mem_fn(const std::string& name) const {
@@ -277,7 +277,7 @@ public:
      * \tparam Signature Signature of the function, required for determining the overload. The return type is the class which this is the constructor of.
      * \return A constructor object.
      *
-     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename Signature>
     constructor<Signature> get_constructor() const {
@@ -298,7 +298,7 @@ public:
      * \tparam Class The class whose destructor shall be loaded
      * \return A destructor object.
      *
-     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
      *
      */
     template<typename Class>
@@ -319,7 +319,7 @@ public:
      * \tparam Class The class whose typeinfo shall be loaded
      * \return A reference to a type_info object.
      *
-     * \throw boost::system::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
      *
      */
     template<typename Class>

@@ -9,7 +9,7 @@
 #ifndef BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
 #define BOOST_DLL_DETAIL_CTOR_DTOR_HPP_
 
-#include <boost/config.hpp>
+#include <boost/dll/config.hpp>
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif
