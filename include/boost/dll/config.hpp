@@ -33,6 +33,7 @@ using std::error_code;
 using std::system_error;
 using std::make_error_code;
 using std::errc;
+using std::system_category;
 
 }}}
 
@@ -50,6 +51,7 @@ using boost::system::error_code;
 using boost::system::system_error;
 using boost::system::errc::make_error_code;
 namespace errc = boost::system::errc;
+using boost::system::system_category;
 
 }}}
 
