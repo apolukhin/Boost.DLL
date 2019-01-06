@@ -13,11 +13,15 @@
 
 #include <boost/predef.h>
 
-#if BOOST_COMP_GNUC || BOOST_COMP_HPACC || BOOST_COMP_IBM
-#if BOOST_OS_WINDOWS
-#error "Clang-win is not supported"
-#endif
+#if BOOST_COMP_GNUC || BOOST_COMP_CLANG || BOOST_COMP_HPACC || BOOST_COMP_IBM
+
+#if BOOST_OS_WINDOWS && BOOST_COMP_CLANG
+#warning "Clang-win is not supported"
+#include <boost/dll/detail/demangling/msvc.hpp>
+#else
 #include <boost/dll/detail/demangling/itanium.hpp>
+#endif
+
 #elif BOOST_COMP_MSVC
 #include <boost/dll/detail/demangling/msvc.hpp>
 #else
