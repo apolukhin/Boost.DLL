@@ -125,7 +125,7 @@ namespace detail {
 *
 * \return callable object if T is a function type, or boost::shared_ptr<T> if T is an object type.
 *
-* \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+* \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 */
 template <class T>
@@ -215,7 +215,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import(BOOST_RV_REF(shared_library) lib, const std:
 *
 * \return callable object if T is a function type, or boost::shared_ptr<T> if T is an object type.
 *
-* \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+* \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 */
 template <class T>

@@ -42,7 +42,7 @@ namespace detail {
     * \param ptr_to_symbol Pointer to symbol which location is to be determined.
     * \param ec Variable that will be set to the result of the operation.
     * \return Path to the binary object that holds symbol or empty path in case error.
-    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept boost::dll::fs::error_code also throws boost::dll::fs::system_error.
+    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept \forcedlinkfs{error_code} also throws \forcedlinkfs{system_error}.
     *
     * \b Examples:
     * \code
@@ -115,7 +115,7 @@ namespace detail {
     * \param symbol Symbol which location is to be determined.
     * \param ec Variable that will be set to the result of the operation.
     * \return Path to the binary object that holds symbol or empty path in case error.
-    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept boost::dll::fs::error_code also throws boost::dll::fs::system_error.
+    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept \forcedlinkfs{error_code} also throws \forcedlinkfs{system_error}.
     *
     * \b Examples:
     * \code
@@ -176,7 +176,7 @@ namespace detail {
     * (the line in which the `this_line_location()` method was called).
     *
     * \param ec Variable that will be set to the result of the operation.
-    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept boost::dll::fs::error_code also throws boost::dll::fs::system_error.
+    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept \forcedlinkfs{error_code} also throws \forcedlinkfs{system_error}.
     */
     static inline boost::dll::fs::path this_line_location(boost::dll::fs::error_code& ec) {
         typedef boost::dll::fs::path(func_t)(boost::dll::fs::error_code& );
@@ -209,7 +209,7 @@ namespace detail {
     * on Linux OS.
     *
     * \param ec Variable that will be set to the result of the operation.
-    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept boost::dll::fs::error_code also throws boost::dll::fs::system_error.
+    * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept \forcedlinkfs{error_code} also throws \forcedlinkfs{system_error}.
     */
     inline boost::dll::fs::path program_location(boost::dll::fs::error_code& ec) {
         ec.clear();

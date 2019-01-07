@@ -1,4 +1,4 @@
-// Copyright 2018 Antony Polukhin.
+// Copyright 2018-2019 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -17,7 +17,24 @@
 
 #ifdef BOOST_DLL_DOXYGEN
 /// Define this macro to make Boost.DLL use C++17's std::filesystem::path, std::system_error and std::error_code.
-#define BOOST_DLL_FORCE_ALIAS_INSTANTIATION
+#define BOOST_DLL_USE_STD_FS BOOST_DLL_USE_STD_FS
+
+/// This namespace contains aliases to the Boost or C++17 classes. Aliases are configured using BOOST_DLL_USE_STD_FS macro.
+namespace boost { namespace dll { namespace fs {
+
+/// Alias to `std::filesystem::path` if \forcedmacrolink{BOOST_DLL_USE_STD_FS} is defined by user.
+/// Alias to `boost::filesystem::path` otherwise.
+using path = std::conditional_t<BOOST_DLL_USE_STD_FS, std::filesystem::path, boost::filesystem::path>;
+
+/// Alias to `std::error_code` if \forcedmacrolink{BOOST_DLL_USE_STD_FS} is defined by user.
+/// boost::system::error_code otherwise.
+using error_code = std::conditional_t<BOOST_DLL_USE_STD_FS, std::error_code, boost::system::error_code>;
+
+/// Alias to `std::system_error` if \forcedmacrolink{BOOST_DLL_USE_STD_FS} is defined by user.
+/// Alias to `boost::system::system_error` otherwise.
+using system_error = std::conditional_t<BOOST_DLL_USE_STD_FS, std::system_error, boost::system::system_error>;
+
+}}}
 
 #endif
 

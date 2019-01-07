@@ -207,7 +207,7 @@ public:
      * \tparam T Type of the variable
      * \return A reference to the variable of type T.
      *
-     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename T>
     T& get_variable(const std::string &name) const {
@@ -233,7 +233,7 @@ public:
      * \tparam Func Type of the function, required for determining the overload
      * \return A reference to the function of type F.
      *
-     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename Func>
     Func& get_function(const std::string &name) const {
@@ -262,7 +262,7 @@ public:
      * \tparam Func Signature of the function, required for determining the overload
      * \return A pointer to the member-function with the signature provided
      *
-     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename Class, typename Func>
     typename boost::dll::detail::get_mem_fn_type<Class, Func>::mem_fn get_mem_fn(const std::string& name) const {
@@ -285,7 +285,7 @@ public:
      * \tparam Signature Signature of the function, required for determining the overload. The return type is the class which this is the constructor of.
      * \return A constructor object.
      *
-     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
      */
     template<typename Signature>
     constructor<Signature> get_constructor() const {
@@ -306,7 +306,7 @@ public:
      * \tparam Class The class whose destructor shall be loaded
      * \return A destructor object.
      *
-     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
      *
      */
     template<typename Class>
@@ -327,7 +327,7 @@ public:
      * \tparam Class The class whose typeinfo shall be loaded
      * \return A reference to a type_info object.
      *
-     * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+     * \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
      *
      */
     template<typename Class>

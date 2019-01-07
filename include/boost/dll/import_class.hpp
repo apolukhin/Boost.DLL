@@ -410,7 +410,7 @@ inline void boost::dll::experimental::imported_class<T>::move_assign(imported_cl
 *
 * \return class object.
 *
-* \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+* \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 */
 template<typename T, typename ... Args> imported_class<T>

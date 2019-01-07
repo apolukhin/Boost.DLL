@@ -73,7 +73,7 @@ public:
     *
     * \param lib A library to copy.
     * \post lib == *this
-    * \throw boost::dll::fs::system_error, std::bad_alloc in case of insufficient memory.
+    * \throw \forcedlinkfs{system_error}, std::bad_alloc in case of insufficient memory.
     */
     shared_library(const shared_library& lib)
         : base_t()
@@ -111,9 +111,9 @@ public:
     * Loads a library by specified path with a specified mode.
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
-    *           const wchar_t* or boost::dll::fs::path.
+    *           const wchar_t* or \forcedlinkfs{path}.
     * \param mode A mode that will be used on library load.
-    * \throw boost::dll::fs::system_error, std::bad_alloc in case of insufficient memory.
+    * \throw \forcedlinkfs{system_error}, std::bad_alloc in case of insufficient memory.
     */
     explicit shared_library(const boost::dll::fs::path& lib_path, load_mode::type mode = load_mode::default_mode) {
         shared_library::load(lib_path, mode);
@@ -123,7 +123,7 @@ public:
     * Loads a library by specified path with a specified mode.
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
-    *           const wchar_t* or boost::dll::fs::path.
+    *           const wchar_t* or \forcedlinkfs{path}.
     * \param mode A mode that will be used on library load.
     * \param ec Variable that will be set to the result of the operation.
     * \throw std::bad_alloc in case of insufficient memory.
@@ -142,7 +142,7 @@ public:
     *
     * \param lib A shared library to assign from.
     * \post lib == *this
-    * \throw boost::dll::fs::system_error, std::bad_alloc in case of insufficient memory.
+    * \throw \forcedlinkfs{system_error}, std::bad_alloc in case of insufficient memory.
     */
     shared_library& operator=(BOOST_COPY_ASSIGN_REF(shared_library) lib) {
         boost::dll::fs::error_code ec;
@@ -217,7 +217,7 @@ public:
     *
     * \param lib A library instance to assign from.
     * \post lib.location() == this->location()
-    * \throw boost::dll::fs::system_error, std::bad_alloc in case of insufficient memory.
+    * \throw \forcedlinkfs{system_error}, std::bad_alloc in case of insufficient memory.
     */
     shared_library& assign(const shared_library& lib) {
         boost::dll::fs::error_code ec;
@@ -236,9 +236,9 @@ public:
     * call unload() and then load the new provided library.
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
-    *           const wchar_t* or boost::dll::fs::path.
+    *           const wchar_t* or \forcedlinkfs{path}.
     * \param mode A mode that will be used on library load.
-    * \throw boost::dll::fs::system_error, std::bad_alloc in case of insufficient memory.
+    * \throw \forcedlinkfs{system_error}, std::bad_alloc in case of insufficient memory.
     *
     */
     void load(const boost::dll::fs::path& lib_path, load_mode::type mode = load_mode::default_mode) {
@@ -258,7 +258,7 @@ public:
     * call unload() and then load the new provided library.
     *
     * \param lib_path Library file name. Can handle std::string, const char*, std::wstring,
-    *           const wchar_t* or boost::dll::fs::path.
+    *           const wchar_t* or \forcedlinkfs{path}.
     * \param ec Variable that will be set to the result of the operation.
     * \param mode A mode that will be used on library load.
     * \throw std::bad_alloc in case of insufficient memory.
@@ -345,7 +345,7 @@ public:
     * \tparam T Type of the symbol that we are going to import. Must be explicitly specified.
     * \param symbol_name Null-terminated symbol name. Can handle std::string, char*, const char*.
     * \return Reference to the symbol.
-    * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+    * \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
     */
     template <typename T>
     inline typename boost::enable_if_c<boost::is_member_pointer<T>::value || boost::is_reference<T>::value, T>::type  get(const std::string& symbol_name) const {
@@ -384,7 +384,7 @@ public:
     *
     * \tparam T Type of the symbol that we are going to import. Must be explicitly specified..
     * \param alias_name Null-terminated alias symbol name. Can handle std::string, char*, const char*.
-    * \throw boost::dll::fs::system_error if symbol does not exist or if the DLL/DSO was not loaded.
+    * \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
     */
     template <typename T>
     inline T& get_alias(const char* alias_name) const {
@@ -447,7 +447,7 @@ public:
     * \endcode
     *
     * \return Full path to the shared library.
-    * \throw boost::dll::fs::system_error, std::bad_alloc.
+    * \throw \forcedlinkfs{system_error}, std::bad_alloc.
     */
     boost::dll::fs::path location() const {
         boost::dll::fs::error_code ec;

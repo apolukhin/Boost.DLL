@@ -32,6 +32,7 @@ local doxygen_params =
     <doxygen:param>MACRO_EXPANSION=YES
     <doxygen:param>"ALIASES= \\
         \"forcedlink{1}=\\xmlonly<link linkend='boost.dll.\\1'>boost::dll::\\1</link>\\endxmlonly\" \\
+        \"forcedlinkfs{1}=\\xmlonly<link linkend='boost.dll.fs.\\1'>boost::dll::fs::\\1</link>\\endxmlonly\" \\
         \"forcedmacrolink{1}=\\xmlonly<link linkend='\\1'>\\1</link>\\endxmlonly\" "
     <doxygen:param>"PREDEFINED= \\
         \"BOOST_RV_REF(T)=T&&\" \\
@@ -52,6 +53,7 @@ local doxygen_params =
 doxygen autodoc_shared_library_core
     :
         [ glob 
+            ../include/boost/dll/config.hpp
             ../include/boost/dll/shared_library.hpp
             ../include/boost/dll/shared_library_load_mode.hpp
             ../include/boost/dll/library_info.hpp
