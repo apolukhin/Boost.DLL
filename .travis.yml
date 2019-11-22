@@ -82,6 +82,7 @@ matrix:
     # Link problems with ASAN
     - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="-DBOOST_TRAVISCI_BUILD"'
       name: "Clang-5"
+      dist: trusty
       addons:
         apt:
           sources: llvm-toolchain-trusty-5.0
@@ -122,7 +123,7 @@ before_install:
   - git status
 
   # Adding missing toolsets and preparing Boost headers
-  - ./bootstrap.sh
+  - ./bootstrap.sh || ( echo === bootstrap.log === ; cat bootstrap.log ; exit 1 ; )
   - ./b2 headers
   - |-
     echo "using gcc ;" >> ~/user-config.jam

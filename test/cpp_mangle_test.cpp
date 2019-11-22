@@ -104,16 +104,18 @@ int main(int argc, char* argv[])
 
     BOOST_TEST(!dtor.empty());
 
+// TODO: ms.get_name on Clang has space after comma `boost::variant<double, int>`
+#if !(defined(BOOST_TRAVISCI_BUILD) && defined(_MSC_VER) && defined(BOOST_CLANG))
     auto var1 = ms.get_function<void(boost::variant<int, double> &)>("use_variant");
     auto var2 = ms.get_function<void(boost::variant<double, int> &)>("use_variant");
 
     BOOST_TEST(!var1.empty());
     BOOST_TEST(!var2.empty());
+#endif
 
-// TODO: FIX!
-#ifndef BOOST_TRAVISCI_BUILD
+#ifndef BOOST_NO_RTTI
 
-#if defined(BOOST_MSVC) || defined(BOOST_MSVC_VER)
+#if defined(_MSC_VER) // MSVC, Clang-cl, and ICC on Windows
     auto vtable = ms.get_vtable<override_class>();
     BOOST_TEST(!vtable.empty());
 #else
@@ -121,7 +123,7 @@ int main(int argc, char* argv[])
     BOOST_TEST(!ti.empty());
 #endif
 
-#endif // #ifndef BOOST_TRAVISCI_BUILD
+#endif // #ifndef BOOST_NO_RTTI
 
     return boost::report_errors();
 }
