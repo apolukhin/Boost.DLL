@@ -46,7 +46,7 @@ private:
         fmt_pe_info32,
         fmt_pe_info64,
         fmt_macho_info32,
-        fmt_macho_info64,
+        fmt_macho_info64
     } fmt_;
 
     /// @cond
