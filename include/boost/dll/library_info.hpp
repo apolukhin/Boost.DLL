@@ -41,7 +41,6 @@ private:
     std::ifstream f_;
 
     enum {
-        fmt_none = 0,
         fmt_elf_info32,
         fmt_elf_info64,
         fmt_pe_info32,
@@ -81,8 +80,6 @@ private:
     }
 
     void init(bool throw_if_not_native) {
-        fmt_ = fmt_none;
-
         if (boost::dll::detail::elf_info32::parsing_supported(f_)) {
             if (throw_if_not_native) { throw_if_in_windows(); throw_if_in_macos(); }
 
