@@ -184,7 +184,7 @@ std::string mangled_storage_impl::get_mem_fn(const std::string &name) const
              '(' + parser::arg_list(*this, func_type()) + ')'
              + const_rule<Class>() + volatile_rule<Class>();
 
-    auto found = std::find_if(storage_.begin(), storage_.end(), [&](const entry& e) {return e.demangled == matcher;});
+    auto found = std::find_if(storage_.begin(), storage_.end(), [&](const entry& e) {return e.demangled.find( matcher ) != std::string::npos;});
 
     if (found != storage_.end())
         return found->mangled;
