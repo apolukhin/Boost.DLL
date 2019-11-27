@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
     if (endFound == std::string::npos)
       continue;
 
+    // Usually "Func<space::my_plugin>" on Linux, "Func<class space::my_plugin>" on Windows.
     auto funcName = demangled.substr(beginFound, endFound - beginFound);
     std::cout << "Function name: " << funcName.data() << std::endl;
     auto typeIndexFunc = boost::dll::experimental::import_mangled<space::my_plugin, int()>(lib, funcName);
@@ -56,11 +57,6 @@ int main(int argc, char** argv) {
     break;
   }
   BOOST_TEST_EQ(matches_found, 1);
-
-
-  auto typeIndexFunc = boost::dll::experimental::import_mangled<space::my_plugin, int()>(lib, "Func<space::my_plugin>");
-  space::my_plugin cl;
-  BOOST_TEST_EQ(typeIndexFunc(&cl), 42);
 
   return boost::report_errors();
 }
