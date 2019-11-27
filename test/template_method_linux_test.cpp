@@ -1,94 +1,71 @@
-// Copyright 2019 Ramil Gauss. 
-// 
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt 
-// or copy at http://www.boost.org/LICENSE_1_0.txt) 
+// Copyright 2019 Ramil Gauss.
+// Copyright 2019 Antony Polukhin.
+//
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// For only Linux testing
+#include <boost/predef.h>
+#if (__cplusplus >= 201402L) || (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(14,0,0))
 
-#include <boost/dll/runtime_symbol_info.hpp>
 #include <boost/dll/smart_library.hpp>
 #include <boost/dll/import_mangled.hpp>
 #include <boost/dll/import_class.hpp>
-#include <iostream>
-#include <memory>
 
+#include <iostream>
 #include <string>
 
-namespace dll = boost::dll;
-namespace bexp = boost::dll::experimental;
+#include "../example/b2_workarounds.hpp"
+#include <boost/core/lightweight_test.hpp>
 
-const std::string kFuncLiteral = "Func";
 
-namespace space
-{
-  class BOOST_SYMBOL_EXPORT my_plugin
-  {
+namespace space {
+  class BOOST_SYMBOL_EXPORT my_plugin {
   public:
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
-    template<typename Arg>
-    BOOST_SYMBOL_EXPORT int Func()
-    {
-      return 42;
-    }
-#pragma GCC pop_options
+    template <typename Arg>
+    BOOST_SYMBOL_EXPORT int Func(); // defined in cpp_test_library.cpp
   };
 }
 
-bool Test();
-
-int main( int argc, char** argv )
-{
-  try
-  {
-    auto testResult = Test() ? "Ok" : "fails";
-    std::cout << "Test result: " << testResult << std::endl;
-  }
-  catch ( std::exception & e )
-  {
-    auto errorDesc = e.what();
-    printf( errorDesc );
-  }
-
-  return 0;
-}
-
-bool Test()
-{
-  auto result = false;
-  auto thisLineLocation = boost::dll::this_line_location();
-
-  boost::dll::fs::path lib_path( thisLineLocation );
-  dll::experimental::smart_library lib( lib_path );// smart library instance
-
-  auto cl = new space::my_plugin();
-  // make definition in export table
-  cl->Func<space::my_plugin>();
+int main(int argc, char** argv) {
+  unsigned matches_found = 0;
+  boost::dll::fs::path lib_path = b2_workarounds::first_lib_from_argv(argc, argv);
+  boost::dll::experimental::smart_library lib(lib_path);
 
   auto storage = lib.symbol_storage().get_storage();
-  for ( auto& s : storage )
-  {
+  for (auto& s : storage) {
     auto& demangled = s.demangled;
-    auto pData = demangled.data();
+    BOOST_TEST(demangled.data());
 
-    auto beginFound = demangled.find( kFuncLiteral );
-    if ( beginFound == std::string::npos )
+    auto beginFound = demangled.find("Func<");
+    if (beginFound == std::string::npos)
       continue;
 
-    auto endFound = demangled.find( "(" );
-    if ( endFound == std::string::npos )
+    auto endFound = demangled.find("(");
+    if (endFound == std::string::npos)
       continue;
 
-    auto funcName = demangled.substr( beginFound, endFound - beginFound );
+    auto funcName = demangled.substr(beginFound, endFound - beginFound);
+    std::cout << "Function name: " << funcName.data() << std::endl;
+    auto typeIndexFunc = boost::dll::experimental::import_mangled<space::my_plugin, int()>(lib, funcName);
 
-    auto typeIndexFunc = bexp::import_mangled<space::my_plugin, int( void )>( lib, funcName.data() );
-    std::cout << funcName.data() << "\t" << typeIndexFunc( cl ) << std::endl;
+    space::my_plugin cl;
+    BOOST_TEST_EQ(typeIndexFunc(&cl), 42);
 
-    result = true;
+    ++matches_found;
     break;
   }
+  BOOST_TEST_EQ(matches_found, 1);
 
-  return result;
+
+  auto typeIndexFunc = boost::dll::experimental::import_mangled<space::my_plugin, int()>(lib, "Func<space::my_plugin>");
+  space::my_plugin cl;
+  BOOST_TEST_EQ(typeIndexFunc(&cl), 42);
+
+  return boost::report_errors();
 }
 
+
+#else
+int main() {}
+#endif

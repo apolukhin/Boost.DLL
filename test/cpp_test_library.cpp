@@ -1,4 +1,5 @@
 // Copyright 2016 Klemens Morgenstern
+// Copyright 2017-2019 Antony Polukhin
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -132,6 +133,70 @@ some_class::~some_class()
     this_ = this;
 }
 
+}
+
+namespace space {
+  class BOOST_SYMBOL_EXPORT my_plugin;
+}
+
+namespace testing { namespace space {
+  class BOOST_SYMBOL_EXPORT my_plugin {
+  public:
+    template<typename Arg>
+    BOOST_SYMBOL_EXPORT int Func() const;
+    template<typename Arg>
+    BOOST_SYMBOL_EXPORT int Func();
+    template<typename Arg>
+    BOOST_SYMBOL_EXPORT int Func2();
+    template<typename Arg>
+    BOOST_SYMBOL_EXPORT int AFunc();
+  };
+
+  template<typename Arg>
+  BOOST_SYMBOL_EXPORT int my_plugin::Func() const { return 30; }
+
+  template<typename Arg>
+  BOOST_SYMBOL_EXPORT int my_plugin::Func() { return 32; }
+
+  template<typename Arg>
+  BOOST_SYMBOL_EXPORT int my_plugin::Func2() { return 33; }
+
+  template<typename Arg>
+  BOOST_SYMBOL_EXPORT int my_plugin::AFunc() { return 31; }
+
+  template BOOST_SYMBOL_EXPORT int my_plugin::Func<::space::my_plugin>();
+  template BOOST_SYMBOL_EXPORT int my_plugin::Func2<::space::my_plugin>();
+  template BOOST_SYMBOL_EXPORT int my_plugin::AFunc<::space::my_plugin>();
+}}
+
+namespace space {
+  class BOOST_SYMBOL_EXPORT my_plugin {
+  public:
+    template<typename Arg>
+    BOOST_SYMBOL_EXPORT int Func() const;
+    template<typename Arg>
+    BOOST_SYMBOL_EXPORT int Func();
+    template<typename Arg>
+    BOOST_SYMBOL_EXPORT int Func2();
+    template<typename Arg>
+    BOOST_SYMBOL_EXPORT int AFunc();
+  };
+
+  template<typename Arg>
+  BOOST_SYMBOL_EXPORT int my_plugin::Func() const { return 40; }
+
+  template<typename Arg>
+  BOOST_SYMBOL_EXPORT int my_plugin::Func() { return 42; }
+
+  template<typename Arg>
+  BOOST_SYMBOL_EXPORT int my_plugin::Func2() { return 43; }
+
+  template<typename Arg>
+  BOOST_SYMBOL_EXPORT int my_plugin::AFunc() { return 41; }
+
+  template BOOST_SYMBOL_EXPORT int my_plugin::Func<::space::my_plugin>();
+  template BOOST_SYMBOL_EXPORT int my_plugin::Func2<::space::my_plugin>();
+  template BOOST_SYMBOL_EXPORT int my_plugin::AFunc<::space::my_plugin>();
 }
 
 
