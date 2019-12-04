@@ -49,7 +49,6 @@ project
     lib library2 : ../example/tutorial7/library2.cpp : <link>shared ;
     lib refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <link>shared ;
     lib cpp_plugin : cpp_test_library.cpp : <link>shared ;
-    lib cpp_ctti_type_parse_plugin : cpp_ctti_type_name_parser_lib.cpp : <link>shared ;
 
     test-suite boostdll
         :
@@ -92,6 +91,5 @@ project
         [ run cpp_load_test.cpp   : : cpp_plugin ]
         [ run cpp_import_test.cpp   : : cpp_plugin ]
         [ run template_method_linux_test.cpp : : cpp_plugin ]
-        [ run gcc_ctti_type_name_parser_test.cpp : : cpp_ctti_type_parse_plugin ]
     ;
 }
