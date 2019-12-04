@@ -13,6 +13,7 @@
 
 #include <boost/dll/config.hpp>
 #include <boost/variant.hpp>
+#include <string>
 
 BOOST_SYMBOL_EXPORT extern int unscoped_var;
 int unscoped_var = 42;
@@ -199,9 +200,7 @@ namespace space {
   template BOOST_SYMBOL_EXPORT int my_plugin::AFunc<::space::my_plugin>();
 }
 
-#include <string>
 namespace space {
-
 template<typename... T>
 class test_template_class
 {};
