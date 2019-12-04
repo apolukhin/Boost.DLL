@@ -95,10 +95,10 @@ namespace parser
     template <typename T>
     std::string get_type(const mangled_storage_impl & ms, dummy<T>*);
 
-    template <typename... T, template <typename...> typename Tn>
+    template <typename... T, template <typename...> class Tn>
     std::string get_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*);
 
-    template <typename... T, template <typename...> typename Tn>
+    template <typename... T, template <typename...> class Tn>
     std::string parse_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*);
 
     template <typename T>
@@ -177,28 +177,27 @@ namespace parser
 
     //! implement
     template <typename T>
-    std::string get_type(const mangled_storage_impl & ms, dummy<T>*) {
-        using namespace std;
+    inline std::string get_type(const mangled_storage_impl & ms, dummy<T>*) {
         auto str = ms.get_name<T>();
         return str;
     }
 
-    template <typename... T, template <typename...> typename Tn>
-    std::string get_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*) {
+    template <typename... T, template <typename...> class Tn>
+    inline std::string get_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*) {
         using namespace std;
         using type = dummy<Tn<T...>>*;
         return parse_type(ms, type());
     }
 
     template <typename R, typename... Args>
-    std::string parse_type(const mangled_storage_impl & ms, dummy<R(Args...)>*) {
+    inline std::string parse_type(const mangled_storage_impl & ms, dummy<R(Args...)>*) {
         using args_type = dummy<Args...>*;
         using return_type = dummy<R>*;
         return parse_type(ms, return_type()) + " (" + parse_type(ms, args_type()) + ")";
     }
 
     template <typename T>
-    std::string parse_type(const mangled_storage_impl & ms, dummy<T>*) {
+    inline std::string parse_type(const mangled_storage_impl & ms, dummy<T>*) {
         using pure_type = no_ptr_cvref<T>;
         using type = dummy<no_ptr_cvref<pure_type>>*;
         auto str = get_type(ms, type());
@@ -206,14 +205,14 @@ namespace parser
     }
 
     template <typename T1, typename T2, typename... T3>
-    std::string parse_type(const mangled_storage_impl & ms, dummy<T1, T2, T3...>*) {
+    inline std::string parse_type(const mangled_storage_impl & ms, dummy<T1, T2, T3...>*) {
         using first_type = dummy<T1>*;
         using next_type = dummy<T2, T3...>*;
         return parse_type(ms, first_type()) + ", " + parse_type(ms, next_type());
     }
 
-    template <typename... T, template <typename...> typename Tn>
-    std::string parse_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*) {
+    template <typename... T, template <typename...> class Tn>
+    inline std::string parse_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*) {
         using next_type = dummy<T...>*;
         std::string str = ms.get_name<Tn<T...>>();
         auto frist = str.find_first_of("<");
@@ -223,7 +222,7 @@ namespace parser
         return template_name + "<" + args_name + (last_ch == '>' ? " >" : ">");
     }
 
-    std::string parse_type(const mangled_storage_impl &, dummy<>*) {
+    inline std::string parse_type(const mangled_storage_impl &, dummy<>*) {
         return "";
     }
 }

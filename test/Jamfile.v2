@@ -92,6 +92,6 @@ project
         [ run cpp_load_test.cpp   : : cpp_plugin ]
         [ run cpp_import_test.cpp   : : cpp_plugin ]
         [ run template_method_linux_test.cpp : : cpp_plugin ]
-        [ run gcc_ctti_type_name_parser_test.cpp : : cpp_mangle_plugin ]
+        [ run ctti_type_name_parser_test.cpp : : cpp_mangle_plugin ]
     ;
 }
