@@ -299,5 +299,4 @@ namespace space {
   template BOOST_SYMBOL_EXPORT int my_plugin::Func2<::space::my_plugin>();
   template BOOST_SYMBOL_EXPORT int my_plugin::AFunc<::space::my_plugin>();
 }
-
 #endif
