@@ -22,20 +22,6 @@
 
 struct override_class {};
 
-#include <string>
-
-class alias;
-
-namespace space {
-template <typename... T>
-class test_template_class {
-};
-
-template <typename T1, typename T2 = char,
-         typename T3 = test_template_class<int>>
-class test_template_class_have_default_args {
-};
-} // namespace space
 
 int main(int argc, char* argv[])
 {
@@ -138,89 +124,6 @@ int main(int argc, char* argv[])
 #endif
 
 #endif // #ifndef BOOST_NO_RTTI
-
-    ms.add_alias<alias>("space::cpp_plugin_type_pasrser");
-
-    auto ctor1 = ms.get_constructor<alias()>();
-    BOOST_TEST(!ctor1.empty());
-
-    auto ctor2 = ms.get_constructor<alias(int*)>();
-    BOOST_TEST(!ctor2.empty());
-
-    auto ctor3 = ms.get_constructor<alias(const int*)>();
-    BOOST_TEST(!ctor3.empty());
-
-    auto ctor4 = ms.get_constructor<alias(const volatile int*)>();
-    BOOST_TEST(!ctor4.empty());
-
-    auto ctor5 = ms.get_constructor<alias(const std::string&)>();
-    BOOST_TEST(!ctor5.empty());
-
-    auto ctor6 = ms.get_constructor<alias(const volatile std::string*)>();
-    BOOST_TEST(!ctor6.empty());
-
-    v = ms.get_mem_fn<alias, void(int*)>("type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias, void(const int*)>("type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias, void(const volatile int*)>("type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias, void(std::string*)>("type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias, void(const std::string*)>("type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias, void(const volatile std::string*)>("type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias, void(const std::string&)>("type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias, void(const space::test_template_class<>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias, void(const space::test_template_class<void(int)>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias, void(const space::test_template_class<int>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias,
-                      void(const space::test_template_class<std::string>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<
-        alias, void(const space::test_template_class<char, int, std::string>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<
-        alias, void(const space::test_template_class_have_default_args<int>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<
-        alias,
-        void(const space::test_template_class_have_default_args<int, double>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
-
-    v = ms.get_mem_fn<alias,
-                      void(const space::test_template_class_have_default_args<
-                           int, double, std::string>&)>("type_test");
-    BOOST_TEST(!v.empty());
-
-    auto dtor = ms.get_destructor<alias>();
-
-    BOOST_TEST(!dtor.empty());
 
     return boost::report_errors();
 }
