@@ -146,8 +146,6 @@ namespace parser
     template<typename T>
     std::string type_rule(const std::string & type_name)
     {
-        using namespace std;
-
         return type_name + const_rule<no_ptr_cvref<T>>() +
                volatile_rule<no_ptr_cvref<T>>() + pointer_rule<T>() +
                const_rule<T>() + volatile_rule<T>() + reference_rule<T>();
