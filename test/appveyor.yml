@@ -32,27 +32,41 @@ skip_tags: true
 
 environment:
   matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       TOOLSET: msvc-9.0,msvc-10.0,msvc-11.0,msvc-12.0
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      TOOLSET: msvc-14.1 #,clang-win TODO: fails to run smart tests
+      TOOLSET: msvc-14.1
       CXXSTD: 14,17
+      ADDRMD: 32,64
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      TOOLSET: msvc-14.2
+      CXXSTD: 14,17,latest  # latest is C++2a
+      ADDRMD: 32,64
+    # TODO: Clang 32bit job yields:
+    # LINK : fatal error LNK1171: unable to load mspdbcore.dll (error code: 126)
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      TOOLSET: clang-win
+      CXXSTD: 14,17
+      ADDRMD: 64
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      TOOLSET: clang-win
+      CXXSTD: 14,17,2a
       ADDRMD: 32,64
       
     # TODO: Both Cygwins have problems with <link.h> and `dladdr`
-    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     #  ADDPATH: C:\cygwin\bin;
     #  TOOLSET: gcc
     #  CXXSTD: 03,11,14,1z
-    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
     #  ADDPATH: C:\cygwin64\bin;
     #  TOOLSET: gcc
     #  CXXSTD: 03,11,14,1z
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       ADDPATH: C:\mingw\bin;
       TOOLSET: gcc
       CXXSTD: 03,11,14,1z
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       ADDPATH: C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin;
       TOOLSET: gcc
       CXXSTD: 03,11,14,1z
@@ -72,7 +86,8 @@ before_build:
     - python tools/boostdep/depinst/depinst.py --git_args "--depth 10 --jobs 2" %BOOST_LIBS_FOLDER%
 
 build_script:
-    - cmd /c bootstrap
+    - bootstrap.bat --with-toolset=msvc
+      || ( echo === bootstrap.log === && cat bootstrap.log && exit /b 1 )
     - b2.exe headers
     - cd %BOOST%/libs/%BOOST_LIBS_FOLDER%/test
 
@@ -83,7 +98,8 @@ test_script:
   - if not "%CXXSTD%" == "" set CXXSTD=cxxstd=%CXXSTD%
   - if not "%ADDRMD%" == "" set ADDRMD=address-model=%ADDRMD%
   - echo "Running command ..\..\..\b2 -j3 toolset=%TOOLSET% %CXXSTD% %ADDRMD% variant=debug,release"
-  - ..\..\..\b2.exe -j3 toolset=%TOOLSET% %CXXSTD% %ADDRMD% variant=debug,release cxxflags="-DBOOST_TRAVISCI_BUILD"
+  # `embed-manifest=off` part required to Clang on VS2019 image (for some reason Boost.Build does not find `mt.exe`)
+  - ..\..\..\b2.exe -j3 toolset=%TOOLSET% %CXXSTD% %ADDRMD% variant=debug,release cxxflags="-DBOOST_TRAVISCI_BUILD" embed-manifest=off
 
 after_test:
 on_success:
