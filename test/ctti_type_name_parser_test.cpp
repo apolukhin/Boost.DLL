@@ -8,7 +8,8 @@
 
 #include <boost/predef.h>
 
-#if (__cplusplus >= 201402L) || (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(14, 0, 0))
+#if (__cplusplus >= 201402L) ||                                                \
+  (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(14, 0, 0))
 
 #include "../example/b2_workarounds.hpp"
 
@@ -22,124 +23,152 @@
 class alias;
 
 namespace space {
-template <typename... T>
-class test_template_class {
-};
+template<typename... T>
+class test_template_class
+{};
 
-template <typename T1, typename T2 = char,
-    typename T3 = test_template_class<int>>
-class test_template_class_have_default_args {
-};
+template<typename T1,
+         typename T2 = char,
+         typename T3 = test_template_class<int>>
+class test_template_class_have_default_args
+{};
 } // namespace space
 
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
-    using mangled_storage = boost::dll::detail::mangled_storage_impl;
-    using library = boost::dll::experimental::smart_library;
+  using mangled_storage = boost::dll::detail::mangled_storage_impl;
+  using library = boost::dll::experimental::smart_library;
 
-    boost::dll::fs::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
+  boost::dll::fs::path pt = b2_workarounds::first_lib_from_argv(argc, argv);
 
-    std::cout << "Library: " << pt << std::endl;
-    //  boost::dll::library_info lib{pt};
+  std::cout << "Library: " << pt << std::endl;
+  //  boost::dll::library_info lib{pt};
 
-    library lib(pt);
-    mangled_storage ms = lib.symbol_storage();
-    //  mangled_storage ms(lib);
+  library lib(pt);
+  mangled_storage ms = lib.symbol_storage();
+  //  mangled_storage ms(lib);
 
-    std::cout << "Symbols: " << std::endl;
+  std::cout << "Symbols: " << std::endl;
 
-    for (auto& s : ms.get_storage()) {
-        std::cout << s.demangled << std::endl;
-    }
+  for (auto& s : ms.get_storage()) {
+    std::cout << s.demangled << std::endl;
+  }
 
-    std::string v;
+  std::string v;
 
-    ms.add_alias<alias>("space::cpp_plugin_type_pasrser");
+  ms.add_alias<alias>("space::cpp_plugin_type_pasrser");
 
-    auto ctor1 = ms.get_constructor<alias()>();
-    BOOST_TEST(!ctor1.empty());
+  auto ctor1 = ms.get_constructor<alias()>();
+  BOOST_TEST(!ctor1.empty());
 
-    auto ctor2 = ms.get_constructor<alias(int*)>();
-    BOOST_TEST(!ctor2.empty());
+  auto ctor2 = ms.get_constructor<alias(int*)>();
+  BOOST_TEST(!ctor2.empty());
 
-    auto ctor3 = ms.get_constructor<alias(const int*)>();
-    BOOST_TEST(!ctor3.empty());
+  auto ctor3 = ms.get_constructor<alias(const int*)>();
+  BOOST_TEST(!ctor3.empty());
 
-    auto ctor4 = ms.get_constructor<alias(const volatile int*)>();
-    BOOST_TEST(!ctor4.empty());
+  auto ctor4 = ms.get_constructor<alias(const volatile int*)>();
+  BOOST_TEST(!ctor4.empty());
 
-    auto ctor5 = ms.get_constructor<alias(const std::string&)>();
-    BOOST_TEST(!ctor5.empty());
+  auto ctor5 = ms.get_constructor<alias(const std::string&)>();
+  BOOST_TEST(!ctor5.empty());
 
-    auto ctor6 = ms.get_constructor<alias(const volatile std::string*)>();
-    BOOST_TEST(!ctor6.empty());
+  auto ctor6 = ms.get_constructor<alias(const volatile std::string*)>();
+  BOOST_TEST(!ctor6.empty());
 
-    v = ms.get_mem_fn<alias, void(int*)>("type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(int*)>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias, void(const int*)>("type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(const int*)>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias, void(const volatile int*)>("type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(const volatile int*)>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias, void(std::string*)>("type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(std::string*)>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias, void(const std::string*)>("type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(const std::string*)>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias, void(const volatile std::string*)>("type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(const volatile std::string*)>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias, void(const std::string&)>("type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(const std::string&)>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias, void(const space::test_template_class<>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(void (*)(const char* volatile))>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias, void(const space::test_template_class<void(int)>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(const volatile char* const* volatile*&&)>(
+    "type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias, void(const space::test_template_class<int>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<const alias, void(const char*)>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias,
-        void(const space::test_template_class<std::string>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<volatile alias, void(const char*)>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<
-        alias, void(const space::test_template_class<char, int, std::string>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<const volatile alias, void(const char*)>("type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<
-        alias, void(const space::test_template_class_have_default_args<int>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(const space::test_template_class<>&)>(
+    "type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<
-        alias,
-        void(const space::test_template_class_have_default_args<int, double>&)>(
-        "type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(const space::test_template_class<void(int)>&)>(
+    "type_test");
+  BOOST_TEST(!v.empty());
 
-    v = ms.get_mem_fn<alias,
-        void(const space::test_template_class_have_default_args<
-            int, double, std::string>&)>("type_test");
-    BOOST_TEST(!v.empty());
+  v = ms.get_mem_fn<alias, void(const space::test_template_class<int>&)>(
+    "type_test");
+  BOOST_TEST(!v.empty());
 
-    auto dtor = ms.get_destructor<alias>();
+  v =
+    ms.get_mem_fn<alias, void(const space::test_template_class<std::string>&)>(
+      "type_test");
+  BOOST_TEST(!v.empty());
 
-    BOOST_TEST(!dtor.empty());
+  v =
+    ms.get_mem_fn<alias,
+                  void(
+                    const space::test_template_class<char, int, std::string>&)>(
+      "type_test");
+  BOOST_TEST(!v.empty());
 
-    return boost::report_errors();
+  v =
+    ms.get_mem_fn<alias,
+                  void(
+                    const space::test_template_class_have_default_args<int>&)>(
+      "type_test");
+  BOOST_TEST(!v.empty());
+
+  v = ms.get_mem_fn<
+    alias,
+    void(const space::test_template_class_have_default_args<int, double>&)>(
+    "type_test");
+  BOOST_TEST(!v.empty());
+
+  v = ms.get_mem_fn<
+    alias,
+    void(const space::
+           test_template_class_have_default_args<int, double, std::string>&)>(
+    "type_test");
+  BOOST_TEST(!v.empty());
+
+  auto dtor = ms.get_destructor<alias>();
+
+  BOOST_TEST(!dtor.empty());
+
+  return boost::report_errors();
 }
 
 #else
-int main() { return 0; }
+int
+main()
+{
+  return 0;
+}
 #endif

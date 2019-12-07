@@ -93,10 +93,10 @@ namespace parser
     struct dummy;
 
     template <typename T>
-    std::string get_type(const mangled_storage_impl & ms, dummy<T>*);
+    std::string parse_type_helper(const mangled_storage_impl & ms, dummy<T>*);
 
     template <typename... T, template <typename...> class Tn>
-    std::string get_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*);
+    std::string parse_type_helper(const mangled_storage_impl & ms, dummy<Tn<T...>>*);
 
     template <typename... T, template <typename...> class Tn>
     std::string parse_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*);
@@ -112,6 +112,85 @@ namespace parser
 
     std::string parse_type(const mangled_storage_impl & ms, dummy<>*);
 
+    template<typename T>
+    std::string
+    type_name(const mangled_storage_impl &);
+
+    template<typename T>
+    using rm_ref = typename remove_reference<T>::type;
+    template<typename T>
+    using rm_cvref = typename remove_cv<rm_ref<T>>::type;
+    template<typename T>
+    using rm_ptr_cvref = typename remove_pointer<rm_cvref<T>>::type;
+
+    //The purpose of this class template is to separate the pure type from the rule name from the target type
+    template<typename T>
+    struct pure_type
+    {
+        typedef T type;
+        inline static std::string type_rule() { return ""; }
+    };
+
+    template<typename T>
+    struct pure_type<T*>
+    {
+        typedef typename pure_type<T>::type type;
+        inline static std::string type_rule()
+        {
+            return pure_type<T>::type_rule() + "*";
+        }
+    };
+
+    template<typename T>
+    struct pure_type<T const>
+    {
+        typedef typename pure_type<T>::type type;
+        inline static std::string type_rule()
+        {
+            return pure_type<T>::type_rule() + " const";
+        }
+    };
+
+    template<typename T>
+    struct pure_type<T volatile>
+    {
+        typedef typename pure_type<T>::type type;
+        inline static std::string type_rule()
+        {
+            return pure_type<T>::type_rule() + " volatile";
+        }
+    };
+
+    template<typename T>
+    struct pure_type<T const volatile>
+    {
+        typedef typename pure_type<T>::type type;
+        inline static std::string type_rule()
+        {
+            return pure_type<T>::type_rule() + " const volatile";
+        }
+    };
+
+    template<typename T>
+    struct pure_type<T&>
+    {
+        typedef typename pure_type<T>::type type;
+        inline static std::string type_rule()
+        {
+            return pure_type<T>::type_rule() + "&";
+        }
+    };
+
+    template<typename T>
+    struct pure_type<T&&>
+    {
+        typedef typename pure_type<T>::type type;
+        inline static std::string type_rule()
+        {
+            return pure_type<T>::type_rule() + "&&";
+        }
+    };
+
     inline std::string const_rule_impl(true_type )  {return " const";}
     inline std::string const_rule_impl(false_type)  {return "";}
     template<typename T>
@@ -126,45 +205,22 @@ namespace parser
     inline std::string reference_rule_impl(true_type,  false_type) {return "&" ;}
     inline std::string reference_rule_impl(false_type, true_type ) {return "&&";}
 
-
     template<typename T>
     std::string reference_rule() {using t_l = is_lvalue_reference<T>; using t_r = is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
 
-    inline std::string pointer_rule_impl(true_type )  {return "*";}
-    inline std::string pointer_rule_impl(false_type)  {return "";}
-    template<typename T>
-    std::string pointer_rule() {using t = is_pointer<typename remove_reference<T>::type>; return pointer_rule_impl(t());}
-
-    template <typename T>
-    using no_ref = typename remove_reference<T>::type;
-    template <typename T>
-    using no_cvref = typename remove_cv<no_ref<T>>::type;
-    template <typename T>
-    using no_ptr_cvref = typename remove_pointer<no_cvref<T>>::type;
-
     //it takes a string, because it may be overloaded.
-    template<typename T>
-    std::string type_rule(const std::string & type_name)
-    {
-        return type_name + const_rule<no_ptr_cvref<T>>() +
-               volatile_rule<no_ptr_cvref<T>>() + pointer_rule<T>() +
-               const_rule<T>() + volatile_rule<T>() + reference_rule<T>();
-    }
-
     template<typename Return, typename Arg>
     std::string arg_list(const mangled_storage_impl & ms, Return (*)(Arg))
     {
         using namespace std;
-        using type = dummy<Arg>*;
-        return parse_type(ms, type());
+        return type_name<Arg>(ms);
     }
 
     template<typename Return, typename First, typename Second, typename ...Args>
     std::string arg_list(const mangled_storage_impl & ms, Return (*)(First, Second, Args...))
     {
-        using first_type = dummy<First>*;
         using next_type = Return (*)(Second, Args...);
-        return parse_type(ms, first_type()) + ", " + arg_list(ms, next_type());
+        return type_name<First>(ms) + ", " + arg_list(ms, next_type());
     }
 
     template<typename Return>
@@ -175,42 +231,46 @@ namespace parser
 
     //! implement
     template <typename T>
-    inline std::string get_type(const mangled_storage_impl & ms, dummy<T>*) {
-        auto str = ms.get_name<T>();
-        return str;
+    std::string parse_type_helper(const mangled_storage_impl & ms, dummy<T>*) {
+        return  ms.get_name<T>();
     }
 
     template <typename... T, template <typename...> class Tn>
-    inline std::string get_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*) {
-        using namespace std;
+    std::string parse_type_helper(const mangled_storage_impl & ms, dummy<Tn<T...>>*) {
         using type = dummy<Tn<T...>>*;
         return parse_type(ms, type());
     }
 
     template <typename R, typename... Args>
-    inline std::string parse_type(const mangled_storage_impl & ms, dummy<R(Args...)>*) {
+    std::string parse_type(const mangled_storage_impl & ms, dummy<R(*)(Args...)>*) {
+        using args_type = dummy<Args...>*;
+        using return_type = dummy<R>*;
+        return parse_type(ms, return_type()) + " (*)(" + parse_type(ms, args_type()) + ")";
+    }
+
+    template <typename R, typename... Args>
+    std::string parse_type(const mangled_storage_impl & ms, dummy<R(Args...)>*) {
         using args_type = dummy<Args...>*;
         using return_type = dummy<R>*;
         return parse_type(ms, return_type()) + " (" + parse_type(ms, args_type()) + ")";
     }
 
     template <typename T>
-    inline std::string parse_type(const mangled_storage_impl & ms, dummy<T>*) {
-        using pure_type = no_ptr_cvref<T>;
-        using type = dummy<no_ptr_cvref<pure_type>>*;
-        auto str = get_type(ms, type());
-        return type_rule<T>(str);
+    std::string parse_type(const mangled_storage_impl & ms, dummy<T>*) {
+        using type = dummy<typename pure_type<T>::type>*;
+        auto str = parse_type_helper(ms, type());
+        return str + pure_type<T>::type_rule();
     }
 
     template <typename T1, typename T2, typename... T3>
-    inline std::string parse_type(const mangled_storage_impl & ms, dummy<T1, T2, T3...>*) {
+    std::string parse_type(const mangled_storage_impl & ms, dummy<T1, T2, T3...>*) {
         using first_type = dummy<T1>*;
         using next_type = dummy<T2, T3...>*;
         return parse_type(ms, first_type()) + ", " + parse_type(ms, next_type());
     }
 
     template <typename... T, template <typename...> class Tn>
-    inline std::string parse_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*) {
+    std::string parse_type(const mangled_storage_impl & ms, dummy<Tn<T...>>*) {
         using next_type = dummy<T...>*;
         std::string str = ms.get_name<Tn<T...>>();
         auto frist = str.find_first_of("<");
@@ -220,8 +280,17 @@ namespace parser
         return template_name + "<" + args_name + (last_ch == '>' ? " >" : ">");
     }
 
-    inline std::string parse_type(const mangled_storage_impl &, dummy<>*) {
+    std::string parse_type(const mangled_storage_impl &, dummy<>*) {
         return "";
+    }
+
+    template<typename T>
+    std::string
+    type_name(const mangled_storage_impl &ms)
+    {
+        using namespace parser;
+        using type = dummy<T>*;
+        return  parse_type(ms, type());
     }
 }
 

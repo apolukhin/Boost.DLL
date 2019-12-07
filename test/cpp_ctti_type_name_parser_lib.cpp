@@ -46,6 +46,11 @@ public:
   void type_test(const std::string*);
   void type_test(const volatile std::string*);
   void type_test(const std::string&);
+  void type_test(void (*)(const char* volatile));
+  void type_test(volatile const char* const* volatile*&&);
+  void type_test(const char*) const;
+  void type_test(const char*) volatile;
+  void type_test(const char*) const volatile;
   void type_test(const test_template_class<>&);
   void type_test(const test_template_class<void(int)>&);
   void type_test(const test_template_class<int>&);
@@ -85,6 +90,27 @@ cpp_plugin_type_pasrser::type_test(const volatile std::string*)
 void
 cpp_plugin_type_pasrser::type_test(const std::string&)
 {}
+
+void
+cpp_plugin_type_pasrser::type_test(void (*)(const char* volatile))
+{}
+
+void
+cpp_plugin_type_pasrser::type_test(const volatile char* const* volatile*&&)
+{}
+
+void
+cpp_plugin_type_pasrser::type_test(const char*) const
+{}
+
+void
+cpp_plugin_type_pasrser::type_test(const char*) volatile
+{}
+
+void
+cpp_plugin_type_pasrser::type_test(const char*) const volatile
+{}
+
 void
 cpp_plugin_type_pasrser::type_test(const test_template_class<>&)
 {}
