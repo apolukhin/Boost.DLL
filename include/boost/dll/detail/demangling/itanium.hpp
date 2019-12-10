@@ -116,12 +116,6 @@ namespace parser
     std::string
     type_name(const mangled_storage_impl &);
 
-    template<typename T>
-    using rm_ref = typename remove_reference<T>::type;
-    template<typename T>
-    using rm_cvref = typename remove_cv<rm_ref<T>>::type;
-    template<typename T>
-    using rm_ptr_cvref = typename remove_pointer<rm_cvref<T>>::type;
 
     //The purpose of this class template is to separate the pure type from the rule name from the target type
     template<typename T>
