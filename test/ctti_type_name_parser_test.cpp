@@ -53,6 +53,8 @@ main(int argc, char* argv[])
 
   for (auto& s : ms.get_storage()) {
     std::cout << s.demangled << std::endl;
+    std::cout << s.mangled << std::endl;
+    std::cout << std::endl;
   }
 
   std::string v;
