@@ -49,7 +49,7 @@ project
     lib library2 : ../example/tutorial7/library2.cpp : <link>shared ;
     lib refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <link>shared ;
     lib cpp_plugin : cpp_test_library.cpp : <link>shared ;
-    lib cpp_mangle_plugin : cpp_ctti_type_name_parser_lib.cpp : <link>shared ;
+    lib cpp_mangle_plugin : cpp_ctti_type_name_parser_lib.cpp : <link>shared <define>_GLIBCXX_USE_CXX11_ABI=1 ;
 
     test-suite boostdll
         :
