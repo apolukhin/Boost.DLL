@@ -48,9 +48,12 @@ environment:
       TOOLSET: clang-win
       CXXSTD: 14,17
       ADDRMD: 64
+    # Some issue with stdcxx=14 builds:
+    # clang-cl: error: linker command failed with exit code 1181 (use -v to see invocation)
+    # "clang-cl.exe" "clang-cl.exe" -m64 -m64 /link /link /incremental:no /incremental:no /manifest /manifest /DLL /subsystem:console /subsystem:console /out:"..\..\..\bin.v2\libs\dll\test\clang-win-9.0.1\release\address-model-64\cxxstd-14-iso\threading-multi\library1-clangw9-mt-x64-1_73.dll" /IMPLIB:"..\..\..\bin.v2\libs\dll\test\clang-win-9.0.1\release\address-model-64\cxxstd-14-iso\threading-multi\library1-clangw9-mt-x64-1_73.lib"    @"..\..\..\bin.v2\libs\dll\test\clang-win-9.0.1\release\address-model-64\cxxstd-14-iso\threading-multi\library1-clangw9-mt-x64-1_73.dll.rsp"
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       TOOLSET: clang-win
-      CXXSTD: 14,17,2a
+      CXXSTD: 17,2a
       ADDRMD: 32,64
       
     # TODO: Both Cygwins have problems with <link.h> and `dladdr`
