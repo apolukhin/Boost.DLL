@@ -434,14 +434,14 @@ void get(const smart_library& sm, const std::string &name);
 #endif
 
 template<class T>
-T& get(const smart_library& sm, const std::string &name, typename boost::enable_if<boost::is_object<T>,T>::type* = nullptr)
+typename boost::enable_if<boost::is_object<T>, T&>::type get(const smart_library& sm, const std::string &name)
 
 {
     return sm.get_variable<T>(name);
 }
 
 template<class T>
-auto get(const smart_library& sm, const std::string &name, typename boost::enable_if<boost::is_function<T>>::type* = nullptr)
+typename boost::enable_if<boost::is_function<T>, T&>::type get(const smart_library& sm, const std::string &name)
 {
     return sm.get_function<T>(name);
 }
