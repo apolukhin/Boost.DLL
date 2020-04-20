@@ -206,16 +206,20 @@ private:
 
         return h;
     }
-    
-    static exports_t exports(std::ifstream& fs, const header_t& h) {
-        exports_t exports;
 
+    static exports_t exports(std::ifstream& fs, const header_t& h) {
         static const unsigned int IMAGE_DIRECTORY_ENTRY_EXPORT_ = 0;
         const std::size_t exp_virtual_address = h.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT_].VirtualAddress;
+
+        if (exp_virtual_address == 0) {
+            // The virtual address can be 0 in case there are no exported symbols
+            return exports_t{};
+        }
 
         const std::size_t real_offset = get_file_offset(fs, exp_virtual_address, h);
         BOOST_ASSERT(real_offset);
 
+        exports_t exports;
         fs.seekg(real_offset);
         read_raw(fs, exports);
 
@@ -223,6 +227,8 @@ private:
     }
 
     static std::size_t get_file_offset(std::ifstream& fs, std::size_t virtual_address, const header_t& h) {
+        BOOST_ASSERT(virtual_address);
+
         section_t image_section_header;
         
         {   // fs.seekg to the beginning on section headers
@@ -279,6 +285,11 @@ public:
         const header_t h = header(fs);
         const exports_t exprt = exports(fs, h);
         const std::size_t exported_symbols = exprt.NumberOfNames;
+
+        if (exported_symbols == 0) {
+            return ret;
+        }
+
         const std::size_t fixed_names_addr = get_file_offset(fs, exprt.AddressOfNames, h);
 
         ret.reserve(exported_symbols);
