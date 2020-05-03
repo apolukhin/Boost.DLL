@@ -9,7 +9,7 @@
 
 #include <boost/predef.h>
 
-#if (__cplusplus >= 201103L)
+#if (__cplusplus >= 201103L) || (defined(_MSVC_LANG) && _MSVC_LANG < 201103L)
 // Make sure that it at least compiles
 #  include <boost/dll/smart_library.hpp>
 #endif

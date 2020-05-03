@@ -16,7 +16,7 @@
 #include <boost/dll/import_mangled.hpp>
 #include <memory>
 
-#if (__cplusplus < 201103L)
+#if (__cplusplus < 201103L) || (defined(_MSVC_LANG) && _MSVC_LANG < 201103L)
 #  error This file requires C++11 at least!
 #endif
 
