@@ -183,7 +183,7 @@ int main(int argc, char* argv[]) {
     int& reference_to_internal_integer = sl.get<int&>("reference_to_internal_integer");
     BOOST_TEST(reference_to_internal_integer == 0xFF0000);
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     int&& rvalue_reference_to_internal_integer = sl.get<int&&>("rvalue_reference_to_internal_integer");
     BOOST_TEST(rvalue_reference_to_internal_integer == 0xFF0000);
 #endif

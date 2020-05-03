@@ -8,31 +8,10 @@
 # See https://svn.boost.org/trac/boost/wiki/TravisCoverals for description of this file
 # and how it can be used with Boost libraries.
 #
-# File revision #9 (DIFF)
+# File revision #10 (DIFF)
 
-sudo: false
 language: cpp
 os: linux
-
-env:
-  global:
-    # Autodetect Boost branch by using the following code: - BOOST_BRANCH=$TRAVIS_BRANCH
-    # or just directly specify it
-    - BOOST_BRANCH=develop && [ "$TRAVIS_BRANCH" == "master" ] && BOOST_BRANCH=master || true
-
-    # Files, which coverage results must be ignored (files from other projects).
-    # Example: - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/*'
-    - IGNORE_COVERAGE='*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*'
-
-    # boost-local/libs/ folder to put this library into. This may be useful, if you're for example running Travis
-    # from `Boost.DLL` repo while Boost already has `dll` and with to replace `dll` with content of`Boost.DLL`.
-    #
-    # Otherwise just leave the default value - BOOST_LIBS_FOLDER=$(basename $TRAVIS_BUILD_DIR)
-    - BOOST_LIBS_FOLDER=dll # DIFF
-
-    # Global options for sanitizers
-    - UBSAN_OPTIONS=print_stacktrace=1
-    - LSAN_OPTIONS=verbosity=1:log_threads=1
 
 # `--coverage` flags required to generate coverage info for Coveralls
 matrix:
@@ -109,11 +88,30 @@ addons:
     - python-yaml
 
 before_install:
+  # Autodetect Boost branch by using the following code: - BOOST_BRANCH=$TRAVIS_BRANCH
+  # or just directly specify it
+  - BOOST_BRANCH=develop && [ "$TRAVIS_BRANCH" == "master" ] && BOOST_BRANCH=master || true
+
+  # Files, which coverage results must be ignored (files from other projects).
+  # Example: - IGNORE_COVERAGE='*/boost/progress.hpp */filesystem/src/*'
+  - IGNORE_COVERAGE='*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*'
+
+  # boost-local/libs/ folder to put this library into. This may be useful, if you're for example running Travis
+  # from `Boost.DLL` repo while Boost already has `dll` and with to replace `dll` with content of`Boost.DLL`.
+  #
+  # Otherwise just leave the default value - BOOST_LIBS_FOLDER=$(basename $TRAVIS_BUILD_DIR)
+  - BOOST_LIBS_FOLDER=dll # DIFF
+
+  # Global options for sanitizers
+  - UBSAN_OPTIONS=print_stacktrace=1
+  - LSAN_OPTIONS=verbosity=1:log_threads=1
+
   # Cloning minimal set of Boost libraries
   - BOOST=$HOME/boost-local
   - git clone -b $BOOST_BRANCH --depth 10 https://github.com/boostorg/boost.git $BOOST
   - cd $BOOST
-  - git submodule update --init --depth 10 tools/build tools/boostdep
+  - git submodule update --init --depth 10 tools/build tools/boostdep tools/inspect libs/filesystem
+  - python tools/boostdep/depinst/depinst.py --git_args "--depth 10 --jobs 2" $BOOST/libs/filesystem
 
   # Replacing Boost module with this project and installing Boost dependencies
   - echo "Testing $BOOST/libs/$BOOST_LIBS_FOLDER moved from $TRAVIS_BUILD_DIR, branch $BOOST_BRANCH"
@@ -125,6 +123,7 @@ before_install:
   # Adding missing toolsets and preparing Boost headers
   - ./bootstrap.sh || ( echo === bootstrap.log === ; cat bootstrap.log ; exit 1 ; )
   - ./b2 headers
+  - ./b2 -j4 variant=debug tools/inspect/build
   - |-
     echo "using gcc ;" >> ~/user-config.jam
     echo "using clang ;" >> ~/user-config.jam
@@ -139,6 +138,7 @@ before_install:
 
 script:
   - sh -c "../../../b2 -j2 $B2_ARGS"
+  - (cd .. && ../../dist/bin/inspect -license -copyright -crlf -end -path_name -tab -ascii -apple_macro -assert_macro -deprecated_macro -minmax)
 
 after_success:
   # Copying Coveralls data to a separate folder
