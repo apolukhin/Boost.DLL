@@ -7,6 +7,7 @@
 
 // For more information, see http://www.boost.org
 
+#include <boost/config.hpp>
 #include <boost/predef.h>
 
 #if (__cplusplus >= 201103L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
