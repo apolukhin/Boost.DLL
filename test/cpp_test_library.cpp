@@ -1,5 +1,5 @@
 // Copyright 2016 Klemens Morgenstern
-// Copyright 2017-2019 Antony Polukhin
+// Copyright 2017-2020 Antony Polukhin
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -7,9 +7,9 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/predef.h>
+#include <boost/config.hpp>
 
-#if (__cplusplus >= 201402L) || (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(14,0,0))
+#if (__cplusplus >= 201402L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
 
 #include <boost/dll/config.hpp>
 #include <boost/variant.hpp>

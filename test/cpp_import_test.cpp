@@ -6,9 +6,9 @@
 
 // For more information, see http://www.boost.org
 
-#include <boost/predef.h>
+#include <boost/config.hpp>
 
-#if (__cplusplus >= 201402L) || (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(14,0,0))
+#if (__cplusplus >= 201402L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
 
 #include "../example/b2_workarounds.hpp"
 
