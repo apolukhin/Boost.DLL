@@ -41,6 +41,7 @@ project
 
     # our test lib for shared library tests
     lib test_library : test_library.cpp : <link>shared ;
+    lib empty_library : empty_library.cpp : <link>shared ;
     lib getting_started_library : ../example/getting_started_library.cpp : <link>shared ;
     lib my_plugin_sum : ../example/tutorial1/my_plugin_sum.cpp : <link>shared ;
     lib my_plugin_aggregator : ../example/tutorial2/my_plugin_aggregator.cpp : <link>shared ;
@@ -67,6 +68,7 @@ project
         [ run shared_library_errors.cpp : : test_library : <test-info>always_show_run_output <link>shared ]
         [ run structures_tests.cpp ]
         [ run library_info_test.cpp ../example/tutorial4/static_plugin.cpp : : test_library : <test-info>always_show_run_output <link>shared ]
+        [ run empty_library_info_test.cpp : : empty_library : <test-info>always_show_run_output <link>shared ]
         [ run ../example/getting_started.cpp : : getting_started_library : <link>shared ]
         [ run ../example/tutorial1/tutorial1.cpp : : my_plugin_sum : <link>shared ]
         [ run ../example/tutorial2/tutorial2.cpp : : my_plugin_aggregator : <link>shared ]

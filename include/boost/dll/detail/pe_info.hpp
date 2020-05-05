@@ -210,16 +210,17 @@ private:
     static exports_t exports(std::ifstream& fs, const header_t& h) {
         static const unsigned int IMAGE_DIRECTORY_ENTRY_EXPORT_ = 0;
         const std::size_t exp_virtual_address = h.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT_].VirtualAddress;
+        exports_t exports;
 
         if (exp_virtual_address == 0) {
             // The virtual address can be 0 in case there are no exported symbols
-            return exports_t{};
+            exports.NumberOfFunctions = 0;
+            return exports;
         }
 
         const std::size_t real_offset = get_file_offset(fs, exp_virtual_address, h);
         BOOST_ASSERT(real_offset);
 
-        exports_t exports;
         fs.seekg(real_offset);
         read_raw(fs, exports);
 
