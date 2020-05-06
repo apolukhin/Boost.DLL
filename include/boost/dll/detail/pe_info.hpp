@@ -214,7 +214,7 @@ private:
 
         if (exp_virtual_address == 0) {
             // The virtual address can be 0 in case there are no exported symbols
-            exports.NumberOfFunctions = 0;
+            std::memset(&exports, 0, sizeof(exports));
             return exports;
         }
 
