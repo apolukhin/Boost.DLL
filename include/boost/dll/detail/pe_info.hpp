@@ -1,5 +1,5 @@
 // Copyright 2014 Renato Tegon Forti, Antony Polukhin.
-// Copyright 2015-2019 Antony Polukhin.
+// Copyright 2015-2020 Antony Polukhin.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -16,6 +16,7 @@
 
 #include <cstring>
 #include <fstream>
+#include <string> // for std::getline
 
 #include <boost/assert.hpp>
 #include <boost/cstdint.hpp>
@@ -300,7 +301,7 @@ public:
             fs.seekg(fixed_names_addr + i * sizeof(name_offset));
             read_raw(fs, name_offset);
             fs.seekg(get_file_offset(fs, name_offset, h));
-            getline(fs, symbol_name, '\0');
+            std::getline(fs, symbol_name, '\0');
             ret.push_back(symbol_name);
         }
 
@@ -361,7 +362,7 @@ public:
             fs.seekg(fixed_names_addr + i * sizeof(ptr));
             read_raw(fs, ptr);
             fs.seekg(get_file_offset(fs, ptr, h));
-            getline(fs, symbol_name, '\0');
+            std::getline(fs, symbol_name, '\0');
             ret.push_back(symbol_name);
         }
 
