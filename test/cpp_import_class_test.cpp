@@ -86,7 +86,7 @@ int main(int argc, char* argv[])
         BOOST_TEST((cl->*func)(3.,2.) == 6.);
         BOOST_TEST((cl->*func)(1 ,2 ) == 3 );
 
-        auto fun2 = cl.import<double(double, double), int(int, int)>("func");
+        auto fun2 = cl.import_symbol<double(double, double), int(int, int)>("func");
 
         BOOST_TEST((cl->*fun2)(3.,2.) == 6.);
         BOOST_TEST((cl->*fun2)(5 ,2 ) == 7 );

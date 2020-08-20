@@ -36,7 +36,7 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
 
     {
         boost::function<say_hello_func> sz2
-            = import<say_hello_func>(shared_library_path, "say_hello");
+            = import_symbol<say_hello_func>(shared_library_path, "say_hello");
 
         sz2();
         sz2();
@@ -74,7 +74,7 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
     }
 
     {
-        boost::shared_ptr<int> i = import<int>(shared_library_path, "integer_g");
+        boost::shared_ptr<int> i = import_symbol<int>(shared_library_path, "integer_g");
         BOOST_TEST(*i == 100);
 
         boost::shared_ptr<int> i2;
@@ -97,7 +97,7 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
     }
 
     {
-        boost::shared_ptr<const int> i = import<const int>(shared_library_path, "const_integer_g");
+        boost::shared_ptr<const int> i = import_symbol<const int>(shared_library_path, "const_integer_g");
         BOOST_TEST(*i == 777);
 
         boost::shared_ptr<const int> i2 = i;

@@ -22,7 +22,7 @@ int main() {
     // OPTION #0, requires C++11 compatible compiler that understands GetStdHandle_t signature.
 /*<-*/
 #if defined(_MSC_VER) && !defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) /*->*/
-    auto get_std_handle = dll::import<GetStdHandle_t>(
+    auto get_std_handle = dll::import_symbol<GetStdHandle_t>(
         "Kernel32.dll",
         "GetStdHandle",
         boost::dll::load_mode::search_system_folders
