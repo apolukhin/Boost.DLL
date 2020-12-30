@@ -16,7 +16,7 @@ os: linux
 # `--coverage` flags required to generate coverage info for Coveralls
 matrix:
   include:
-    - env: B2_ARGS='cxxstd=98,03,11,14,1y toolset=gcc-6 cxxflags="--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD -fno-rtti" linkflags="--coverage -lasan -lubsan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.3"'
+    - env: B2_ARGS='cxxstd=98,03,11,14,1y toolset=gcc-6 cxxflags="--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD -fno-rtti" linkflags="--coverage -lasan -lubsan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.3"' GCOVTOOL='gcov-6'
       name: "GCC-6, no RTTI"
       addons:
         apt:
@@ -24,7 +24,7 @@ matrix:
           packages: g++-6
 
     # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
-    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=gcc-8 visibility=global cxxflags="--coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD" linkflags="--coverage  -lasan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
+    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=gcc-8 visibility=global cxxflags="--coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD" linkflags="--coverage  -lasan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"' GCOVTOOL='gcov-8'
       name: "GCC-8"
       sudo: required # Required by leak sanitizer
       addons:
@@ -33,7 +33,7 @@ matrix:
           packages: g++-8
 
     # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
-    - env: B2_ARGS='cxxstd=17,2a toolset=gcc-8 visibility=global cxxflags="-DBOOST_DLL_USE_STD_FS --coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -lstdc++fs -lasan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"'
+    - env: B2_ARGS='cxxstd=17,2a toolset=gcc-8 visibility=global cxxflags="-DBOOST_DLL_USE_STD_FS --coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD" linkflags="--coverage -lstdc++fs -lasan" "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"' GCOVTOOL='gcov-8'
       name: "GCC-8, C++ Standard FS"
       sudo: required # Required by leak sanitizer
       addons:
@@ -41,7 +41,7 @@ matrix:
           sources: ubuntu-toolchain-r-test
           packages: g++-8
 
-    - env: B2_ARGS='cxxstd=98,0x toolset=gcc-4.6 cxxflags="--coverage -DBOOST_TRAVISCI_BUILD" linkflags="--coverage"'
+    - env: B2_ARGS='cxxstd=98,0x toolset=gcc-4.6 cxxflags="--coverage -DBOOST_TRAVISCI_BUILD" linkflags="--coverage"' GCOVTOOL='gcov-4.6'
       name: "GCC-4.6"
       addons:
         apt:
@@ -59,7 +59,7 @@ matrix:
     # `-fsanitize=enum` causes "boost/dll/shared_library_load_mode.hpp:226:19: runtime error: load of value 4278190079, which is not a valid value for type 'boost::dll::load_mode::type'"
     # `--coverage` causes SegFailts after passing the tests and exiting main().
     # Link problems with ASAN
-    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="-DBOOST_TRAVISCI_BUILD"'
+    - env: B2_ARGS='cxxstd=98,03,11,14,1z toolset=clang-5 cxxflags="-DBOOST_TRAVISCI_BUILD"' GCOVTOOL='gcov_for_clang.sh'
       name: "Clang-5"
       dist: trusty
       addons:
@@ -69,7 +69,7 @@ matrix:
 
     # `--coverage` causes SegFailts after passing the tests and exiting main().
     # Link problems with ASAN
-    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="-DBOOST_TRAVISCI_BUILD"'
+    - env: B2_ARGS='cxxstd=03,11,14 toolset=clang-libc++ cxxflags="-DBOOST_TRAVISCI_BUILD"' GCOVTOOL='gcov_for_clang.sh'
       name: "Clang-3.8, libc++"
       addons:
         apt:
@@ -147,9 +147,12 @@ after_success:
   - find ../../../bin.v2/ -name "*.gcno" -exec cp "{}" $TRAVIS_BUILD_DIR/coverals/ \;
   - find ../../../bin.v2/ -name "*.da" -exec cp "{}" $TRAVIS_BUILD_DIR/coverals/ \;
   - find ../../../bin.v2/ -name "*.no" -exec cp "{}" $TRAVIS_BUILD_DIR/coverals/ \;
-  - wget https://github.com/linux-test-project/lcov/archive/v1.12.zip
-  - unzip v1.12.zip
-  - LCOV="`pwd`/lcov-1.12/bin/lcov --gcov-tool gcov-6"
+  - wget https://github.com/linux-test-project/lcov/archive/v1.14.zip
+  - unzip v1.14.zip
+  - LCOV="`pwd`/lcov-1.14/bin/lcov --gcov-tool $GCOVTOOL"
+  - mkdir -p ~/.local/bin
+  - echo -e '#!/bin/bash\nexec llvm-cov gcov "$@"' > ~/.local/bin/gcov_for_clang.sh
+  - chmod 755 ~/.local/bin/gcov_for_clang.sh
 
   # Preparing Coveralls data by changind data format to a readable one
   - echo "$LCOV --directory $TRAVIS_BUILD_DIR/coverals --base-directory `pwd` --capture --output-file $TRAVIS_BUILD_DIR/coverals/coverage.info"
