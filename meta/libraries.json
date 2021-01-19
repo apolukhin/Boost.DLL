@@ -11,5 +11,6 @@
   "std": [ "proposal" ],
   "category": [
     "System"
-  ]
+  ],
+  "cxxstd": "03"
 }
