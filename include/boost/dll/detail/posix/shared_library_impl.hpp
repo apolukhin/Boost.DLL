@@ -62,7 +62,7 @@ public:
     static boost::dll::fs::path decorate(const boost::dll::fs::path & sl) {
         boost::dll::fs::path actual_path = (
             std::strncmp(sl.filename().string().c_str(), "lib", 3)
-            ? boost::dll::fs::path((sl.has_parent_path() ? sl.parent_path() / L"lib" : L"lib").native() + sl.filename().native())
+            ? boost::dll::fs::path((sl.has_parent_path() ? sl.parent_path() / "lib" : "lib").native() + sl.filename().native())
             : sl
         );
         actual_path += suffix();
