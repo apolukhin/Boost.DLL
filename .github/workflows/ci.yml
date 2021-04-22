@@ -45,9 +45,10 @@ jobs:
             compiler: clang++-10
             cxxstd: "03,11,14,17,2a"
             os: ubuntu-20.04
-          - toolset: clang
-            cxxstd: "03,11,14,17,2a"
-            os: macos-10.15
+          # TODO: fix and uncomment
+          #- toolset: clang
+          #  cxxstd: "03,11,14,17,2a"
+          #  os: macos-10.15
 
     runs-on: ${{matrix.os}}
 
