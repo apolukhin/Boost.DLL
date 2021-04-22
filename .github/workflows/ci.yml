@@ -29,33 +29,6 @@ jobs:
           - toolset: gcc-9
             cxxstd: "03,11,14,17,2a"
             os: ubuntu-18.04
-          - toolset: gcc-10
-            cxxstd: "17,2a"
-            os: ubuntu-18.04
-            cxxflags: "cxxflags=--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined -DBOOST_DLL_USE_STD_FS -DBOOST_TRAVISCI_BUILD"
-            linkflags: "linkflags=--coverage -lasan -lubsan"
-            launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
-            gcov_tool: "gcov-10"
-          - toolset: gcc-10
-            cxxstd: "03,11,14,17,2a"
-            os: ubuntu-18.04
-            cxxflags: "cxxflags=--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD"
-            linkflags: "linkflags=--coverage -lasan -lubsan"
-            launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
-            gcov_tool: "gcov-10"
-          - toolset: gcc-10
-            cxxstd: "03,11,14,17,2a"
-            os: ubuntu-18.04
-            cxxflags: "cxxflags=--coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD"
-            linkflags: "linkflags=--coverage -lasan"
-            launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
-            gcov_tool: "gcov-10"
-          - toolset: gcc-10
-            cxxstd: "03,11,14,17,2a"
-            os: ubuntu-18.04
-            cxxflags: "cxxflags=--coverage -fsanitize=undefined -fno-sanitize-recover=undefined -DBOOST_TRAVISCI_BUILD"
-            linkflags: "linkflags=--coverage -lubsan"
-            gcov_tool: "gcov-10"
           - toolset: clang
             compiler: clang++-3.7
             cxxstd: "03,11,14"
@@ -75,9 +48,6 @@ jobs:
           - toolset: clang
             cxxstd: "03,11,14,17,2a"
             os: macos-10.15
-            cxxflags: "cxxflags=-fsanitize=address -DBOOST_TRAVISCI_BUILD"
-            linkflags: "linkflags=-fsanitize=address"
-            
 
     runs-on: ${{matrix.os}}
 
