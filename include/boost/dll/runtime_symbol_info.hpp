@@ -168,6 +168,8 @@ namespace detail {
     /// @cond
     // We have anonymous namespace here to make sure that `this_line_location()` method is instantiated in
     // current translation unit and is not shadowed by instantiations from other units.
+    //
+    // boost-no-inspect
     namespace {
     /// @endcond
 
