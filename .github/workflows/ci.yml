@@ -1,6 +1,6 @@
 name: CI
 
-# Diff: addtitional runs with `-DBOOST_DLL_USE_STD_FS`; launchers and `rm -rf libs/$LIBRARY/* libs/dll/*`
+# Diff: addtitional runs with `-DBOOST_DLL_USE_STD_FS`; launchers; `LIBRARY=dll` + `set LIBRARY=dll`; disabled ubsan on MacOS
 
 on:
   pull_request:
@@ -30,7 +30,7 @@ jobs:
             cxxstd: "03,11,14,17,2a"
             os: ubuntu-18.04
           - toolset: gcc-10
-            cxxstd: "03,11,14,17,2a"
+            cxxstd: "17,2a"
             os: ubuntu-18.04
             cxxflags: "cxxflags=--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined -DBOOST_DLL_USE_STD_FS"
             linkflags: "linkflags=--coverage -lasan -lubsan"
@@ -42,6 +42,19 @@ jobs:
             cxxflags: "cxxflags=--coverage -fsanitize=address,leak,undefined -fno-sanitize-recover=undefined"
             linkflags: "linkflags=--coverage -lasan -lubsan"
             launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
+            gcov_tool: "gcov-10"
+          - toolset: gcc-10
+            cxxstd: "03,11,14,17,2a"
+            os: ubuntu-18.04
+            cxxflags: "cxxflags=--coverage -fsanitize=address,leak"
+            linkflags: "linkflags=--coverage -lasan"
+            launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
+            gcov_tool: "gcov-10"
+          - toolset: gcc-10
+            cxxstd: "03,11,14,17,2a"
+            os: ubuntu-18.04
+            cxxflags: "cxxflags=--coverage -fsanitize=undefined -fno-sanitize-recover=undefined"
+            linkflags: "linkflags=--coverage -lubsan"
             gcov_tool: "gcov-10"
           - toolset: clang
             compiler: clang++-3.7
@@ -62,8 +75,8 @@ jobs:
           - toolset: clang
             cxxstd: "03,11,14,17,2a"
             os: macos-10.15
-            cxxflags: "cxxflags=-fsanitize=address,undefined -fno-sanitize-recover=undefined"
-            linkflags: "linkflags=-fsanitize=address,undefined"
+            cxxflags: "cxxflags=-fsanitize=address"
+            linkflags: "linkflags=-fsanitize=address"
             
 
     runs-on: ${{matrix.os}}
@@ -78,7 +91,7 @@ jobs:
       - name: Setup Boost
         run: |
           echo GITHUB_REPOSITORY: $GITHUB_REPOSITORY
-          LIBRARY=${GITHUB_REPOSITORY#*/}
+          LIBRARY=dll
           echo LIBRARY: $LIBRARY
           echo "LIBRARY=$LIBRARY" >> $GITHUB_ENV
           echo GITHUB_BASE_REF: $GITHUB_BASE_REF
@@ -93,8 +106,8 @@ jobs:
           cd boost-root
           git submodule update --init --depth 10 --jobs 2 tools/boostdep tools/inspect libs/filesystem
           python tools/boostdep/depinst/depinst.py --git_args "--depth 10 --jobs 3" filesystem
-          rm -rf libs/$LIBRARY/* libs/dll/*
-          cp -r $GITHUB_WORKSPACE/* libs/dll
+          rm -rf libs/$LIBRARY/*
+          cp -r $GITHUB_WORKSPACE/* libs/$LIBRARY
           python tools/boostdep/depinst/depinst.py --git_args "--depth 10 --jobs 3" $LIBRARY
           ./bootstrap.sh
           ./b2 -d0 headers
@@ -166,7 +179,7 @@ jobs:
         shell: cmd
         run: |
           echo GITHUB_REPOSITORY: %GITHUB_REPOSITORY%
-          for /f %%i in ("%GITHUB_REPOSITORY%") do set LIBRARY=%%~nxi
+          set LIBRARY=dll
           echo LIBRARY: %LIBRARY%
           echo LIBRARY=%LIBRARY%>>%GITHUB_ENV%
           echo GITHUB_BASE_REF: %GITHUB_BASE_REF%
