@@ -41,6 +41,7 @@ jobs:
             cxxflags: "cxxflags=--coverage"
             linkflags: "linkflags=--coverage"
             gcov_tool: "llvm-cov-9 gcov"
+            ignore_coverage: "*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*"
           - toolset: clang
             compiler: clang++-10
             cxxstd: "03,11,14,17,2a"
@@ -79,7 +80,7 @@ jobs:
           python tools/boostdep/depinst/depinst.py --git_args "--depth 10 --jobs 3" filesystem
           rm -rf libs/$LIBRARY/*
           cp -r $GITHUB_WORKSPACE/* libs/$LIBRARY
-          python tools/boostdep/depinst/depinst.py --git_args "--depth 10 --jobs 3" $LIBRARY
+          python tools/boostdep/depinst/depinst.py --include benchmark --include example --include examples --include tools --git_args "--depth 10 --jobs 3" $LIBRARY
           ./bootstrap.sh
           ./b2 -d0 headers
           ./b2 -j4 variant=debug tools/inspect/build
@@ -93,7 +94,7 @@ jobs:
         run: |
           cd ../boost-root
           ./b2 -j3 libs/$LIBRARY/test toolset=${{matrix.toolset}} cxxstd=${{matrix.cxxstd}} variant=debug,release "${{matrix.cxxflags}}" "${{matrix.linkflags}}" "${{matrix.launcher}}"
-          dist/bin/inspect libs/$LIBRARY/test
+          dist/bin/inspect libs/$LIBRARY
 
       - name: Prepare coverage data
         if: matrix.gcov_tool
@@ -106,7 +107,7 @@ jobs:
           unzip v1.15.zip
           LCOV="`pwd`/lcov-1.15/bin/lcov --gcov-tool $GITHUB_WORKSPACE/coveralls/gcov_wrapper.sh"
 
-          echo "$LCOV --directory $GITHUB_WORKSPACE/coveralls --base-directory `pwd`/libs/$LIBRARY/test --capture --output-file $GITHUB_WORKSPACE/coveralls/coverage.info"
+          echo "$LCOV --directory ../boost-root/bin.v2/libs/$LIBRARY/ --base-directory `pwd`/libs/$LIBRARY/test --capture --output-file $GITHUB_WORKSPACE/coveralls/coverage.info"
           $LCOV --directory ../boost-root/bin.v2/libs/$LIBRARY/ --base-directory ../boost-root/ --capture --output-file $GITHUB_WORKSPACE/coveralls/coverage.info
           $LCOV --remove $GITHUB_WORKSPACE/coveralls/coverage.info "/usr*" "*/$LIBRARY/test/*" ${{matrix.ignore_coverage}} "*/$LIBRARY/tests/*" "*/$LIBRARY/examples/*" "*/$LIBRARY/example/*" -o $GITHUB_WORKSPACE/coveralls/coverage.info
 
@@ -164,7 +165,7 @@ jobs:
           cd boost-root
           xcopy /s /e /q %GITHUB_WORKSPACE% libs\%LIBRARY%\
           git submodule update --init tools/boostdep
-          python tools/boostdep/depinst/depinst.py --git_args "--jobs 3" %LIBRARY%
+          python tools/boostdep/depinst/depinst.py --include benchmark --include example --include examples --include tools --git_args "--jobs 3" %LIBRARY%
           cmd /c bootstrap
           b2 -d0 headers
 
