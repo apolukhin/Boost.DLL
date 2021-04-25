@@ -111,7 +111,7 @@ jobs:
       - name: Run tests
         run: |
           cd ../boost-root
-          ./b2 -j3 libs/$LIBRARY/test toolset=${{matrix.toolset}} cxxstd=${{matrix.cxxstd}} variant=debug,release address-model=32,64 "${{matrix.cxxflags}}" "${{matrix.linkflags}}" "${{matrix.launcher}}"
+          ./b2 -j3 libs/$LIBRARY/test toolset=${{matrix.toolset}} cxxstd=${{matrix.cxxstd}} variant=debug,release "${{matrix.cxxflags}}" "${{matrix.linkflags}}" "${{matrix.launcher}}"
           dist/bin/inspect libs/$LIBRARY
 
       - name: Prepare coverage data
