@@ -34,15 +34,15 @@ jobs:
             cxxstd: "03,11,14,17,2a"
             os: ubuntu-18.04
             # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
-            cxxflags: "cxxflags=--coverage -fsanitize=address,leak"
+            cxxflags: "cxxflags=--coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD"
             linkflags: "linkflags=--coverage -lasan"
             launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
             gcov_tool: "gcov-9"
           - toolset: gcc-9
-            cxxstd: "03,11,14,17,2a"
+            cxxstd: "17,2a"
             os: ubuntu-18.04
             # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
-            cxxflags: "cxxflags=--coverage -fsanitize=address,leak -DBOOST_DLL_USE_STD_FS "
+            cxxflags: "cxxflags=--coverage -fsanitize=address,leak -DBOOST_DLL_USE_STD_FS -DBOOST_TRAVISCI_BUILD"
             linkflags: "linkflags=--coverage -lasan"
             launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
             gcov_tool: "gcov-9"
@@ -111,7 +111,7 @@ jobs:
       - name: Run tests
         run: |
           cd ../boost-root
-          ./b2 -j3 libs/$LIBRARY/test toolset=${{matrix.toolset}} cxxstd=${{matrix.cxxstd}} variant=debug,release "${{matrix.cxxflags}}" "${{matrix.linkflags}}" "${{matrix.launcher}}"
+          ./b2 -j3 libs/$LIBRARY/test toolset=${{matrix.toolset}} cxxstd=${{matrix.cxxstd}} variant=debug,release address-model=32,64 "${{matrix.cxxflags}}" "${{matrix.linkflags}}" "${{matrix.launcher}}"
           dist/bin/inspect libs/$LIBRARY
 
       - name: Prepare coverage data
