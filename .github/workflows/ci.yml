@@ -38,6 +38,7 @@ jobs:
             linkflags: "linkflags=--coverage -lasan"
             launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
             gcov_tool: "gcov-9"
+            ignore_coverage: "*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*"
           - toolset: gcc-9
             cxxstd: "17,2a"
             os: ubuntu-18.04
