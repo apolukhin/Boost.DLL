@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <fstream>
 #include <string> // for std::getline
+#include <vector>
 
 #include <boost/cstdint.hpp>
 

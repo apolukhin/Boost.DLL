@@ -17,6 +17,7 @@
 #include <cstring>
 #include <fstream>
 #include <string> // for std::getline
+#include <vector>
 
 #include <boost/assert.hpp>
 #include <boost/cstdint.hpp>

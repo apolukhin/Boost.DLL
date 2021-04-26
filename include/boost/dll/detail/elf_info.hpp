@@ -17,6 +17,7 @@
 #include <cstring>
 #include <fstream>
 #include <limits>
+#include <vector>
 
 #include <boost/cstdint.hpp>
 #include <boost/throw_exception.hpp>
