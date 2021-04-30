@@ -229,10 +229,11 @@ int main(int argc, char* argv[])
         try {
 #if BOOST_OS_WINDOWS
             boost::dll::shared_library("winmm.dll");
+            BOOST_TEST(false);
 #elif BOOST_OS_LINUX
             boost::dll::shared_library("libdl.so");
-#endif
             BOOST_TEST(false);
+#endif
         } catch (...) {}
    }
 
