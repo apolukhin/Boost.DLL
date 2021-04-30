@@ -70,7 +70,8 @@ jobs:
             os: macos-10.15
             cxxflags: "cxxflags=--coverage -DBOOST_TRAVISCI_BUILD"
             linkflags: "linkflags=--coverage"
-            gcov_tool: "gcov"
+            gcov_tool: "llvm-cov gcov"
+            ignore_coverage: "*/detail/pe_info.hpp */filesystem/src/*"
 
     runs-on: ${{matrix.os}}
 
