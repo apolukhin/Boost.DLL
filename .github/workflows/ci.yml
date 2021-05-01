@@ -70,8 +70,9 @@ jobs:
             os: macos-10.15
             cxxflags: "cxxflags=--coverage -DBOOST_TRAVISCI_BUILD"
             linkflags: "linkflags=--coverage"
+            # Crashes, uncomment on a later version of clang
             # gcov_tool: "/usr/local/Cellar/llvm/12.0.0/bin/llvm-cov gcov"
-            gcov_tool: "/usr/local/Cellar/llvm/12.0.0/Toolchains/LLVM12.0.0.xctoolchain/usr/bin/llvm-cov gcov"
+            # gcov_tool: "/usr/local/Cellar/llvm/12.0.0/Toolchains/LLVM12.0.0.xctoolchain/usr/bin/llvm-cov gcov"
             ignore_coverage: "*/detail/pe_info.hpp */filesystem/src/*"
 
     runs-on: ${{matrix.os}}
@@ -82,13 +83,6 @@ jobs:
       - name: Install packages
         if: matrix.install
         run: sudo apt install ${{matrix.install}}
-
-      - name: Install packages via brew
-        if: matrix.brew
-        run: |
-            brew install ${{matrix.brew}}
-            brew ls --verbose ${{matrix.brew}}
-            find / -name 'llvm-cov*'
 
       - name: Setup Boost
         run: |
@@ -144,9 +138,7 @@ jobs:
           cd ../boost-root
           OTHER_LIBS=`grep "submodule .*" .gitmodules | sed 's/\[submodule\ "\(.*\)"\]/"\*\/boost\/\1\.hpp" "\*\/boost\/\1\/\*"/g'| sed "/\"\*\/boost\/$LIBRARY\/\*\"/d" | sed ':a;N;$!ba;s/\n/ /g'`
           echo $OTHER_LIBS
-          for COV_IGNORE_LIB in "${OTHER_LIBS[@]}"; do
-              eval "$LCOV --remove $GITHUB_WORKSPACE/coveralls/coverage.info $COV_IGNORE_LIB -o $GITHUB_WORKSPACE/coveralls/coverage.info || :"
-          done
+          eval "$LCOV --remove $GITHUB_WORKSPACE/coveralls/coverage.info $OTHER_LIBS -o $GITHUB_WORKSPACE/coveralls/coverage.info"
 
       - name: Coveralls
         uses: coverallsapp/github-action@master
