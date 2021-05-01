@@ -85,7 +85,10 @@ jobs:
 
       - name: Install packages via brew
         if: matrix.brew
-        run: brew install ${{matrix.brew}}
+        run: |
+            brew install ${{matrix.brew}}
+            brew ls --verbose ${{matrix.brew}}
+            find / -name 'llvm-cov*'
 
       - name: Setup Boost
         run: |
