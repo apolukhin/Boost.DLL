@@ -72,6 +72,7 @@ jobs:
             linkflags: "linkflags=--coverage"
             gcov_tool: "llvm-cov gcov"
             ignore_coverage: "*/detail/pe_info.hpp */filesystem/src/*"
+            brew: "llvm"
 
     runs-on: ${{matrix.os}}
 
@@ -81,6 +82,10 @@ jobs:
       - name: Install packages
         if: matrix.install
         run: sudo apt install ${{matrix.install}}
+
+      - name: Install packages via brew
+        if: matrix.brew
+        run: brew install ${{matrix.brew}}
 
       - name: Setup Boost
         run: |
