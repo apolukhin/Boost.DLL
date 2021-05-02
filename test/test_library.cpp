@@ -26,6 +26,10 @@ extern "C" void LIBRARY_API say_hello(void);
 extern "C" float LIBRARY_API lib_version(void);
 extern "C" int LIBRARY_API increment(int);
 
+#if defined(__GNUC__) && __GNUC__ >= 4
+extern "C" int __attribute__((visibility ("protected"))) protected_function(int);
+#endif
+
 extern "C" int LIBRARY_API integer_g;
 extern "C" const int LIBRARY_API const_integer_g = 777;
 
@@ -93,6 +97,13 @@ int increment(int n)
 {
    return ++n;
 }
+
+#if defined(__GNUC__) && __GNUC__ >= 4
+int protected_function(int) {
+    return 42;
+}
+#endif
+
 
 #include <boost/dll/runtime_symbol_info.hpp>
 

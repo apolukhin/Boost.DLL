@@ -35,6 +35,10 @@ int main(int argc, char* argv[])
     std::copy(symb.begin(), symb.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
     BOOST_TEST(std::find(symb.begin(), symb.end(), "const_integer_g") != symb.end());
     BOOST_TEST(std::find(symb.begin(), symb.end(), "say_hello") != symb.end());
+
+#if defined(__GNUC__) && __GNUC__ >= 4
+    BOOST_TEST(std::find(symb.begin(), symb.end(), "protected_function") != symb.end());
+#endif
     
     symb = lib_info.symbols("boostdll");
     std::copy(symb.begin(), symb.end(), std::ostream_iterator<std::string>(std::cout, "\n"));

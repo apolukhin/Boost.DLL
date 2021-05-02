@@ -43,6 +43,14 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
         sz2();
     }
 
+
+#if defined(__GNUC__) && __GNUC__ >= 4
+    {
+        const int the_answer = import_symbol<int(int)>(shared_library_path, "protected_function")(0);
+        BOOST_TEST_EQ(the_answer, 42);
+    }
+#endif
+
     {
         boost::function<std::size_t(const std::vector<int>&)> sz
             = import_alias<std::size_t(const std::vector<int>&)>(shared_library_path, "foo_bar");
