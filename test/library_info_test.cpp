@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
     BOOST_TEST(std::find(symb.begin(), symb.end(), "const_integer_g") != symb.end());
     BOOST_TEST(std::find(symb.begin(), symb.end(), "say_hello") != symb.end());
 
-#if defined(__GNUC__) && __GNUC__ >= 4
+#if defined(__GNUC__) && __GNUC__ >= 4 && defined(__ELF__)
     BOOST_TEST(std::find(symb.begin(), symb.end(), "protected_function") != symb.end());
 #endif
     

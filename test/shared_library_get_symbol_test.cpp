@@ -44,7 +44,7 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
     }
 
 
-#if defined(__GNUC__) && __GNUC__ >= 4
+#if defined(__GNUC__) && __GNUC__ >= 4 && defined(__ELF__)
     {
         const int the_answer = import_symbol<int(int)>(shared_library_path, "protected_function")(0);
         BOOST_TEST_EQ(the_answer, 42);

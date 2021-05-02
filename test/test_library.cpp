@@ -26,7 +26,7 @@ extern "C" void LIBRARY_API say_hello(void);
 extern "C" float LIBRARY_API lib_version(void);
 extern "C" int LIBRARY_API increment(int);
 
-#if defined(__GNUC__) && __GNUC__ >= 4
+#if defined(__GNUC__) && __GNUC__ >= 4 && defined(__ELF__)
 extern "C" int __attribute__((visibility ("protected"))) protected_function(int);
 #endif
 
@@ -98,7 +98,7 @@ int increment(int n)
    return ++n;
 }
 
-#if defined(__GNUC__) && __GNUC__ >= 4
+#if defined(__GNUC__) && __GNUC__ >= 4 && defined(__ELF__)
 int protected_function(int) {
     return 42;
 }
