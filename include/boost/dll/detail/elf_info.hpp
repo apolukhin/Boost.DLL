@@ -135,13 +135,17 @@ public:
         std::vector<std::string> ret;
         std::vector<char> names;
         sections_names_raw(fs, names);
-        
+
         const char* name_begin = &names[0];
         const char* const name_end = name_begin + names.size();
         ret.reserve(header(fs).e_shnum);
         do {
-            ret.push_back(name_begin);
-            name_begin += ret.back().size() + 1;
+            if (*name_begin) {
+                ret.push_back(name_begin);
+                name_begin += ret.back().size() + 1;
+            } else {
+                ++name_begin;
+            }
         } while (name_begin != name_end);
 
         return ret;
@@ -182,7 +186,7 @@ private:
         checked_seekg(fs, elf.e_shoff + elf.e_shstrndx * sizeof(section_t));
         read_raw(fs, section_names_section);
 
-        sections.resize(static_cast<std::size_t>(section_names_section.sh_size));
+        sections.resize(static_cast<std::size_t>(section_names_section.sh_size) + 1, '\0');
         checked_seekg(fs, section_names_section.sh_offset);
         read_raw(fs, sections[0], static_cast<std::size_t>(section_names_section.sh_size));
     }
@@ -212,7 +216,10 @@ private:
         for (std::size_t i = 0; i < elf.e_shnum; ++i) {
             section_t section;
             read_raw(fs, section);
-            const char* name = names.data() + section.sh_name;
+            if (section.sh_name >= names.size()) {
+                continue;
+            }
+            const char* name = &names[section.sh_name];
 
             if (section.sh_type == SHT_SYMTAB_ && !std::strcmp(name, ".symtab")) {
                 symtab_size = section.sh_size;
@@ -243,7 +250,7 @@ private:
             return;
         }
 
-        text.resize(static_cast<std::size_t>(strtab_size));
+        text.resize(static_cast<std::size_t>(strtab_size) + 1, '\0');
         checked_seekg(fs, strtab_offset);
         read_raw(fs, text[0], static_cast<std::size_t>(strtab_size));
 
@@ -270,8 +277,8 @@ public:
 
         ret.reserve(symbols.size());
         for (std::size_t i = 0; i < symbols.size(); ++i) {
-            if (is_visible(symbols[i])) {
-                ret.push_back(&text[0] + symbols[i].st_name);
+            if (is_visible(symbols[i]) && symbols[i].st_name < text.size()) {
+                ret.push_back(&text[symbols[i].st_name]);
                 if (ret.back().empty()) {
                     ret.pop_back(); // Do not show empty names
                 }
@@ -297,7 +304,7 @@ public:
             checked_seekg(fs, elf.e_shoff + index * sizeof(section_t));
             read_raw(fs, section);
 
-            if (!std::strcmp(&names[0] + section.sh_name, section_name)) {
+            if (!std::strcmp(&names.at(section.sh_name), section_name)) {
                 if (!section.sh_entsize) {
                     section.sh_entsize = 1;
                 }
@@ -317,8 +324,8 @@ public:
         }
 
         for (std::size_t i = 0; i < symbols.size(); ++i) {
-            if (symbols[i].st_shndx == index && is_visible(symbols[i])) {
-                ret.push_back(&text[0] + symbols[i].st_name);
+            if (symbols[i].st_shndx == index && is_visible(symbols[i]) && symbols[i].st_name < text.size()) {
+                ret.push_back(&text[symbols[i].st_name]);
                 if (ret.back().empty()) {
                     ret.pop_back(); // Do not show empty names
                 }
