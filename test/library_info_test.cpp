@@ -65,5 +65,14 @@ int main(int argc, char* argv[])
     std::copy(symb.begin(), symb.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
     BOOST_TEST(std::find(symb.begin(), symb.end(), "create_plugin") != symb.end());
 
+    boost::dll::fs::path sections_stripped_path = "/lib/x86_64-linux-gnu/libaio.so.1";
+    if (exists(sections_stripped_path)) {
+        boost::dll::library_info stripped_lib(sections_stripped_path);
+        std::cout << "\n\n\n";
+        symb = stripped_lib.symbols();
+        std::copy(symb.begin(), symb.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
+        BOOST_TEST(!symb.empty());
+    }
+
     return boost::report_errors();
 }
