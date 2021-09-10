@@ -41,14 +41,6 @@ jobs:
             gcov_tool: "gcov-9"
             ignore_coverage: "*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*"
           - toolset: clang
-            compiler: clang++-9
-            cxxstd: "03,11,14,17,2a"
-            os: ubuntu-20.04
-            cxxflags: "cxxflags=--coverage"
-            linkflags: "linkflags=--coverage"
-            gcov_tool: "llvm-cov-9 gcov"
-            ignore_coverage: "*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*"
-          - toolset: clang
             compiler: clang++-10
             cxxstd: "03,11,14,17,2a"
             os: ubuntu-20.04
