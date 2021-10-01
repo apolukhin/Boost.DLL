@@ -99,7 +99,7 @@ struct BOOST_SYMBOL_EXPORT some_class : some_father
 some_class::some_class(some_class &&){}
 
 
-some_class& some_class::operator=(some_class &&ref) {return ref;}
+some_class& some_class::operator=(some_class &&) {return *this;}
 
 
 BOOST_SYMBOL_EXPORT extern std::size_t size_of_some_class;
