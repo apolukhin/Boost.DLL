@@ -44,15 +44,15 @@ jobs:
             compiler: clang++-10
             cxxstd: "03,11,14,17,2a"
             os: ubuntu-20.04
-          - toolset: clang
-            cxxstd: "03,11,14,17,2a"
-            os: macos-10.15
-            cxxflags: "cxxflags=--coverage -DBOOST_TRAVISCI_BUILD"
-            linkflags: "linkflags=--coverage"
-            # Crashes, uncomment on a later version of clang
-            # gcov_tool: "/usr/local/Cellar/llvm/12.0.0/bin/llvm-cov gcov"
-            # gcov_tool: "/usr/local/Cellar/llvm/12.0.0/Toolchains/LLVM12.0.0.xctoolchain/usr/bin/llvm-cov gcov"
-            ignore_coverage: "*/detail/pe_info.hpp */filesystem/src/*"
+          #- toolset: clang
+          #  cxxstd: "03,11,14,17,2a"
+          #  os: macos-10.15
+          #  cxxflags: "cxxflags=--coverage -DBOOST_TRAVISCI_BUILD"
+          #  linkflags: "linkflags=--coverage"
+          #  # Crashes, uncomment on a later version of clang
+          #  # gcov_tool: "/usr/local/Cellar/llvm/12.0.0/bin/llvm-cov gcov"
+          #  # gcov_tool: "/usr/local/Cellar/llvm/12.0.0/Toolchains/LLVM12.0.0.xctoolchain/usr/bin/llvm-cov gcov"
+          #  ignore_coverage: "*/detail/pe_info.hpp */filesystem/src/*"
 
     runs-on: ${{matrix.os}}
 
