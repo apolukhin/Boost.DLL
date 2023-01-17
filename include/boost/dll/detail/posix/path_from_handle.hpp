@@ -35,8 +35,8 @@ namespace boost { namespace dll { namespace detail {
 
         // Iterate through all images currently in memory
         // https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man3/dyld.3.html
-        const std::size_t count = _dyld_image_count(); // not thread safe: other thread my [un]load images
-        for (std::size_t i = 0; i <= count; ++i) {
+        const uint32_t count = _dyld_image_count(); // not thread safe: other thread my [un]load images
+        for (uint32_t i = 0; i <= count; ++i) {
             // on last iteration `i` is equal to `count` which is out of range, so `_dyld_get_image_name`
             // will return NULL. `dlopen(NULL, RTLD_LAZY)` call will open the current executable.
             const char* image_name = _dyld_get_image_name(i);
