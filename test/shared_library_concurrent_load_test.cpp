@@ -1,4 +1,4 @@
-// Copyright Antony Polukhin, 2015-2022
+// Copyright Antony Polukhin, 2015-2023
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
