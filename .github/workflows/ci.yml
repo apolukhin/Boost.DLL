@@ -19,26 +19,23 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - toolset: gcc-7
-            cxxstd: "03,11,14,17"
-            os: ubuntu-18.04
-          - toolset: gcc-9
+          - toolset: gcc-12
             cxxstd: "03,11,14,17,2a"
-            os: ubuntu-18.04
+            os: ubuntu-22.04
             # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
             cxxflags: "cxxflags=--coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD"
             linkflags: "linkflags=--coverage -lasan"
             launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
-            gcov_tool: "gcov-9"
+            gcov_tool: "gcov-12"
             ignore_coverage: "*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*"
-          - toolset: gcc-9
+          - toolset: gcc-12
             cxxstd: "17,2a"
-            os: ubuntu-18.04
+            os: ubuntu-22.04
             # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
             cxxflags: "cxxflags=--coverage -fsanitize=address,leak -DBOOST_DLL_USE_STD_FS -DBOOST_TRAVISCI_BUILD"
             linkflags: "linkflags=--coverage -lasan"
             launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
-            gcov_tool: "gcov-9"
+            gcov_tool: "gcov-12"
             ignore_coverage: "*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*"
           - toolset: clang
             compiler: clang++-10
@@ -106,9 +103,9 @@ jobs:
 
           echo -e "#!/bin/bash\nexec ${{matrix.gcov_tool}} \"\$@\"" > $GITHUB_WORKSPACE/coveralls/gcov_wrapper.sh
           chmod +x $GITHUB_WORKSPACE/coveralls/gcov_wrapper.sh
-          wget https://github.com/linux-test-project/lcov/archive/v1.15.zip
-          unzip v1.15.zip
-          LCOV="`pwd`/lcov-1.15/bin/lcov --gcov-tool $GITHUB_WORKSPACE/coveralls/gcov_wrapper.sh"
+          wget https://github.com/linux-test-project/lcov/archive/v1.16.zip
+          unzip v1.16.zip
+          LCOV="`pwd`/lcov-1.16/bin/lcov --gcov-tool $GITHUB_WORKSPACE/coveralls/gcov_wrapper.sh"
 
           echo "$LCOV --directory ../boost-root/bin.v2/libs/$LIBRARY/ --base-directory `pwd`/libs/$LIBRARY/test --capture --output-file $GITHUB_WORKSPACE/coveralls/coverage.info"
           $LCOV --directory ../boost-root/bin.v2/libs/$LIBRARY/ --base-directory ../boost-root/ --capture --output-file $GITHUB_WORKSPACE/coveralls/coverage.info
