@@ -25,7 +25,7 @@ jobs:
             # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
             cxxflags: "cxxflags=--coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD"
             linkflags: "linkflags=--coverage -lasan"
-            launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.5"
+            launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.8"
             gcov_tool: "gcov-12"
             ignore_coverage: "*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*"
           - toolset: gcc-12
