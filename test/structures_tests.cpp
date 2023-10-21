@@ -10,7 +10,6 @@
 #include <boost/dll/detail/elf_info.hpp>
 #include <boost/dll/detail/pe_info.hpp>
 #include <boost/dll/detail/macho_info.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <boost/predef/os.h>
 
@@ -41,7 +40,7 @@ inline std::size_t get_offset(const T1& v1, const T2& v2) {
 }
 
 #define CHECK_FIELD(Field)                                              \
-    BOOST_STATIC_ASSERT(sizeof(v1.Field) == sizeof(v2.Field));          \
+    static_assert(sizeof(v1.Field) == sizeof(v2.Field), "");          \
     BOOST_TEST(get_offset(v1, v1.Field) == get_offset(v2, v2.Field))   \
     /**/
 
@@ -49,7 +48,7 @@ inline std::size_t get_offset(const T1& v1, const T2& v2) {
 // ELF structures
 template <class T1, class T2>
 void elf_header_checks(const T1& v1, const T2& v2) {
-    BOOST_STATIC_ASSERT(sizeof(T1) == sizeof(T2));
+    static_assert(sizeof(T1) == sizeof(T2), "");
 
     CHECK_FIELD(e_ident);
     CHECK_FIELD(e_type);
@@ -69,7 +68,7 @@ void elf_header_checks(const T1& v1, const T2& v2) {
 
 template <class T1, class T2>
 void elf_sheader_checks(const T1& v1, const T2& v2) {
-    BOOST_STATIC_ASSERT(sizeof(T1) == sizeof(T2));
+    static_assert(sizeof(T1) == sizeof(T2), "");
 
     CHECK_FIELD(sh_name);
     CHECK_FIELD(sh_type);
@@ -85,7 +84,7 @@ void elf_sheader_checks(const T1& v1, const T2& v2) {
 
 template <class T1, class T2>
 void elf_sym_header_checks(const T1& v1, const T2& v2) {
-    BOOST_STATIC_ASSERT(sizeof(T1) == sizeof(T2));
+    static_assert(sizeof(T1) == sizeof(T2), "");
 
     CHECK_FIELD(st_name);
     CHECK_FIELD(st_value);
@@ -99,7 +98,7 @@ void elf_sym_header_checks(const T1& v1, const T2& v2) {
 // PE structures
 template <class T>
 void generic_header_check(const T& v1, const dd::IMAGE_DOS_HEADER_& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
 
     CHECK_FIELD(e_magic);
     CHECK_FIELD(e_cblp);
@@ -124,7 +123,7 @@ void generic_header_check(const T& v1, const dd::IMAGE_DOS_HEADER_& v2) {
 
 template <class T>
 void generic_header_check(const T& v1, const dd::IMAGE_FILE_HEADER_& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
 
     CHECK_FIELD(Machine);
     CHECK_FIELD(NumberOfSections);
@@ -137,7 +136,7 @@ void generic_header_check(const T& v1, const dd::IMAGE_FILE_HEADER_& v2) {
 
 template <class T>
 void generic_header_check(const T& v1, const dd::IMAGE_DATA_DIRECTORY_& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
 
     CHECK_FIELD(VirtualAddress);
     CHECK_FIELD(Size);
@@ -145,7 +144,7 @@ void generic_header_check(const T& v1, const dd::IMAGE_DATA_DIRECTORY_& v2) {
 
 template <class T>
 void generic_header_check(const T& v1, const dd::IMAGE_EXPORT_DIRECTORY_& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
     
     CHECK_FIELD(Characteristics);
     CHECK_FIELD(TimeDateStamp);
@@ -163,7 +162,7 @@ void generic_header_check(const T& v1, const dd::IMAGE_EXPORT_DIRECTORY_& v2) {
 
 template <class T>
 void generic_header_check(const T& v1, const dd::IMAGE_SECTION_HEADER_& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
     
     CHECK_FIELD(Name);
     CHECK_FIELD(VirtualAddress);
@@ -178,7 +177,7 @@ void generic_header_check(const T& v1, const dd::IMAGE_SECTION_HEADER_& v2) {
 
 template <class T, class AddrT>
 void generic_header_check(const T& v1, const dd::IMAGE_OPTIONAL_HEADER_template<AddrT>& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
     
     CHECK_FIELD(Magic);
     CHECK_FIELD(MajorLinkerVersion);
@@ -213,7 +212,7 @@ void generic_header_check(const T& v1, const dd::IMAGE_OPTIONAL_HEADER_template<
 
 template <class T, class AddrT>
 void generic_header_check(const T& v1, const dd::IMAGE_NT_HEADERS_template<AddrT>& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
 
     CHECK_FIELD(Signature);
     CHECK_FIELD(FileHeader);
@@ -221,7 +220,7 @@ void generic_header_check(const T& v1, const dd::IMAGE_NT_HEADERS_template<AddrT
 }
 template <class T, class AddrT>
 void generic_header_check(const T& v1, const dd::mach_header_template<AddrT>& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
 
     CHECK_FIELD(magic);
     CHECK_FIELD(cputype);
@@ -234,7 +233,7 @@ void generic_header_check(const T& v1, const dd::mach_header_template<AddrT>& v2
 
 template <class T, class AddrT>
 void generic_header_check(const T& v1, const dd::segment_command_template<AddrT>& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
 
     CHECK_FIELD(cmd);          
     CHECK_FIELD(cmdsize);      
@@ -251,7 +250,7 @@ void generic_header_check(const T& v1, const dd::segment_command_template<AddrT>
 
 template <class T, class AddrT>
 void generic_header_check(const T& v1, const dd::section_template<AddrT>& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
 
     CHECK_FIELD(sectname);
     CHECK_FIELD(segname); 
@@ -267,7 +266,7 @@ void generic_header_check(const T& v1, const dd::section_template<AddrT>& v2) {
 
 template <class T>
 void generic_header_check(const T& v1, const dd::symtab_command_& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
     
     CHECK_FIELD(cmd);    
     CHECK_FIELD(cmdsize);
@@ -279,7 +278,7 @@ void generic_header_check(const T& v1, const dd::symtab_command_& v2) {
 
 template <class T, class AddrT>
 void generic_header_check(const T& v1, const dd::nlist_template<AddrT>& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
     
     //CHECK_FIELD(n_strx);
     CHECK_FIELD(n_type);
@@ -290,7 +289,7 @@ void generic_header_check(const T& v1, const dd::nlist_template<AddrT>& v2) {
 
 template <class T>
 void generic_header_check(const T& v1, const dd::load_command_& v2) {
-    BOOST_STATIC_ASSERT(sizeof(v1) == sizeof(v2));
+    static_assert(sizeof(v1) == sizeof(v2), "");
     
     CHECK_FIELD(cmd);    
     CHECK_FIELD(cmdsize);

@@ -11,6 +11,8 @@
 import testing ;
 import path ;
 
+import ../../config/checks/config : requires ;
+
 local RDYNAMIC = <target-os>freebsd:<linkflags>"-rdynamic" <target-os>solaris:<linkflags>"-Bdynamic" <target-os>aix:<linkflags>"-rdynamic"
     <target-os>qnxnto,<toolset>qcc:<linkflags>"-Bdynamic" <target-os>qnxnto,<toolset>gcc:<linkflags>"-rdynamic"
     <target-os>android:<linkflags>"-rdynamic" <target-os>linux:<linkflags>"-rdynamic" <target-os>darwin,<toolset>gcc:<linkflags>"-dynamic"
@@ -25,7 +27,8 @@ lib static_refcounting_plugin : ../example/tutorial8/refcounting_plugin.cpp : <l
 project
    : source-location .
    : requirements
-
+      [ requires cxx11_rvalue_references ]
+      [ requires cxx11_static_assert ]
    # linux
       <target-os>linux:<linkflags>"-ldl"
       <toolset>gcc:<cxxflags>"-Wall -Wextra -pedantic -Wno-long-long"

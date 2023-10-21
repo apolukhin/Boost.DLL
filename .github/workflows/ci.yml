@@ -20,7 +20,7 @@ jobs:
       matrix:
         include:
           - toolset: gcc-12
-            cxxstd: "03,11,14,17,2a"
+            cxxstd: "11,14,17,2a"
             os: ubuntu-22.04
             # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
             cxxflags: "cxxflags=--coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD"
@@ -39,10 +39,10 @@ jobs:
             ignore_coverage: "*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*"
           - toolset: clang
             compiler: clang++-10
-            cxxstd: "03,11,14,17,2a"
+            cxxstd: "11,14,17,2a"
             os: ubuntu-20.04
           #- toolset: clang
-          #  cxxstd: "03,11,14,17,2a"
+          #  cxxstd: "11,14,17,2a"
           #  os: macos-10.15
           #  cxxflags: "cxxflags=--coverage -DBOOST_TRAVISCI_BUILD"
           #  linkflags: "linkflags=--coverage"
@@ -138,7 +138,7 @@ jobs:
             addrmd: 32,64
             os: windows-2019
           - toolset: gcc
-            cxxstd: "03,11,14,17,2a"
+            cxxstd: "11,14,17,2a"
             addrmd: 64
             os: windows-2019
 
