@@ -404,7 +404,7 @@ private:
 
             // report_error() calls dlsym, do not use it here!
             boost::throw_exception(
-                boost::dll::fs::system_error(
+                std::system_error(
                     ec, "boost::dll::shared_library::get() failed: no library was loaded"
                 )
             );
@@ -450,7 +450,7 @@ public:
             );
 
             boost::throw_exception(
-                boost::dll::fs::system_error(
+                std::system_error(
                     ec, "boost::dll::shared_library::location() failed (no library was loaded)"
                 )
             );

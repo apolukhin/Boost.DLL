@@ -136,7 +136,7 @@ int main(int argc, char* argv[])
     try {
         sm.get_mem_fn<override_class, int()>("get");
         BOOST_TEST(false);
-    } catch(boost::dll::fs::system_error &) {}
+    } catch(std::system_error &) {}
     auto get = sm.get_mem_fn<const override_class, int()>("get");
     std::cerr << 17 << ' ';
     BOOST_TEST(get != nullptr);
