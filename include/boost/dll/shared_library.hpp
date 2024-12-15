@@ -26,6 +26,8 @@
 #   include <boost/dll/detail/posix/shared_library_impl.hpp>
 #endif
 
+#include <utility>  // std::move
+
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif

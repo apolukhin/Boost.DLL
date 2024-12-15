@@ -16,6 +16,8 @@
 #include <boost/core/invoke_swap.hpp>
 #include <boost/predef/os.h>
 
+#include <utility>  // std::move
+
 #include <dlfcn.h>
 #include <cstring> // strncmp
 #if !BOOST_OS_MACOS && !BOOST_OS_IOS && !BOOST_OS_QNX

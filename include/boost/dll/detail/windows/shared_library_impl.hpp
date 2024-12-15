@@ -18,6 +18,8 @@
 
 #include <boost/winapi/dll.hpp>
 
+#include <utility>  // std::move
+
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif

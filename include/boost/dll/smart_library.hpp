@@ -31,7 +31,7 @@
 #include <boost/type_traits/is_void.hpp>
 #include <boost/type_traits/is_function.hpp>
 
-
+#include <utility>  // std::move
 
 namespace boost {
 namespace dll {
