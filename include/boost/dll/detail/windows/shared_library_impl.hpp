@@ -61,7 +61,7 @@ public:
         unload();
 
         if (!sl.is_absolute() && !(native_mode & load_mode::search_system_folders)) {
-            std::error_code current_path_ec;
+            boost::dll::fs::error_code current_path_ec;
             boost::dll::fs::path prog_loc = boost::dll::fs::current_path(current_path_ec);
 
             if (!current_path_ec) {
