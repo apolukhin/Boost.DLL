@@ -10,12 +10,9 @@
 #include <boost/config.hpp>
 #include <boost/predef.h>
 
-#if (__cplusplus >= 201103L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201103L)
-// Make sure that it at least compiles
-#  include <boost/dll/smart_library.hpp>
-#endif
+#if (__cplusplus > 201402L) || (defined(_MSVC_LANG) && _MSVC_LANG > 201402L)
 
-#if (__cplusplus >= 201402L) || (BOOST_COMP_MSVC >= BOOST_VERSION_NUMBER(14,0,0))
+#  include <boost/dll/smart_library.hpp>
 
 #include "../example/b2_workarounds.hpp"
 

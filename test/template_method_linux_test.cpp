@@ -6,7 +6,7 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/config.hpp>
-#if (__cplusplus >= 201402L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
+#if (__cplusplus > 201402L) || (defined(_MSVC_LANG) && _MSVC_LANG > 201402L)
 
 #include <boost/dll/smart_library.hpp>
 #include <boost/dll/import_mangled.hpp>
