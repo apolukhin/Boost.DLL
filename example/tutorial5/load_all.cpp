@@ -32,7 +32,7 @@ class plugins_collector {
 
     // Gets `my_plugin_api` instance using "create_plugin" or "plugin" imports,
     // stores plugin with its name in the `plugins_` map.
-    void insert_plugin(BOOST_RV_REF(dll::shared_library) lib);
+    void insert_plugin(dll::shared_library&& lib);
 
 public:
     plugins_collector(const boost::dll::fs::path& plugins_directory)
@@ -75,17 +75,17 @@ void plugins_collector::load_all() {
         std::cout << "Loaded (" << plugin.native() << "):" << it->path() << '\n';
 
         // Gets plugin using "create_plugin" or "plugin" function
-        insert_plugin(boost::move(plugin));
+        insert_plugin(std::move(plugin));
     }
 
     dll::shared_library plugin(dll::program_location());
     std::cout << "Loaded self\n";
-    insert_plugin(boost::move(plugin));
+    insert_plugin(std::move(plugin));
 }
 //]
 
 //[plugcpp_plugins_collector_insert_plugin
-void plugins_collector::insert_plugin(BOOST_RV_REF(dll::shared_library) lib) {
+void plugins_collector::insert_plugin(dll::shared_library&& lib) {
     std::string plugin_name;
     if (lib.has("create_plugin")) {
         plugin_name = lib.get_alias<boost::shared_ptr<my_plugin_api>()>("create_plugin")()->name();
@@ -96,7 +96,7 @@ void plugins_collector::insert_plugin(BOOST_RV_REF(dll::shared_library) lib) {
     }
 
     if (plugins_.find(plugin_name) == plugins_.cend()) {
-        plugins_[plugin_name] = boost::move(lib);
+        plugins_[plugin_name] = std::move(lib);
     }
 }
 //]
