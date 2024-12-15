@@ -13,7 +13,6 @@
 #include <boost/dll/detail/posix/path_from_handle.hpp>
 #include <boost/dll/detail/posix/program_location_impl.hpp>
 
-#include <boost/move/utility.hpp>
 #include <boost/core/invoke_swap.hpp>
 #include <boost/predef/os.h>
 
@@ -33,27 +32,24 @@
 namespace boost { namespace dll { namespace detail {
 
 class shared_library_impl {
-
-    BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library_impl)
-
 public:
     typedef void* native_handle_t;
 
-    shared_library_impl() BOOST_NOEXCEPT
+    shared_library_impl() noexcept
         : handle_(NULL)
     {}
 
-    ~shared_library_impl() BOOST_NOEXCEPT {
+    ~shared_library_impl() noexcept {
         unload();
     }
 
-    shared_library_impl(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT
+    shared_library_impl(shared_library_impl&& sl) noexcept
         : handle_(sl.handle_)
     {
         sl.handle_ = NULL;
     }
 
-    shared_library_impl & operator=(BOOST_RV_REF(shared_library_impl) sl) BOOST_NOEXCEPT {
+    shared_library_impl & operator=(shared_library_impl&& sl) noexcept {
         swap(sl);
         return *this;
     }
@@ -163,11 +159,11 @@ public:
         }
     }
 
-    bool is_loaded() const BOOST_NOEXCEPT {
+    bool is_loaded() const noexcept {
         return (handle_ != 0);
     }
 
-    void unload() BOOST_NOEXCEPT {
+    void unload() noexcept {
         if (!is_loaded()) {
             return;
         }
@@ -176,7 +172,7 @@ public:
         handle_ = 0;
     }
 
-    void swap(shared_library_impl& rhs) BOOST_NOEXCEPT {
+    void swap(shared_library_impl& rhs) noexcept {
         boost::core::invoke_swap(handle_, rhs.handle_);
     }
 
@@ -193,7 +189,7 @@ public:
 #endif
     }
 
-    void* symbol_addr(const char* sb, boost::dll::fs::error_code &ec) const BOOST_NOEXCEPT {
+    void* symbol_addr(const char* sb, boost::dll::fs::error_code &ec) const noexcept {
         // dlsym - obtain the address of a symbol from a dlopen object
         void* const symbol = dlsym(handle_, sb);
         if (symbol == NULL) {
@@ -210,7 +206,7 @@ public:
         return symbol;
     }
 
-    native_handle_t native() const BOOST_NOEXCEPT {
+    native_handle_t native() const noexcept {
         return handle_;
     }
 
