@@ -38,10 +38,8 @@ using system_error = std::conditional_t<BOOST_DLL_USE_STD_FS, std::system_error,
 
 #endif
 
-
 #ifdef BOOST_DLL_USE_STD_FS
 #include <filesystem>
-
 #include <system_error>
 
 namespace boost { namespace dll { namespace fs {
