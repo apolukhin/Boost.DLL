@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     try {
         shared_library lib(bad_path);
         BOOST_TEST(false);
-    } catch (const std::system_error& e) {
+    } catch (const boost::dll::fs::system_error& e) {
         std::cout << e.what() << '\n';
     }
 
@@ -35,21 +35,21 @@ int main(int argc, char* argv[]) {
         shared_library lib;
         lib.get<int>("variable_or_function_that_does_not_exist");
         BOOST_TEST(false);
-    } catch (const std::system_error& e) {
+    } catch (const boost::dll::fs::system_error& e) {
         std::cout << e.what() << '\n';
     }
 
     try {
         shared_library lib("");
         BOOST_TEST(false);
-    } catch (const std::system_error& e) {
+    } catch (const boost::dll::fs::system_error& e) {
         std::cout << e.what() << '\n';
     }
 
     try {
         shared_library lib("\0\0");
         BOOST_TEST(false);
-    } catch (const std::system_error& e) {
+    } catch (const boost::dll::fs::system_error& e) {
         std::cout << e.what() << '\n';
     }
 
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
         shared_library lib;
         lib.location();
         BOOST_TEST(false);
-    } catch (const std::system_error& e) {
+    } catch (const boost::dll::fs::system_error& e) {
         std::cout << e.what() << '\n';
     }
 
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
         shared_library lib;
         lib.load("\0\0", load_mode::rtld_global);
         BOOST_TEST(false);
-    } catch (const std::system_error& e) {
+    } catch (const boost::dll::fs::system_error& e) {
         std::cout << e.what() << '\n';
     }
 
@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
     try {
         sl.get<int>("variable_or_function_that_does_not_exist");
         BOOST_TEST(false);
-    } catch (const std::system_error& e) {
+    } catch (const boost::dll::fs::system_error& e) {
         std::cout << e.what() << '\n';
     }
 
