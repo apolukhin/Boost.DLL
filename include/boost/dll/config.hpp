@@ -39,8 +39,14 @@ using system_error = std::conditional_t<BOOST_DLL_USE_STD_FS, std::system_error,
 
 #endif
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> b753854... fixes
 #ifdef BOOST_DLL_USE_STD_FS
 #include <filesystem>
+#include <system_error>
+
 #include <system_error>
 
 namespace boost { namespace dll { namespace fs {
@@ -63,9 +69,13 @@ using std::system_error;
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>
 <<<<<<< HEAD
+<<<<<<< HEAD
 #include <boost/system/system_error.hpp>
 =======
 >>>>>>> 7d8af2a... wip
+=======
+#include <boost/system/system_error.hpp>
+>>>>>>> b753854... fixes
 #include <boost/system/error_code.hpp>
 
 namespace boost { namespace dll { namespace fs {
