@@ -10,7 +10,7 @@
 //[callplugcpp_tutorial9
 #include <boost/dll/import.hpp>         // for dll::import
 #include <boost/dll/shared_library.hpp> // for dll::shared_library
-#include <boost/function.hpp>
+#include <functional>
 #include <iostream>
 #include <windows.h>
 
@@ -29,15 +29,14 @@ int main() {
     );
     std::cout << "0.0 GetStdHandle() returned " << get_std_handle(STD_OUTPUT_HANDLE) << std::endl;
 
-    // You may put the `get_std_handle` into boost::function<>. But boost::function<Signature> can not compile with
+    // You may put the `get_std_handle` into std::function<>. But std::function<Signature> may not compile with
     // Signature template parameter that contains calling conventions, so you'll have to remove the calling convention.
-    boost::function<HANDLE(DWORD)> get_std_handle2 = get_std_handle;
+    std::function<HANDLE(DWORD)> get_std_handle2 = get_std_handle;
     std::cout << "0.1 GetStdHandle() returned " << get_std_handle2(STD_OUTPUT_HANDLE) << std::endl;
 /*<-*/
 #endif /*->*/
 
-    // OPTION #1, does not require C++11. But without C++11 dll::import<> can not handle calling conventions,
-    // so you'll need to hand write the import.
+    // OPTION #1, hand write the import.
     dll::shared_library lib("Kernel32.dll", dll::load_mode::search_system_folders);
     GetStdHandle_t& func = lib.get<GetStdHandle_t>("GetStdHandle");
 

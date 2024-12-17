@@ -19,10 +19,9 @@ int main(int argc, char* argv[]) {
     /*<-*/ b2_workarounds::argv_to_path_guard guard(argc, argv); /*->*/
     boost::dll::fs::path shared_library_path(argv[1]);                  // argv[1] contains path to directory with our plugin library
     shared_library_path /= "my_plugin_aggregator";
-    typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
-    boost::function<pluginapi_create_t> creator;
 
-    creator = boost::dll::import_alias<pluginapi_create_t>(             // type of imported symbol must be explicitly specified
+    using pluginapi_create_t = boost::shared_ptr<my_plugin_api>();
+    auto creator = boost::dll::import_alias<pluginapi_create_t>(        // type of imported symbol must be explicitly specified
         shared_library_path,                                            // path to library
         "create_plugin",                                                // symbol to import
         dll::load_mode::append_decorations                              // do append extensions and prefixes

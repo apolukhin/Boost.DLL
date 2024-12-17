@@ -22,7 +22,7 @@ namespace dll = boost::dll;
 
 class plugins_collector {
     // Name => plugin
-    typedef boost::container::map<std::string, dll::shared_library> plugins_t;
+    using plugins_t = boost::container::map<std::string, dll::shared_library>;
 
     boost::dll::fs::path            plugins_directory_;
     plugins_t                       plugins_;
@@ -52,8 +52,7 @@ public:
 //[plugcpp_plugins_collector_load_all
 void plugins_collector::load_all() {
     namespace fs = ::boost::dll::fs;
-    typedef fs::path::string_type string_type;
-    const string_type extension = dll::shared_library::suffix().native();
+    const auto extension = dll::shared_library::suffix().native();
 
     // Searching a folder for files with '.so' or '.dll' extension
     fs::recursive_directory_iterator endit;
@@ -67,7 +66,7 @@ void plugins_collector::load_all() {
         }
         /*->*/
         // We found a file. Trying to load it
-        boost::dll::fs::error_code error;
+        std::error_code error;
         dll::shared_library plugin(it->path(), error);
         if (error) {
             continue;

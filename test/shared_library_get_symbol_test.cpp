@@ -11,7 +11,7 @@
 #include "../example/b2_workarounds.hpp"
 #include <boost/dll.hpp>
 #include <boost/core/lightweight_test.hpp>
-#include <boost/function.hpp>
+#include <functional>
 #include <boost/fusion/container.hpp>
 // lib functions
 
@@ -35,7 +35,7 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
     std::vector<int> v(1000);
 
     {
-        boost::function<say_hello_func> sz2
+        std::function<say_hello_func> sz2
             = import_symbol<say_hello_func>(shared_library_path, "say_hello");
 
         sz2();
@@ -52,17 +52,17 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
 #endif
 
     {
-        boost::function<std::size_t(const std::vector<int>&)> sz
+        std::function<std::size_t(const std::vector<int>&)> sz
             = import_alias<std::size_t(const std::vector<int>&)>(shared_library_path, "foo_bar");
         BOOST_TEST(sz(v) == 1000);
     }
 
 
     {
-        boost::function<do_share_t> f;
+        std::function<do_share_t> f;
 
         {
-            boost::function<do_share_t> f2 = import_alias<do_share_t>(shared_library_path, "do_share");
+            std::function<do_share_t> f2 = import_alias<do_share_t>(shared_library_path, "do_share");
             f = f2;
         }
 
@@ -91,13 +91,13 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
     }
 
     {
-        boost::function<int&()> f = import_alias<int&()>(shared_library_path, "ref_returning_function");
+        std::function<int&()> f = import_alias<int&()>(shared_library_path, "ref_returning_function");
         BOOST_TEST(f() == 0);
 
         f() = 10;
         BOOST_TEST(f() == 10);
         
-        boost::function<int&()> f1 = import_alias<int&()>(shared_library_path, "ref_returning_function");
+        std::function<int&()> f1 = import_alias<int&()>(shared_library_path, "ref_returning_function");
         BOOST_TEST(f1() == 10);
 
         f1() += 10;
@@ -157,7 +157,7 @@ int main(int argc, char* argv[]) {
 
     BOOST_TEST(sl.get<const int>("const_integer_g") == 777);
 
-    boost::function<int(int)> inc = sl.get<int(int)>("increment");
+    std::function<int(int)> inc = sl.get<int(int)>("increment");
     BOOST_TEST(inc(1) == 2);
     BOOST_TEST(inc(2) == 3);
     BOOST_TEST(inc(3) == 4);
@@ -170,7 +170,7 @@ int main(int argc, char* argv[]) {
 
 
     // Checking aliases
-    boost::function<std::size_t(const std::vector<int>&)> sz 
+    std::function<std::size_t(const std::vector<int>&)> sz 
         = sl.get_alias<std::size_t(const std::vector<int>&)>("foo_bar");
 
     std::vector<int> v(10);

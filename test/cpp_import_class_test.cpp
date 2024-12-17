@@ -24,7 +24,7 @@ using namespace std;
 #include <boost/core/lightweight_test.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/variant.hpp>
-#include <boost/function.hpp>
+#include <functional>
 
 #define L cout << __LINE__ << endl;
 
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
         BOOST_TEST((cl->*fun2)(5 ,2 ) == 7 );
 
         //test if it binds.
-        boost::function<int(override_class* const, int, int)> mem_fn_obj = func;
+        std::function<int(override_class* const, int, int)> mem_fn_obj = func;
 
 
         const std::type_info & ti = cl.get_type_info();

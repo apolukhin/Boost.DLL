@@ -9,10 +9,10 @@
 
 //[callplugcpp_tutorial6
 #include <boost/dll/import.hpp>
-#include <boost/function.hpp>
+#include <functional>
 #include <iostream>
 
-typedef boost::function<void()> callback_t;
+using callback_t = std::function<void()> ;
 
 void print_unloaded() {
     std::cout << "unloaded" << std::endl;
@@ -23,16 +23,15 @@ int main(int argc, char* argv[]) {
     boost::dll::fs::path shared_library_path = /*<-*/ b2_workarounds::first_lib_from_argv(argc, argv); /*->*/ //=argv[1];
 
     // loading library and getting a function from it
-    boost::function<void(const callback_t&)> on_unload
-        = boost::dll::import_alias<void(const callback_t&)>(
-            shared_library_path, "on_unload"
-        );
+    std::function<void(const callback_t&)> on_unload = boost::dll::import_alias<void(const callback_t&)>(
+        shared_library_path, "on_unload"
+    );
 
     on_unload(&print_unloaded); // adding a callback
     std::cout << "Before library unload." << std::endl;
 
     // Releasing last reference to the library, so that it gets unloaded
-    on_unload.clear();
+    on_unload = {};
     std::cout << "After library unload." << std::endl;
 }
 //]

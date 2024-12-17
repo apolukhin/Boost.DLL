@@ -380,7 +380,7 @@ public:
       MSVCR110D.dll
     */
     /*
-    static std::vector<std::string> depend_of(boost::dll::fs::error_code &ec) BOOST_NOEXCEPT {
+    static std::vector<std::string> depend_of(boost::dll::fs::error_code &ec) noexcept {
         std::vector<std::string> ret;
 
         IMAGE_DOS_HEADER* image_dos_header = (IMAGE_DOS_HEADER*)native();

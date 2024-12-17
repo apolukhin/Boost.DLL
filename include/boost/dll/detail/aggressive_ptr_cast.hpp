@@ -33,7 +33,7 @@ namespace boost { namespace dll { namespace detail {
 // This method suppress the warnings and ensures that such casts are safe.
 template <class To, class From>
 BOOST_FORCEINLINE typename boost::disable_if_c<boost::is_member_pointer<To>::value || boost::is_reference<To>::value || boost::is_member_pointer<From>::value, To>::type
-    aggressive_ptr_cast(From v) BOOST_NOEXCEPT
+    aggressive_ptr_cast(From v) noexcept
 {
     static_assert(
         boost::is_pointer<To>::value && boost::is_pointer<From>::value,
@@ -61,7 +61,7 @@ BOOST_FORCEINLINE typename boost::disable_if_c<boost::is_member_pointer<To>::val
 
 template <class To, class From>
 BOOST_FORCEINLINE typename boost::disable_if_c<!boost::is_reference<To>::value || boost::is_member_pointer<From>::value, To>::type
-    aggressive_ptr_cast(From v) BOOST_NOEXCEPT
+    aggressive_ptr_cast(From v) noexcept
 {
     static_assert(
         boost::is_pointer<From>::value,
@@ -90,7 +90,7 @@ BOOST_FORCEINLINE typename boost::disable_if_c<!boost::is_reference<To>::value |
 
 template <class To, class From>
 BOOST_FORCEINLINE typename boost::disable_if_c<!boost::is_member_pointer<To>::value || boost::is_member_pointer<From>::value, To>::type
-    aggressive_ptr_cast(From v) BOOST_NOEXCEPT
+    aggressive_ptr_cast(From v) noexcept
 {
     static_assert(
         boost::is_pointer<From>::value,
@@ -109,7 +109,7 @@ BOOST_FORCEINLINE typename boost::disable_if_c<!boost::is_member_pointer<To>::va
 
 template <class To, class From>
 BOOST_FORCEINLINE typename boost::disable_if_c<boost::is_member_pointer<To>::value || !boost::is_member_pointer<From>::value, To>::type
-    aggressive_ptr_cast(From /* v */) BOOST_NOEXCEPT
+    aggressive_ptr_cast(From /* v */) noexcept
 {
     static_assert(
         boost::is_pointer<To>::value,

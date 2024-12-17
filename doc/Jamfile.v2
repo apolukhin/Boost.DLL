@@ -35,15 +35,8 @@ local doxygen_params =
         \"forcedlinkfs{1}=\\xmlonly<link linkend='boost.dll.fs.\\1'>boost::dll::fs::\\1</link>\\endxmlonly\" \\
         \"forcedmacrolink{1}=\\xmlonly<link linkend='\\1'>\\1</link>\\endxmlonly\" "
     <doxygen:param>"PREDEFINED= \\
-        \"BOOST_RV_REF(T)=T&&\" \\
-        \"BOOST_RV_REF(shared_library)=shared_library&&\" \\
-        \"BOOST_COPY_ASSIGN_REF(shared_library)=const shared_library&\" \\
-        \"BOOST_MOVABLE_BUT_NOT_COPYABLE(shared_library)= \\
-            shared_library(const shared_library&) = delete; \\
-            shared_library& operator=(const shared_library&) = delete; \" \\
         \"BOOST_DLL_IMPORT_RESULT_TYPE=result_type\" \\
         \"BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE=result_type\" \\
-        \"BOOST_EXPLICIT_OPERATOR_BOOL()=explicit operator bool() const noexcept;\" \\
         \"BOOST_DLL_DOXYGEN\" "
     ;
 

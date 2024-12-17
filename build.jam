@@ -10,7 +10,6 @@ constant boost_dependencies :
     /boost/config//boost_config
     /boost/core//boost_core
     /boost/filesystem//boost_filesystem
-    /boost/function//boost_function
     /boost/predef//boost_predef
     /boost/smart_ptr//boost_smart_ptr
     /boost/spirit//boost_spirit

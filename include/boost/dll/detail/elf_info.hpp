@@ -259,7 +259,7 @@ private:
         read_raw(fs, symbols[0], static_cast<std::size_t>(symtab_size - (symtab_size % sizeof(symbol_t))) );
     }
 
-    static bool is_visible(const symbol_t& sym) BOOST_NOEXCEPT {
+    static bool is_visible(const symbol_t& sym) noexcept {
         const unsigned char visibility = (sym.st_other & 0x03);
         // `(sym.st_info >> 4) != STB_LOCAL_ && !!sym.st_size` check also workarounds the
         // GCC's issue https://sourceware.org/bugzilla/show_bug.cgi?id=13621

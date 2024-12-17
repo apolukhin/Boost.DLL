@@ -185,7 +185,7 @@ struct mangled_import_type<sequence<T>, false, false, true> //is variable
 * \b Examples:
 *
 * \code
-* boost::function<int(int)> f = import_mangled<int(int)>("test_lib.so", "integer_func_name");
+* std::function<int(int)> f = import_mangled<int(int)>("test_lib.so", "integer_func_name");
 *
 * auto f_cpp11 = import_mangled<int(int)>("test_lib.so", "integer_func_name");
 * \endcode
