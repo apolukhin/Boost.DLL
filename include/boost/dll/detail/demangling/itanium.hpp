@@ -9,12 +9,12 @@
 
 #include <boost/dll/detail/demangling/mangled_storage_base.hpp>
 
-#include <iterator>
 #include <algorithm>
+#include <iterator>
+#include <type_traits>
 
 
 namespace boost { namespace dll { namespace detail {
-
 
 
 class mangled_storage_impl : public mangled_storage_base
@@ -181,22 +181,22 @@ namespace parser
         }
     };
 
-    inline std::string const_rule_impl(true_type )  {return " const";}
-    inline std::string const_rule_impl(false_type)  {return "";}
+    inline std::string const_rule_impl(std::true_type )  {return " const";}
+    inline std::string const_rule_impl(std::false_type)  {return "";}
     template<typename T>
-    std::string const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
+    std::string const_rule() {using t = std::is_const<typename std::remove_reference<T>::type>; return const_rule_impl(t());}
 
-    inline std::string volatile_rule_impl(true_type )  {return " volatile";}
-    inline std::string volatile_rule_impl(false_type)  {return "";}
+    inline std::string volatile_rule_impl(std::true_type )  {return " volatile";}
+    inline std::string volatile_rule_impl(std::false_type)  {return "";}
     template<typename T>
-    std::string volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
+    std::string volatile_rule() {using t = std::is_volatile<typename std::remove_reference<T>::type>; return volatile_rule_impl(t());}
 
-    inline std::string reference_rule_impl(false_type, false_type) {return "";}
-    inline std::string reference_rule_impl(true_type,  false_type) {return "&" ;}
-    inline std::string reference_rule_impl(false_type, true_type ) {return "&&";}
+    inline std::string reference_rule_impl(std::false_type, std::false_type) {return "";}
+    inline std::string reference_rule_impl(std::true_type,  std::false_type) {return "&" ;}
+    inline std::string reference_rule_impl(std::false_type, std::true_type ) {return "&&";}
 
     template<typename T>
-    std::string reference_rule() {using t_l = is_lvalue_reference<T>; using t_r = is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
+    std::string reference_rule() {using t_l = std::is_lvalue_reference<T>; using t_r = std::is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
 
     //it takes a string, because it may be overloaded.
     template<typename Return, typename Arg>

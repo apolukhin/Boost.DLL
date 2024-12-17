@@ -10,6 +10,7 @@
 #include <boost/dll/detail/demangling/mangled_storage_base.hpp>
 #include <iterator>
 #include <algorithm>
+#include <type_traits>
 
 #include <boost/spirit/home/x3.hpp>
 
@@ -109,35 +110,35 @@ namespace parser
     auto const virtual_ = x3::space >> "virtual";
     auto const static_     = x3::space >> x3::lit("static") ;
 
-    inline auto const_rule_impl(true_type )  {return x3::space >> "const";};
-    inline auto const_rule_impl(false_type)  {return x3::eps;};
+    inline auto const_rule_impl(std::true_type )  {return x3::space >> "const";};
+    inline auto const_rule_impl(std::false_type)  {return x3::eps;};
     template<typename T>
-    auto const_rule() {using t = is_const<typename remove_reference<T>::type>; return const_rule_impl(t());}
+    auto const_rule() {using t = std::is_const<typename std::remove_reference<T>::type>; return const_rule_impl(t());}
 
-    inline auto volatile_rule_impl(true_type )  {return x3::space >> "volatile";};
-    inline auto volatile_rule_impl(false_type)  {return x3::eps;};
+    inline auto volatile_rule_impl(std::true_type )  {return x3::space >> "volatile";};
+    inline auto volatile_rule_impl(std::false_type)  {return x3::eps;};
     template<typename T>
-    auto volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return volatile_rule_impl(t());}
+    auto volatile_rule() {using t = std::is_volatile<typename std::remove_reference<T>::type>; return volatile_rule_impl(t());}
 
 
-    inline auto inv_const_rule_impl(true_type )  {return "const" >>  x3::space ;};
-    inline auto inv_const_rule_impl(false_type)  {return x3::eps;};
+    inline auto inv_const_rule_impl(std::true_type )  {return "const" >>  x3::space ;};
+    inline auto inv_const_rule_impl(std::false_type)  {return x3::eps;};
     template<typename T>
-    auto inv_const_rule() {using t = is_const<typename remove_reference<T>::type>; return inv_const_rule_impl(t());}
+    auto inv_const_rule() {using t = std::is_const<typename std::remove_reference<T>::type>; return inv_const_rule_impl(t());}
 
-    inline auto inv_volatile_rule_impl(true_type )  {return "volatile" >> x3::space;};
-    inline auto inv_volatile_rule_impl(false_type)  {return x3::eps;};
+    inline auto inv_volatile_rule_impl(std::true_type )  {return "volatile" >> x3::space;};
+    inline auto inv_volatile_rule_impl(std::false_type)  {return x3::eps;};
     template<typename T>
-    auto inv_volatile_rule() {using t = is_volatile<typename remove_reference<T>::type>; return inv_volatile_rule_impl(t());}
+    auto inv_volatile_rule() {using t = std::is_volatile<typename std::remove_reference<T>::type>; return inv_volatile_rule_impl(t());}
 
 
-    inline auto reference_rule_impl(false_type, false_type) {return x3::eps;}
-    inline auto reference_rule_impl(true_type,  false_type) {return x3::space >>"&"  ;}
-    inline auto reference_rule_impl(false_type, true_type ) {return x3::space >>"&&" ;}
+    inline auto reference_rule_impl(std::false_type, std::false_type) {return x3::eps;}
+    inline auto reference_rule_impl(std::true_type,  std::false_type) {return x3::space >>"&"  ;}
+    inline auto reference_rule_impl(std::false_type, std::true_type ) {return x3::space >>"&&" ;}
 
 
     template<typename T>
-    auto reference_rule() {using t_l = is_lvalue_reference<T>; using t_r = is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
+    auto reference_rule() {using t_l = std::is_lvalue_reference<T>; using t_r = std::is_rvalue_reference<T>; return reference_rule_impl(t_l(), t_r());}
 
     auto const class_ = ("class" | x3::lit("struct"));
 
@@ -167,15 +168,12 @@ namespace parser
     template<typename Return, typename Arg>
     auto arg_list(const mangled_storage_impl & ms, Return (*)(Arg))
     {
-        using namespace std;
-
         return type_rule<Arg>(ms.get_name<Arg>());
     }
 
     template<typename Return, typename First, typename Second, typename ...Args>
     auto arg_list(const mangled_storage_impl & ms, Return (*)(First, Second, Args...))
     {
-
         using next_type = Return (*)(Second, Args...);
         return type_rule<First>(ms.get_name<First>()) >> x3::char_(',') >> arg_list(ms, next_type());
     }
