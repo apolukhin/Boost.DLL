@@ -184,7 +184,7 @@ namespace boost { namespace dll {
 #else    
 // Note: we can not use `aggressive_ptr_cast` here, because in that case GCC applies
 // different permissions to the section and it causes Segmentation fault.
-// Note: we can not use `boost::addressof()` here, because in that case GCC 
+// Note: we can not use `std::addressof()` here, because in that case GCC 
 // may optimize away the FunctionOrVar instance and we'll get a pointer to unexisting symbol.
 /*!
 * \brief Same as \forcedmacrolink{BOOST_DLL_ALIAS} but puts alias name into the user specified section.

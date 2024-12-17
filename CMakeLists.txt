@@ -18,15 +18,12 @@ target_link_libraries(boost_dll
     Boost::config
     Boost::core
     Boost::filesystem
-    Boost::function
-    Boost::move
     Boost::predef
     Boost::smart_ptr
     Boost::spirit
     Boost::system
     Boost::throw_exception
     Boost::type_index
-    Boost::type_traits
     Boost::winapi
 )
 

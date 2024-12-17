@@ -12,6 +12,7 @@
 #include <boost/predef/os.h>
 #include <boost/predef/compiler/visualc.h>
 #include <boost/dll/detail/aggressive_ptr_cast.hpp>
+
 #if BOOST_OS_WINDOWS
 #   include <boost/winapi/dll.hpp>
 #   include <boost/dll/detail/windows/path_from_handle.hpp>
@@ -19,6 +20,8 @@
 #   include <dlfcn.h>
 #   include <boost/dll/detail/posix/program_location_impl.hpp>
 #endif
+
+#include <memory>  // std::addressof
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -54,7 +57,7 @@ namespace detail {
     */
     template <class T>
     inline boost::dll::fs::path symbol_location_ptr(T ptr_to_symbol, std::error_code& ec) {
-        static_assert(boost::is_pointer<T>::value, "boost::dll::symbol_location_ptr works only with pointers! `ptr_to_symbol` must be a pointer");
+        static_assert(std::is_pointer<T>::value, "boost::dll::symbol_location_ptr works only with pointers! `ptr_to_symbol` must be a pointer");
         boost::dll::fs::path ret;
         if (!ptr_to_symbol) {
             ec = std::make_error_code(
@@ -135,7 +138,7 @@ namespace detail {
     inline boost::dll::fs::path symbol_location(const T& symbol, std::error_code& ec) {
         ec.clear();
         return boost::dll::symbol_location_ptr(
-            boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol)),
+            boost::dll::detail::aggressive_ptr_cast<const void*>(std::addressof(symbol)),
             ec
         );
     }
@@ -154,7 +157,7 @@ namespace detail {
         boost::dll::fs::path ret;
         std::error_code ec;
         ret = boost::dll::symbol_location_ptr(
-            boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol)),
+            boost::dll::detail::aggressive_ptr_cast<const void*>(std::addressof(symbol)),
             ec
         );
 

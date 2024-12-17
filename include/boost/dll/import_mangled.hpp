@@ -21,10 +21,9 @@
 #include <boost/make_shared.hpp>
 #include <boost/dll/smart_library.hpp>
 #include <boost/dll/detail/import_mangled_helpers.hpp>
-#include <boost/core/addressof.hpp>
-#include <boost/core/enable_if.hpp>
-#include <boost/type_traits/conditional.hpp>
-#include <boost/type_traits/is_object.hpp>
+
+#include <memory>  // std::addressof
+#include <type_traits>
 
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
@@ -93,8 +92,8 @@ public:
 
 
 // simple enough to be here
-template<class Seq>  struct is_variable : boost::false_type {};
-template<typename T> struct is_variable<sequence<T>> : boost::is_object<T> {};
+template<class Seq>  struct is_variable : std::false_type {};
+template<typename T> struct is_variable<sequence<T>> : std::is_object<T> {};
 
 template <class Sequence,
           bool isFunction = is_function_seq<Sequence>::value,
@@ -112,7 +111,7 @@ struct mangled_import_type<sequence<Args...>, true,false,false> //is function
     {
         return type(
                 boost::make_shared<shared_library>(p.shared_lib()),
-                boost::addressof(p.get_function<Args>(name))...);
+                std::addressof(p.get_function<Args>(name))...);
     }
 };
 
@@ -153,7 +152,7 @@ struct mangled_import_type<sequence<T>, false, false, true> //is variable
     {
         return type(
                 boost::make_shared<shared_library>(p.shared_lib()),
-                boost::addressof(p.get_variable<T>(name)));
+                std::addressof(p.get_variable<T>(name)));
     }
 
 };
@@ -281,7 +280,7 @@ BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const shared_library& lib, c
     typedef typename boost::dll::experimental::detail::mangled_import_type<detail::sequence<Args...>> type;
 
     boost::shared_ptr<boost::dll::experimental::smart_library> p = boost::make_shared<boost::dll::experimental::smart_library>(lib);
-    return type::make(p, name);
+    return type::boostmake(p, name);
 }
 
 //! \overload boost::dll::import(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)

@@ -9,11 +9,11 @@
 #define BOOST_DLL_IMPORT_HPP
 
 #include <boost/dll/config.hpp>
-#include <boost/core/addressof.hpp>
-#include <boost/core/enable_if.hpp>
-#include <boost/type_traits/is_object.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/dll/shared_library.hpp>
+
+#include <memory>  // std::addressof
+#include <type_traits>
 
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
@@ -58,7 +58,7 @@ namespace detail {
 
     template <class T>
     using import_type = typename std::conditional<
-        boost::is_object<T>::value,
+        std::is_object<T>::value,
         boost::shared_ptr<T>,
         boost::dll::detail::library_function<T>
     >::type;
@@ -111,7 +111,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(const boost::dll::fs::path& lib, cons
     using type = boost::dll::detail::import_type<T>;
 
     auto p = boost::make_shared<boost::dll::shared_library>(lib, mode);
-    return type(p, boost::addressof(p->get<T>(name)));
+    return type(p, std::addressof(p->get<T>(name)));
 }
 
 //! \overload boost::dll::import_symbol(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
@@ -128,7 +128,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(const shared_library& lib, const char
     using type = boost::dll::detail::import_type<T>;
 
     auto p = boost::make_shared<boost::dll::shared_library>(lib);
-    return type(p, boost::addressof(p->get<T>(name)));
+    return type(p, std::addressof(p->get<T>(name)));
 }
 
 //! \overload boost::dll::import_symbol(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
@@ -145,7 +145,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(shared_library&& lib, const char* nam
     auto p = boost::make_shared<boost::dll::shared_library>(
         std::move(lib)
     );
-    return type(p, boost::addressof(p->get<T>(name)));
+    return type(p, std::addressof(p->get<T>(name)));
 }
 
 //! \overload boost::dll::import_symbol(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
