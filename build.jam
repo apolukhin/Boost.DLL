@@ -16,7 +16,6 @@ constant boost_dependencies :
     /boost/system//boost_system
     /boost/throw_exception//boost_throw_exception
     /boost/type_index//boost_type_index
-    /boost/type_traits//boost_type_traits
     /boost/winapi//boost_winapi ;
 
 project /boost/dll

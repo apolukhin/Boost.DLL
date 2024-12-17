@@ -8,13 +8,9 @@
 #define BOOST_DLL_DETAIL_DEMANGLING_ITANIUM_HPP_
 
 #include <boost/dll/detail/demangling/mangled_storage_base.hpp>
+
 #include <iterator>
 #include <algorithm>
-#include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/is_volatile.hpp>
-#include <boost/type_traits/is_rvalue_reference.hpp>
-#include <boost/type_traits/is_lvalue_reference.hpp>
-#include <boost/type_traits/function_traits.hpp>
 
 
 namespace boost { namespace dll { namespace detail {

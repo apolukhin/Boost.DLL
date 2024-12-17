@@ -10,12 +10,6 @@
 #include <boost/dll/detail/demangling/mangled_storage_base.hpp>
 #include <iterator>
 #include <algorithm>
-#include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/is_volatile.hpp>
-#include <boost/type_traits/is_lvalue_reference.hpp>
-#include <boost/type_traits/is_rvalue_reference.hpp>
-#include <boost/type_traits/function_traits.hpp>
-#include <boost/type_traits/remove_reference.hpp>
 
 #include <boost/spirit/home/x3.hpp>
 
