@@ -15,10 +15,6 @@
 #include <boost/make_shared.hpp>
 #include <boost/dll/shared_library.hpp>
 
-#if defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) || defined(BOOST_NO_CXX11_DECLTYPE) || defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-#   include <boost/function.hpp>
-#endif
-
 #ifdef BOOST_HAS_PRAGMA_ONCE
 # pragma once
 #endif
@@ -43,12 +39,6 @@ namespace detail {
             : f_(lib, func_ptr)
         {}
 
-#if defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) || defined(BOOST_NO_CXX11_DECLTYPE) || defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-        operator T*() const noexcept {
-            return f_.get();
-        }
-#else
-
         // Compilation error at this point means that imported function
         // was called with unmatching parameters.
         //
@@ -63,7 +53,6 @@ namespace detail {
         {
             return (*f_)(static_cast<Args&&>(args)...);
         }
-#endif
     };
 
     template <class T, class = void>
@@ -71,27 +60,14 @@ namespace detail {
 
     template <class T>
     struct import_type<T, typename boost::disable_if<boost::is_object<T> >::type> {
-        typedef boost::dll::detail::library_function<T> base_type;
-
-#if defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) || defined(BOOST_NO_CXX11_DECLTYPE) || defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) || defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-        typedef boost::function<T>                      type;
-#else
         typedef boost::dll::detail::library_function<T> type;
-#endif
     };
 
     template <class T>
     struct import_type<T, typename boost::enable_if<boost::is_object<T> >::type> {
-        typedef boost::shared_ptr<T> base_type;
         typedef boost::shared_ptr<T> type;
     };
 } // namespace detail
-
-
-#ifndef BOOST_DLL_DOXYGEN
-#   define BOOST_DLL_IMPORT_RESULT_TYPE inline typename boost::dll::detail::import_type<T>::type
-#endif
-
 
 /*!
 * Returns callable object or boost::shared_ptr<T> that holds the symbol imported
@@ -128,10 +104,10 @@ namespace detail {
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 */
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(const boost::dll::fs::path& lib, const char* name,
+auto import_symbol(const boost::dll::fs::path& lib, const char* name,
     load_mode::type mode = load_mode::default_mode)
 {
-    typedef typename boost::dll::detail::import_type<T>::base_type type;
+    typedef typename boost::dll::detail::import_type<T>::type type;
 
     boost::shared_ptr<boost::dll::shared_library> p = boost::make_shared<boost::dll::shared_library>(lib, mode);
     return type(p, boost::addressof(p->get<T>(name)));
@@ -139,7 +115,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(const boost::dll::fs::path& lib, cons
 
 //! \overload boost::dll::import_symbol(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(const boost::dll::fs::path& lib, const std::string& name,
+auto import_symbol(const boost::dll::fs::path& lib, const std::string& name,
     load_mode::type mode = load_mode::default_mode)
 {
     return dll::import_symbol<T>(lib, name.c_str(), mode);
@@ -147,8 +123,8 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(const boost::dll::fs::path& lib, cons
 
 //! \overload boost::dll::import_symbol(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(const shared_library& lib, const char* name) {
-    typedef typename boost::dll::detail::import_type<T>::base_type type;
+auto import_symbol(const shared_library& lib, const char* name) {
+    typedef typename boost::dll::detail::import_type<T>::type type;
 
     boost::shared_ptr<boost::dll::shared_library> p = boost::make_shared<boost::dll::shared_library>(lib);
     return type(p, boost::addressof(p->get<T>(name)));
@@ -156,14 +132,14 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(const shared_library& lib, const char
 
 //! \overload boost::dll::import_symbol(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(const shared_library& lib, const std::string& name) {
+auto import_symbol(const shared_library& lib, const std::string& name) {
     return dll::import_symbol<T>(lib, name.c_str());
 }
 
 //! \overload boost::dll::import_symbol(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(shared_library&& lib, const char* name) {
-    typedef typename boost::dll::detail::import_type<T>::base_type type;
+auto import_symbol(shared_library&& lib, const char* name) {
+    typedef typename boost::dll::detail::import_type<T>::type type;
 
     boost::shared_ptr<boost::dll::shared_library> p = boost::make_shared<boost::dll::shared_library>(
         std::move(lib)
@@ -173,7 +149,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(shared_library&& lib, const char* nam
 
 //! \overload boost::dll::import_symbol(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(shared_library&& lib, const std::string& name) {
+auto import_symbol(shared_library&& lib, const std::string& name) {
     return dll::import_symbol<T>(std::move(lib), name.c_str());
 }
 
@@ -218,10 +194,10 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(shared_library&& lib, const std::stri
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
 */
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const boost::dll::fs::path& lib, const char* name,
+auto import_alias(const boost::dll::fs::path& lib, const char* name,
     load_mode::type mode = load_mode::default_mode)
 {
-    typedef typename boost::dll::detail::import_type<T>::base_type type;
+    typedef typename boost::dll::detail::import_type<T>::type type;
 
     boost::shared_ptr<boost::dll::shared_library> p = boost::make_shared<boost::dll::shared_library>(lib, mode);
     return type(p, p->get<T*>(name));
@@ -229,7 +205,7 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const boost::dll::fs::path& lib, const
 
 //! \overload boost::dll::import_alias(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const boost::dll::fs::path& lib, const std::string& name,
+auto import_alias(const boost::dll::fs::path& lib, const std::string& name,
     load_mode::type mode = load_mode::default_mode)
 {
     return dll::import_alias<T>(lib, name.c_str(), mode);
@@ -237,8 +213,8 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const boost::dll::fs::path& lib, const
 
 //! \overload boost::dll::import_alias(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const shared_library& lib, const char* name) {
-    typedef typename boost::dll::detail::import_type<T>::base_type type;
+auto import_alias(const shared_library& lib, const char* name) {
+    typedef typename boost::dll::detail::import_type<T>::type type;
 
     boost::shared_ptr<boost::dll::shared_library> p = boost::make_shared<boost::dll::shared_library>(lib);
     return type(p, p->get<T*>(name));
@@ -246,14 +222,14 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const shared_library& lib, const char*
 
 //! \overload boost::dll::import_alias(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const shared_library& lib, const std::string& name) {
+auto import_alias(const shared_library& lib, const std::string& name) {
     return dll::import_alias<T>(lib, name.c_str());
 }
 
 //! \overload boost::dll::import_alias(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_alias(shared_library&& lib, const char* name) {
-    typedef typename boost::dll::detail::import_type<T>::base_type type;
+auto import_alias(shared_library&& lib, const char* name) {
+    typedef typename boost::dll::detail::import_type<T>::type type;
 
     boost::shared_ptr<boost::dll::shared_library> p = boost::make_shared<boost::dll::shared_library>(
         std::move(lib)
@@ -263,11 +239,11 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_alias(shared_library&& lib, const char* name
 
 //! \overload boost::dll::import_alias(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class T>
-BOOST_DLL_IMPORT_RESULT_TYPE import_alias(shared_library&& lib, const std::string& name) {
+auto import_alias(shared_library&& lib, const std::string& name) {
     return dll::import_alias<T>(std::move(lib), name.c_str());
 }
 
-#undef BOOST_DLL_IMPORT_RESULT_TYPE
+#undef auto
 
 
 }} // boost::dll

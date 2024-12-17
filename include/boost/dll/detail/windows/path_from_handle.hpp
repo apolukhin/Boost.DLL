@@ -19,7 +19,7 @@
 
 namespace boost { namespace dll { namespace detail {
 
-    inline std::error_code last_error_code() BOOST_NOEXCEPT {
+    inline std::error_code last_error_code() noexcept {
         boost::winapi::DWORD_ err = boost::winapi::GetLastError();
         return std::error_code(
             static_cast<int>(err),

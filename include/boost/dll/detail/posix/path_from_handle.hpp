@@ -24,7 +24,7 @@
 #   include <cstddef> // for std::ptrdiff_t
 
 namespace boost { namespace dll { namespace detail {
-    inline void* strip_handle(void* handle) BOOST_NOEXCEPT {
+    inline void* strip_handle(void* handle) noexcept {
         return reinterpret_cast<void*>(
             (reinterpret_cast<std::ptrdiff_t>(handle) >> 2) << 2
         );

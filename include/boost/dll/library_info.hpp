@@ -54,7 +54,7 @@ private:
         boost::throw_exception(std::runtime_error("Not native format: 64bit binary"));
     }
 
-    inline static void throw_if_in_32bit_impl(boost::false_type /* is_32bit_platform */) BOOST_NOEXCEPT {}
+    inline static void throw_if_in_32bit_impl(boost::false_type /* is_32bit_platform */) noexcept {}
 
 
     inline static void throw_if_in_32bit() {
