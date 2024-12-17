@@ -36,7 +36,7 @@ BOOST_FORCEINLINE typename std::enable_if<!std::is_member_pointer<To>::value && 
 
     static_assert(
         std::is_void< typename std::remove_pointer<To>::type >::value
-        || boost::is_void< typename boost::remove_pointer<From>::type >::value,
+        || std::is_void< typename std::remove_pointer<From>::type >::value,
         "`agressive_ptr_cast` function must be used only for casting to or from void pointers."
     );
 
@@ -92,7 +92,7 @@ BOOST_FORCEINLINE typename std::enable_if<std::is_member_pointer<To>::value && !
     );
 
     static_assert(
-        std::is_void< typename boost::remove_pointer<From>::type >::value,
+        std::is_void< typename std::remove_pointer<From>::type >::value,
         "`agressive_ptr_cast` function must be used only for casting to or from void pointers."
     );
 
