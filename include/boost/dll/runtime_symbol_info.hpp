@@ -30,7 +30,7 @@ namespace boost { namespace dll {
 
 #if BOOST_OS_WINDOWS
 namespace detail {
-    inline boost::dll::fs::path program_location_impl(boost::dll::fs::error_code& ec) {
+    inline boost::dll::fs::path program_location_impl(std::error_code& ec) {
         return boost::dll::detail::path_from_handle(NULL, ec);
     }
 } // namespace detail
@@ -53,12 +53,12 @@ namespace detail {
     * \endcode
     */
     template <class T>
-    inline boost::dll::fs::path symbol_location_ptr(T ptr_to_symbol, boost::dll::fs::error_code& ec) {
+    inline boost::dll::fs::path symbol_location_ptr(T ptr_to_symbol, std::error_code& ec) {
         static_assert(boost::is_pointer<T>::value, "boost::dll::symbol_location_ptr works only with pointers! `ptr_to_symbol` must be a pointer");
         boost::dll::fs::path ret;
         if (!ptr_to_symbol) {
-            ec = boost::dll::fs::make_error_code(
-                boost::dll::fs::errc::bad_address
+            ec = std::make_error_code(
+                std::errc::bad_address
             );
 
             return ret;
@@ -85,8 +85,8 @@ namespace detail {
             ret = info.dli_fname;
         } else {
             boost::dll::detail::reset_dlerror();
-            ec = boost::dll::fs::make_error_code(
-                boost::dll::fs::errc::bad_address
+            ec = std::make_error_code(
+                std::errc::bad_address
             );
         }
 
@@ -94,11 +94,11 @@ namespace detail {
 #endif
     }
 
-    //! \overload symbol_location_ptr(const void* ptr_to_symbol, boost::dll::fs::error_code& ec)
+    //! \overload symbol_location_ptr(const void* ptr_to_symbol, std::error_code& ec)
     template <class T>
     inline boost::dll::fs::path symbol_location_ptr(T ptr_to_symbol) {
         boost::dll::fs::path ret;
-        boost::dll::fs::error_code ec;
+        std::error_code ec;
         ret = boost::dll::symbol_location_ptr(ptr_to_symbol, ec);
 
         if (ec) {
@@ -132,7 +132,7 @@ namespace detail {
     * \endcode
     */
     template <class T>
-    inline boost::dll::fs::path symbol_location(const T& symbol, boost::dll::fs::error_code& ec) {
+    inline boost::dll::fs::path symbol_location(const T& symbol, std::error_code& ec) {
         ec.clear();
         return boost::dll::symbol_location_ptr(
             boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol)),
@@ -146,13 +146,13 @@ namespace detail {
     template <class T>
     inline boost::dll::fs::path symbol_location(const T& symbol, const char* /*workaround*/ = 0)
 #else
-    //! \overload symbol_location(const T& symbol, boost::dll::fs::error_code& ec)
+    //! \overload symbol_location(const T& symbol, std::error_code& ec)
     template <class T>
     inline boost::dll::fs::path symbol_location(const T& symbol)
 #endif
     {
         boost::dll::fs::path ret;
-        boost::dll::fs::error_code ec;
+        std::error_code ec;
         ret = boost::dll::symbol_location_ptr(
             boost::dll::detail::aggressive_ptr_cast<const void*>(boost::addressof(symbol)),
             ec
@@ -180,16 +180,16 @@ namespace detail {
     * \param ec Variable that will be set to the result of the operation.
     * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept \forcedlinkfs{error_code} also throws \forcedlinkfs{system_error}.
     */
-    static inline boost::dll::fs::path this_line_location(boost::dll::fs::error_code& ec) {
-        typedef boost::dll::fs::path(func_t)(boost::dll::fs::error_code& );
+    static inline boost::dll::fs::path this_line_location(std::error_code& ec) {
+        typedef boost::dll::fs::path(func_t)(std::error_code& );
         func_t& f = this_line_location;
         return boost::dll::symbol_location(f, ec);
     }
 
-    //! \overload this_line_location(boost::dll::fs::error_code& ec)
+    //! \overload this_line_location(std::error_code& ec)
     static inline boost::dll::fs::path this_line_location() {
         boost::dll::fs::path ret;
-        boost::dll::fs::error_code ec;
+        std::error_code ec;
         ret = this_line_location(ec);
 
         if (ec) {
@@ -213,15 +213,15 @@ namespace detail {
     * \param ec Variable that will be set to the result of the operation.
     * \throws std::bad_alloc in case of insufficient memory. Overload that does not accept \forcedlinkfs{error_code} also throws \forcedlinkfs{system_error}.
     */
-    inline boost::dll::fs::path program_location(boost::dll::fs::error_code& ec) {
+    inline boost::dll::fs::path program_location(std::error_code& ec) {
         ec.clear();
         return boost::dll::detail::program_location_impl(ec);
     }
 
-    //! \overload program_location(boost::dll::fs::error_code& ec) {
+    //! \overload program_location(std::error_code& ec) {
     inline boost::dll::fs::path program_location() {
         boost::dll::fs::path ret;
-        boost::dll::fs::error_code ec;
+        std::error_code ec;
         ret = boost::dll::detail::program_location_impl(ec);
 
         if (ec) {

@@ -30,7 +30,7 @@ namespace boost { namespace dll { namespace detail {
         );
     }
 
-    inline boost::dll::fs::path path_from_handle(void* handle, boost::dll::fs::error_code &ec) {
+    inline boost::dll::fs::path path_from_handle(void* handle, std::error_code &ec) {
         handle = strip_handle(handle);
 
         // Iterate through all images currently in memory
@@ -53,8 +53,8 @@ namespace boost { namespace dll { namespace detail {
         }
 
         boost::dll::detail::reset_dlerror();
-        ec = boost::dll::fs::make_error_code(
-            boost::dll::fs::errc::bad_file_descriptor
+        ec = std::make_error_code(
+            std::errc::bad_file_descriptor
         );
 
         return boost::dll::fs::path();
@@ -78,7 +78,7 @@ namespace boost { namespace dll { namespace detail {
         // ...          // Ignoring remaning parts of the structure
     };
 
-    inline boost::dll::fs::path path_from_handle(const void* handle, boost::dll::fs::error_code &ec) {
+    inline boost::dll::fs::path path_from_handle(const void* handle, std::error_code &ec) {
         static const std::size_t work_around_b_24465209__offset = 128;
         const struct soinfo* si = reinterpret_cast<const struct soinfo*>(
             static_cast<const char*>(handle) + work_around_b_24465209__offset
@@ -119,7 +119,7 @@ namespace boost { namespace dll { namespace detail {
     };
 #endif // #if BOOST_OS_QNX
 
-    inline boost::dll::fs::path path_from_handle(void* handle, boost::dll::fs::error_code &ec) {
+    inline boost::dll::fs::path path_from_handle(void* handle, std::error_code &ec) {
         // RTLD_DI_LINKMAP (RTLD_DI_ORIGIN returns only folder and is not suitable for this case)
         // Obtain the Link_map for the handle  that  is  specified.
         // The  p  argument  points to a Link_map pointer (Link_map
@@ -144,8 +144,8 @@ namespace boost { namespace dll { namespace detail {
 #endif
         if (!link_map) {
             boost::dll::detail::reset_dlerror();
-            ec = boost::dll::fs::make_error_code(
-                boost::dll::fs::errc::bad_file_descriptor
+            ec = std::make_error_code(
+                std::errc::bad_file_descriptor
             );
 
             return boost::dll::fs::path();

@@ -55,7 +55,7 @@ public:
         return actual_path;
     }
 
-    void load(boost::dll::fs::path sl, load_mode::type portable_mode, boost::dll::fs::error_code &ec) {
+    void load(boost::dll::fs::path sl, load_mode::type portable_mode, std::error_code &ec) {
         typedef boost::winapi::DWORD_ native_mode_t;
         native_mode_t native_mode = static_cast<native_mode_t>(portable_mode);
         unload();
@@ -125,7 +125,7 @@ public:
         boost::core::invoke_swap(handle_, rhs.handle_);
     }
 
-    boost::dll::fs::path full_module_path(boost::dll::fs::error_code &ec) const {
+    boost::dll::fs::path full_module_path(std::error_code &ec) const {
         return boost::dll::detail::path_from_handle(handle_, ec);
     }
 
@@ -133,13 +133,13 @@ public:
         return L".dll";
     }
 
-    void* symbol_addr(const char* sb, boost::dll::fs::error_code &ec) const noexcept {
+    void* symbol_addr(const char* sb, std::error_code &ec) const noexcept {
         if (is_resource()) {
             // `GetProcAddress` could not be called for libraries loaded with
             // `LOAD_LIBRARY_AS_DATAFILE`, `LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE`
             // or `LOAD_LIBRARY_AS_IMAGE_RESOURCE`.
-            ec = boost::dll::fs::make_error_code(
-                boost::dll::fs::errc::operation_not_supported
+            ec = std::make_error_code(
+                std::errc::operation_not_supported
             );
 
             return NULL;
@@ -164,7 +164,7 @@ public:
 
 private:
     // Returns true if this load attempt should be the last one.
-    bool load_impl(const boost::dll::fs::path &load_path, boost::winapi::DWORD_ mode, boost::dll::fs::error_code &ec) {
+    bool load_impl(const boost::dll::fs::path &load_path, boost::winapi::DWORD_ mode, std::error_code &ec) {
         handle_ = boost::winapi::LoadLibraryExW(load_path.c_str(), 0, mode);
         if (handle_) {
             return true;
