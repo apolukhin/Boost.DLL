@@ -12,7 +12,6 @@ constant boost_dependencies :
     /boost/filesystem//boost_filesystem
     /boost/predef//boost_predef
     /boost/smart_ptr//boost_smart_ptr
-    /boost/spirit//boost_spirit
     /boost/system//boost_system
     /boost/throw_exception//boost_throw_exception
     /boost/type_index//boost_type_index

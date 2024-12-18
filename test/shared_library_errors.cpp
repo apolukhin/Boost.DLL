@@ -12,7 +12,6 @@
 #include <boost/dll/shared_library.hpp>
 #include <boost/dll/library_info.hpp>
 #include <boost/core/lightweight_test.hpp>
-#include <boost/function.hpp>
 
 
 // Unit Tests

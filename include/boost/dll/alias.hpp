@@ -44,7 +44,7 @@ namespace boost { namespace dll {
 #define BOOST_DLL_SELECTANY __declspec(selectany)
 
 #define BOOST_DLL_SECTION(SectionName, Permissions)                                             \
-    static_assert(                                                                    \
+    static_assert(                                                                              \
         sizeof(#SectionName) < 10,                                                              \
         "Some platforms require section names to be at most 8 bytes"                            \
     );                                                                                          \
@@ -83,7 +83,7 @@ namespace boost { namespace dll {
 * \param Permissions Can be "read" or "write" (without quotes!).
 */
 #define BOOST_DLL_SECTION(SectionName, Permissions)                                             \
-    static_assert(                                                                    \
+    static_assert(                                                                              \
         sizeof(#SectionName) < 10,                                                              \
         "Some platforms require section names to be at most 8 bytes"                            \
     );                                                                                          \
@@ -92,7 +92,7 @@ namespace boost { namespace dll {
 #else // #if !BOOST_OS_MACOS && !BOOST_OS_IOS
 
 #define BOOST_DLL_SECTION(SectionName, Permissions)                                             \
-    static_assert(                                                                    \
+    static_assert(                                                                              \
         sizeof(#SectionName) < 10,                                                              \
         "Some platforms require section names to be at most 8 bytes"                            \
     );                                                                                          \
