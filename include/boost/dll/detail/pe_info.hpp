@@ -343,7 +343,7 @@ public:
 
         std::cerr << "!!!!!! BEFORE exports(fs, h)\n";
         const exports_t exprt = exports(fs, h);
-        std::cerr << "!!!!!! AFTER exports(fs, h) exprt.NumberOfFunctions " << exprt.NumberOfFunctions << "\n";
+        std::cerr << "!!!!!! AFTER exports(fs, h) exprt.NumberOfFunctions " << exprt.NumberOfFunctions << " NumberOfNames = " << exprt.NumberOfNames << "\n";
         const std::size_t exported_symbols = exprt.NumberOfFunctions;
         const std::size_t fixed_names_addr = get_file_offset(fs, exprt.AddressOfNames, h);
         const std::size_t fixed_ordinals_addr = get_file_offset(fs, exprt.AddressOfNameOrdinals, h);
@@ -359,6 +359,10 @@ public:
             fs.seekg(fixed_ordinals_addr + i * sizeof(ordinal));
             read_raw(fs, ordinal);
             std::cerr << "!!!!!! LOOP exported_symbols ordinal " << ordinal << "\n";
+            if (ordinal >= exported_symbols) {
+                std::cerr << "!!!!!! LOOP clang-win exiting\n";
+                continue;
+            }
 
             // getting function addr
             fs.seekg(fixed_functions_addr + ordinal * sizeof(ptr));
