@@ -21,7 +21,7 @@ init:
 # From this point and below code is same for all the Boost libs
 ###############################################################################################################
 
-version: 1.64.{build}-{branch}
+version: 1.87.{build}-{branch}
  
 # branches to build
 branches:
