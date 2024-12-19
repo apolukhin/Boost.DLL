@@ -16,6 +16,7 @@
 
 #include <cstring>
 #include <fstream>
+#include <iostream>
 #include <string> // for std::getline
 #include <vector>
 
@@ -311,8 +312,10 @@ public:
 
     static std::vector<std::string> symbols(std::ifstream& fs, const char* section_name) {
         std::vector<std::string> ret;
+        std::cerr << "!!!!!! BEFORE header(fs)\n";
 
         const header_t h = header(fs);
+        std::cerr << "!!!!!! AFTER header(fs)\n";
         
         std::size_t section_begin_addr = 0;
         std::size_t section_end_addr = 0;
@@ -322,6 +325,7 @@ public:
             char name_helper[section_t::IMAGE_SIZEOF_SHORT_NAME_ + 1];
             std::memset(name_helper, 0, sizeof(name_helper));
             for (std::size_t i = 0;i < h.FileHeader.NumberOfSections;++i) {
+                std::cerr << "!!!!!! LOOP iteration " << i << "\n";
                 // There is no terminating null character if the string is exactly eight characters long
                 read_raw(fs, image_section_header);
                 std::memcpy(name_helper, image_section_header.Name, section_t::IMAGE_SIZEOF_SHORT_NAME_);
@@ -330,13 +334,16 @@ public:
                     section_end_addr = section_begin_addr + image_section_header.SizeOfRawData;
                 }
             }
+            std::cerr << "!!!!!! END LOOP iteration\n";
             
             // returning empty result if section was not found
             if(section_begin_addr == 0 || section_end_addr == 0)
                 return ret;
         }
 
+        std::cerr << "!!!!!! BEFORE exports(fs, h)\n";
         const exports_t exprt = exports(fs, h);
+        std::cerr << "!!!!!! AFTER exports(fs, h)\n";
         const std::size_t exported_symbols = exprt.NumberOfFunctions;
         const std::size_t fixed_names_addr = get_file_offset(fs, exprt.AddressOfNames, h);
         const std::size_t fixed_ordinals_addr = get_file_offset(fs, exprt.AddressOfNameOrdinals, h);
@@ -347,6 +354,7 @@ public:
         boost::dll::detail::WORD_ ordinal;
         std::string symbol_name;
         for (std::size_t i = 0;i < exported_symbols;++i) {
+            std::cerr << "!!!!!! LOOP exported_symbols iteration " << i << "\n";
             // getting ordinal
             fs.seekg(fixed_ordinals_addr + i * sizeof(ordinal));
             read_raw(fs, ordinal);
@@ -366,6 +374,7 @@ public:
             std::getline(fs, symbol_name, '\0');
             ret.push_back(symbol_name);
         }
+        std::cerr << "!!!!!! END LOOP exported_symbols\n";
 
         return ret;
     }

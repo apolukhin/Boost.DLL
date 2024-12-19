@@ -32,46 +32,12 @@ skip_tags: true
 
 environment:
   matrix:
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      TOOLSET: msvc-14.1
-      CXXSTD: 14,17
-      ADDRMD: 32,64
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      TOOLSET: msvc-14.2
-      CXXSTD: 14,17,latest  # latest is C++2a
-      ADDRMD: 32,64
     # TODO: Clang 32bit job yields:
     # LINK : fatal error LNK1171: unable to load mspdbcore.dll (error code: 126)
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       TOOLSET: clang-win
       CXXSTD: 14,17
       ADDRMD: 64
-    # Some issue with stdcxx=14 builds:
-    # clang-cl: error: linker command failed with exit code 1181 (use -v to see invocation)
-    # "clang-cl.exe" "clang-cl.exe" -m64 -m64 /link /link /incremental:no /incremental:no /manifest /manifest /DLL /subsystem:console /subsystem:console /out:"..\..\..\bin.v2\libs\dll\test\clang-win-9.0.1\release\address-model-64\cxxstd-14-iso\threading-multi\library1-clangw9-mt-x64-1_73.dll" /IMPLIB:"..\..\..\bin.v2\libs\dll\test\clang-win-9.0.1\release\address-model-64\cxxstd-14-iso\threading-multi\library1-clangw9-mt-x64-1_73.lib"    @"..\..\..\bin.v2\libs\dll\test\clang-win-9.0.1\release\address-model-64\cxxstd-14-iso\threading-multi\library1-clangw9-mt-x64-1_73.dll.rsp"
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      TOOLSET: clang-win
-      CXXSTD: 17,2a
-      ADDRMD: 32,64
-      
-    # TODO: Both Cygwins have problems with <link.h> and `dladdr`
-    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    #  ADDPATH: C:\cygwin\bin;
-    #  TOOLSET: gcc
-    #  CXXSTD: 11,14,1z
-    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    #  ADDPATH: C:\cygwin64\bin;
-    #  TOOLSET: gcc
-    #  CXXSTD: 11,14,1z
-    # MinGW 32 bit is not supported by boost system any more
-    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    #  ADDPATH: C:\mingw\bin;
-    #  TOOLSET: gcc
-    #  CXXSTD: 11,14,1z
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      ADDPATH: C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin;
-      TOOLSET: gcc
-      CXXSTD: 11,14,1z
 
 before_build:
     - set BOOST_BRANCH=develop
