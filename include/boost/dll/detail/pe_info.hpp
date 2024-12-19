@@ -350,6 +350,9 @@ public:
             // getting ordinal
             fs.seekg(fixed_ordinals_addr + i * sizeof(ordinal));
             read_raw(fs, ordinal);
+            if (ordinal >= exported_symbols) {  // required for clang-win created PE
+                continue;
+            }
 
             // getting function addr
             fs.seekg(fixed_functions_addr + ordinal * sizeof(ptr));
