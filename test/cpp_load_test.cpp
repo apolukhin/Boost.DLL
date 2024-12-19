@@ -10,8 +10,6 @@
 #include <boost/config.hpp>
 #include <boost/predef.h>
 
-#if (__cplusplus > 201402L) || (defined(_MSVC_LANG) && _MSVC_LANG > 201402L)
-
 #  include <boost/dll/smart_library.hpp>
 
 #include "../example/b2_workarounds.hpp"
@@ -228,7 +226,3 @@ int main(int argc, char* argv[])
     std::cerr << 28 << ' ';
     return boost::report_errors();
 }
-
-#else
-int main() {return 0;}
-#endif

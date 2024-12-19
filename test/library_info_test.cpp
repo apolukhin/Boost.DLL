@@ -39,7 +39,8 @@ int main(int argc, char* argv[])
 #if defined(__GNUC__) && __GNUC__ >= 4 && defined(__ELF__)
     BOOST_TEST(std::find(symb.begin(), symb.end(), "protected_function") != symb.end());
 #endif
-    
+
+    std::cout << "\n\n'boostdll' symbols:\n";
     symb = lib_info.symbols("boostdll");
     std::copy(symb.begin(), symb.end(), std::ostream_iterator<std::string>(std::cout, "\n"));
     BOOST_TEST(std::find(symb.begin(), symb.end(), "const_integer_g_alias") != symb.end());
