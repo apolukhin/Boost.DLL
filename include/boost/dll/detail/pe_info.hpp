@@ -363,15 +363,20 @@ public:
             fs.seekg(fixed_functions_addr + ordinal * sizeof(ptr));
             read_raw(fs, ptr);
             ptr = static_cast<boost::dll::detail::DWORD_>( get_file_offset(fs, ptr, h) );
-
+            
+            std::cerr << "!!!!!! LOOP exported_symbols " << ptr << " >= " << section_end_addr << " || " << ptr << " < " << section_begin_addr << "\n";
             if (ptr >= section_end_addr || ptr < section_begin_addr) {
+                std::cerr << "!!!!!! LOOP exported_symbols true is " << ptr << " >= " << section_end_addr << " || " << ptr << " < " << section_begin_addr << "\n";
                 continue;
             }
+            std::cerr << "!!!!!! LOOP exported_symbols false is " << ptr << " >= " << section_end_addr << " || " << ptr << " < " << section_begin_addr << "\n";
 
             fs.seekg(fixed_names_addr + i * sizeof(ptr));
             read_raw(fs, ptr);
+            std::cerr << "!!!!!! LOOP exported_symbols read_raw " << ptr << "\n";
             fs.seekg(get_file_offset(fs, ptr, h));
             std::getline(fs, symbol_name, '\0');
+            std::cerr << "!!!!!! LOOP exported_symbols symbol_name " << symbol_name << "\n";
             ret.push_back(symbol_name);
         }
         std::cerr << "!!!!!! END LOOP exported_symbols\n";
