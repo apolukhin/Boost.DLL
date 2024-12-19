@@ -8,11 +8,9 @@
 
 #include <boost/core/lightweight_test.hpp>
 
-#if (__cplusplus > 201402L) || (defined(_MSVC_LANG) && _MSVC_LANG > 201402L)
 #include <boost/dll/detail/demangling/msvc.hpp>
 
-int main(int argc, char* argv[])
-{
+int main() {
     namespace parser = boost::dll::detail::parser;
 
     BOOST_TEST(parser::is_destructor_with_name("foo::~foo(void)")("public: __cdecl foo::~foo(void)"));
@@ -154,6 +152,4 @@ int main(int argc, char* argv[])
 
     return boost::report_errors();
 }
-#else
-int main() {return 0;}
-#endif
+
