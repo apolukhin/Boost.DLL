@@ -27,9 +27,10 @@ std::size_t search_for_symbols(const std::vector<boost::dll::fs::path>& plugins)
         }
 
         // library has symbol, importing...
-        typedef boost::shared_ptr<my_plugin_api> (pluginapi_create_t)();
-        boost::function<pluginapi_create_t> creator
-            = dll::import_alias<pluginapi_create_t>(boost::move(lib), "create_plugin");
+        using pluginapi_create_t = boost::shared_ptr<my_plugin_api>();
+        auto creator = dll::import_alias<pluginapi_create_t>(
+            std::move(lib), "create_plugin"
+        );
 
         std::cout << "Matching plugin name: " << creator()->name() << std::endl;
         ++ plugins_found;

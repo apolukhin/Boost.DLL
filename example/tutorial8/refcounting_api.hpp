@@ -54,8 +54,8 @@ inline boost::shared_ptr<my_refcounting_api> bind(my_refcounting_api* plugin) {
 inline boost::shared_ptr<my_refcounting_api> get_plugin(
     boost::dll::fs::path path, const char* func_name)
 {
-    typedef my_refcounting_api*(func_t)();
-    boost::function<func_t> creator = boost::dll::import_alias<func_t>(
+    using func_t = my_refcounting_api*();
+    auto creator = boost::dll::import_alias<func_t>(
         path, 
         func_name, 
         boost::dll::load_mode::append_decorations   // will be ignored for executable

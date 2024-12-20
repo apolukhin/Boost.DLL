@@ -350,6 +350,9 @@ public:
             // getting ordinal
             fs.seekg(fixed_ordinals_addr + i * sizeof(ordinal));
             read_raw(fs, ordinal);
+            if (ordinal >= exported_symbols) {  // required for clang-win created PE
+                continue;
+            }
 
             // getting function addr
             fs.seekg(fixed_functions_addr + ordinal * sizeof(ptr));
@@ -380,7 +383,7 @@ public:
       MSVCR110D.dll
     */
     /*
-    static std::vector<std::string> depend_of(boost::dll::fs::error_code &ec) BOOST_NOEXCEPT {
+    static std::vector<std::string> depend_of(boost::dll::fs::error_code &ec) noexcept {
         std::vector<std::string> ret;
 
         IMAGE_DOS_HEADER* image_dos_header = (IMAGE_DOS_HEADER*)native();

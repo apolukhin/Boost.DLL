@@ -14,9 +14,9 @@
 #include <boost/predef/os.h>
 #include <boost/predef/architecture.h>
 #include <boost/throw_exception.hpp>
-#include <boost/type_traits/integral_constant.hpp>
 
 #include <fstream>
+#include <type_traits>
 
 #include <boost/dll/detail/pe_info.hpp>
 #include <boost/dll/detail/elf_info.hpp>
@@ -50,15 +50,15 @@ private:
     } fmt_;
 
     /// @cond
-    inline static void throw_if_in_32bit_impl(boost::true_type /* is_32bit_platform */) {
+    inline static void throw_if_in_32bit_impl(std::true_type /* is_32bit_platform */) {
         boost::throw_exception(std::runtime_error("Not native format: 64bit binary"));
     }
 
-    inline static void throw_if_in_32bit_impl(boost::false_type /* is_32bit_platform */) BOOST_NOEXCEPT {}
+    inline static void throw_if_in_32bit_impl(std::false_type /* is_32bit_platform */) noexcept {}
 
 
     inline static void throw_if_in_32bit() {
-        throw_if_in_32bit_impl( boost::integral_constant<bool, (sizeof(void*) == 4)>() );
+        throw_if_in_32bit_impl( std::integral_constant<bool, (sizeof(void*) == 4)>() );
     }
 
     static void throw_if_in_windows() {

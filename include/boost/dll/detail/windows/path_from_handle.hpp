@@ -19,15 +19,15 @@
 
 namespace boost { namespace dll { namespace detail {
 
-    inline boost::dll::fs::error_code last_error_code() BOOST_NOEXCEPT {
+    inline std::error_code last_error_code() noexcept {
         boost::winapi::DWORD_ err = boost::winapi::GetLastError();
-        return boost::dll::fs::error_code(
+        return std::error_code(
             static_cast<int>(err),
-            boost::dll::fs::system_category()
+            std::system_category()
         );
     }
 
-    inline boost::dll::fs::path path_from_handle(boost::winapi::HMODULE_ handle, boost::dll::fs::error_code &ec) {
+    inline boost::dll::fs::path path_from_handle(boost::winapi::HMODULE_ handle, std::error_code &ec) {
         BOOST_STATIC_CONSTANT(boost::winapi::DWORD_, ERROR_INSUFFICIENT_BUFFER_ = 0x7A);
         BOOST_STATIC_CONSTANT(boost::winapi::DWORD_, DEFAULT_PATH_SIZE_ = 260);
 

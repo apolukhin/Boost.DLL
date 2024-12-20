@@ -21,7 +21,7 @@
 #include <mach-o/dyld.h>
 
 namespace boost { namespace dll { namespace detail {
-    inline boost::dll::fs::path program_location_impl(boost::dll::fs::error_code &ec) {
+    inline boost::dll::fs::path program_location_impl(std::error_code &ec) {
         ec.clear();
 
         char path[1024];
@@ -31,8 +31,8 @@ namespace boost { namespace dll { namespace detail {
 
         char *p = new char[size];
         if (_NSGetExecutablePath(p, &size) != 0) {
-            ec = boost::dll::fs::make_error_code(
-                boost::dll::fs::errc::bad_file_descriptor
+            ec = std::make_error_code(
+                std::errc::bad_file_descriptor
             );
         }
 
@@ -46,7 +46,7 @@ namespace boost { namespace dll { namespace detail {
 
 #include <stdlib.h>
 namespace boost { namespace dll { namespace detail {
-    inline boost::dll::fs::path program_location_impl(boost::dll::fs::error_code& ec) {
+    inline boost::dll::fs::path program_location_impl(std::error_code& ec) {
         ec.clear();
 
         return boost::dll::fs::path(getexecname());
@@ -60,7 +60,7 @@ namespace boost { namespace dll { namespace detail {
 #include <stdlib.h>
 
 namespace boost { namespace dll { namespace detail {
-    inline boost::dll::fs::path program_location_impl(boost::dll::fs::error_code& ec) {
+    inline boost::dll::fs::path program_location_impl(std::error_code& ec) {
         ec.clear();
 
         int mib[4];
@@ -81,7 +81,7 @@ namespace boost { namespace dll { namespace detail {
 #elif BOOST_OS_BSD_NET
 
 namespace boost { namespace dll { namespace detail {
-    inline boost::dll::fs::path program_location_impl(boost::dll::fs::error_code &ec) {
+    inline boost::dll::fs::path program_location_impl(std::error_code &ec) {
         return boost::dll::fs::read_symlink("/proc/curproc/exe", ec);
     }
 }}} // namespace boost::dll::detail
@@ -90,7 +90,7 @@ namespace boost { namespace dll { namespace detail {
 
 
 namespace boost { namespace dll { namespace detail {
-    inline boost::dll::fs::path program_location_impl(boost::dll::fs::error_code &ec) {
+    inline boost::dll::fs::path program_location_impl(std::error_code &ec) {
         return boost::dll::fs::read_symlink("/proc/curproc/file", ec);
     }
 }}} // namespace boost::dll::detail
@@ -100,7 +100,7 @@ namespace boost { namespace dll { namespace detail {
 #include <fstream>
 #include <string> // for std::getline
 namespace boost { namespace dll { namespace detail {
-    inline boost::dll::fs::path program_location_impl(boost::dll::fs::error_code &ec) {
+    inline boost::dll::fs::path program_location_impl(std::error_code &ec) {
         ec.clear();
 
         std::string s;
@@ -108,8 +108,8 @@ namespace boost { namespace dll { namespace detail {
         std::getline(ifs, s);
 
         if (ifs.fail() || s.empty()) {
-            ec = boost::dll::fs::make_error_code(
-                boost::dll::fs::errc::bad_file_descriptor
+            ec = std::make_error_code(
+                std::errc::bad_file_descriptor
             );
         }
 
@@ -120,12 +120,15 @@ namespace boost { namespace dll { namespace detail {
 #else  // BOOST_OS_LINUX || BOOST_OS_UNIX || BOOST_OS_HPUX || BOOST_OS_ANDROID
 
 namespace boost { namespace dll { namespace detail {
-    inline boost::dll::fs::path program_location_impl(boost::dll::fs::error_code &ec) {
+    inline boost::dll::fs::path program_location_impl(std::error_code &ec) {
         // We can not use
         // boost::dll::detail::path_from_handle(dlopen(NULL, RTLD_LAZY | RTLD_LOCAL), ignore);
         // because such code returns empty path.
 
-        return boost::dll::fs::read_symlink("/proc/self/exe", ec);   // Linux specific
+        boost::dll::fs::error_code fs_errc;
+        auto result = boost::dll::fs::read_symlink("/proc/self/exe", fs_errc);   // Linux specific
+        ec = fs_errc;
+        return result;
     }
 }}} // namespace boost::dll::detail
 

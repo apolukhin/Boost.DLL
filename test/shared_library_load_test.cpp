@@ -9,6 +9,11 @@
 
 #include "../example/b2_workarounds.hpp"
 #include <boost/dll.hpp>
+
+#include <system_error>
+#include <boost/system/error_code.hpp>
+#include <boost/system/system_error.hpp>
+
 #include <boost/core/lightweight_test.hpp>
 // Unit Tests
 
@@ -403,7 +408,8 @@ int main(int argc, char* argv[])
         std::cout << "\nLibrary location: " << sl.location();
         BOOST_TEST( boost::dll::fs::equivalent(sl.location(), program_location()) );
 
-        boost::dll::fs::error_code ec;
+        // Make sure that works with boost::system::error_code
+        boost::system::error_code ec;
         shared_library sl2(program_location());
         BOOST_TEST(sl2.is_loaded());
         BOOST_TEST( boost::dll::fs::equivalent(sl2.location(), program_location()) );
@@ -478,7 +484,7 @@ int main(int argc, char* argv[])
 
 
    {  // error_code load calls test
-        boost::dll::fs::error_code ec;
+        std::error_code ec;
         shared_library sl(shared_library_path / "dir_that_does_not_exist", ec);
         BOOST_TEST(ec);
         BOOST_TEST(!sl.is_loaded());
@@ -512,6 +518,75 @@ int main(int argc, char* argv[])
         BOOST_TEST(!sl);
    }
 
+   {  // error_code load calls test
+        std::error_code ec;  // make sure that works with std::error_code
+        shared_library sl(shared_library_path / "dir_that_does_not_exist", ec);
+        BOOST_TEST(ec);
+        BOOST_TEST(!sl.is_loaded());
+        BOOST_TEST(!sl);
+
+        boost::dll::fs::path bad_path(shared_library_path);
+        bad_path += ".1.1.1.1.1.1";
+        sl.load(bad_path, ec);
+        BOOST_TEST(ec);
+        BOOST_TEST(!sl.is_loaded());
+        BOOST_TEST(!sl);
+
+        sl.load(shared_library_path, ec);
+        BOOST_TEST(!ec);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+
+        shared_library sl2(bad_path, ec);
+        BOOST_TEST(ec);
+        BOOST_TEST(!sl2.is_loaded());
+        BOOST_TEST(!sl2);
+
+        shared_library sl3(shared_library_path, ec);
+        BOOST_TEST(!ec);
+        BOOST_TEST(sl3.is_loaded());
+        BOOST_TEST(sl3);
+
+        sl.load("", ec);
+        BOOST_TEST(ec);
+        BOOST_TEST(!sl.is_loaded());
+        BOOST_TEST(!sl);
+   }
+
+   {  // error_code load calls test
+        boost::system::error_code ec;  // make sure that works with boost::system::error_code
+        shared_library sl(shared_library_path / "dir_that_does_not_exist", ec);
+        BOOST_TEST(ec);
+        BOOST_TEST(!sl.is_loaded());
+        BOOST_TEST(!sl);
+
+        boost::dll::fs::path bad_path(shared_library_path);
+        bad_path += ".1.1.1.1.1.1";
+        sl.load(bad_path, ec);
+        BOOST_TEST(ec);
+        BOOST_TEST(!sl.is_loaded());
+        BOOST_TEST(!sl);
+
+        sl.load(shared_library_path, ec);
+        BOOST_TEST(!ec);
+        BOOST_TEST(sl.is_loaded());
+        BOOST_TEST(sl);
+
+        shared_library sl2(bad_path, ec);
+        BOOST_TEST(ec);
+        BOOST_TEST(!sl2.is_loaded());
+        BOOST_TEST(!sl2);
+
+        shared_library sl3(shared_library_path, ec);
+        BOOST_TEST(!ec);
+        BOOST_TEST(sl3.is_loaded());
+        BOOST_TEST(sl3);
+
+        sl.load("", ec);
+        BOOST_TEST(ec);
+        BOOST_TEST(!sl.is_loaded());
+        BOOST_TEST(!sl);
+   }
 
     shared_library_path = do_find_correct_libs_path(argc, argv, "library1");
     fs_copy_guard guard(shared_library_path);
