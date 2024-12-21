@@ -139,7 +139,14 @@ int main(int argc, char* argv[])
         BOOST_TEST(sl2.location(ec) != sl.location());
         BOOST_TEST(ec);
    }
-
+   {
+        shared_library sl_empty(nullptr);
+        BOOST_TEST(!sl_empty.is_loaded());
+        BOOST_TEST(!sl_empty);
+        std::error_code ec;
+        sl_empty.location(ec);
+        BOOST_TEST(ec);
+   }
    {
         boost::dll::fs::error_code ec;
         shared_library sl(shared_library_path, ec);

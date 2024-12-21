@@ -18,6 +18,7 @@
 
 #if BOOST_OS_MACOS || BOOST_OS_IOS
 
+#include <string>
 #include <mach-o/dyld.h>
 
 namespace boost { namespace dll { namespace detail {
@@ -29,16 +30,15 @@ namespace boost { namespace dll { namespace detail {
         if (_NSGetExecutablePath(path, &size) == 0)
             return boost::dll::fs::path(path);
 
-        char *p = new char[size];
-        if (_NSGetExecutablePath(p, &size) != 0) {
+        std::string p;
+        p.resize(size);
+        if (_NSGetExecutablePath(p.data(), &size) != 0) {
             ec = std::make_error_code(
                 std::errc::bad_file_descriptor
             );
         }
 
-        boost::dll::fs::path ret(p);
-        delete[] p;
-        return ret;
+        return boost::dll::fs::path(std::move(p));
     }
 }}} // namespace boost::dll::detail
 
@@ -55,6 +55,7 @@ namespace boost { namespace dll { namespace detail {
 
 #elif BOOST_OS_BSD_FREE
 
+#include <string>
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #include <stdlib.h>
@@ -68,11 +69,27 @@ namespace boost { namespace dll { namespace detail {
         mib[1] = KERN_PROC;
         mib[2] = KERN_PROC_PATHNAME;
         mib[3] = -1;
-        char buf[10240];
-        size_t cb = sizeof(buf);
-        sysctl(mib, 4, buf, &cb, NULL, 0);
+        char path[1024];
+        size_t size = sizeof(buf);
+        if (sysctl(mib, 4, path, &size, nullptr, 0) == 0)
+            return boost::dll::fs::path(path);
 
-        return boost::dll::fs::path(buf);
+        const auto errno_snapshot = static_cast<std::errc>(errno);
+        if (errno_snapshot != std::errc::not_enough_memory) {
+            ec = std::make_error_code(
+                errno_snapshot
+            );
+        }
+
+        std::string p;
+        p.resize(size);
+        if (sysctl(mib, 4, p.data(), &size, nullptr, 0) != 0) {
+            ec = std::make_error_code(
+                static_cast<std::errc>(errno)
+            );
+        }
+
+        return boost::dll::fs::path(std::move(p));
     }
 }}} // namespace boost::dll::detail
 
@@ -103,17 +120,17 @@ namespace boost { namespace dll { namespace detail {
     inline boost::dll::fs::path program_location_impl(std::error_code &ec) {
         ec.clear();
 
-        std::string s;
+        std::string path;
         std::ifstream ifs("/proc/self/exefile");
-        std::getline(ifs, s);
+        std::getline(ifs, path);
 
-        if (ifs.fail() || s.empty()) {
+        if (ifs.fail() || path.empty()) {
             ec = std::make_error_code(
                 std::errc::bad_file_descriptor
             );
         }
 
-        return boost::dll::fs::path(s);
+        return boost::dll::fs::path(std::move(path));
     }
 }}} // namespace boost::dll::detail
 

@@ -28,8 +28,8 @@ namespace boost { namespace dll { namespace detail {
     }
 
     inline boost::dll::fs::path path_from_handle(boost::winapi::HMODULE_ handle, std::error_code &ec) {
-        BOOST_STATIC_CONSTANT(boost::winapi::DWORD_, ERROR_INSUFFICIENT_BUFFER_ = 0x7A);
-        BOOST_STATIC_CONSTANT(boost::winapi::DWORD_, DEFAULT_PATH_SIZE_ = 260);
+        constexpr boost::winapi::DWORD_ ERROR_INSUFFICIENT_BUFFER_ = 0x7A;
+        constexpr boost::winapi::DWORD_ DEFAULT_PATH_SIZE_ = 260;
 
         // If `handle` parameter is NULL, GetModuleFileName retrieves the path of the
         // executable file of the current process.
