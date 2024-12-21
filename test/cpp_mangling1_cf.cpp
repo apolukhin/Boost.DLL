@@ -20,6 +20,9 @@ typedef void(*Callback)(CallbackInfo* pInfo);
 int main() {
     namespace parser = boost::dll::detail::parser;
     boost::dll::detail::mangled_storage_impl ms;
+    
+    // The following case of mangling is not supported at the moment. Make 
+    // sure that we detect it on compile time.
     parser::is_mem_fn_with_name<int, void(*)(Callback)>("set_callback", ms)
         ("public: void __cdecl int::set_callback(void (__cdecl*)(struct CallbackInfo * __ptr64)) __ptr64")
     ;
