@@ -20,6 +20,21 @@
 
 #include <iostream>
 
+struct CallbackInfo
+{
+	void* p;
+	int a;
+	int b;
+	void* pContext;
+};
+
+//using Callback = std::function<void(CallbackInfo* pInfo)>;
+#ifdef _MSC_VER
+typedef void(__stdcall* Callback)(CallbackInfo* pInfo);
+#else
+typedef void(*Callback)(CallbackInfo* pInfo);
+#endif
+
 struct override_class
 {
     int arr[32];
@@ -144,6 +159,7 @@ int main(int argc, char* argv[])
     auto func_ii  = sm.get_mem_fn<override_class,                int(int, int)>         ("func");
     auto func_iiv = sm.get_mem_fn<volatile override_class,       int(int, int)>         ("func");
     auto func_ddc = sm.get_mem_fn<const volatile override_class, double(double, double)>("func");
+    auto func_set_callback = sm.get_mem_fn<override_class, void(Callback)>("set_callback");
 
     std::cerr << 19 << ' ';
     BOOST_TEST(func_dd != nullptr);
@@ -198,7 +214,9 @@ int main(int argc, char* argv[])
     BOOST_TEST((oc.*func_ii)(1,2)   == 3);  BOOST_TEST(this_dll == this_exe);
     BOOST_TEST((oc.*func_ddc)(10,2) == 5);  BOOST_TEST(this_dll == this_exe);
     BOOST_TEST((oc.*func_iiv)(9,2)  == 7);  BOOST_TEST(this_dll == this_exe);
-    std::cerr << 26 << ' ';
+    std::cerr << 26.0 << ' ';
+    (oc.*func_set_callback)(nullptr);
+    std::cerr << 26.1 << ' ';
     dtor.call_standard(&oc);                BOOST_TEST(this_dll == this_exe);
     BOOST_TEST(static_val == 0);
 
