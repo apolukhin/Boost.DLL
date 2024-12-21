@@ -139,6 +139,15 @@ public:
     }
 
     /*!
+    * Takes ownership of a loaded library.
+    *
+    * \param handle The native handle.
+    */
+    explicit shared_library(native_handle_t handle) noexcept
+        : base_t(handle)
+    {}
+
+    /*!
     * Assignment operator. If this->is_loaded() then calls this->unload(). Does not invalidate existing symbols and functions loaded from lib.
     *
     * \param lib A shared library to assign from.

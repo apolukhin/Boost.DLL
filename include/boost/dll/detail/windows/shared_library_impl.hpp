@@ -31,7 +31,7 @@ public:
     typedef boost::winapi::HMODULE_ native_handle_t;
 
     shared_library_impl() noexcept
-        : handle_(NULL)
+        : shared_library_impl(nullptr)
     {}
 
     ~shared_library_impl() noexcept {
@@ -41,8 +41,12 @@ public:
     shared_library_impl(shared_library_impl&& sl) noexcept
         : handle_(sl.handle_)
     {
-        sl.handle_ = NULL;
+        sl.handle_ = nullptr;
     }
+
+    explicit shared_library_impl(native_handle_t handle) noexcept
+        : handle_(handle)
+    {}
 
     shared_library_impl & operator=(shared_library_impl&& sl) noexcept {
         swap(sl);
@@ -142,7 +146,7 @@ public:
                 std::errc::operation_not_supported
             );
 
-            return NULL;
+            return nullptr;
         }
 
         // Judging by the documentation of GetProcAddress
@@ -151,7 +155,7 @@ public:
         void* const symbol = boost::dll::detail::aggressive_ptr_cast<void*>(
             boost::winapi::get_proc_address(handle_, sb)
         );
-        if (symbol == NULL) {
+        if (symbol == nullptr) {
             ec = boost::dll::detail::last_error_code();
         }
 

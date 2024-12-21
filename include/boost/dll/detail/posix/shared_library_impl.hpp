@@ -38,7 +38,7 @@ public:
     typedef void* native_handle_t;
 
     shared_library_impl() noexcept
-        : handle_(NULL)
+        : handle_(nullptr)
     {}
 
     ~shared_library_impl() noexcept {
@@ -48,8 +48,12 @@ public:
     shared_library_impl(shared_library_impl&& sl) noexcept
         : handle_(sl.handle_)
     {
-        sl.handle_ = NULL;
+        sl.handle_ = nullptr;
     }
+
+    explicit shared_library_impl(native_handle_t handle) noexcept
+        : handle_(handle)
+    {}
 
     shared_library_impl & operator=(shared_library_impl&& sl) noexcept {
         swap(sl);
@@ -152,7 +156,7 @@ public:
             // returned handle is for the main program.
             ec.clear();
             boost::dll::detail::reset_dlerror();
-            handle_ = dlopen(NULL, native_mode);
+            handle_ = dlopen(nullptr, native_mode);
             if (!handle_) {
                 ec = std::make_error_code(
                     std::errc::bad_file_descriptor
@@ -194,7 +198,7 @@ public:
     void* symbol_addr(const char* sb, std::error_code &ec) const noexcept {
         // dlsym - obtain the address of a symbol from a dlopen object
         void* const symbol = dlsym(handle_, sb);
-        if (symbol == NULL) {
+        if (symbol == nullptr) {
             ec = std::make_error_code(
                 std::errc::invalid_seek
             );
