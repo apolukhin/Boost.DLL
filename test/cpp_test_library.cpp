@@ -19,21 +19,6 @@ BOOST_SYMBOL_EXPORT extern const double unscoped_c_var;
 const double unscoped_c_var = 1.234;
 
 
-struct CallbackInfo
-{
-	void* p;
-	int a;
-	int b;
-	void* pContext;
-};
-
-//using Callback = std::function<void(CallbackInfo* pInfo)>;
-#ifdef _MSC_VER
-typedef void(__stdcall* Callback)(CallbackInfo* pInfo);
-#else
-typedef void(*Callback)(CallbackInfo* pInfo);
-#endif
-
 namespace some_space {
 
 BOOST_SYMBOL_EXPORT extern double variable;
@@ -105,7 +90,6 @@ struct BOOST_SYMBOL_EXPORT some_class : some_father
 
     some_class& operator=(some_class &&);
 
-	void set_callback(Callback callback);
 
     virtual ~some_class();
 };
@@ -114,12 +98,6 @@ some_class::some_class(some_class &&){}
 
 
 some_class& some_class::operator=(some_class &&) {return *this;}
-
-
-void some_class::set_callback(Callback callback) {
-    static CallbackInfo ci{};
-    if (callback) { callback(&ci); }
-}
 
 
 BOOST_SYMBOL_EXPORT extern std::size_t size_of_some_class;

@@ -17,21 +17,6 @@
 
 #include <iostream>
 
-struct CallbackInfo
-{
-	void* p;
-	int a;
-	int b;
-	void* pContext;
-};
-
-//using Callback = std::function<void(CallbackInfo* pInfo)>;
-#ifdef _MSC_VER
-typedef void(__stdcall* Callback)(CallbackInfo* pInfo);
-#else
-typedef void(*Callback)(CallbackInfo* pInfo);
-#endif
-
 
 struct override_class {};
 
@@ -112,8 +97,6 @@ int main(int argc, char* argv[])
     v = ms.get_mem_fn<override_class, int(int, int)>("func");
     BOOST_TEST(!v.empty());
 
-    auto func_set_callback = ms.get_mem_fn<override_class, void(Callback)>("set_callback");
-    BOOST_TEST(!func_set_callback.empty());
 
     auto dtor = ms.get_destructor<override_class>();
 

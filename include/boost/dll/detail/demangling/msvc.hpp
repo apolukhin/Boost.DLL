@@ -129,7 +129,7 @@ namespace parser {
 
         static_assert(
             !std::is_function<typename std::remove_pointer<T>::type>::value,
-            "Functions accepting function pointers are not supported and won't be supported."
+            "Functions that accept function are not supported and won't be supported."
         );
         if (!parser::try_consume_prefix(s, mangled_name)) {
             return false;
