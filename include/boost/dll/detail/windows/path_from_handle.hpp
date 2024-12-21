@@ -29,27 +29,34 @@ namespace boost { namespace dll { namespace detail {
 
     inline boost::dll::fs::path path_from_handle(boost::winapi::HMODULE_ handle, std::error_code &ec) {
         constexpr boost::winapi::DWORD_ ERROR_INSUFFICIENT_BUFFER_ = 0x7A;
-        constexpr boost::winapi::DWORD_ DEFAULT_PATH_SIZE_ = 260;
+        constexpr boost::winapi::DWORD_ DEFAULT_PATH_SIZE_ = 2;
+
+        ec.clear();
 
         // If `handle` parameter is NULL, GetModuleFileName retrieves the path of the
         // executable file of the current process.
         boost::winapi::WCHAR_ path_hldr[DEFAULT_PATH_SIZE_];
-        const boost::winapi::DWORD_ ret = boost::winapi::GetModuleFileNameW(handle, path_hldr, DEFAULT_PATH_SIZE_);
-        if (ret) {
+        const boost::winapi::DWORD_ size = boost::winapi::GetModuleFileNameW(handle, path_hldr, DEFAULT_PATH_SIZE_);
+
+        // If the function succeeds, the return value is the length of the string that is copied to the
+        // buffer, in characters, not including the terminating null character.  If the buffer is too
+        // small to hold the module name, the string is truncated to nSize characters including the
+        // terminating null character, the function returns nSize, and the function sets the last
+        // error to ERROR_INSUFFICIENT_BUFFER.
+        if (size != 0 && size < DEFAULT_PATH_SIZE_) {
             // On success, GetModuleFileNameW() doesn't reset last error to ERROR_SUCCESS. Resetting it manually.
-            ec.clear();
             return boost::dll::fs::path(path_hldr);
         }
 
         ec = boost::dll::detail::last_error_code();
         for (unsigned i = 2; i < 1025 && static_cast<boost::winapi::DWORD_>(ec.value()) == ERROR_INSUFFICIENT_BUFFER_; i *= 2) {
             std::wstring p(DEFAULT_PATH_SIZE_ * i, L'\0');
-            const std::size_t size = boost::winapi::GetModuleFileNameW(handle, &p[0], DEFAULT_PATH_SIZE_ * i);
-            if (size) {
+            const std::size_t size = boost::winapi::GetModuleFileNameW(handle, p.data(), p.size());
+            if (size != 0 && size < p.size()) {
                 // On success, GetModuleFileNameW() doesn't reset last error to ERROR_SUCCESS. Resetting it manually.
                 ec.clear();
                 p.resize(size);
-                return boost::dll::fs::path(p);
+                return boost::dll::fs::path(std::move(p));
             }
 
             ec = boost::dll::detail::last_error_code();
