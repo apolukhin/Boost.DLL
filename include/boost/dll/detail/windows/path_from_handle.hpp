@@ -29,7 +29,7 @@ namespace boost { namespace dll { namespace detail {
 
     inline boost::dll::fs::path path_from_handle(boost::winapi::HMODULE_ handle, std::error_code &ec) {
         constexpr boost::winapi::DWORD_ ERROR_INSUFFICIENT_BUFFER_ = 0x7A;
-        constexpr boost::winapi::DWORD_ DEFAULT_PATH_SIZE_ = 2;
+        constexpr boost::winapi::DWORD_ DEFAULT_PATH_SIZE_ = 260;
 
         ec.clear();
 
