@@ -131,7 +131,9 @@ namespace parser {
             !std::is_function<typename std::remove_pointer<T>::type>::value,
             "boost::dll::smart_library on Windows platform does not support "
             "functions that accept functions. If you wish to see such support "
-            "- please provide a working PR on github with sufficient tests."
+            "- please provide a working PR on github with sufficient tests. "
+            "Otherwise simplify the function. For example, use `void*` "
+            "parameter instead of a function pointer. "
         );
         if (!parser::try_consume_prefix(s, mangled_name)) {
             return false;
