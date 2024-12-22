@@ -14,17 +14,17 @@
 
 namespace my_namespace {
 
-class my_plugin_sum : public my_plugin_api {
+class my_plugin_sum final: public my_plugin_api {
 public:
     my_plugin_sum() {
         std::cout << "Constructing my_plugin_sum" << std::endl;
     }
 
-    std::string name() const {
+    std::string name() const override {
         return "sum";
     }
 
-    float calculate(float x, float y) {
+    float calculate(float x, float y) override {
         return x + y;
     }
    

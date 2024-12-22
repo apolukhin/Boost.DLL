@@ -9,7 +9,6 @@
 
 //[callplugcpp_tutorial2
 #include <boost/dll/import.hpp> // for import_alias
-#include <boost/function.hpp>
 #include <iostream>
 #include "../tutorial_common/my_plugin_api.hpp"
 
@@ -20,14 +19,14 @@ int main(int argc, char* argv[]) {
     boost::dll::fs::path shared_library_path(argv[1]);                  // argv[1] contains path to directory with our plugin library
     shared_library_path /= "my_plugin_aggregator";
 
-    using pluginapi_create_t = boost::shared_ptr<my_plugin_api>();
+    using pluginapi_create_t = std::shared_ptr<my_plugin_api>();
     auto creator = boost::dll::import_alias<pluginapi_create_t>(        // type of imported symbol must be explicitly specified
         shared_library_path,                                            // path to library
         "create_plugin",                                                // symbol to import
         dll::load_mode::append_decorations                              // do append extensions and prefixes
     );
 
-    boost::shared_ptr<my_plugin_api> plugin = creator();
+    std::shared_ptr<my_plugin_api> plugin = creator();
     std::cout << "plugin->calculate(1.5, 1.5) call:  " << plugin->calculate(1.5, 1.5) << std::endl;
     std::cout << "plugin->calculate(1.5, 1.5) second call:  " << plugin->calculate(1.5, 1.5) << std::endl;
     std::cout << "Plugin Name:  " << plugin->name() << std::endl;

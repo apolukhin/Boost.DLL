@@ -14,21 +14,21 @@
 
 namespace my_namespace {
 
-class my_plugin_refcounting : public my_refcounting_api {
+class my_plugin_refcounting final: public my_refcounting_api {
 public:    
     // Must be instantiated in plugin
     boost::dll::fs::path location() const {
         return boost::dll::this_line_location(); // location of this plugin
     }
 
-    std::string name() const {
+    std::string name() const override {
         return "refcounting";
     }
 
     // ...
     //<-
     // This block is invisible for Quickbook documentation
-    float calculate(float /*x*/, float /*y*/) {
+    float calculate(float /*x*/, float /*y*/) override {
         return 0;
     }
     //->

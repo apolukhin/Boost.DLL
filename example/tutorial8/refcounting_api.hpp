@@ -19,30 +19,28 @@ public:
 
 
 //[plugcpp_library_holding_deleter_api_bind
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
+#include <memory>
 #include <boost/dll/shared_library.hpp>
 
 struct library_holding_deleter {
-    boost::shared_ptr<boost::dll::shared_library> lib_;
+    std::shared_ptr<boost::dll::shared_library> lib_;
 
     void operator()(my_refcounting_api* p) const {
         delete p;
     }
 };
 
-inline boost::shared_ptr<my_refcounting_api> bind(my_refcounting_api* plugin) {
+inline std::shared_ptr<my_refcounting_api> bind(my_refcounting_api* plugin) {
     // getting location of the shared library that holds the plugin
     boost::dll::fs::path location = plugin->location();
 
     // `make_shared` is an efficient way to create a shared pointer
-    boost::shared_ptr<boost::dll::shared_library> lib
-        = boost::make_shared<boost::dll::shared_library>(location);
+    auto lib = std::make_shared<boost::dll::shared_library>(location);
 
     library_holding_deleter deleter;
     deleter.lib_ = lib;
 
-    return boost::shared_ptr<my_refcounting_api>(
+    return std::shared_ptr<my_refcounting_api>(
         plugin, deleter
     );
 }
@@ -50,8 +48,7 @@ inline boost::shared_ptr<my_refcounting_api> bind(my_refcounting_api* plugin) {
 
 //[plugcpp_get_plugin_refcounting
 #include <boost/dll/import.hpp>
-#include <boost/function.hpp>
-inline boost::shared_ptr<my_refcounting_api> get_plugin(
+inline std::shared_ptr<my_refcounting_api> get_plugin(
     boost::dll::fs::path path, const char* func_name)
 {
     using func_t = my_refcounting_api*();
