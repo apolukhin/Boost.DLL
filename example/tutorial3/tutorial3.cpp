@@ -8,9 +8,8 @@
 #include "../b2_workarounds.hpp"
 //[callplugcpp_tutorial3
 #include <boost/dll/import.hpp> // for import_alias
-#include <boost/make_shared.hpp>
-#include <boost/function.hpp>
 #include <iostream>
+#include <memory>
 #include "../tutorial_common/my_plugin_api.hpp"
 
 namespace dll = boost::dll;
@@ -27,7 +26,7 @@ std::size_t search_for_symbols(const std::vector<boost::dll::fs::path>& plugins)
         }
 
         // library has symbol, importing...
-        using pluginapi_create_t = boost::shared_ptr<my_plugin_api>();
+        using pluginapi_create_t = std::shared_ptr<my_plugin_api>();
         auto creator = dll::import_alias<pluginapi_create_t>(
             std::move(lib), "create_plugin"
         );

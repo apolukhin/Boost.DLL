@@ -11,7 +11,7 @@
 #include "refcounting_plugin.hpp"
 
 int main() {
-    boost::shared_ptr<my_refcounting_api> plugin = get_plugin(
+    std::shared_ptr<my_refcounting_api> plugin = get_plugin(
         boost::dll::program_location(),
         "create_refc_plugin"
     );
