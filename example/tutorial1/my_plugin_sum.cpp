@@ -33,11 +33,11 @@ public:
     }
 };
 
-// Exporting `my_namespace::plugin` variable with alias name `plugin`
-// (Has the same effect as `BOOST_DLL_ALIAS(my_namespace::plugin, plugin)`)
+// Exporting `my_namespace::plugin` variable with name `plugin`
 extern "C" BOOST_SYMBOL_EXPORT my_plugin_sum plugin;
 my_plugin_sum plugin;
 
 } // namespace my_namespace
+
 
 //]
