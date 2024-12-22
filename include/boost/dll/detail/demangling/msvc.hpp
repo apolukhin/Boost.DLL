@@ -76,7 +76,7 @@ void mangled_storage_impl::trim_typename(std::string & val)
         static constexpr char class_ [7] = "class ";
         static constexpr char struct_[8] = "struct ";
 
-        if (equal(begin(class_), end(class_)-1, val.begin())) //aklright, starts with 'class '
+        if (equal(begin(class_), end(class_)-1, val.begin()))
             val.erase(0, 6);
         else if (val.size() >= 7)
             if (equal(begin(struct_), end(struct_)-1, val.begin()))
@@ -98,7 +98,7 @@ namespace parser {
         parser::try_consume_prefix(s, prefix);
         return true;
     }
-    
+
     inline void consume_ptrs(boost::core::string_view& s) {
         do {
             while (parser::try_consume_prefix(s, " ")) {}
@@ -126,6 +126,15 @@ namespace parser {
         parser::ignore_prefix(s, "struct ");
 
         const auto& mangled_name = ms.get_name<T>();
+
+        static_assert(
+            !std::is_function<typename std::remove_pointer<T>::type>::value,
+            "boost::dll::smart_library on Windows platform does not support "
+            "functions that accept functions. If you wish to see such support "
+            "- please provide a working PR on github with sufficient tests. "
+            "Otherwise simplify the function. For example, use `void*` "
+            "parameter instead of a function pointer. "
+        );
         if (!parser::try_consume_prefix(s, mangled_name)) {
             return false;
         }
