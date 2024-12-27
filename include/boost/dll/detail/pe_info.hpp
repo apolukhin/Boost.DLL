@@ -14,13 +14,13 @@
 # pragma once
 #endif
 
+#include <cstdint>
 #include <cstring>
 #include <fstream>
 #include <string> // for std::getline
 #include <vector>
 
 #include <boost/assert.hpp>
-#include <boost/cstdint.hpp>
 
 namespace boost { namespace dll { namespace detail {
 
@@ -32,13 +32,13 @@ namespace boost { namespace dll { namespace detail {
 
 // Basic Windows typedefs. We can not use <boost/winapi/basic_types.hpp> header
 // because that header must be included only on Windows platform
-typedef unsigned char BYTE_;
-typedef unsigned short WORD_;
-typedef boost::uint32_t DWORD_;
-typedef boost::int32_t LONG_;
-typedef boost::uint32_t ULONG_;
-typedef boost::int64_t LONGLONG_;
-typedef boost::uint64_t ULONGLONG_;
+using BYTE_ = unsigned char;
+using WORD_ = unsigned short;
+using DWORD_ = std::uint32_t;
+using LONG_ = std::int32_t;
+using ULONG_ = std::uint32_t;
+using LONGLONG_ = std::int64_t;
+using ULONGLONG_ = std::uint64_t;
 
 struct IMAGE_DOS_HEADER_ { // 32/64 independent header
     boost::dll::detail::WORD_   e_magic;        // Magic number
@@ -150,8 +150,8 @@ struct IMAGE_OPTIONAL_HEADER_template {
     IMAGE_DATA_DIRECTORY_       DataDirectory[IMAGE_NUMBEROF_DIRECTORY_ENTRIES_];
 };
 
-typedef IMAGE_OPTIONAL_HEADER_template<boost::dll::detail::DWORD_>      IMAGE_OPTIONAL_HEADER32_;
-typedef IMAGE_OPTIONAL_HEADER_template<boost::dll::detail::ULONGLONG_>  IMAGE_OPTIONAL_HEADER64_;
+using IMAGE_OPTIONAL_HEADER32_ = IMAGE_OPTIONAL_HEADER_template<boost::dll::detail::DWORD_>;
+using IMAGE_OPTIONAL_HEADER64_ = IMAGE_OPTIONAL_HEADER_template<boost::dll::detail::ULONGLONG_>;
 
 template <class AddressOffsetT>
 struct IMAGE_NT_HEADERS_template {
@@ -160,16 +160,16 @@ struct IMAGE_NT_HEADERS_template {
     IMAGE_OPTIONAL_HEADER_template<AddressOffsetT>  OptionalHeader;
 };
 
-typedef IMAGE_NT_HEADERS_template<boost::dll::detail::DWORD_>      IMAGE_NT_HEADERS32_;
-typedef IMAGE_NT_HEADERS_template<boost::dll::detail::ULONGLONG_>  IMAGE_NT_HEADERS64_;
+using IMAGE_NT_HEADERS32_ = IMAGE_NT_HEADERS_template<boost::dll::detail::DWORD_>;
+using IMAGE_NT_HEADERS64_ = IMAGE_NT_HEADERS_template<boost::dll::detail::ULONGLONG_>;
 
 
 template <class AddressOffsetT>
 class pe_info {
-    typedef IMAGE_NT_HEADERS_template<AddressOffsetT>   header_t;
-    typedef IMAGE_EXPORT_DIRECTORY_                     exports_t;
-    typedef IMAGE_SECTION_HEADER_                       section_t;
-    typedef IMAGE_DOS_HEADER_                           dos_t;
+    using header_t = IMAGE_NT_HEADERS_template<AddressOffsetT>;
+    using exports_t = IMAGE_EXPORT_DIRECTORY_;
+    using section_t = IMAGE_SECTION_HEADER_;
+    using dos_t = IMAGE_DOS_HEADER_;
 
     template <class T>
     static void read_raw(std::ifstream& fs, T& value, std::size_t size = sizeof(T)) {
@@ -192,7 +192,7 @@ public:
         fs.read(reinterpret_cast<char*>(&h), sizeof(h));
 
         return h.Signature == 0x00004550 // 'PE00'
-                && h.OptionalHeader.Magic == (sizeof(boost::uint32_t) == sizeof(AddressOffsetT) ? 0x10B : 0x20B);
+                && h.OptionalHeader.Magic == (sizeof(std::uint32_t) == sizeof(AddressOffsetT) ? 0x10B : 0x20B);
     }
 
 private:
@@ -431,8 +431,8 @@ public:
 */
 };
 
-typedef pe_info<boost::dll::detail::DWORD_>      pe_info32;
-typedef pe_info<boost::dll::detail::ULONGLONG_>  pe_info64;
+using pe_info32 = pe_info<boost::dll::detail::DWORD_>;
+using pe_info64 = pe_info<boost::dll::detail::ULONGLONG_>;
 
 }}} // namespace boost::dll::detail
 
