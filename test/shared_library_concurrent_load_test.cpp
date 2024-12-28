@@ -13,6 +13,7 @@
 
 #include <cctype>
 #include <condition_variable>
+#include <functional>
 #include <mutex>
 #include <thread>
 #include <vector>
@@ -34,6 +35,8 @@ class simple_barrier {
 
 public:
     explicit simple_barrier(std::size_t count) : initial_count_(count) {}
+    simple_barrier(simple_barrier&&) = delete;
+    simple_barrier(const simple_barrier&) = delete;
 
     void wait() {
         std::unique_lock<std::mutex> lock{mutex_};
@@ -66,9 +69,7 @@ inline paths_t generate_paths(int argc, char* argv[]) {
     return ret;
 }
 
-inline void load_unload(const paths_t& paths, std::size_t count, simple_barrier* b) {
-    BOOST_TEST(b);
-
+inline void load_unload(const paths_t& paths, std::size_t count, simple_barrier& b) {
     for (std::size_t j = 0; j < count; j += 2) {
         for (std::size_t i = 0; i < paths.size(); ++i) {
             boost::dll::shared_library lib(paths[i]);
@@ -80,7 +81,7 @@ inline void load_unload(const paths_t& paths, std::size_t count, simple_barrier*
         }
 
         // Waiting for all threads to unload shared libraries
-        b->wait();
+        b.wait();
     }
 }
 
@@ -107,7 +108,7 @@ int main(int argc, char* argv[]) {
     simple_barrier barrier{threads_count};
     std::thread threads[threads_count];
     for (auto& t: threads) {
-        t = std::thread(load_unload, paths, 1000, &barrier);
+        t = std::thread(load_unload, paths, 1000, std::ref(barrier));
     }
 
     for (auto& t: threads) {
