@@ -20,8 +20,6 @@ int main() {
     typedef HANDLE(__stdcall GetStdHandle_t)(DWORD );       // function signature with calling convention
 
     // OPTION #0, requires C++11 compatible compiler that understands GetStdHandle_t signature.
-/*<-*/
-#if defined(_MSC_VER) && !defined(BOOST_NO_CXX11_TRAILING_RESULT_TYPES) && !defined(BOOST_NO_CXX11_DECLTYPE) && !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) /*->*/
     auto get_std_handle = dll::import_symbol<GetStdHandle_t>(
         "Kernel32.dll",
         "GetStdHandle",
@@ -33,8 +31,6 @@ int main() {
     // Signature template parameter that contains calling conventions, so you'll have to remove the calling convention.
     std::function<HANDLE(DWORD)> get_std_handle2 = get_std_handle;
     std::cout << "0.1 GetStdHandle() returned " << get_std_handle2(STD_OUTPUT_HANDLE) << std::endl;
-/*<-*/
-#endif /*->*/
 
     // OPTION #1, hand write the import.
     dll::shared_library lib("Kernel32.dll", dll::load_mode::search_system_folders);
