@@ -162,6 +162,10 @@ private:
             boost::throw_exception(std::runtime_error("Integral underflow while getting info from ELF file"));
         }
         */
+
+        // `seekg` will throw exceptions on an attempts to get outsize od the
+        // file size.
+        
         fs.seekg(static_cast<std::streamoff>(pos));
     }
 
