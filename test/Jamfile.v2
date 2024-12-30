@@ -97,7 +97,7 @@ project
         [ run ../example/tutorial9/tutorial9.cpp ]
         # test for shared libraries
         [ compile-fail section_name_too_big.cpp ]
-        [ run shared_library_concurrent_load_test.cpp /boost/thread//boost_thread : : library1 library2 my_plugin_aggregator refcounting_plugin : <link>shared ]
+        [ run shared_library_concurrent_load_test.cpp : : library1 library2 my_plugin_aggregator refcounting_plugin : <link>shared ]
         [ run cpp_mangle_test.cpp : : cpp_plugin ]
         [ run cpp_mangling.cpp ]
         [ compile-fail cpp_mangling1_cf.cpp ]

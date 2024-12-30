@@ -13,8 +13,9 @@
 #include <boost/dll/runtime_symbol_info.hpp> // for program_location()
 #include <boost/dll/shared_library.hpp>
 #include <boost/make_shared.hpp>
-#include <boost/container/map.hpp>
 #include <boost/filesystem.hpp>
+
+#include <map>
 #include <iostream>
 
 //[plugcpp_plugins_collector_def
@@ -22,7 +23,7 @@ namespace dll = boost::dll;
 
 class plugins_collector {
     // Name => plugin
-    using plugins_t = boost::container::map<std::string, dll::shared_library>;
+    using plugins_t = std::map<std::string, dll::shared_library>;
 
     boost::dll::fs::path            plugins_directory_;
     plugins_t                       plugins_;
