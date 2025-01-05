@@ -116,6 +116,7 @@ public:
     * \param library_path Path to the binary file from which the info must be extracted.
     * \param throw_if_not_native_format Throw an exception if this file format is not
     * supported by OS.
+    * \throws std::exception based exceptions.
     */
     explicit library_info(const boost::dll::fs::path& library_path, bool throw_if_not_native_format = true)
         : f_(
@@ -142,6 +143,7 @@ public:
 
     /*!
     * \return List of sections that exist in binary file.
+    * \throws std::exception based exceptions.
     */
     std::vector<std::string> sections() {
         switch (fmt_) {
@@ -158,6 +160,7 @@ public:
 
     /*!
     * \return List of all the exportable symbols from all the sections that exist in binary file.
+    * \throws std::exception based exceptions.
     */
     std::vector<std::string> symbols() {
         switch (fmt_) {
@@ -175,6 +178,7 @@ public:
     /*!
     * \param section_name Name of the section from which symbol names must be returned.
     * \return List of symbols from the specified section.
+    * \throws std::exception based exceptions.
     */
     std::vector<std::string> symbols(const char* section_name) {
         switch (fmt_) {

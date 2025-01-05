@@ -17,7 +17,6 @@
 #include <cstdint>
 #include <cstring>
 #include <fstream>
-#include <limits>
 #include <vector>
 
 #include <boost/throw_exception.hpp>
@@ -154,14 +153,15 @@ public:
 private:
     template <class Integer>
     static void checked_seekg(std::ifstream& fs, Integer pos) {
-        /* TODO: use cmp_less, cmp_greater
-        if ((std::numeric_limits<std::streamoff>::max)() < pos) {
-            boost::throw_exception(std::runtime_error("Integral overflow while getting info from ELF file"));
-        }
-        if ((std::numeric_limits<std::streamoff>::min)() > pos){
+        if (pos < 0) {
             boost::throw_exception(std::runtime_error("Integral underflow while getting info from ELF file"));
         }
-        */
+        if (static_cast<std::streamoff>(pos) < 0) {
+            boost::throw_exception(std::runtime_error("Integral overflow while getting info from ELF file"));
+        }
+
+        // `seekg` will throw exceptions on an attempt to get outsize of the
+        // file size.
         fs.seekg(static_cast<std::streamoff>(pos));
     }
 

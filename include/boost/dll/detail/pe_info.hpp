@@ -20,8 +20,6 @@
 #include <string> // for std::getline
 #include <vector>
 
-#include <boost/assert.hpp>
-
 namespace boost { namespace dll { namespace detail {
 
 // reference:
@@ -221,7 +219,6 @@ private:
         }
 
         const std::size_t real_offset = get_file_offset(fs, exp_virtual_address, h);
-        BOOST_ASSERT(real_offset);
 
         fs.seekg(real_offset);
         read_raw(fs, exports);
@@ -230,8 +227,6 @@ private:
     }
 
     static std::size_t get_file_offset(std::ifstream& fs, std::size_t virtual_address, const header_t& h) {
-        BOOST_ASSERT(virtual_address);
-
         section_t image_section_header;
         
         {   // fs.seekg to the beginning on section headers
