@@ -51,7 +51,7 @@ namespace boost { namespace dll { namespace detail {
         ec = boost::dll::detail::last_error_code();
         for (boost::winapi::DWORD_ new_size = 1024; new_size < 1024 * 1024 && static_cast<boost::winapi::DWORD_>(ec.value()) == ERROR_INSUFFICIENT_BUFFER_; new_size *= 2) {
             std::wstring p(new_size, L'\0');
-            const std::size_t size = boost::winapi::GetModuleFileNameW(handle, &p[0], p.size());
+            const std::size_t size = boost::winapi::GetModuleFileNameW(handle, &p[0], static_cast<boost::winapi::DWORD_>(p.size()));
             if (size != 0 && size < p.size()) {
                 // On success, GetModuleFileNameW() doesn't reset last error to ERROR_SUCCESS. Resetting it manually.
                 ec.clear();
