@@ -5,12 +5,11 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-
 #ifndef BOOST_DLL_IMPORT_MANGLED_HPP_
 #define BOOST_DLL_IMPORT_MANGLED_HPP_
 
 /// \file boost/dll/import_mangled.hpp
-/// \warning Extremely experimental! Requires C++11! Will change in next version of Boost! boost/dll/import_mangled.hpp is not included in boost/dll.hpp
+/// \warning Extremely experimental! May change in next version of Boost! boost/dll/import_mangled.hpp is not included in boost/dll.hpp
 /// \brief Contains the boost::dll::experimental::import_mangled function for importing mangled symbols.
 
 #include <boost/dll/config.hpp>

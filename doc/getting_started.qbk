@@ -7,7 +7,9 @@
 
 [section:getting_started Getting started]
 
-Boost.DLL is a header only library. To start with the library you only need to include `<boost/dll.hpp>` header. After that you are free to import and export functions and variables. Importing code requires linking with `boost_filesystem` and `boost_system` libraries.
+Boost.DLL is a header only library. To start with the library you only need to include `<boost/dll.hpp>` header. After that you are free to import and export functions and variables.
+`boost::dll::import*` functions require linking with `boost_filesystem` and `boost_system` libraries, along with some platform specific dynamic load libraries like `dl`. With CMake
+that burden goes away as `find_package(Boost COMPONENTS dll)` provides a `Boost::dll` target that manages the dependencies to other libraries.
 
 If you want to load a library, just construct [classref boost::dll::shared_library] class with a path to the library as a parameter:
 ```
