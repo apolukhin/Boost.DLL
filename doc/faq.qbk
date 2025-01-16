@@ -72,6 +72,21 @@ stability by your own.
 [pre
 ]
 
+* [*Question:]  Is there a `RTLD_NODELETE` mode? Is there a built in way to skip unload or "leak" a dynamically loaded library?
+  * [*Answer:]  No. Boost tries to support best practices and leaking resources is not one of them. If you are dynamically loading a third party library that fails to unload, try the following:
+```
+std::vector<boost::dll::shared_library>& late_unload_registry() {
+    static std::vector<boost::dll::shared_library> registry;
+    return registry;
+}
+```
+and push the library to that registry `late_unload_registry().emplace_back(third_party_shared_library)`. It will force the library to not unload till the end of program.
+
+If the above `late_unload_registry()` does not help - ask the vendor of the library for support to dynamically load/unload the library.
+
+[pre
+]
+
 * [*Question:]  How to load a shared object from memory??
   * [*Answer:]  All existing OS avoid loading shared libraries directly from userspace memory, so you'll find no syscall for such case. Currently Boost.DLL provides no means for honest loading shared objects from memory. This requires reimplementing dynamic linker logic in userspace for all the platforms, which is a huge amount of work and very error-prone. However working patches are welcomed!
 
