@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 
     //[getting_started_imports_c_variable
     // Importing pure C variable
-    shared_ptr<int> c_var = dll::import_symbol<int>(
+    std::shared_ptr<int> c_var = dll::import_symbol<int>(
             path_to_shared_library, "c_variable_name"
         );
     //]
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
 
     //[getting_started_imports_cpp_variable
     // Importing  variable.
-    shared_ptr<std::string> cpp_var = dll::import_symbol<std::string>(
+    std::shared_ptr<std::string> cpp_var = dll::import_symbol<std::string>(
             path_to_shared_library, "cpp_variable_name"
         );
     //]

@@ -12,6 +12,7 @@
 #include <boost/dll.hpp>
 #include <boost/core/lightweight_test.hpp>
 #include <functional>
+#include <memory>
 #include <boost/fusion/container.hpp>
 // lib functions
 
@@ -20,7 +21,7 @@ typedef void  (say_hello_func)  ();
 typedef int   (increment)       (int);
 
 typedef boost::fusion::vector<std::vector<int>, std::vector<int>, std::vector<int>, const std::vector<int>*, std::vector<int>* > do_share_res_t;
-typedef boost::shared_ptr<do_share_res_t> (do_share_t)(
+typedef std::shared_ptr<do_share_res_t> (do_share_t)(
             std::vector<int> v1,
             std::vector<int>& v2,
             const std::vector<int>& v3,
@@ -67,7 +68,7 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
         }
 
         std::vector<int> v1(1, 1), v2(2, 2), v3(3, 3), v4(4, 4), v5(1000, 5);
-        boost::shared_ptr<do_share_res_t> res = f(v1, v2, v3, &v4, &v5);
+        auto res = f(v1, v2, v3, &v4, &v5);
 
         BOOST_TEST(at_c<0>(*res).size() == 1); BOOST_TEST(at_c<0>(*res).front() == 1);
         BOOST_TEST(at_c<1>(*res).size() == 2); BOOST_TEST(at_c<1>(*res).front() == 2);
@@ -82,10 +83,10 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
     }
 
     {
-        boost::shared_ptr<int> i = import_symbol<int>(shared_library_path, "integer_g");
+        auto i = import_symbol<int>(shared_library_path, "integer_g");
         BOOST_TEST(*i == 100);
 
-        boost::shared_ptr<int> i2;
+        decltype(i) i2;
         i.swap(i2);
         BOOST_TEST(*i2 == 100);
     }
@@ -105,19 +106,19 @@ void refcountable_test(boost::dll::fs::path shared_library_path) {
     }
 
     {
-        boost::shared_ptr<const int> i = import_symbol<const int>(shared_library_path, "const_integer_g");
+        auto i = import_symbol<const int>(shared_library_path, "const_integer_g");
         BOOST_TEST(*i == 777);
 
-        boost::shared_ptr<const int> i2 = i;
+        auto i2 = i;
         i.reset();
         BOOST_TEST(*i2 == 777);
     }
 
     {
-        boost::shared_ptr<std::string> s = import_alias<std::string>(shared_library_path, "info");
+        auto s = import_alias<std::string>(shared_library_path, "info");
         BOOST_TEST(*s == "I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
 
-        boost::shared_ptr<std::string> s2;
+        decltype(s) s2;
         s.swap(s2);
         BOOST_TEST(*s2 == "I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
     }

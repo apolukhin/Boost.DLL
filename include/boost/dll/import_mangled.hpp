@@ -19,7 +19,7 @@
 #  error This file requires C++11 at least!
 #endif
 
-#include <boost/make_shared.hpp>
+#include <boost/dll/config.hpp>
 #include <boost/dll/smart_library.hpp>
 #include <boost/dll/detail/import_mangled_helpers.hpp>
 
@@ -39,10 +39,10 @@ namespace detail
 template <class ... Ts>
 class mangled_library_function {
     // Copying of `boost::dll::shared_library` is very expensive, so we use a `shared_ptr` to make it faster.
-    boost::shared_ptr<shared_library> lib_;
+    boost::dll::detail::shared_ptr<shared_library> lib_;
     function_tuple<Ts...>   f_;
 public:
-    constexpr mangled_library_function(const boost::shared_ptr<shared_library>& lib, Ts*... func_ptr) noexcept
+    constexpr mangled_library_function(const boost::dll::detail::shared_ptr<shared_library>& lib, Ts*... func_ptr) noexcept
         : lib_(lib)
         , f_(func_ptr...)
     {}
@@ -72,11 +72,11 @@ template <class Class, class ... Ts>
 class mangled_library_mem_fn<Class, sequence<Ts...>> {
     // Copying of `boost::dll::shared_library` is very expensive, so we use a `shared_ptr` to make it faster.
     typedef mem_fn_tuple<Ts...> call_tuple_t;
-    boost::shared_ptr<shared_library>   lib_;
+    boost::dll::detail::shared_ptr<shared_library>   lib_;
     call_tuple_t f_;
 
 public:
-    constexpr mangled_library_mem_fn(const boost::shared_ptr<shared_library>& lib, typename Ts::mem_fn... func_ptr) noexcept
+    constexpr mangled_library_mem_fn(const boost::dll::detail::shared_ptr<shared_library>& lib, typename Ts::mem_fn... func_ptr) noexcept
         : lib_(lib)
         , f_(func_ptr...)
     {}
@@ -111,7 +111,7 @@ struct mangled_import_type<sequence<Args...>, true,false,false> //is function
            const std::string& name)
     {
         return type(
-                boost::make_shared<shared_library>(p.shared_lib()),
+                boost::dll::detail::make_shared<shared_library>(p.shared_lib()),
                 std::addressof(p.get_function<Args>(name))...);
     }
 };
@@ -129,7 +129,7 @@ struct mangled_import_type<sequence<Class, Args...>, false, true, false> //is me
             const std::string & name,
             sequence<ArgsIn...> * )
     {
-        return type(boost::make_shared<shared_library>(p.shared_lib()),
+        return type(boost::dll::detail::make_shared<shared_library>(p.shared_lib()),
                     p.get_mem_fn<typename ArgsIn::class_type, typename ArgsIn::func_type>(name)...);
     }
 
@@ -145,14 +145,14 @@ struct mangled_import_type<sequence<Class, Args...>, false, true, false> //is me
 template <class T>
 struct mangled_import_type<sequence<T>, false, false, true> //is variable
 {
-    typedef boost::shared_ptr<T> type;
+    typedef boost::dll::detail::shared_ptr<T> type;
 
     static type make(
            const boost::dll::experimental::smart_library& p,
            const std::string& name)
     {
         return type(
-                boost::make_shared<shared_library>(p.shared_lib()),
+                boost::dll::detail::make_shared<shared_library>(p.shared_lib()),
                 std::addressof(p.get_variable<T>(name)));
     }
 
@@ -175,7 +175,7 @@ struct mangled_import_type<sequence<T>, false, false, true> //is variable
  */
 
 /*!
-* Returns callable object or boost::shared_ptr<T> that holds the symbol imported
+* Returns callable object or boost::dll::detail::shared_ptr<T> that holds the symbol imported
 * from the loaded library. Returned value refcounts usage
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
@@ -191,7 +191,7 @@ struct mangled_import_type<sequence<T>, false, false, true> //is variable
 * \endcode
 *
 * \code
-* boost::shared_ptr<int> i = import_mangled<int>("test_lib.so", "integer_name");
+* boost::dll::detail::shared_ptr<int> i = import_mangled<int>("test_lib.so", "integer_name");
 * \endcode
 *
 * Additionally you can also import overloaded symbols, including member-functions.
@@ -218,7 +218,7 @@ struct mangled_import_type<sequence<T>, false, false, true> //is variable
 * \param name Null-terminated C or C++ mangled name of the function to import. Can handle std::string, char*, const char*.
 * \param mode An mode that will be used on library load.
 *
-* \return callable object if T is a function type, or boost::shared_ptr<T> if T is an object type.
+* \return callable object if T is a function type, or boost::dll::detail::shared_ptr<T> if T is an object type.
 *
 * \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
@@ -280,7 +280,7 @@ template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const shared_library& lib, const char* name) {
     typedef typename boost::dll::experimental::detail::mangled_import_type<detail::sequence<Args...>> type;
 
-    boost::shared_ptr<boost::dll::experimental::smart_library> p = boost::make_shared<boost::dll::experimental::smart_library>(lib);
+    boost::dll::detail::shared_ptr<boost::dll::experimental::smart_library> p = boost::dll::detail::make_shared<boost::dll::experimental::smart_library>(lib);
     return type::boostmake(p, name);
 }
 
