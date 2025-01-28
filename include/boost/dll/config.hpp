@@ -82,7 +82,6 @@ namespace boost { namespace dll { namespace detail {
     template <class T>
     using shared_ptr = boost::shared_ptr<T>;
     using boost::make_shared;
-
 }}}
 
 #else  // BOOST_DLL_USE_STD_FS

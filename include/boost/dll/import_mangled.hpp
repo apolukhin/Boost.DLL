@@ -175,7 +175,8 @@ struct mangled_import_type<sequence<T>, false, false, true> //is variable
  */
 
 /*!
-* Returns callable object or boost::dll::detail::shared_ptr<T> that holds the symbol imported
+* Returns callable object or std::shared_ptr<T> (boost::shared_ptr<T> if
+* BOOST_DLL_USE_BOOST_SHARED_PTR is defined) that holds the symbol imported
 * from the loaded library. Returned value refcounts usage
 * of the loaded shared library, so that it won't get unload until all copies of return value
 * are not destroyed.
@@ -191,7 +192,7 @@ struct mangled_import_type<sequence<T>, false, false, true> //is variable
 * \endcode
 *
 * \code
-* boost::dll::detail::shared_ptr<int> i = import_mangled<int>("test_lib.so", "integer_name");
+* std::shared_ptr<int> i = import_mangled<int>("test_lib.so", "integer_name");
 * \endcode
 *
 * Additionally you can also import overloaded symbols, including member-functions.
@@ -218,7 +219,8 @@ struct mangled_import_type<sequence<T>, false, false, true> //is variable
 * \param name Null-terminated C or C++ mangled name of the function to import. Can handle std::string, char*, const char*.
 * \param mode An mode that will be used on library load.
 *
-* \return callable object if T is a function type, or boost::dll::detail::shared_ptr<T> if T is an object type.
+* \return callable object if T is a function type, or std::shared_ptr<T> (boost::shared_ptr<T> if
+* BOOST_DLL_USE_BOOST_SHARED_PTR is defined) if T is an object type.
 *
 * \throw \forcedlinkfs{system_error} if symbol does not exist or if the DLL/DSO was not loaded.
 *       Overload that accepts path also throws std::bad_alloc in case of insufficient memory.
@@ -232,9 +234,7 @@ BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const boost::dll::fs::path& 
     typedef typename boost::dll::experimental::detail::mangled_import_type<
                      boost::dll::experimental::detail::sequence<Args...>> type;
 
-    boost::dll::experimental::smart_library p(lib, mode);
-    //the load
-    return type::make(p, name);
+    return type::make(boost::dll::experimental::smart_library{lib, mode}, name);
 }
 
 
@@ -244,7 +244,7 @@ template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const boost::dll::fs::path& lib, const std::string& name,
     load_mode::type mode = load_mode::default_mode)
 {
-    return import_mangled<Args...>(lib, name.c_str(), mode);
+    return boost::dll::experimental::import_mangled<Args...>(lib, name.c_str(), mode);
 }
 
 //! \overload boost::dll::import(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
@@ -258,52 +258,52 @@ BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const smart_library& lib, co
 //! \overload boost::dll::import(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const smart_library& lib, const std::string& name) {
-    return import_mangled<Args...>(lib, name.c_str());
+    return boost::dll::experimental::import_mangled<Args...>(lib, name.c_str());
 }
 
 //! \overload boost::dll::import(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(smart_library&& lib, const char* name) {
     typedef typename boost::dll::experimental::detail::mangled_import_type<detail::sequence<Args...>> type;
-
-    return type::make(lib, name);
+    return type::make(std::move(lib), name);
 }
 
 //! \overload boost::dll::import(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(smart_library&& lib, const std::string& name) {
-    return import_mangled<Args...>(std::move(lib), name.c_str());
+    return boost::dll::experimental::import_mangled<Args...>(std::move(lib), name.c_str());
 }
 
 //! \overload boost::dll::import(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const shared_library& lib, const char* name) {
     typedef typename boost::dll::experimental::detail::mangled_import_type<detail::sequence<Args...>> type;
-
-    boost::dll::detail::shared_ptr<boost::dll::experimental::smart_library> p = boost::dll::detail::make_shared<boost::dll::experimental::smart_library>(lib);
-    return type::boostmake(p, name);
+    return type::make(
+        boost::dll::detail::make_shared<boost::dll::experimental::smart_library>(lib),
+        name
+    );
 }
 
 //! \overload boost::dll::import(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(const shared_library& lib, const std::string& name) {
-    return import_mangled<Args...>(lib, name.c_str());
+    return boost::dll::experimental::import_mangled<Args...>(lib, name.c_str());
 }
 
 //! \overload boost::dll::import(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(shared_library&& lib, const char* name) {
     typedef typename boost::dll::experimental::detail::mangled_import_type<detail::sequence<Args...>> type;
-
-    boost::dll::experimental::smart_library p(std::move(lib));
-
-    return type::make(p, name);
+    return type::make(
+        boost::dll::experimental::smart_library{std::move(lib)},
+        name
+    );
 }
 
 //! \overload boost::dll::import(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
 template <class ...Args>
 BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE import_mangled(shared_library&& lib, const std::string& name) {
-    return import_mangled<Args...>(std::move(lib), name.c_str());
+    return boost::dll::experimental::import_mangled<Args...>(std::move(lib), name.c_str());
 }
 
 #undef BOOST_DLL_MANGLED_IMPORT_RESULT_TYPE

@@ -19,18 +19,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - toolset: gcc-12
+          - toolset: gcc-14
             cxxstd: "11,14,17,2a"
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
             cxxflags: "cxxflags=--coverage -fsanitize=address,leak -DBOOST_TRAVISCI_BUILD"
             linkflags: "linkflags=--coverage -lasan"
             launcher: "testing.launcher=LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libasan.so.8"
-            gcov_tool: "gcov-12"
+            gcov_tool: "gcov-14"
             ignore_coverage: "*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*"
-          - toolset: gcc-12
+          - toolset: gcc-14
             cxxstd: "17,2a"
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
             cxxflags: "cxxflags=--coverage -fsanitize=address,leak -DBOOST_DLL_USE_STD_FS -DBOOST_TRAVISCI_BUILD"
             linkflags: "linkflags=--coverage -lasan"
@@ -41,6 +41,10 @@ jobs:
             compiler: clang++-10
             cxxstd: "11,14,17,2a"
             os: ubuntu-20.04
+          - toolset: clang-18
+            compiler: clang++-18
+            cxxstd: "11,14,17,2a"
+            os: ubuntu-24.04
           #- toolset: clang
           #  cxxstd: "11,14,17,2a"
           #  os: macos-10.15
