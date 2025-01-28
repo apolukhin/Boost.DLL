@@ -9,7 +9,9 @@
 #define BOOST_DLL_SMART_LIBRARY_HPP_
 
 /// \file boost/dll/smart_library.hpp
-/// \warning Extremely experimental! May change in next version of Boost! boost/dll/smart_library.hpp is not included in boost/dll.hpp
+/// \warning Experimental feature that relies on an incomplete implementation of platform specific C++
+///          mangling. In case of an issue provide a PR with a fix and tests to https://github.com/boostorg/dll .
+///          boost/dll/smart_library.hpp is not included in boost/dll.hpp
 /// \brief Contains the boost::dll::experimental::smart_library class for loading mangled symbols.
 
 #include <boost/dll/config.hpp>
@@ -44,7 +46,8 @@ using boost::dll::detail::destructor;
 * This class allows type safe loading of overloaded functions, member-functions, constructors and variables.
 * It also allows to overwrite classes so they can be loaded, while being declared with different names.
 *
-* \warning Is still very experimental.
+* \warning Experimental feature that relies on an incomplete implementation of platform specific C++
+*          mangling. In case of an issue provide a PR with a fix and tests to https://github.com/boostorg/dll
 *
 * Currently known limitations:
 *

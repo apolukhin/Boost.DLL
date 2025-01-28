@@ -9,7 +9,9 @@
 #define BOOST_DLL_IMPORT_CLASS_HPP_
 
 /// \file boost/dll/import_class.hpp
-/// \warning Extremely experimental! May change in next version of Boost! boost/dll/import_class.hpp is not included in boost/dll.hpp
+/// \warning Experimental feature that relies on an incomplete implementation of platform specific C++
+///          mangling. In case of an issue provide a PR with a fix and tests to https://github.com/boostorg/dll .
+///          boost/dll/import_class.hpp is not included in boost/dll.hpp
 /// \brief Contains the boost::dll::experimental::import_class function for importing classes.
 
 #include <boost/dll/smart_library.hpp>
