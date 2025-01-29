@@ -38,11 +38,9 @@ jobs:
             gcov_tool: "gcov-12"
             ignore_coverage: "*/detail/pe_info.hpp */detail/macho_info.hpp */filesystem/src/*"
           - toolset: clang
-            compiler: clang++-10
             cxxstd: "11,14,17,2a"
             os: ubuntu-20.04
           - toolset: clang-18
-            compiler: clang++-18
             cxxstd: "11,14,17,2a"
             os: ubuntu-24.04
           #- toolset: clang
@@ -88,11 +86,6 @@ jobs:
           ./bootstrap.sh
           ./b2 -d0 headers
           ./b2 -j4 variant=debug tools/inspect/build
-
-      - name: Create user-config.jam
-        if: matrix.compiler
-        run: |
-          echo "using ${{matrix.toolset}} : : ${{matrix.compiler}} ;" > ~/user-config.jam
 
       - name: Run tests
         run: |
