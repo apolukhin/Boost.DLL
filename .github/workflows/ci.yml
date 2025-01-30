@@ -12,6 +12,11 @@ on:
 
 env:
   UBSAN_OPTIONS: print_stacktrace=1
+  # ASAN complains:
+  # ==5457==ERROR: AddressSanitizer: odr-violation (0x7f6112f03b00):
+  # [1] size=8 'rvalue_reference_to_internal_integer' test/test_library.cpp:122:7 in bin.v2/libs/dll/test/gcc-14/debug/x86_64/cxxstd-17-iso/threading-multi/visibility-hidden/libtest_library.so
+  # [2] size=8 'rvalue_reference_to_internal_integer' test/test_library.cpp:122:7 in bin.v2/libs/dll/test/gcc-14/debug/x86_64/cxxstd-17-iso/threading-multi/visibility-hidden/libtest_library.so.1.88.0
+  ASAN_OPTIONS: detect_odr_violation=0
 
 jobs:
   posix:
