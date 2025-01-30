@@ -111,7 +111,8 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(const boost::dll::fs::path& lib, cons
     using type = boost::dll::detail::import_type<T>;
 
     auto p = boost::dll::detail::make_shared<boost::dll::shared_library>(lib, mode);
-    return type(p, std::addressof(p->get<T>(name)));
+    auto* addr = std::addressof(p->get<T>(name));
+    return type(std::move(p), addr);
 }
 
 //! \overload boost::dll::import_symbol(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
@@ -145,7 +146,8 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_symbol(shared_library&& lib, const char* nam
     auto p = boost::dll::detail::make_shared<boost::dll::shared_library>(
         std::move(lib)
     );
-    return type(p, std::addressof(p->get<T>(name)));
+    auto* addr = std::addressof(p->get<T>(name));
+    return type(std::move(p), addr);
 }
 
 //! \overload boost::dll::import_symbol(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
@@ -203,7 +205,8 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const boost::dll::fs::path& lib, const
     using type = boost::dll::detail::import_type<T>;
 
     auto p = boost::dll::detail::make_shared<boost::dll::shared_library>(lib, mode);
-    return type(p, p->get<T*>(name));
+    auto* addr = p->get<T*>(name);
+    return type(std::move(p), addr);
 }
 
 //! \overload boost::dll::import_alias(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
@@ -220,7 +223,8 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_alias(const shared_library& lib, const char*
     using type = boost::dll::detail::import_type<T>;
 
     auto p = boost::dll::detail::make_shared<boost::dll::shared_library>(lib);
-    return type(p, p->get<T*>(name));
+    auto* addr = p->get<T*>(name);
+    return type(std::move(p), addr);
 }
 
 //! \overload boost::dll::import_alias(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
@@ -237,7 +241,8 @@ BOOST_DLL_IMPORT_RESULT_TYPE import_alias(shared_library&& lib, const char* name
     auto p = boost::dll::detail::make_shared<boost::dll::shared_library>(
         std::move(lib)
     );
-    return type(p, p->get<T*>(name));
+    auto* addr = p->get<T*>(name);
+    return type(std::move(p), addr);
 }
 
 //! \overload boost::dll::import_alias(const boost::dll::fs::path& lib, const char* name, load_mode::type mode)
