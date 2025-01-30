@@ -20,7 +20,6 @@ target_link_libraries(boost_dll
     Boost::core
     Boost::filesystem
     Boost::predef
-    Boost::smart_ptr
     Boost::system
     Boost::throw_exception
     Boost::type_index

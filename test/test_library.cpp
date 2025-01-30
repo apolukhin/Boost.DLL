@@ -13,11 +13,10 @@
 
 #include <boost/dll/config.hpp>
 #include <boost/dll/alias.hpp>
+#include <memory>
 #include <iostream>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/fusion/container.hpp>
 
 #define LIBRARY_API BOOST_SYMBOL_EXPORT
@@ -49,7 +48,7 @@ namespace namespace1 { namespace namespace2 { namespace namespace3 {
         boost::fusion::vector<std::vector<int>, std::vector<int>, std::vector<int>, const std::vector<int>*, std::vector<int>* >
     do_share_res_t;
 
-    boost::shared_ptr<do_share_res_t> do_share(
+    std::shared_ptr<do_share_res_t> do_share(
             std::vector<int> v1,
             std::vector<int>& v2,
             const std::vector<int>& v3,
@@ -59,7 +58,7 @@ namespace namespace1 { namespace namespace2 { namespace namespace3 {
     {
         v2.back() = 777;
         v5->back() = 9990;
-        return boost::make_shared<do_share_res_t>(v1, v2, v3, v4, v5);
+        return std::make_shared<do_share_res_t>(v1, v2, v3, v4, v5);
     }
 
     std::string info("I am a std::string from the test_library (Think of me as of 'Hello world'. Long 'Hello world').");
