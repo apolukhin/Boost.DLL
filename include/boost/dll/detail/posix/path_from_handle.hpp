@@ -62,36 +62,14 @@ namespace boost { namespace dll { namespace detail {
 
 }}} // namespace boost::dll::detail
 
-#elif BOOST_OS_ANDROID
+#elif !BOOST_PLAT_ANDROID
 
 #include <boost/dll/runtime_symbol_info.hpp>
 
 namespace boost { namespace dll { namespace detail {
 
-    struct soinfo {
-        // if defined(__work_around_b_24465209__), then an array of char[128] goes here.
-        // Unfortunately, __work_around_b_24465209__ is visible only during compilation of Android's linker
-        const void* phdr;
-        size_t      phnum;
-        void*       entry;
-        void*       base;
-        // ...          // Ignoring remaning parts of the structure
-    };
-
-    inline boost::dll::fs::path path_from_handle(const void* handle, std::error_code &ec) {
-        static const std::size_t work_around_b_24465209__offset = 128;
-        const struct soinfo* si = reinterpret_cast<const struct soinfo*>(
-            static_cast<const char*>(handle) + work_around_b_24465209__offset
-        );
-        boost::dll::fs::path ret = boost::dll::symbol_location_ptr(si->base, ec);
-
-        if (ec) {
-            ec.clear();
-            si = static_cast<const struct soinfo*>(handle);
-            return boost::dll::symbol_location_ptr(si->base, ec);
-        }
-
-        return ret;
+    inline boost::dll::fs::path path_from_symbol(const void* symbol, std::error_code &ec) {
+        return boost::dll::symbol_location_ptr(symbol, ec);
     }
 
 }}} // namespace boost::dll::detail

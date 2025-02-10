@@ -95,7 +95,7 @@ public:
             native_mode |= load_mode::rtld_local;
         }
 
-#if BOOST_OS_LINUX || BOOST_OS_ANDROID
+#if BOOST_OS_LINUX || BOOST_PLAT_ANDROID
         if (!sl.has_parent_path() && !(native_mode & load_mode::search_system_folders)) {
             sl = "." / sl;
         }
@@ -183,7 +183,25 @@ public:
     }
 
     boost::dll::fs::path full_module_path(std::error_code &ec) const {
+#if !BOOST_PLAT_ANDROID
+        void* ptr = nullptr;
+        for (const char* name: {"__dso_handle", "completed.0", "__cxx_global_var_init", "__clang_call_terminate"}) {
+            ec = {};
+            ptr = symbol_addr(name, ec);
+            if (!ec && ptr) {
+                //throw std::runtime_error(name);
+                break;
+            }
+        }
+
+        if (ec || !ptr) {
+            return boost::dll::fs::path{};
+        }
+
+        return boost::dll::detail::path_from_symbol(ptr, ec);
+#else
         return boost::dll::detail::path_from_handle(handle_, ec);
+#endif
     }
 
     static boost::dll::fs::path suffix() {
