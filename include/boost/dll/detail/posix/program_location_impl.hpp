@@ -32,7 +32,7 @@ namespace boost { namespace dll { namespace detail {
 
         std::string p;
         p.resize(size);
-        if (_NSGetExecutablePath(p.data(), &size) != 0) {
+        if (_NSGetExecutablePath(&p[0], &size) != 0) {
             ec = std::make_error_code(
                 std::errc::bad_file_descriptor
             );
