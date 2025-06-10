@@ -143,13 +143,13 @@ namespace boost { namespace dll { namespace detail {
 
 #if BOOST_OS_CYGWIN
         // Cygwin doesn't have <link.h> header
-        unsigned long long DEFAULT_BUFFER_SIZE = 4096;
-        std::vector<wchar_t> buffer(DEFAULT_BUFFER_SIZE);
+        unsigned long long buffer_size = 4096;
+        std::vector<wchar_t> buffer;
         do
         {
-            buffer.resize(DEFAULT_BUFFER_SIZE);
+            buffer.resize(buffer_size);
             GetModuleFileNameW(handle, buffer.data(), buffer.size());
-            DEFAULT_BUFFER_SIZE *= 2;
+            buffer_size *= 2;
         } while (GetLastError() == 122 /* ERROR_INSUFFICIENT_BUFFER */);
         if (GetLastError() == 0)
         {
