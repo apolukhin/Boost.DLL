@@ -8,6 +8,8 @@ cmake_minimum_required(VERSION 3.5...3.16)
 
 project(boost_dll VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
 
+option(BOOST_DLL_USE_STD_FS "Use std::filesystem instead of Boost.Filesystem" OFF)
+
 add_library(boost_dll INTERFACE)
 add_library(Boost::dll ALIAS boost_dll)
 
@@ -18,7 +20,6 @@ target_link_libraries(boost_dll
     Boost::assert
     Boost::config
     Boost::core
-    Boost::filesystem
     Boost::predef
     Boost::system
     Boost::throw_exception
@@ -26,6 +27,13 @@ target_link_libraries(boost_dll
     Boost::winapi
     ${CMAKE_DL_LIBS}
 )
+
+if(BOOST_DLL_USE_STD_FS)
+  target_compile_definitions(boost_dll INTERFACE BOOST_DLL_USE_STD_FS)
+  target_compile_features(boost_dll INTERFACE cxx_std_17)
+else()
+  target_link_libraries(boost_dll INTERFACE Boost::filesystem)
+endif()
 
 if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
 
