@@ -24,7 +24,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - toolset: gcc-14
+          - toolset: gcc-14  # Do not remove! It is the only toolset that tests CMake tests down below
             cxxstd: "11,14,17,2a"
             os: ubuntu-24.04
             # UBSAN complains on vtables and fails. No ',undefined -fno-sanitize-recover=undefined' flags!
@@ -91,6 +91,18 @@ jobs:
           ./bootstrap.sh
           ./b2 -d0 headers
           ./b2 -j4 variant=debug tools/inspect
+
+      - name: Run CMake tests
+        if: ${{matrix.toolset == 'gcc-14'}}
+        run: |
+          cd ../boost-root/
+          mkdir __build
+          cd __build
+          cmake -DBUILD_TESTING=1 -DBOOST_INCLUDE_LIBRARIES=dll -DCMAKE_CXX_COMPILER=g++-14 -DCMAKE_C_COMPILER=gcc-14 ..
+          cmake --build . --target tests
+          ctest --output-on-failure --no-tests=error
+          cd ..
+          rm -rf __build
 
       - name: Run tests
         run: |
