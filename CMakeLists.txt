@@ -10,12 +10,9 @@ project(boost_dll VERSION "${BOOST_SUPERPROJECT_VERSION}" LANGUAGES CXX)
 
 option(BOOST_DLL_USE_STD_FS "Use std::filesystem instead of Boost.Filesystem" OFF)
 
-add_library(boost_dll INTERFACE)
-add_library(Boost::dll ALIAS boost_dll)
-
-target_include_directories(boost_dll INTERFACE include)
-
-target_link_libraries(boost_dll
+add_library(boost_dll_base INTERFACE)
+target_include_directories(boost_dll_base INTERFACE include)
+target_link_libraries(boost_dll_base
   INTERFACE
     Boost::assert
     Boost::config
@@ -28,12 +25,31 @@ target_link_libraries(boost_dll
     ${CMAKE_DL_LIBS}
 )
 
+
+add_library(boost_dll_std_fs INTERFACE)
+target_link_libraries(boost_dll_std_fs
+  INTERFACE
+    boost_dll_base
+)
+target_compile_definitions(boost_dll_std_fs INTERFACE BOOST_DLL_USE_STD_FS)
+target_compile_features(boost_dll_std_fs INTERFACE cxx_std_17)
+
+add_library(boost_dll_boost_fs INTERFACE)
+target_link_libraries(boost_dll_boost_fs
+  INTERFACE
+    boost_dll_base
+    Boost::filesystem
+)
+
+
+add_library(boost_dll INTERFACE)
 if(BOOST_DLL_USE_STD_FS)
-  target_compile_definitions(boost_dll INTERFACE BOOST_DLL_USE_STD_FS)
-  target_compile_features(boost_dll INTERFACE cxx_std_17)
+  target_link_libraries(boost_dll INTERFACE boost_dll_std_fs)
 else()
-  target_link_libraries(boost_dll INTERFACE Boost::filesystem)
+  target_link_libraries(boost_dll INTERFACE boost_dll_boost_fs)
 endif()
+
+add_library(Boost::dll ALIAS boost_dll)
 
 if(BUILD_TESTING AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/test/CMakeLists.txt")
 
