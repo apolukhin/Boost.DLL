@@ -43,19 +43,6 @@ target_link_libraries(boost_dll_boost_fs
 
 
 add_library(boost_dll INTERFACE)
-target_link_libraries(boost_dll
-  INTERFACE
-    Boost::assert
-    Boost::config
-    Boost::core
-    Boost::filesystem
-    Boost::predef
-    Boost::system
-    Boost::throw_exception
-    Boost::type_index
-    Boost::winapi
-    ${CMAKE_DL_LIBS}
-)
 if(BOOST_DLL_USE_STD_FS)
   target_link_libraries(boost_dll INTERFACE boost_dll_std_fs)
 else()
