@@ -45,6 +45,7 @@ project
       <library>/boost/smart_ptr//boost_smart_ptr
       <threading>multi
       <define>BOOST_SYSTEM_NO_DEPRECATED
+      <target-os>windows,<toolset>gcc:<define>BOOST_DLL_USE_STD_FS=1
     ;
 {
 
