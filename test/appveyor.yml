@@ -53,25 +53,10 @@ environment:
       TOOLSET: clang-win
       CXXSTD: 17,2a
       ADDRMD: 32,64
-      
-    # TODO: Both Cygwins have problems with <link.h> and `dladdr`
-    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    #  ADDPATH: C:\cygwin\bin;
-    #  TOOLSET: gcc
-    #  CXXSTD: 11,14,1z
-    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    #  ADDPATH: C:\cygwin64\bin;
-    #  TOOLSET: gcc
-    #  CXXSTD: 11,14,1z
-    # MinGW 32 bit is not supported by boost system any more
-    #- APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-    #  ADDPATH: C:\mingw\bin;
-    #  TOOLSET: gcc
-    #  CXXSTD: 11,14,1z
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      ADDPATH: C:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin;
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2022
+      ADDPATH: C:\Qt\6.8\msvc2022_64\bin;
       TOOLSET: gcc
-      CXXSTD: 11,14,1z
+      CXXSTD: 17,20
 
 before_build:
     - set BOOST_BRANCH=develop
