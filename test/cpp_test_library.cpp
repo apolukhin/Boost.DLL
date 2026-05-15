@@ -9,7 +9,6 @@
 
 #include <boost/config.hpp>
 
-#include <boost/dll/config.hpp>
 #include <boost/variant.hpp>
 
 BOOST_SYMBOL_EXPORT extern int unscoped_var;
