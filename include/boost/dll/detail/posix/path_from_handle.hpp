@@ -70,7 +70,7 @@ namespace boost { namespace dll { namespace detail {
 
 }}} // namespace boost::dll::detail
 
-#elif BOOST_OS_ANDROID
+#elif BOOST_PLAT_ANDROID
 
 #if !defined(BOOST_DLL_INTERFACE_UNIT)
 #include <boost/dll/runtime_symbol_info.hpp>
@@ -106,7 +106,7 @@ namespace boost { namespace dll { namespace detail {
 
 }}} // namespace boost::dll::detail
 
-#else // #if BOOST_OS_MACOS || BOOST_OS_IOS || BOOST_OS_ANDROID
+#else // #if BOOST_OS_MACOS || BOOST_OS_IOS || BOOST_PLAT_ANDROID
 
 // for dlinfo
 #if !defined(BOOST_DLL_INTERFACE_UNIT)
