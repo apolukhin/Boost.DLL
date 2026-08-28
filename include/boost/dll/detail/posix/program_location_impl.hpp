@@ -163,7 +163,7 @@ namespace boost { namespace dll { namespace detail {
     }
 }}} // namespace boost::dll::detail
 
-#else  // BOOST_OS_LINUX || BOOST_OS_UNIX || BOOST_OS_HPUX || BOOST_OS_ANDROID
+#else  // BOOST_OS_LINUX || BOOST_OS_UNIX || BOOST_OS_HPUX || BOOST_PLAT_ANDROID
 
 namespace boost { namespace dll { namespace detail {
     inline boost::dll::fs::path program_location_impl(std::error_code &ec) {

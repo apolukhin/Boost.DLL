@@ -64,7 +64,7 @@ namespace boost { namespace dll {
 #else // #if BOOST_COMP_MSVC
 
 
-#if BOOST_OS_WINDOWS || BOOST_OS_ANDROID || BOOST_COMP_IBM
+#if BOOST_OS_WINDOWS || BOOST_PLAT_ANDROID || BOOST_COMP_IBM
 // There are some problems with mixing `__dllexport__` and `weak` using MinGW
 // See https://sourceware.org/bugzilla/show_bug.cgi?id=17480
 //
@@ -177,7 +177,7 @@ namespace boost { namespace dll {
     /**/
 
 
-#if ((BOOST_COMP_GNUC && BOOST_OS_WINDOWS) || BOOST_OS_ANDROID || BOOST_COMP_IBM || defined(BOOST_DLL_FORCE_NO_WEAK_EXPORTS)) \
+#if ((BOOST_COMP_GNUC && BOOST_OS_WINDOWS) || BOOST_PLAT_ANDROID || BOOST_COMP_IBM || defined(BOOST_DLL_FORCE_NO_WEAK_EXPORTS)) \
     && !defined(BOOST_DLL_FORCE_ALIAS_INSTANTIATION) && !defined(BOOST_DLL_DOXYGEN)
 
 #define BOOST_DLL_ALIAS_SECTIONED(FunctionOrVar, AliasName, SectionName)                        \

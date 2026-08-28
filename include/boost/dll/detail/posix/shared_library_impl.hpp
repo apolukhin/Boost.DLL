@@ -100,7 +100,7 @@ public:
             native_mode |= load_mode::rtld_local;
         }
 
-#if BOOST_OS_LINUX || BOOST_OS_ANDROID
+#if BOOST_OS_LINUX || BOOST_PLAT_ANDROID
         if (!sl.has_parent_path() && !(native_mode & load_mode::search_system_folders)) {
             sl = "." / sl;
         }
