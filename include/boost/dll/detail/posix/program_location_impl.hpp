@@ -20,6 +20,12 @@
 
 #include <boost/dll/detail/system_error.hpp>
 
+#if !defined(BOOST_DLL_INTERFACE_UNIT)
+#if BOOST_OS_BSD_OPEN
+#include <sys/param.h>
+#endif
+#endif // !defined(BOOST_DLL_INTERFACE_UNIT)
+
 #if BOOST_OS_MACOS || BOOST_OS_IOS
 
 #if !defined(BOOST_DLL_INTERFACE_UNIT)
@@ -111,7 +117,23 @@ namespace boost { namespace dll { namespace detail {
     }
 }}} // namespace boost::dll::detail
 
+#elif BOOST_OS_BSD_OPEN && OpenBSD >= 202610
 
+namespace boost { namespace dll { namespace detail {
+    inline boost::dll::fs::path program_location_impl(std::error_code& ec) {
+        ec.clear();
+
+        char path[1024];
+        if (getexecpath(path, sizeof(path)) != 0) {
+            ec = std::make_error_code(
+                static_cast<std::errc>(errno)
+            );
+            return boost::dll::fs::path();
+        }
+
+        return boost::dll::fs::path(path);
+    }
+}}} // namespace boost::dll::detail
 
 #elif BOOST_OS_BSD_NET
 
